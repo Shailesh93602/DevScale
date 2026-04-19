@@ -2,7 +2,16 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { BookOpen, Users, Clock, Award, Heart, Bookmark, Share2, CheckCircle } from 'lucide-react';
+import {
+  BookOpen,
+  Users,
+  Clock,
+  Award,
+  Heart,
+  Bookmark,
+  Share2,
+  CheckCircle,
+} from 'lucide-react';
 import { RoadmapDetails } from '../RoadmapDetail';
 import { cn } from '@/lib/utils';
 
@@ -19,7 +28,10 @@ interface RoadmapHeaderActionsProps {
     like: boolean;
     bookmark: boolean;
   };
-  handleSocialAction: (action: (id: string) => Promise<void>, type: 'like' | 'bookmark') => Promise<void>;
+  handleSocialAction: (
+    action: (id: string) => Promise<void>,
+    type: 'like' | 'bookmark',
+  ) => Promise<void>;
   handleLike: (id: string) => Promise<void>;
   handleBookmark: (id: string) => Promise<void>;
   handleShare: () => Promise<void>;
@@ -44,9 +56,22 @@ export const RoadmapHeaderActions = ({
       <Card className="overflow-hidden border-none bg-card/60 p-8 shadow-xl backdrop-blur-sm">
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           <StatItem icon={<BookOpen />} value={roadmapCount} label="Steps" />
-          <StatItem icon={<Users />} value={roadmapDetails.enrollmentCount || 0} label="Enrolled" />
-          <StatItem icon={<Clock />} value={roadmapDetails.estimatedTime || '---'} label="Duration" />
-          <StatItem icon={<Award />} value={roadmapDetails.progress || 0} isPercentage label="Complete" />
+          <StatItem
+            icon={<Users />}
+            value={roadmapDetails.enrollmentCount || 0}
+            label="Enrolled"
+          />
+          <StatItem
+            icon={<Clock />}
+            value={roadmapDetails.estimatedTime || '---'}
+            label="Duration"
+          />
+          <StatItem
+            icon={<Award />}
+            value={roadmapDetails.progress || 0}
+            isPercentage
+            label="Complete"
+          />
         </div>
 
         {roadmapDetails.progress !== undefined && (
@@ -69,7 +94,9 @@ export const RoadmapHeaderActions = ({
               fillColor="#ef4444"
               isLoading={socialActionLoading.like}
               onClick={() => handleSocialAction(handleLike, 'like')}
-              aria-label={currentState.isLiked ? 'Unlike roadmap' : 'Like roadmap'}
+              aria-label={
+                currentState.isLiked ? 'Unlike roadmap' : 'Like roadmap'
+              }
             />
 
             <SocialButton
@@ -83,7 +110,11 @@ export const RoadmapHeaderActions = ({
               fillColor="#f97316"
               isLoading={socialActionLoading.bookmark}
               onClick={() => handleSocialAction(handleBookmark, 'bookmark')}
-              aria-label={currentState.isBookmarked ? 'Remove bookmark' : 'Bookmark roadmap'}
+              aria-label={
+                currentState.isBookmarked
+                  ? 'Remove bookmark'
+                  : 'Bookmark roadmap'
+              }
             />
           </div>
 
@@ -117,16 +148,22 @@ export const RoadmapHeaderActions = ({
   );
 };
 
-const StatItem = ({ icon, value, label, isPercentage }: { 
-  icon: React.ReactNode, 
-  value: number | string, 
-  label: string,
-  isPercentage?: boolean 
+const StatItem = ({
+  icon,
+  value,
+  label,
+  isPercentage,
+}: {
+  icon: React.ReactNode;
+  value: number | string;
+  label: string;
+  isPercentage?: boolean;
 }) => (
   <div className="rounded-xl bg-card p-4 text-center shadow-sm">
     <div className="mx-auto h-6 w-6 text-primary">{icon}</div>
     <p className="mt-2 text-2xl font-semibold text-foreground">
-      {value}{isPercentage ? '%' : ''}
+      {value}
+      {isPercentage ? '%' : ''}
     </p>
     <p className="text-sm text-muted-foreground">{label}</p>
   </div>
@@ -146,18 +183,18 @@ interface SocialButtonProps {
   'aria-label'?: string;
 }
 
-const SocialButton = ({ 
-  icon, 
-  isActive, 
-  count, 
-  activeColor, 
-  activeBg, 
-  hoverColor, 
-  hoverBg, 
-  fillColor, 
-  isLoading, 
+const SocialButton = ({
+  icon,
+  isActive,
+  count,
+  activeColor,
+  activeBg,
+  hoverColor,
+  hoverBg,
+  fillColor,
+  isLoading,
   onClick,
-  'aria-label': ariaLabel
+  'aria-label': ariaLabel,
 }: SocialButtonProps) => (
   <Button
     variant="ghost"

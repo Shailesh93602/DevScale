@@ -254,7 +254,6 @@ export const companyInfo = {
   description: BRANDING.description,
 };
 
-
 // CTA Links
 export const ctaLinks = {
   getStarted: {

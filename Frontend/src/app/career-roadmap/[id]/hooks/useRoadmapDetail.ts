@@ -11,9 +11,11 @@ export const useRoadmapDetail = (careerId: string) => {
   const { handleLike, handleBookmark } = useRoadmapSocial();
   const [isLoading, setIsLoading] = useState(true);
   const [roadmap, setRoadmap] = useState<IRoadmap[]>([]);
-  const [roadmapDetails, setRoadmapDetails] = useState<RoadmapDetails | null>(null);
+  const [roadmapDetails, setRoadmapDetails] = useState<RoadmapDetails | null>(
+    null,
+  );
   const [isEnrolling, setIsEnrolling] = useState(false);
-  
+
   const [socialActionLoading, setSocialActionLoading] = useState({
     like: false,
     bookmark: false,
@@ -102,19 +104,27 @@ export const useRoadmapDetail = (careerId: string) => {
       // Optimistic update
       if (type === 'like') {
         setOptimisticState((prev) =>
-          prev ? {
-            ...prev,
-            isLiked: !prev.isLiked,
-            likesCount: prev.isLiked ? prev.likesCount - 1 : prev.likesCount + 1,
-          } : null
+          prev
+            ? {
+                ...prev,
+                isLiked: !prev.isLiked,
+                likesCount: prev.isLiked
+                  ? prev.likesCount - 1
+                  : prev.likesCount + 1,
+              }
+            : null,
         );
       } else {
         setOptimisticState((prev) =>
-          prev ? {
-            ...prev,
-            isBookmarked: !prev.isBookmarked,
-            bookmarksCount: prev.isBookmarked ? prev.bookmarksCount - 1 : prev.bookmarksCount + 1,
-          } : null
+          prev
+            ? {
+                ...prev,
+                isBookmarked: !prev.isBookmarked,
+                bookmarksCount: prev.isBookmarked
+                  ? prev.bookmarksCount - 1
+                  : prev.bookmarksCount + 1,
+              }
+            : null,
         );
       }
 

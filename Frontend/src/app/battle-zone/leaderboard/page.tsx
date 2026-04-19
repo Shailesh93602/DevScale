@@ -112,7 +112,7 @@ export default function LeaderboardPage() {
   if (isLoading) {
     return (
       <BattleZoneLayout>
-        <div className="space-y-8 animate-pulse">
+        <div className="animate-pulse space-y-8">
           <div className="space-y-2">
             <div className="h-10 w-48 rounded bg-muted" />
             <div className="h-4 w-64 rounded bg-muted" />
@@ -142,22 +142,27 @@ export default function LeaderboardPage() {
 
           <div className="space-y-4">
             <div className="h-10 w-full rounded bg-muted" />
-            {['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6'].map((id) => (
-              <div key={id} className="flex items-center rounded-lg border p-4">
-                <div className="mr-6 h-8 w-8 rounded-full bg-muted" />
-                <div className="flex items-center gap-3 flex-1">
-                  <div className="h-10 w-10 rounded-full bg-muted" />
-                  <div className="space-y-2">
-                    <div className="h-4 w-32 rounded bg-muted" />
-                    <div className="h-3 w-20 rounded bg-muted" />
+            {['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6'].map(
+              (id) => (
+                <div
+                  key={id}
+                  className="flex items-center rounded-lg border p-4"
+                >
+                  <div className="mr-6 h-8 w-8 rounded-full bg-muted" />
+                  <div className="flex flex-1 items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-muted" />
+                    <div className="space-y-2">
+                      <div className="h-4 w-32 rounded bg-muted" />
+                      <div className="h-3 w-20 rounded bg-muted" />
+                    </div>
                   </div>
+                  <div className="mx-2 hidden h-6 w-24 rounded bg-muted sm:block" />
+                  <div className="mx-2 hidden h-6 w-24 rounded bg-muted sm:block" />
+                  <div className="mx-2 hidden h-6 w-24 rounded bg-muted sm:block" />
+                  <div className="ml-2 h-6 w-32 rounded bg-muted" />
                 </div>
-                <div className="hidden sm:block w-24 h-6 rounded bg-muted mx-2" />
-                <div className="hidden sm:block w-24 h-6 rounded bg-muted mx-2" />
-                <div className="hidden sm:block w-24 h-6 rounded bg-muted mx-2" />
-                <div className="w-32 h-6 rounded bg-muted ml-2" />
-              </div>
-            ))}
+              ),
+            )}
           </div>
         </div>
       </BattleZoneLayout>

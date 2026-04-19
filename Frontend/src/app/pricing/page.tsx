@@ -29,7 +29,7 @@ const plans: PricingPlan[] = [
       'Community Forum Access',
       'Basic Code Editor',
       'Public Portfolio Builder',
-      '1 Concurrent Battle'
+      '1 Concurrent Battle',
     ],
     cta: 'Start Coding',
   },
@@ -45,7 +45,7 @@ const plans: PricingPlan[] = [
       '1-on-1 Mentor Sessions (2/mo)',
       'Private Code Reviews',
       'Verified Certifications',
-      'Priority Support'
+      'Priority Support',
     ],
     cta: 'Upgrade to Pro',
     highlighted: true,
@@ -63,11 +63,11 @@ const plans: PricingPlan[] = [
       'Dedicated Account Manager',
       'Tailored Training Paths',
       'SLA & API Access',
-      'Enterprise Integrations'
+      'Enterprise Integrations',
     ],
     cta: 'Contact Sales',
     priceId: process.env.NEXT_PUBLIC_STRIPE_TEAM_PRICE_ID,
-  }
+  },
 ];
 
 export default function PricingPage() {
@@ -87,13 +87,14 @@ export default function PricingPage() {
     setLoading(plan.id);
     try {
       const { data } = await axios.post('/api/v1/billing/checkout', {
-        priceId: plan.priceId
+        priceId: plan.priceId,
       });
       if (data.url) {
         window.location.href = data.url;
       }
     } catch (error: unknown) {
-      const msg = (error as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      const msg = (error as { response?: { data?: { message?: string } } })
+        ?.response?.data?.message;
       toast.error(msg || 'Failed to start checkout');
     } finally {
       setLoading(null);
@@ -101,35 +102,36 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white py-20 px-4">
-      <div className="max-w-7xl mx-auto text-center mb-16">
-        <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600 mb-6">
+    <div className="min-h-screen bg-black px-4 py-20 text-white">
+      <div className="mx-auto mb-16 max-w-7xl text-center">
+        <h1 className="from-purple-400 to-pink-600 mb-6 bg-gradient-to-r bg-clip-text text-5xl font-bold text-transparent md:text-7xl">
           Unlock Your Potential with EduScale
         </h1>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          Flexible plans to elevate your coding skills and career. Choose the one that fits your goals.
+        <p className="mx-auto max-w-2xl text-xl text-gray-400">
+          Flexible plans to elevate your coding skills and career. Choose the
+          one that fits your goals.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
         {plans.map((plan) => (
           <div
             key={plan.id}
-            className={`relative rounded-3xl p-8 transition-all duration-300 transform hover:-translate-y-2 border ${
+            className={`relative transform rounded-3xl border p-8 transition-all duration-300 hover:-translate-y-2 ${
               plan.highlighted
-                ? 'bg-gradient-to-b from-purple-900/20 to-black border-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.2)]'
-                : 'bg-zinc-900/50 border-white/10 hover:border-white/20'
+                ? 'from-purple-900/20 border-purple-500/50 bg-gradient-to-b to-black shadow-[0_0_30px_rgba(168,85,247,0.2)]'
+                : 'border-white/10 bg-zinc-900/50 hover:border-white/20'
             }`}
           >
             {plan.highlighted && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-purple-500 text-white text-sm font-bold px-4 py-1 rounded-full uppercase tracking-wider">
+              <div className="bg-purple-500 absolute -top-4 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-sm font-bold uppercase tracking-wider text-white">
                 Most Popular
               </div>
             )}
 
             <div className="mb-8">
-              <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-              <p className="text-gray-400 text-sm h-10">{plan.description}</p>
+              <h3 className="mb-2 text-2xl font-bold">{plan.name}</h3>
+              <p className="h-10 text-sm text-gray-400">{plan.description}</p>
             </div>
 
             <div className="mb-8 flex items-baseline gap-1">
@@ -137,11 +139,13 @@ export default function PricingPage() {
               <span className="text-gray-400">{plan.period}</span>
             </div>
 
-            <ul className="space-y-4 mb-10">
+            <ul className="mb-10 space-y-4">
               {plan.features.map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <div className={`mt-1 p-0.5 rounded-full ${plan.highlighted ? 'bg-purple-500' : 'bg-gray-600'}`}>
-                    <Check className="w-3 h-3 text-white" />
+                  <div
+                    className={`mt-1 rounded-full p-0.5 ${plan.highlighted ? 'bg-purple-500' : 'bg-gray-600'}`}
+                  >
+                    <Check className="h-3 w-3 text-white" />
                   </div>
                   <span className="text-sm text-gray-300">{feature}</span>
                 </li>
@@ -151,14 +155,14 @@ export default function PricingPage() {
             <button
               onClick={() => handleSubscribe(plan)}
               disabled={loading !== null}
-              className={`w-full py-4 rounded-2xl font-bold transition-all duration-300 flex items-center justify-center gap-2 ${
+              className={`flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-bold transition-all duration-300 ${
                 plan.highlighted
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg shadow-purple-500/20'
+                  ? 'from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-purple-500/20 bg-gradient-to-r shadow-lg'
                   : 'bg-white/10 hover:bg-white/20'
               } disabled:opacity-50`}
             >
               {loading === plan.id ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 plan.cta
               )}
@@ -166,11 +170,11 @@ export default function PricingPage() {
           </div>
         ))}
       </div>
-      
+
       <div className="mt-24 text-center">
-        <p className="text-gray-500 text-sm">
-          Trusted by engineers at top companies worldwide. 
-          <span className="block mt-4 opacity-50 space-x-8 grayscale">
+        <p className="text-sm text-gray-500">
+          Trusted by engineers at top companies worldwide.
+          <span className="mt-4 block space-x-8 opacity-50 grayscale">
             <span className="text-xl font-bold">Google</span>
             <span className="text-xl font-bold">GitHub</span>
             <span className="text-xl font-bold">Stripe</span>

@@ -4,9 +4,10 @@ import Article from './Article';
 export const revalidate = 3600; // ISR: revalidate every hour
 
 async function getArticle(id: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000/api/v1';
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000/api/v1';
   const url = `${baseUrl}/articles/${id}`;
-  
+
   try {
     const res = await fetch(url, { next: { revalidate: 3600 } });
     if (!res.ok) return undefined;

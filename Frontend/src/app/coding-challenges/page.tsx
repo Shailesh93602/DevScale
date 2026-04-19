@@ -247,8 +247,8 @@ export default function CodingChallengesPage() {
                 No challenges found
               </h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                We couldn&apos;t find anything matching &ldquo;{searchTerm}&rdquo;. Try adjusting
-                your search terms.
+                We couldn&apos;t find anything matching &ldquo;{searchTerm}
+                &rdquo;. Try adjusting your search terms.
               </p>
             </div>
           )

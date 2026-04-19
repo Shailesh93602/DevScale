@@ -50,11 +50,7 @@ export default function Page() {
 
         <p className="description">
           Click the button below, and view the sample error on the Sentry{' '}
-          <a
-            target="_blank"
-            rel="noopener"
-            href="https://sentry.io/issues/"
-          >
+          <a target="_blank" rel="noopener" href="https://sentry.io/issues/">
             Issues Page
           </a>
           . For more details about setting up Sentry,{' '}

@@ -20,7 +20,9 @@ export const useBattleState = (battleId: string) => {
   const [error, setError] = useState<string | null>(null);
   const { fetchBattle } = useBattleApi();
   const fetchBattleRef = useRef(fetchBattle);
-  useEffect(() => { fetchBattleRef.current = fetchBattle; });
+  useEffect(() => {
+    fetchBattleRef.current = fetchBattle;
+  });
   const hasFetched = useRef(false);
 
   const { isConnected, on } = useBattleSocket(battleId);
