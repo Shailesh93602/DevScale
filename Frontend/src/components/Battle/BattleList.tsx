@@ -30,7 +30,10 @@ const BattleCard = lazy(() => import('./BattleCard'));
 import { BattleCardSkeleton } from './BattleCard';
 
 const SKELETON_COUNT = 6;
-const skeletonIds = Array.from({ length: SKELETON_COUNT }, (_, i) => `battle-skeleton-${i}`);
+const skeletonIds = Array.from(
+  { length: SKELETON_COUNT },
+  (_, i) => `battle-skeleton-${i}`,
+);
 
 interface BattleListProps {
   initialFilters?: BattleFilters;
@@ -187,8 +190,8 @@ export const BattleList: React.FC<BattleListProps> = ({
             No battles found
           </h3>
           <p className="mb-6 text-center text-sm text-muted-foreground">
-            We could not find any battles matching your criteria. Be the first to
-            start a new challenge!
+            We could not find any battles matching your criteria. Be the first
+            to start a new challenge!
           </p>
           <Link href="/battle-zone/create">
             <Button>Create Your First Battle</Button>

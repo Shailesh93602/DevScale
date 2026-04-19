@@ -86,7 +86,9 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
   }, [isConnected]);
 
   const onStartBattleRef = useRef(onStartBattle);
-  useEffect(() => { onStartBattleRef.current = onStartBattle; });
+  useEffect(() => {
+    onStartBattleRef.current = onStartBattle;
+  });
 
   useEffect(() => {
     if (wsStatus === 'IN_PROGRESS') {

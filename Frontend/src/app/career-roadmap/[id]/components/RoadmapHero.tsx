@@ -9,7 +9,7 @@ interface RoadmapHeroProps {
 
 export const RoadmapHero = ({ roadmapDetails }: RoadmapHeroProps) => {
   const tags = roadmapDetails?.tags ? roadmapDetails.tags.split(',') : [];
-  
+
   return (
     <div className="flex flex-col justify-center space-y-6 rounded-2xl bg-card/60 p-6 backdrop-blur-sm sm:p-8">
       <div className="space-y-4">
@@ -21,15 +21,12 @@ export const RoadmapHero = ({ roadmapDetails }: RoadmapHeroProps) => {
             {roadmapDetails.difficulty?.toUpperCase()}
           </Badge>
           {roadmapDetails.isFeatured && (
-            <Badge
-              variant="secondary"
-              className="bg-orange/10 text-orange"
-            >
+            <Badge variant="secondary" className="bg-orange/10 text-orange">
               FEATURED
             </Badge>
           )}
         </div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground break-words sm:text-4xl">
+        <h1 className="break-words text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {roadmapDetails.title}
         </h1>
         <p className="text-lg text-muted-foreground">
@@ -51,9 +48,7 @@ export const RoadmapHero = ({ roadmapDetails }: RoadmapHeroProps) => {
 
       <div className="flex items-center space-x-4 rounded-lg bg-card/80 p-4 shadow-sm">
         <Avatar className="ring-primary/10 h-12 w-12 ring-2">
-          <AvatarImage
-            src={roadmapDetails?.user?.avatar_url || undefined}
-          />
+          <AvatarImage src={roadmapDetails?.user?.avatar_url || undefined} />
           <AvatarFallback className="bg-primary/5 text-primary">
             {(
               roadmapDetails?.user?.full_name?.[0] ||
