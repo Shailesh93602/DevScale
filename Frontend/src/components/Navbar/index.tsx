@@ -95,9 +95,9 @@ const Navbar = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
-    
+
     requestAnimationFrame(() => setMounted(true));
-    
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -131,12 +131,12 @@ const Navbar = () => {
           <LogoSection isAuthenticated={isAuthenticated} />
 
           {/* Desktop Navigation Links */}
-          <DesktopNav 
-            showPublicNavbar={showPublicNavbar} 
-            navList={navList} 
-            battleZoneOpen={battleZoneOpen} 
-            toggleBattleZone={toggleBattleZone} 
-            handleLinkClick={handleLinkClick} 
+          <DesktopNav
+            showPublicNavbar={showPublicNavbar}
+            navList={navList}
+            battleZoneOpen={battleZoneOpen}
+            toggleBattleZone={toggleBattleZone}
+            handleLinkClick={handleLinkClick}
           />
 
           {/* Right Controls - Desktop Only */}
@@ -163,13 +163,13 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Right Section - Shown Only When Desktop Hidden */}
-          <MobileRightControls 
-            mounted={mounted} 
-            resolvedTheme={resolvedTheme} 
-            toggleTheme={toggleTheme} 
-            toggleMenu={toggleMenu} 
-            isOpen={isOpen} 
-            isDesktop={isDesktop} 
+          <MobileRightControls
+            mounted={mounted}
+            resolvedTheme={resolvedTheme}
+            toggleTheme={toggleTheme}
+            toggleMenu={toggleMenu}
+            isOpen={isOpen}
+            isDesktop={isDesktop}
           />
         </div>
       </div>
@@ -183,14 +183,14 @@ const Navbar = () => {
         />
       )}
 
-      <MobileMenuOverlay 
-        isOpen={isOpen} 
-        isDesktop={isDesktop} 
-        navList={navList} 
-        showPublicNavbar={showPublicNavbar} 
-        isAdmin={isAdmin} 
-        handleLinkClick={handleLinkClick} 
-        closeAllMenus={closeAllMenus} 
+      <MobileMenuOverlay
+        isOpen={isOpen}
+        isDesktop={isDesktop}
+        navList={navList}
+        showPublicNavbar={showPublicNavbar}
+        isAdmin={isAdmin}
+        handleLinkClick={handleLinkClick}
+        closeAllMenus={closeAllMenus}
       />
     </nav>
   );
@@ -216,12 +216,12 @@ const LogoSection = ({ isAuthenticated }: { isAuthenticated: boolean }) => (
   </div>
 );
 
-const DesktopNav = ({ 
-  showPublicNavbar, 
-  navList, 
-  battleZoneOpen, 
-  toggleBattleZone, 
-  handleLinkClick 
+const DesktopNav = ({
+  showPublicNavbar,
+  navList,
+  battleZoneOpen,
+  toggleBattleZone,
+  handleLinkClick,
 }: {
   showPublicNavbar: boolean;
   navList: INavItem[];

@@ -21,7 +21,9 @@ export const ProgressVisualization = ({
   colors = ['#8300b8', '#690091', '#8300b826', '#690091', '#8300b8'],
   animate = true,
 }: ProgressVisualizationProps) => {
-  const [currentStep, setCurrentStep] = useState(() => (animate ? 0 : activeStep));
+  const [currentStep, setCurrentStep] = useState(() =>
+    animate ? 0 : activeStep,
+  );
 
   // Animate through steps if animate is true
   useEffect(() => {

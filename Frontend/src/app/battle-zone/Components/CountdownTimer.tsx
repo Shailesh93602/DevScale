@@ -38,7 +38,9 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   const [isActive] = useState(autoStart);
   const [isCompleted, setIsCompleted] = useState(false);
   const onCompleteRef = useRef(onComplete);
-  useEffect(() => { onCompleteRef.current = onComplete; });
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  });
 
   // Calculate initial time left
   useEffect(() => {

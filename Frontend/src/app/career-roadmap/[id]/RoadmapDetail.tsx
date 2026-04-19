@@ -216,7 +216,10 @@ export default function CareerPathPage() {
               </div>
 
               <div className="relative">
-                <TabsContent value="content" className="focus-visible:outline-none">
+                <TabsContent
+                  value="content"
+                  className="focus-visible:outline-none"
+                >
                   <div className="space-y-8 px-6">
                     {isLoading || !roadmapDetails ? (
                       <RoadmapSkeleton />
@@ -247,16 +250,20 @@ export default function CareerPathPage() {
 
                         <div className="pb-24">
                           <Timeline>
-                            {roadmap?.map((section: IRoadmap, index: number) => (
-                              <RoadmapSection
-                                key={section.id}
-                                name={section.main_concept?.name}
-                                description={section.main_concept?.description}
-                                subjects={section.main_concept?.subjects}
-                                index={index}
-                                roadmapId={careerId}
-                              />
-                            ))}
+                            {roadmap?.map(
+                              (section: IRoadmap, index: number) => (
+                                <RoadmapSection
+                                  key={section.id}
+                                  name={section.main_concept?.name}
+                                  description={
+                                    section.main_concept?.description
+                                  }
+                                  subjects={section.main_concept?.subjects}
+                                  index={index}
+                                  roadmapId={careerId}
+                                />
+                              ),
+                            )}
                           </Timeline>
                         </div>
                       </>
@@ -264,7 +271,10 @@ export default function CareerPathPage() {
                   </div>
                 </TabsContent>
 
-                <TabsContent value="comments" className="border-none focus-visible:outline-none">
+                <TabsContent
+                  value="comments"
+                  className="border-none focus-visible:outline-none"
+                >
                   <div className="space-y-6 px-6 pb-24 pt-8">
                     <CommentSection roadmapId={careerId} />
                   </div>
@@ -278,8 +288,17 @@ export default function CareerPathPage() {
   );
 }
 
-const TabLink = ({ value, children }: { value: string, children: React.ReactNode }) => (
-  <TabsTrigger value={value} className="group relative h-full data-[state=active]:bg-transparent">
+const TabLink = ({
+  value,
+  children,
+}: {
+  value: string;
+  children: React.ReactNode;
+}) => (
+  <TabsTrigger
+    value={value}
+    className="group relative h-full data-[state=active]:bg-transparent"
+  >
     <span className="relative z-10 font-medium text-muted-foreground transition-colors group-data-[state=active]:text-primary">
       {children}
     </span>
