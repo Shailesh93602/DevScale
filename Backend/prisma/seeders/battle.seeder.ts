@@ -23,7 +23,7 @@ const seedBattles = async () => {
         }
 
         const difficulties = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD];
-        const lengths = [Length.short, Difficulty.MEDIUM, Length.long]; // Note: length enum might be different logic but let's stick to valid ones
+        const _lengths = [Length.short, Difficulty.MEDIUM, Length.long]; // Note: length enum might be different logic but let's stick to valid ones
         const types = [BattleType.QUICK, BattleType.SCHEDULED, BattleType.PRACTICE];
         const titles = [
             'JavaScript Fundamentals Duel',
