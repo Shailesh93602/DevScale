@@ -7,7 +7,10 @@ import { deleteCache, getCache, setCache } from '../services/cacheService';
 
 import prisma from '../lib/prisma.js';
 
-export default class UserProgressRepository extends BaseRepository< UserProgress, typeof prisma.userProgress > {
+export default class UserProgressRepository extends BaseRepository<
+  UserProgress,
+  typeof prisma.userProgress
+> {
   constructor() {
     // Pass the Prisma delegate for the user model (prisma.user)
     super(prisma.userProgress);

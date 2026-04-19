@@ -14,7 +14,10 @@ const redisConnection = new Redis(REDIS_URL, {
 
 redisConnection.on('error', (err: Error & { code?: string }) => {
   if (err.code !== 'ECONNREFUSED') {
-    logger.error('Redis connection error', { message: err.message, code: err.code });
+    logger.error('Redis connection error', {
+      message: err.message,
+      code: err.code,
+    });
   }
 });
 

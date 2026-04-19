@@ -16,7 +16,10 @@ interface UpdateStreakParams {
   timezone: string;
 }
 
-export default class StreakRepository extends BaseRepository< UserStreak, typeof prisma.userStreak > {
+export default class StreakRepository extends BaseRepository<
+  UserStreak,
+  typeof prisma.userStreak
+> {
   constructor() {
     super(prisma.userStreak);
   }

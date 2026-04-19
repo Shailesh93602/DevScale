@@ -72,7 +72,9 @@ export default class ArticleController {
       try {
         const { id } = req.params;
         const title = req.body.title ? sanitizeText(req.body.title) : undefined;
-        const content = req.body.content ? sanitizeRichText(req.body.content) : undefined;
+        const content = req.body.content
+          ? sanitizeRichText(req.body.content)
+          : undefined;
 
         if (!title && !content) {
           return sendResponse(res, 'ARTICLE_NOT_FOUND', {

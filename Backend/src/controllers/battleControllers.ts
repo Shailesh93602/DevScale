@@ -32,7 +32,18 @@ export default class BattleController {
   });
 
   getBattles = catchAsync(async (req: Request, res: Response) => {
-    const { page, limit, search, status, difficulty, type, topic_id, user_id, sort_by, sort_order } = req.query;
+    const {
+      page,
+      limit,
+      search,
+      status,
+      difficulty,
+      type,
+      topic_id,
+      user_id,
+      sort_by,
+      sort_order,
+    } = req.query;
 
     const result = await this.repo.getBattles({
       page: page ? Number.parseInt(page as string) : undefined,
@@ -47,7 +58,10 @@ export default class BattleController {
       sort_order: sort_order as 'asc' | 'desc' | undefined,
     });
 
-    sendResponse(res, 'BATTLES_FETCHED', { data: result.data, meta: result.meta });
+    sendResponse(res, 'BATTLES_FETCHED', {
+      data: result.data,
+      meta: result.meta,
+    });
   });
 
   // ── Detail ──────────────────────────────────────────────────────────────
@@ -65,7 +79,10 @@ export default class BattleController {
     const { type, id, difficulty, categories, count } = req.query;
 
     const parsedCategories = categories
-      ? (categories as string).split(',').map((c) => c.trim()).filter(Boolean)
+      ? (categories as string)
+          .split(',')
+          .map((c) => c.trim())
+          .filter(Boolean)
       : undefined;
 
     const result = await getQuestionPool({
@@ -76,7 +93,10 @@ export default class BattleController {
       count: count ? Number.parseInt(count as string) : undefined,
     });
 
-    const responseType = result.total_available === 0 ? 'QUESTION_POOL_EMPTY' : 'QUESTION_POOL_FETCHED';
+    const responseType =
+      result.total_available === 0
+        ? 'QUESTION_POOL_EMPTY'
+        : 'QUESTION_POOL_FETCHED';
 
     // Strip correct_answer before sending as preview
     const preview = result.questions.map((question) => {
@@ -96,19 +116,29 @@ export default class BattleController {
     if (!req.user?.id) throw createAppError('Unauthorized', 401);
 
     const {
-      title, description, topic_id, question_source, difficulty, type,
-      max_participants, total_questions, time_per_question,
-      points_per_question, start_time,
+      title,
+      description,
+      topic_id,
+      question_source,
+      difficulty,
+      type,
+      max_participants,
+      total_questions,
+      time_per_question,
+      points_per_question,
+      start_time,
     } = req.body;
 
     const resolvedTotalQuestions = total_questions ?? 10;
 
     // If question_source provided, fetch pool now so we can seed atomically
-    let autoQuestions: Awaited<ReturnType<typeof getQuestionPool>>['questions'] | undefined;
+    let autoQuestions:
+      | Awaited<ReturnType<typeof getQuestionPool>>['questions']
+      | undefined;
     if (question_source) {
       const excludeIds = await getAntiRepeatExclusions(
         question_source.type as QuestionSourceType,
-        question_source.id,
+        question_source.id
       );
       const pool = await getQuestionPool({
         type: question_source.type as QuestionSourceType,
@@ -121,7 +151,7 @@ export default class BattleController {
       if (pool.questions.length === 0) {
         throw createAppError(
           'No questions available for the selected source. Try a broader selection.',
-          422,
+          422
         );
       }
       autoQuestions = pool.questions;
@@ -149,7 +179,9 @@ export default class BattleController {
     if (autoQuestions && autoQuestions.length > 0) {
       const questionsToAdd = autoQuestions.slice(0, battle.total_questions);
       await this.repo.addQuestionsFromPool(battle.id, questionsToAdd);
-      logger.info(`Auto-seeded ${questionsToAdd.length} questions into battle ${battle.id}`);
+      logger.info(
+        `Auto-seeded ${questionsToAdd.length} questions into battle ${battle.id}`
+      );
     }
 
     battleSocketService.initializeBattle(battle.id);
@@ -257,7 +289,9 @@ export default class BattleController {
 
     const result = await this.repo.addQuestions(id, req.user.id, questions);
 
-    logger.info(`${questions.length} questions added to battle ${id} by ${req.user.id}`);
+    logger.info(
+      `${questions.length} questions added to battle ${id} by ${req.user.id}`
+    );
     sendResponse(res, 'BATTLE_QUESTIONS_ADDED', { data: result });
   });
 
@@ -266,7 +300,10 @@ export default class BattleController {
   getBattleQuestions = catchAsync(async (req: Request, res: Response) => {
     if (!req.user?.id) throw createAppError('Unauthorized', 401);
 
-    const questions = await this.repo.getBattleQuestions(req.params.id, req.user.id);
+    const questions = await this.repo.getBattleQuestions(
+      req.params.id,
+      req.user.id
+    );
     sendResponse(res, 'QUESTIONS_FETCHED', { data: questions });
   });
 
@@ -286,9 +323,15 @@ export default class BattleController {
     );
 
     // Fire socket events (answer result, leaderboard, possible completion)
-    await battleSocketService.handleAnswerSubmitted(battle_id, req.user.id, result);
+    await battleSocketService.handleAnswerSubmitted(
+      battle_id,
+      req.user.id,
+      result
+    );
 
-    logger.info(`User ${req.user.id} answered Q ${question_id} in battle ${battle_id}`);
+    logger.info(
+      `User ${req.user.id} answered Q ${question_id} in battle ${battle_id}`
+    );
     sendResponse(res, 'ANSWER_SUBMITTED', {
       data: {
         is_correct: result.is_correct,
@@ -332,7 +375,10 @@ export default class BattleController {
       page ? Number.parseInt(page as string) : 1,
       limit ? Number.parseInt(limit as string) : 10
     );
-    sendResponse(res, 'BATTLES_FETCHED', { data: result.data, meta: result.meta });
+    sendResponse(res, 'BATTLES_FETCHED', {
+      data: result.data,
+      meta: result.meta,
+    });
   });
 
   // ── Statistics ────────────────────────────────────────────────────────────
@@ -344,4 +390,3 @@ export default class BattleController {
     sendResponse(res, 'STATISTICS_FETCHED', { data: stats });
   });
 }
-

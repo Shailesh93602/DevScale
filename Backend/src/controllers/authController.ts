@@ -5,7 +5,10 @@ import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from '../config';
 import { redis } from '../services/cacheService';
 import { clearAuthCache } from '../middlewares/authMiddleware';
-import { recordAuthFailure, clearAuthFailures } from '../middlewares/accountLockout';
+import {
+  recordAuthFailure,
+  clearAuthFailures,
+} from '../middlewares/accountLockout';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 
@@ -16,14 +19,19 @@ const REFRESH_COOKIE = 'sb-refresh-token';
 const REFRESH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
 
 const tokenBloclistKey = (token: string) =>
-  TOKEN_BLOCKLIST_PREFIX + crypto.createHash('sha256').update(token).digest('hex');
+  TOKEN_BLOCKLIST_PREFIX +
+  crypto.createHash('sha256').update(token).digest('hex');
 
 /**
  * POST /api/v1/auth/logout
  * Adds the caller's JWT to the Redis blocklist so it cannot be reused
  * for its remaining lifetime, and purges the auth cache entry.
  */
-export const logout = async (req: Request, res: Response, next: NextFunction) => {
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) return next(createAppError('No token provided', 400));
@@ -40,7 +48,11 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
     // Also clear the per-token auth cache so the next request hits the DB
     await clearAuthCache(token);
 
-    logger.info('auth:logout', { userId: req.user?.id, ip: req.ip, ua: req.headers['user-agent'] });
+    logger.info('auth:logout', {
+      userId: req.user?.id,
+      ip: req.ip,
+      ua: req.headers['user-agent'],
+    });
     res.json({ success: true, message: 'Logged out successfully' });
   } catch (err) {
     next(err);
@@ -56,22 +68,39 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
  * Cookie set: sb-refresh-token (httpOnly, Secure in prod, SameSite=Strict, 7d)
  * Response body: { access_token, expires_in }
  */
-export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+export const refreshToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const refresh = req.cookies?.[REFRESH_COOKIE];
     if (!refresh) return next(createAppError('No refresh token cookie', 401));
 
-    const { data, error } = await supabase.auth.refreshSession({ refresh_token: refresh });
+    const { data, error } = await supabase.auth.refreshSession({
+      refresh_token: refresh,
+    });
 
     if (error || !data.session) {
       // Clear the stale cookie so the client doesn't loop
       res.clearCookie(REFRESH_COOKIE);
       await recordAuthFailure(req);
-      logger.warn('Refresh token invalid or expired', { error: error?.message });
-      return next(createAppError('Refresh token invalid or expired — please log in again', 401));
+      logger.warn('Refresh token invalid or expired', {
+        error: error?.message,
+      });
+      return next(
+        createAppError(
+          'Refresh token invalid or expired — please log in again',
+          401
+        )
+      );
     }
 
-    const { access_token, refresh_token: newRefresh, expires_in } = data.session;
+    const {
+      access_token,
+      refresh_token: newRefresh,
+      expires_in,
+    } = data.session;
 
     // Successful refresh — reset failure counter
     await clearAuthFailures(req);
@@ -101,7 +130,11 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
  * The frontend should call this once after `supabase.auth.signInWithPassword`
  * succeeds, then discard the refresh token from JS memory.
  */
-export const setRefreshCookie = async (req: Request, res: Response, next: NextFunction) => {
+export const setRefreshCookie = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { refresh_token } = req.body as { refresh_token?: string };
     if (!refresh_token || typeof refresh_token !== 'string') {
@@ -127,7 +160,11 @@ export const setRefreshCookie = async (req: Request, res: Response, next: NextFu
  * Clears the auth cache for the current token, forcing a fresh DB lookup
  * on the next request. Useful after profile changes.
  */
-export const refreshCache = async (req: Request, res: Response, next: NextFunction) => {
+export const refreshCache = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
     if (token) await clearAuthCache(token);
@@ -136,4 +173,3 @@ export const refreshCache = async (req: Request, res: Response, next: NextFuncti
     next(err);
   }
 };
-

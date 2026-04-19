@@ -17,7 +17,11 @@ jest.mock('../../services/cacheService', () => ({
 jest.mock('../../lib/prisma', () => ({
   __esModule: true,
   default: {
-    subscription: { findUnique: jest.fn(), upsert: jest.fn(), update: jest.fn() },
+    subscription: {
+      findUnique: jest.fn(),
+      upsert: jest.fn(),
+      update: jest.fn(),
+    },
     user: { findUnique: jest.fn() },
     $disconnect: jest.fn(),
   },
@@ -109,13 +113,13 @@ describe('SubscriptionService', () => {
       const url = await createCheckoutSession('user-123', 'price_pro_123');
 
       expect(mockCustomersCreate).toHaveBeenCalledWith(
-        expect.objectContaining({ email: 'test@eduscale.com' }),
+        expect.objectContaining({ email: 'test@eduscale.com' })
       );
       expect(mockCheckoutSessionsCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           customer: 'cus_new_123',
           mode: 'subscription',
-        }),
+        })
       );
       expect(url).toBe('https://checkout.stripe.com/session_abc');
     });
@@ -137,7 +141,7 @@ describe('SubscriptionService', () => {
 
       expect(mockCustomersCreate).not.toHaveBeenCalled();
       expect(mockCheckoutSessionsCreate).toHaveBeenCalledWith(
-        expect.objectContaining({ customer: 'cus_existing_789' }),
+        expect.objectContaining({ customer: 'cus_existing_789' })
       );
       expect(url).toBe('https://checkout.stripe.com/session_xyz');
     });
@@ -145,8 +149,9 @@ describe('SubscriptionService', () => {
     it('should throw 404 when user is not found', async () => {
       mockUserFindUnique.mockResolvedValue(null as never);
 
-      await expect(createCheckoutSession('nonexistent', 'price_pro_123'))
-        .rejects.toMatchObject({ statusCode: 404 });
+      await expect(
+        createCheckoutSession('nonexistent', 'price_pro_123')
+      ).rejects.toMatchObject({ statusCode: 404 });
     });
   });
 
@@ -165,7 +170,7 @@ describe('SubscriptionService', () => {
       const url = await createPortalSession('user-123');
 
       expect(mockBillingPortalSessionsCreate).toHaveBeenCalledWith(
-        expect.objectContaining({ customer: 'cus_456' }),
+        expect.objectContaining({ customer: 'cus_456' })
       );
       expect(url).toBe('https://billing.stripe.com/portal_abc');
     });
@@ -176,8 +181,9 @@ describe('SubscriptionService', () => {
         subscription: null,
       } as never);
 
-      await expect(createPortalSession('user-123'))
-        .rejects.toMatchObject({ statusCode: 404 });
+      await expect(createPortalSession('user-123')).rejects.toMatchObject({
+        statusCode: 404,
+      });
     });
   });
 
@@ -212,7 +218,7 @@ describe('SubscriptionService', () => {
           stripe_id: 'sub_123',
           stripe_customer_id: 'cus_456',
           tier: 'pro',
-        }),
+        })
       );
     });
 
@@ -239,7 +245,7 @@ describe('SubscriptionService', () => {
         expect.objectContaining({
           tier: 'team',
           status: 'active',
-        }),
+        })
       );
     });
 
@@ -260,7 +266,7 @@ describe('SubscriptionService', () => {
         expect.objectContaining({
           status: 'canceled',
           tier: 'free',
-        }),
+        })
       );
     });
 

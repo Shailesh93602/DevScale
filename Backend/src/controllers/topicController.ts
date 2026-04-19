@@ -51,11 +51,11 @@ export default class TopicController {
           include: {
             questions: {
               include: {
-                options: true
-              }
-            }
-          }
-        }
+                options: true,
+              },
+            },
+          },
+        },
       },
     })) as Prisma.TopicGetPayload<{
       include: {
@@ -63,12 +63,12 @@ export default class TopicController {
           include: {
             questions: {
               include: {
-                options: true
-              }
-            }
-          }
-        }
-      }
+                options: true;
+              };
+            };
+          };
+        };
+      };
     }>;
 
     if (!topic || !topic.quizzes || topic.quizzes.length === 0) {

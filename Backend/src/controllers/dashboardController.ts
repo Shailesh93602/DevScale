@@ -43,11 +43,23 @@ export class DashboardController {
       }
 
       const page = Math.max(1, Number.parseInt(req.query.page as string) || 1);
-      const limit = Math.min(100, Math.max(1, Number.parseInt(req.query.limit as string) || 50));
-      const progress = await this.dashboardRepo.getLearningProgress(userId, page, limit);
+      const limit = Math.min(
+        100,
+        Math.max(1, Number.parseInt(req.query.limit as string) || 50)
+      );
+      const progress = await this.dashboardRepo.getLearningProgress(
+        userId,
+        page,
+        limit
+      );
       return sendResponse(res, 'LEARNING_PROGRESS_FETCHED', {
         data: progress.items,
-        meta: { total: progress.total, page: progress.page, limit: progress.limit, totalPages: progress.totalPages },
+        meta: {
+          total: progress.total,
+          page: progress.page,
+          limit: progress.limit,
+          totalPages: progress.totalPages,
+        },
       });
     }
   );
@@ -64,15 +76,17 @@ export class DashboardController {
     });
   });
 
-  public getDashboardSummary = catchAsync(async (req: Request, res: Response) => {
-    const userId = req.user?.id;
-    if (!userId) {
-      throw createAppError('User not authenticated', 401);
+  public getDashboardSummary = catchAsync(
+    async (req: Request, res: Response) => {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw createAppError('User not authenticated', 401);
+      }
+
+      const summary = await this.dashboardRepo.getDashboardSummary(userId);
+
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      return sendResponse(res, 'DASHBOARD_SUMMARY_FETCHED', { data: summary });
     }
-
-    const summary = await this.dashboardRepo.getDashboardSummary(userId);
-
-    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    return sendResponse(res, 'DASHBOARD_SUMMARY_FETCHED', { data: summary });
-  });
+  );
 }

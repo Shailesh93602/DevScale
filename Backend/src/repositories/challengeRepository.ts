@@ -8,12 +8,19 @@ import { createAppError } from '../utils/errorHandler.js';
 import BaseRepository from './baseRepository.js';
 import logger from '../utils/logger.js';
 import { executeCode } from '../utils/codeExecutor';
-import { ChallengeData, ResourceStats, ChallengeSubmissionData } from '../types/index.js';
+import {
+  ChallengeData,
+  ResourceStats,
+  ChallengeSubmissionData,
+} from '../types/index.js';
 import { invalidateCachePattern } from '../services/cacheService';
 
 import prisma from '../lib/prisma.js';
 
-export class ChallengeRepository extends BaseRepository< Challenge, typeof prisma.challenge > {
+export class ChallengeRepository extends BaseRepository<
+  Challenge,
+  typeof prisma.challenge
+> {
   constructor() {
     super(prisma.challenge);
   }
@@ -70,7 +77,9 @@ export class ChallengeRepository extends BaseRepository< Challenge, typeof prism
     });
   }
 
-  async submitChallenge(data: ChallengeSubmissionData): Promise<ChallengeSubmission> {
+  async submitChallenge(
+    data: ChallengeSubmissionData
+  ): Promise<ChallengeSubmission> {
     const challenge = await this.getChallenge(data.challenge_id);
     const test_cases = await prisma.testCase.findMany({
       where: { challenge_id: data.challenge_id },
@@ -161,7 +170,9 @@ export class ChallengeRepository extends BaseRepository< Challenge, typeof prism
       this.count(),
       this.count({ where: { status: 'ACTIVE' } }),
       this.count({ where: { status: 'PENDING' } }),
-      this.prismaClient.contentReport.count({ where: { content_type: 'CHALLENGE' } }),
+      this.prismaClient.contentReport.count({
+        where: { content_type: 'CHALLENGE' },
+      }),
     ]);
 
     return { total, active, pending, reported };

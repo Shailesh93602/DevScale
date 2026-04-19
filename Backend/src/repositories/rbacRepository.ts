@@ -3,7 +3,7 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export class RBACRepository extends BaseRepository< Role, typeof prisma.role > {
+export class RBACRepository extends BaseRepository<Role, typeof prisma.role> {
   constructor() {
     super(prisma.role);
   }

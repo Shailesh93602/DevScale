@@ -55,12 +55,22 @@ jest.mock('@supabase/supabase-js', () => ({
 
 // ─── Mock jsonwebtoken ─────────────────────────────────────────────────────────
 jest.mock('jsonwebtoken', () => ({
-  decode: jest.fn().mockReturnValue({ exp: Math.floor(Date.now() / 1000) + 3600 }),
+  decode: jest
+    .fn()
+    .mockReturnValue({ exp: Math.floor(Date.now() / 1000) + 3600 }),
 }));
 
-import { logout, refreshToken, setRefreshCookie, refreshCache } from '../../controllers/authController';
+import {
+  logout,
+  refreshToken,
+  setRefreshCookie,
+  refreshCache,
+} from '../../controllers/authController';
 import { clearAuthCache } from '../../middlewares/authMiddleware';
-import { recordAuthFailure, clearAuthFailures } from '../../middlewares/accountLockout';
+import {
+  recordAuthFailure,
+  clearAuthFailures,
+} from '../../middlewares/accountLockout';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 function makeReq(overrides: Partial<Request> = {}): Request {
@@ -105,11 +115,14 @@ describe('AuthController', () => {
       expect(mockRedis.setex).toHaveBeenCalledWith(
         expect.stringContaining('eduscale:auth:blocklist:'),
         expect.any(Number),
-        '1',
+        '1'
       );
       expect(clearAuthCache).toHaveBeenCalledWith('test-jwt-token');
       expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ success: true, message: 'Logged out successfully' }),
+        expect.objectContaining({
+          success: true,
+          message: 'Logged out successfully',
+        })
       );
     });
 
@@ -118,7 +131,7 @@ describe('AuthController', () => {
       await logout(req, res, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 400 }),
+        expect.objectContaining({ statusCode: 400 })
       );
     });
   });
@@ -148,10 +161,13 @@ describe('AuthController', () => {
       expect(res.cookie).toHaveBeenCalledWith(
         'sb-refresh-token',
         'new-refresh-token',
-        expect.objectContaining({ httpOnly: true, sameSite: 'strict' }),
+        expect.objectContaining({ httpOnly: true, sameSite: 'strict' })
       );
       expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ success: true, access_token: 'new-access-token' }),
+        expect.objectContaining({
+          success: true,
+          access_token: 'new-access-token',
+        })
       );
     });
 
@@ -160,7 +176,7 @@ describe('AuthController', () => {
       await refreshToken(req, res, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 401 }),
+        expect.objectContaining({ statusCode: 401 })
       );
     });
 
@@ -178,7 +194,7 @@ describe('AuthController', () => {
       expect(recordAuthFailure).toHaveBeenCalled();
       expect(res.clearCookie).toHaveBeenCalledWith('sb-refresh-token');
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 401 }),
+        expect.objectContaining({ statusCode: 401 })
       );
     });
   });
@@ -192,7 +208,7 @@ describe('AuthController', () => {
       expect(res.cookie).toHaveBeenCalledWith(
         'sb-refresh-token',
         'my-refresh-token',
-        expect.objectContaining({ httpOnly: true }),
+        expect.objectContaining({ httpOnly: true })
       );
       expect(res.json).toHaveBeenCalledWith({ success: true });
     });
@@ -202,7 +218,7 @@ describe('AuthController', () => {
       await setRefreshCookie(req, res, next as NextFunction);
 
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 400 }),
+        expect.objectContaining({ statusCode: 400 })
       );
     });
   });
@@ -214,7 +230,10 @@ describe('AuthController', () => {
 
       expect(clearAuthCache).toHaveBeenCalledWith('test-jwt-token');
       expect(res.json).toHaveBeenCalledWith(
-        expect.objectContaining({ success: true, message: 'Auth cache cleared' }),
+        expect.objectContaining({
+          success: true,
+          message: 'Auth cache cleared',
+        })
       );
     });
   });

@@ -4,7 +4,10 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class JobRepository extends BaseRepository< Job, typeof prisma.job > {
+export default class JobRepository extends BaseRepository<
+  Job,
+  typeof prisma.job
+> {
   constructor() {
     super(prisma.job);
   }

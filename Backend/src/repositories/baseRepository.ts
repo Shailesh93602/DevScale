@@ -23,7 +23,10 @@ export type PrismaDelegate = {
 };
 
 // src/repositories/baseRepository.ts
-export default abstract class BaseRepository<T, D extends PrismaDelegate = PrismaDelegate> {
+export default abstract class BaseRepository<
+  T,
+  D extends PrismaDelegate = PrismaDelegate,
+> {
   protected prismaClient: PrismaClient;
   protected delegate: D;
 
@@ -36,21 +39,30 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
    * Finds a unique record.
    */
   async findUnique(args: unknown): Promise<T | null> {
-    return (await this.delegate.findUnique?.(args as any) as unknown as T | null) ?? null;
+    return (
+      ((await this.delegate.findUnique?.(
+        args as any
+      )) as unknown as T | null) ?? null
+    );
   }
 
   /**
    * Finds the first record.
    */
   async findFirst(args: unknown): Promise<T | null> {
-    return (await this.delegate.findFirst?.(args as any) as unknown as T | null) ?? null;
+    return (
+      ((await this.delegate.findFirst?.(args as any)) as unknown as T | null) ??
+      null
+    );
   }
 
   /**
    * Finds multiple records.
    */
   async findMany(args?: unknown): Promise<T[]> {
-    return (await this.delegate.findMany?.(args as any) as unknown as T[]) ?? [];
+    return (
+      ((await this.delegate.findMany?.(args as any)) as unknown as T[]) ?? []
+    );
   }
 
   /**
@@ -64,7 +76,11 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
    * Creates multiple records.
    */
   async createMany(args: unknown): Promise<{ count: number }> {
-    return (await this.delegate.createMany?.(args as any) as unknown as { count: number }) ?? { count: 0 };
+    return (
+      ((await this.delegate.createMany?.(args as any)) as unknown as {
+        count: number;
+      }) ?? { count: 0 }
+    );
   }
 
   /**
@@ -78,7 +94,11 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
    * Updates multiple records.
    */
   async updateMany(args: unknown): Promise<{ count: number }> {
-    return (await this.delegate.updateMany?.(args as any) as unknown as { count: number }) ?? { count: 0 };
+    return (
+      ((await this.delegate.updateMany?.(args as any)) as unknown as {
+        count: number;
+      }) ?? { count: 0 }
+    );
   }
 
   /**
@@ -92,7 +112,11 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
    * Deletes multiple records.
    */
   async deleteMany(args: unknown): Promise<{ count: number }> {
-    return (await this.delegate.deleteMany?.(args as any) as unknown as { count: number }) ?? { count: 0 };
+    return (
+      ((await this.delegate.deleteMany?.(args as any)) as unknown as {
+        count: number;
+      }) ?? { count: 0 }
+    );
   }
 
   /**
@@ -106,14 +130,19 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
    * Counts records matching the criteria.
    */
   async count(args?: unknown): Promise<number> {
-    return (await this.delegate.count?.(args as any) as unknown as number) ?? 0;
+    return (
+      ((await this.delegate.count?.(args as any)) as unknown as number) ?? 0
+    );
   }
 
   /**
    * Get records grouped by a specific field.
    */
   async groupBy(args: unknown): Promise<unknown[]> {
-    return (await this.delegate.groupBy?.(args as any) as unknown as unknown[]) ?? [];
+    return (
+      ((await this.delegate.groupBy?.(args as any)) as unknown as unknown[]) ??
+      []
+    );
   }
 
   /**
@@ -127,13 +156,16 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
   async paginate(
     options: PaginationParams,
     searchFields?: string[],
-    selection?: { include?: Record<string, unknown>; select?: Record<string, unknown> },
+    selection?: {
+      include?: Record<string, unknown>;
+      select?: Record<string, unknown>;
+    },
     whereClause: Record<string, unknown> = {}
   ): Promise<PaginatedResult<T>> {
     const page = options.page || 1;
     const limit = options.limit || 10;
     const skip = (page - 1) * limit;
-    
+
     // Internal logic uses type assertions to interact with Prisma's complex 'where' types.
     const where = { ...whereClause } as any;
 
@@ -167,7 +199,7 @@ export default abstract class BaseRepository<T, D extends PrismaDelegate = Prism
     }
 
     const [total, data] = await Promise.all([
-      (this.delegate.count?.({ where }) || Promise.resolve(0)),
+      this.delegate.count?.({ where }) || Promise.resolve(0),
       (this.delegate.findMany?.({
         where,
         skip,

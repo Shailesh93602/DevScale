@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import { BattleType, Difficulty } from '@prisma/client';
-import { BattleRepository, calculatePoints } from '../repositories/battleRepository';
+import {
+  BattleRepository,
+  calculatePoints,
+} from '../repositories/battleRepository';
 import prisma from '../lib/prisma';
 
 // Remote Supabase DB can be slow — allow 30 s per test/hook
@@ -54,7 +57,9 @@ beforeAll(async () => {
 
 afterAll(async () => {
   // Cascade deletes handle battle children
-  await prisma.battle.deleteMany({ where: { user_id: { in: [userId1, userId2] } } });
+  await prisma.battle.deleteMany({
+    where: { user_id: { in: [userId1, userId2] } },
+  });
   await prisma.user.deleteMany({ where: { id: { in: [userId1, userId2] } } });
   await prisma.topic.deleteMany({ where: { id: topicId } });
   await prisma.$disconnect();
@@ -209,7 +214,10 @@ describe('Battle lifecycle', () => {
 
   it('rejects COMPLETED → IN_PROGRESS transition', async () => {
     // Force complete it first
-    await prisma.battle.update({ where: { id: battleId }, data: { status: 'COMPLETED' } });
+    await prisma.battle.update({
+      where: { id: battleId },
+      data: { status: 'COMPLETED' },
+    });
     await expect(
       battleRepo.updateStatus(battleId, userId1, 'IN_PROGRESS')
     ).rejects.toThrow();
@@ -239,15 +247,34 @@ describe('Answer submission', () => {
     // Add test questions directly
     const [q] = await prisma.battleQuestion.createManyAndReturn({
       data: [
-        { battle_id: battleId, question: 'What is 2+2?', options: ['1', '2', '3', '4'], correct_answer: 3, points: 100, time_limit: 30, order: 0 },
-        { battle_id: battleId, question: 'Capital of France?', options: ['London', 'Paris', 'Berlin', 'Rome'], correct_answer: 1, points: 100, time_limit: 30, order: 1 },
+        {
+          battle_id: battleId,
+          question: 'What is 2+2?',
+          options: ['1', '2', '3', '4'],
+          correct_answer: 3,
+          points: 100,
+          time_limit: 30,
+          order: 0,
+        },
+        {
+          battle_id: battleId,
+          question: 'Capital of France?',
+          options: ['London', 'Paris', 'Berlin', 'Rome'],
+          correct_answer: 1,
+          points: 100,
+          time_limit: 30,
+          order: 1,
+        },
       ],
     });
     questionId = q.id;
 
     await battleRepo.joinBattle(battleId, userId1);
     await battleRepo.joinBattle(battleId, userId2);
-    await prisma.battle.update({ where: { id: battleId }, data: { status: 'IN_PROGRESS' } });
+    await prisma.battle.update({
+      where: { id: battleId },
+      data: { status: 'IN_PROGRESS' },
+    });
   });
 
   afterAll(async () => {
@@ -256,9 +283,11 @@ describe('Answer submission', () => {
 
   it('scores correct answer with speed bonus', async () => {
     const result = await battleRepo.submitAnswer(
-      battleId, questionId, userId1,
-      3,      // correct option index
-      5000    // 5s out of 30s = 17% → ×1.5
+      battleId,
+      questionId,
+      userId1,
+      3, // correct option index
+      5000 // 5s out of 30s = 17% → ×1.5
     );
     expect(result.is_correct).toBe(true);
     expect(result.points_earned).toBe(150); // 100 × 1.5
@@ -266,8 +295,10 @@ describe('Answer submission', () => {
 
   it('gives 0 points for wrong answer', async () => {
     const result = await battleRepo.submitAnswer(
-      battleId, questionId, userId2,
-      0,      // wrong option
+      battleId,
+      questionId,
+      userId2,
+      0, // wrong option
       5000
     );
     expect(result.is_correct).toBe(false);
@@ -281,13 +312,14 @@ describe('Answer submission', () => {
   });
 
   it('returns sorted leaderboard after answer', async () => {
-    await battleRepo.submitAnswer(
-      battleId, questionId, userId1,
-      3, 5000
-    ).catch(() => null); // Will reject (duplicate) — get leaderboard directly
+    await battleRepo
+      .submitAnswer(battleId, questionId, userId1, 3, 5000)
+      .catch(() => null); // Will reject (duplicate) — get leaderboard directly
 
     const leaderboard = await battleRepo.getBattleLeaderboard(battleId);
-    expect(leaderboard[0].score).toBeGreaterThanOrEqual(leaderboard?.at(-1)?.score ?? 0);
+    expect(leaderboard[0].score).toBeGreaterThanOrEqual(
+      leaderboard?.at(-1)?.score ?? 0
+    );
     expect(leaderboard[0].rank).toBe(1);
   });
 });
@@ -395,7 +427,9 @@ describe('addQuestions', () => {
   });
 
   it('allows creator to add questions', async () => {
-    const result = await battleRepo.addQuestions(battleId, userId1, [sampleQuestion]);
+    const result = await battleRepo.addQuestions(battleId, userId1, [
+      sampleQuestion,
+    ]);
     expect(result.added).toBe(1);
     expect(result.total_questions_added).toBe(1);
     expect(result.ready_to_start).toBe(false);
@@ -435,12 +469,18 @@ describe('addQuestions', () => {
 
   it('rejects adding questions to an IN_PROGRESS battle', async () => {
     // Force in-progress
-    await prisma.battle.update({ where: { id: battleId }, data: { status: 'IN_PROGRESS' } });
+    await prisma.battle.update({
+      where: { id: battleId },
+      data: { status: 'IN_PROGRESS' },
+    });
     await expect(
       battleRepo.addQuestions(battleId, userId1, [sampleQuestion])
     ).rejects.toThrow();
     // Reset
-    await prisma.battle.update({ where: { id: battleId }, data: { status: 'WAITING' } });
+    await prisma.battle.update({
+      where: { id: battleId },
+      data: { status: 'WAITING' },
+    });
   });
 });
 
@@ -464,7 +504,10 @@ describe('startBattle question guard', () => {
     battleId = battle.id;
     await battleRepo.joinBattle(battleId, userId1);
     await battleRepo.joinBattle(battleId, userId2);
-    await prisma.battle.update({ where: { id: battleId }, data: { status: 'LOBBY' } });
+    await prisma.battle.update({
+      where: { id: battleId },
+      data: { status: 'LOBBY' },
+    });
     await battleRepo.markReady(battleId, userId1);
     await battleRepo.markReady(battleId, userId2);
   });
@@ -475,9 +518,7 @@ describe('startBattle question guard', () => {
 
   it('prevents starting a battle with insufficient questions', async () => {
     // Battle has 0 questions, needs 2
-    await expect(
-      battleRepo.startBattle(battleId, userId1)
-    ).rejects.toThrow();
+    await expect(battleRepo.startBattle(battleId, userId1)).rejects.toThrow();
   });
 
   it('allows starting after questions are added', async () => {

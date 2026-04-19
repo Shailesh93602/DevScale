@@ -62,7 +62,9 @@ emailQueue.process(async (job) => {
 // Handle failed jobs and move to DLQ
 emailQueue.on('failed', async (job, error) => {
   if (job.attemptsMade >= (job.opts.attempts || 1)) {
-    logger.error(`Job ${job.id} definitively failed. Moving to DLQ. Error: ${error.message}`);
+    logger.error(
+      `Job ${job.id} definitively failed. Moving to DLQ. Error: ${error.message}`
+    );
     await emailDLQ.add({
       originalJobId: job.id,
       data: job.data,
@@ -70,13 +72,18 @@ emailQueue.on('failed', async (job, error) => {
       failedAt: new Date(),
     });
   } else {
-    logger.warn(`Job ${job.id} failed (${job.attemptsMade} attempts). Retrying... Error: ${error.message}`);
+    logger.warn(
+      `Job ${job.id} failed (${job.attemptsMade} attempts). Retrying... Error: ${error.message}`
+    );
   }
 });
 
 // Process DLQ (just for logging/alerting — manual intervention required)
 emailDLQ.process(async (job) => {
-  logger.error('CRITICAL: Email in Dead-Letter Queue requires review:', job.data);
+  logger.error(
+    'CRITICAL: Email in Dead-Letter Queue requires review:',
+    job.data
+  );
   // Optional: Send alert to admin
 });
 
@@ -99,8 +106,6 @@ const trackEmailDelivery = async (
     logger.error('Error tracking email delivery:', error);
   }
 };
-
-
 
 export const sendVerificationEmail = async (
   to: string,

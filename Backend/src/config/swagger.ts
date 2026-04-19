@@ -24,7 +24,10 @@ const options: swaggerJsdoc.Options = {
       {
         // API_URL must be set to https:// in production
         url: process.env.API_URL || 'http://localhost:5000',
-        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server',
+        description:
+          process.env.NODE_ENV === 'production'
+            ? 'Production server'
+            : 'Development server',
       },
     ],
     components: {

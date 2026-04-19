@@ -5,7 +5,10 @@ import { CategoryData } from '../types/index.js';
 
 import prisma from '../lib/prisma.js';
 
-export default class CategoryRepository extends BaseRepository< Category, typeof prisma.category > {
+export default class CategoryRepository extends BaseRepository<
+  Category,
+  typeof prisma.category
+> {
   constructor() {
     super(prisma.category);
   }
