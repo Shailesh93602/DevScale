@@ -47,7 +47,8 @@ export const StickyScroll = ({
     'linear-gradient(to bottom right, var(--orange-500), var(--yellow-500))',
   ];
 
-  const backgroundGradient = linearGradients[activeCard % linearGradients.length];
+  const backgroundGradient =
+    linearGradients[activeCard % linearGradients.length];
 
   return (
     <motion.div

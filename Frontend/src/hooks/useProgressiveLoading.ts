@@ -13,7 +13,9 @@ export function useProgressiveLoading<T>({
   increment = 5,
   interval = 300,
 }: UseProgressiveLoadingProps<T>) {
-  const [visibleItems, setVisibleItems] = useState<T[]>(() => data.slice(0, initialCount));
+  const [visibleItems, setVisibleItems] = useState<T[]>(() =>
+    data.slice(0, initialCount),
+  );
   const [isLoading, setIsLoading] = useState(() => data.length > 0);
 
   useEffect(() => {

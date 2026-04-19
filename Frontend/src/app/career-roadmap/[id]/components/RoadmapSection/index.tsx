@@ -49,7 +49,11 @@ export const RoadmapSection = ({
           {subjects?.map((step, stepIndex) => (
             <RoadmapStep
               key={step.id}
-              id={step.subject?.id || (step as { subject_id?: string })?.subject_id || ''}
+              id={
+                step.subject?.id ||
+                (step as { subject_id?: string })?.subject_id ||
+                ''
+              }
               name={step.subject?.title}
               description={step.subject?.description}
               icon={step.subject?.icon}
