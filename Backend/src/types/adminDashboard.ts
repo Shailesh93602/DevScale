@@ -9,7 +9,10 @@ export interface UserStats {
   totalUsers: number;
   activeUsers: number;
   newUsers: number;
-  usersByRole: Record<'beginner' | 'intermediate' | 'advanced' | 'expert' | 'unknown', number>;
+  usersByRole: Record<
+    'beginner' | 'intermediate' | 'advanced' | 'expert' | 'unknown',
+    number
+  >;
   completionRates: Record<string, number>;
 }
 
@@ -47,7 +50,9 @@ export interface ResourceAllocation {
 }
 
 export interface ReportConfig {
-  metrics: Array<'userGrowth' | 'contentEngagement' | 'challengeCompletion' | 'resourceUsage'>;
+  metrics: Array<
+    'userGrowth' | 'contentEngagement' | 'challengeCompletion' | 'resourceUsage'
+  >;
   filters?: Record<string, unknown>;
   groupBy?: string[];
   timeRange?: {
@@ -90,10 +95,10 @@ export interface ResourceUsageMetric {
   _sum: { downloadCount: number | null };
 }
 
-export type MetricDataType = 
-  | UserGrowthMetric 
-  | ContentEngagementMetric 
-  | ChallengeCompletionMetric 
+export type MetricDataType =
+  | UserGrowthMetric
+  | ContentEngagementMetric
+  | ChallengeCompletionMetric
   | ResourceUsageMetric;
 
 export interface ReportResult {

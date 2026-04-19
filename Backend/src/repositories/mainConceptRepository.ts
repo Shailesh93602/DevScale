@@ -3,12 +3,17 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
-export class MainConceptRepository extends BaseRepository< MainConcept, typeof prisma.mainConcept > {
+export class MainConceptRepository extends BaseRepository<
+  MainConcept,
+  typeof prisma.mainConcept
+> {
   constructor() {
     super(prisma.mainConcept);
   }
 
-  async getMainConceptWithSubjects(id: string): Promise<Prisma.MainConceptGetPayload<{
+  async getMainConceptWithSubjects(
+    id: string
+  ): Promise<Prisma.MainConceptGetPayload<{
     include: { subjects: { include: { subject: true } } };
   }> | null> {
     const result = await this.findUnique({

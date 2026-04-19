@@ -54,11 +54,17 @@ jest.mock('@supabase/supabase-js', () => ({
 // ─── Mock jose ─────────────────────────────────────────────────────────────────
 // Simulate failed local verification so it falls back to Supabase HTTP API
 jest.mock('jose', () => ({
-  jwtVerify: jest.fn().mockRejectedValue(new Error('test: forcing fallback') as never),
+  jwtVerify: jest
+    .fn()
+    .mockRejectedValue(new Error('test: forcing fallback') as never),
   createRemoteJWKSet: jest.fn().mockReturnValue(() => {}),
 }));
 
-import { authMiddleware, optionalAuthMiddleware, clearAuthCache } from '../../middlewares/authMiddleware';
+import {
+  authMiddleware,
+  optionalAuthMiddleware,
+  clearAuthCache,
+} from '../../middlewares/authMiddleware';
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 function makeReq(overrides: Partial<Request> = {}): Request {
@@ -110,7 +116,7 @@ describe('authMiddleware', () => {
     await authMiddleware(req, res, next as NextFunction);
 
     expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({ statusCode: 401 }),
+      expect.objectContaining({ statusCode: 401 })
     );
   });
 
@@ -120,14 +126,17 @@ describe('authMiddleware', () => {
     await authMiddleware(req, res, next as NextFunction);
 
     expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({ statusCode: 401, message: expect.stringContaining('revoked') }),
+      expect.objectContaining({
+        statusCode: 401,
+        message: expect.stringContaining('revoked'),
+      })
     );
   });
 
   it('should use cache hit and set req.user', async () => {
     mockRedis.exists.mockResolvedValue(0 as never);
     mockRedis.get.mockResolvedValue(
-      JSON.stringify({ user: MOCK_USER, userData: MOCK_DB_USER }) as never,
+      JSON.stringify({ user: MOCK_USER, userData: MOCK_DB_USER }) as never
     );
 
     const req = makeReq();
@@ -162,8 +171,13 @@ describe('authMiddleware', () => {
       error: null,
     } as never);
     mockPrisma.user.findUnique.mockResolvedValue(null as never);
-    mockPrisma.role.findUnique.mockResolvedValue({ id: 'role-student-id' } as never);
-    mockPrisma.user.create.mockResolvedValue({ ...MOCK_DB_USER, id: 'new-user-id' } as never);
+    mockPrisma.role.findUnique.mockResolvedValue({
+      id: 'role-student-id',
+    } as never);
+    mockPrisma.user.create.mockResolvedValue({
+      ...MOCK_DB_USER,
+      id: 'new-user-id',
+    } as never);
 
     const req = makeReq();
     await authMiddleware(req, res, next as NextFunction);
@@ -184,7 +198,7 @@ describe('authMiddleware', () => {
     await authMiddleware(req, res, next as NextFunction);
 
     expect(next).toHaveBeenCalledWith(
-      expect.objectContaining({ statusCode: 401 }),
+      expect.objectContaining({ statusCode: 401 })
     );
   });
 });
@@ -209,7 +223,7 @@ describe('optionalAuthMiddleware', () => {
 
   it('should set user from cache when token is present and cached', async () => {
     mockRedis.get.mockResolvedValue(
-      JSON.stringify({ user: MOCK_USER, userData: MOCK_DB_USER }) as never,
+      JSON.stringify({ user: MOCK_USER, userData: MOCK_DB_USER }) as never
     );
 
     const req = makeReq();
@@ -228,7 +242,7 @@ describe('clearAuthCache', () => {
   it('should delete the cache key for the given token', async () => {
     await clearAuthCache('some-token');
     expect(mockRedis.del).toHaveBeenCalledWith(
-      expect.stringContaining('eduscale:auth:'),
+      expect.stringContaining('eduscale:auth:')
     );
   });
 });

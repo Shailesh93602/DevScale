@@ -3,7 +3,7 @@
  * Called once at process start — crashes immediately if required vars are
  * missing or malformed, before any connections are attempted.
  *
- * Import this at the very top of main.ts and app.logic.ts (after instrument.ts). 
+ * Import this at the very top of main.ts and app.logic.ts (after instrument.ts).
  */
 
 import 'dotenv/config';
@@ -11,17 +11,23 @@ import { z } from 'zod';
 
 const envSchema = z.object({
   // ── App ──────────────────────────────────────────────────────────────────
-  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
   PORT: z.coerce.number().int().positive().default(5000),
   LOG_LEVEL: z.enum(['debug', 'info', 'warn', 'error']).catch('info'),
 
   // ── Database ──────────────────────────────────────────────────────────────
-  DATABASE_URL: z.string().url('DATABASE_URL must be a valid postgresql:// URL'),
+  DATABASE_URL: z
+    .string()
+    .url('DATABASE_URL must be a valid postgresql:// URL'),
   DIRECT_URL: z.string().url('DIRECT_URL must be a valid postgresql:// URL'),
 
   // ── Supabase ──────────────────────────────────────────────────────────────
   SUPABASE_URL: z.string().url('SUPABASE_URL must be a valid https:// URL'),
-  SUPABASE_PUBLISHABLE_KEY: z.string().min(10, 'SUPABASE_PUBLISHABLE_KEY is missing'),
+  SUPABASE_PUBLISHABLE_KEY: z
+    .string()
+    .min(10, 'SUPABASE_PUBLISHABLE_KEY is missing'),
   SUPABASE_JWT_SIGNING_KEY: z.string().optional().or(z.literal('')),
 
   // ── Redis ─────────────────────────────────────────────────────────────────
@@ -54,7 +60,7 @@ const envSchema = z.object({
   MAIL_ADDRESS: z.string().optional(),
   MAIL_PASSWORD: z.string().optional(),
   ALERT_EMAIL: z.string().email().optional(),
-  
+
   // ── Stripe (High Priority Features) ──────────────────────────────────────
   STRIPE_SECRET_KEY: z.string().optional().or(z.literal('')),
   STRIPE_WEBHOOK_SECRET: z.string().optional().or(z.literal('')),
@@ -64,7 +70,7 @@ const envSchema = z.object({
 
 function validateEnv() {
   const sanitizedEnv = { ...process.env };
-  
+
   // Strip inline comments and trim whitespace from all string env vars
   Object.keys(sanitizedEnv).forEach((key) => {
     const val = sanitizedEnv[key];
@@ -84,7 +90,7 @@ function validateEnv() {
     // Write directly to stderr — logger may not be ready yet
     process.stderr.write(
       `\n[FATAL] Missing or invalid environment variables:\n${errorsList}\n\n` +
-      `Copy Backend/.env.example to Backend/.env and fill in the required values.\n\n`,
+        `Copy Backend/.env.example to Backend/.env and fill in the required values.\n\n`
     );
     process.exit(1);
   }
@@ -94,15 +100,22 @@ function validateEnv() {
   // Warn in production if optional-but-important vars are absent
   if (env.NODE_ENV === 'production') {
     const productionWarnings: string[] = [];
-    if (!env.SENTRY_DSN) productionWarnings.push('SENTRY_DSN (error tracking disabled)');
-    if (!env.SMTP_HOST) productionWarnings.push('SMTP_HOST (email delivery disabled)');
-    if (!env.COMPILER_CLIENT_SECRET) productionWarnings.push('COMPILER_CLIENT_SECRET (code execution disabled)');
-    if (!env.STRIPE_SECRET_KEY) productionWarnings.push('STRIPE_SECRET_KEY (billing disabled)');
+    if (!env.SENTRY_DSN)
+      productionWarnings.push('SENTRY_DSN (error tracking disabled)');
+    if (!env.SMTP_HOST)
+      productionWarnings.push('SMTP_HOST (email delivery disabled)');
+    if (!env.COMPILER_CLIENT_SECRET)
+      productionWarnings.push(
+        'COMPILER_CLIENT_SECRET (code execution disabled)'
+      );
+    if (!env.STRIPE_SECRET_KEY)
+      productionWarnings.push('STRIPE_SECRET_KEY (billing disabled)');
 
     if (productionWarnings.length > 0) {
       process.stderr.write(
         `\n[WARN] Running in production with optional features disabled:\n` +
-        productionWarnings.map((w) => `  • ${w}`).join('\n') + '\n\n',
+          productionWarnings.map((w) => `  • ${w}`).join('\n') +
+          '\n\n'
       );
     }
   }

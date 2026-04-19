@@ -11,27 +11,35 @@ export default class ChallengeController {
     this.challengeRepo = new ChallengeRepository();
   }
 
-  public getChallengeCategories = catchAsync(async (_req: Request, res: Response) => {
-    const rows = await prisma.challenge.groupBy({
-      by: ['category', 'difficulty'],
-      _count: { _all: true },
-      orderBy: { category: 'asc' },
-    });
+  public getChallengeCategories = catchAsync(
+    async (_req: Request, res: Response) => {
+      const rows = await prisma.challenge.groupBy({
+        by: ['category', 'difficulty'],
+        _count: { _all: true },
+        orderBy: { category: 'asc' },
+      });
 
-    // Group into { category, count, difficulties[] }
-    const map = new Map<string, { category: string; count: number; difficulties: string[] }>();
-    for (const row of rows) {
-      const cat = row.category as string;
-      if (!map.has(cat)) map.set(cat, { category: cat, count: 0, difficulties: [] });
-      const entry = map.get(cat)!;
-      entry.count += row._count._all;
-      if (!entry.difficulties.includes(row.difficulty)) {
-        entry.difficulties.push(row.difficulty);
+      // Group into { category, count, difficulties[] }
+      const map = new Map<
+        string,
+        { category: string; count: number; difficulties: string[] }
+      >();
+      for (const row of rows) {
+        const cat = row.category as string;
+        if (!map.has(cat))
+          map.set(cat, { category: cat, count: 0, difficulties: [] });
+        const entry = map.get(cat)!;
+        entry.count += row._count._all;
+        if (!entry.difficulties.includes(row.difficulty)) {
+          entry.difficulties.push(row.difficulty);
+        }
       }
-    }
 
-    return sendResponse(res, 'CHALLENGES_FETCHED', { data: Array.from(map.values()) });
-  });
+      return sendResponse(res, 'CHALLENGES_FETCHED', {
+        data: Array.from(map.values()),
+      });
+    }
+  );
 
   public getChallenges = catchAsync(async (req: Request, res: Response) => {
     const { page = 1, limit = 10, search = '' } = req.query;

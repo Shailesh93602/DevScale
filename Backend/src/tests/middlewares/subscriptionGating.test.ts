@@ -83,7 +83,10 @@ describe('subscriptionGating Middleware', () => {
       const req = makeReqWithSubscription('free', 'active');
       requirePro(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403, message: expect.stringContaining('Pro') }),
+        expect.objectContaining({
+          statusCode: 403,
+          message: expect.stringContaining('Pro'),
+        })
       );
     });
 
@@ -91,7 +94,7 @@ describe('subscriptionGating Middleware', () => {
       const req = makeReqWithSubscription('pro', 'canceled');
       requirePro(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403 }),
+        expect.objectContaining({ statusCode: 403 })
       );
     });
 
@@ -99,7 +102,7 @@ describe('subscriptionGating Middleware', () => {
       const req = { headers: {} } as unknown as Request;
       requirePro(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 401 }),
+        expect.objectContaining({ statusCode: 401 })
       );
     });
 
@@ -110,7 +113,7 @@ describe('subscriptionGating Middleware', () => {
       } as unknown as Request;
       requirePro(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403 }),
+        expect.objectContaining({ statusCode: 403 })
       );
     });
   });
@@ -133,7 +136,10 @@ describe('subscriptionGating Middleware', () => {
       const req = makeReqWithSubscription('pro', 'active');
       requireTeam(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403, message: expect.stringContaining('Team') }),
+        expect.objectContaining({
+          statusCode: 403,
+          message: expect.stringContaining('Team'),
+        })
       );
     });
 
@@ -141,7 +147,7 @@ describe('subscriptionGating Middleware', () => {
       const req = makeReqWithSubscription('free', 'active');
       requireTeam(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 403 }),
+        expect.objectContaining({ statusCode: 403 })
       );
     });
 
@@ -149,7 +155,7 @@ describe('subscriptionGating Middleware', () => {
       const req = { headers: {} } as unknown as Request;
       requireTeam(req, res, next as NextFunction);
       expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({ statusCode: 401 }),
+        expect.objectContaining({ statusCode: 401 })
       );
     });
   });

@@ -15,17 +15,26 @@ export const requirePro = (req: Request, res: Response, next: NextFunction) => {
   const tier = user.subscription?.tier ?? 'free';
   const status = user.subscription?.status ?? 'inactive';
 
-  if ((tier === 'pro' || tier === 'team') && (status === 'active' || status === 'trialing')) {
+  if (
+    (tier === 'pro' || tier === 'team') &&
+    (status === 'active' || status === 'trialing')
+  ) {
     return next();
   }
 
-  return next(createAppError('Pro subscription required for this feature', 403));
+  return next(
+    createAppError('Pro subscription required for this feature', 403)
+  );
 };
 
 /**
  * Middleware to restrict access to Team features.
  */
-export const requireTeam = (req: Request, res: Response, next: NextFunction) => {
+export const requireTeam = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { user } = req;
 
   if (!user) {
@@ -39,5 +48,7 @@ export const requireTeam = (req: Request, res: Response, next: NextFunction) => 
     return next();
   }
 
-  return next(createAppError('Team subscription required for this feature', 403));
+  return next(
+    createAppError('Team subscription required for this feature', 403)
+  );
 };

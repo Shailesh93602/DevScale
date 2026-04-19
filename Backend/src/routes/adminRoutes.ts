@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import AdminController from '../controllers/adminController.js';
-import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware.js';
+import {
+  authMiddleware,
+  authorizeRoles,
+} from '../middlewares/authMiddleware.js';
 
 import { BaseRouter } from './BaseRouter.js';
 
@@ -24,19 +27,13 @@ export class AdminRoutes extends BaseRouter {
     );
 
     // User Management Routes
-    this.router.get(
-      '/users',
-      this.adminController.searchUsers
-    );
+    this.router.get('/users', this.adminController.searchUsers);
 
     this.router.patch(
       '/users/:userId/role',
       this.adminController.updateUserRole
     );
-    this.router.delete(
-      '/users/:userId',
-      this.adminController.deleteUser
-    );
+    this.router.delete('/users/:userId', this.adminController.deleteUser);
 
     // Content Moderation Routes
     this.router.get(
@@ -50,10 +47,7 @@ export class AdminRoutes extends BaseRouter {
     );
 
     // System Configuration Routes
-    this.router.patch(
-      '/config',
-      this.adminController.setConfig
-    );
+    this.router.patch('/config', this.adminController.setConfig);
 
     this.router.get(
       '/config/:category',
@@ -78,10 +72,7 @@ export class AdminRoutes extends BaseRouter {
     );
 
     // Audit System Routes
-    this.router.get(
-      '/audit/logs',
-      this.adminController.getSystemAuditLogs
-    );
+    this.router.get('/audit/logs', this.adminController.getSystemAuditLogs);
   }
 
   public getRouter(): Router {

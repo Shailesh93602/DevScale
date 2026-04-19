@@ -8,7 +8,10 @@ const LEADERBOARD_STALE_TTL = 3600; // 1 hour (grace period)
 const cacheKey = (subjectId: string, timeRange: string, limit: number) =>
   `eduscale:leaderboard:${subjectId}:${timeRange}:${limit}`;
 
-export default class LeaderboardRepository extends BaseRepository< LeaderboardEntry, typeof prisma.leaderboardEntry > {
+export default class LeaderboardRepository extends BaseRepository<
+  LeaderboardEntry,
+  typeof prisma.leaderboardEntry
+> {
   constructor() {
     super(prisma.leaderboardEntry);
   }
@@ -18,7 +21,7 @@ export default class LeaderboardRepository extends BaseRepository< LeaderboardEn
     return getWithSWR(
       key,
       () => this._queryLeaderboard(subject_id, time_range, limit),
-      { ttl: LEADERBOARD_TTL, staleTtl: LEADERBOARD_STALE_TTL },
+      { ttl: LEADERBOARD_TTL, staleTtl: LEADERBOARD_STALE_TTL }
     );
   }
 
@@ -32,7 +35,11 @@ export default class LeaderboardRepository extends BaseRepository< LeaderboardEn
     }
   }
 
-  private async _queryLeaderboard(subject_id: string, time_range: string, limit: number) {
+  private async _queryLeaderboard(
+    subject_id: string,
+    time_range: string,
+    limit: number
+  ) {
     const time_filter = this.getTimeFilter(time_range);
     return this.findMany({
       where: {
@@ -58,7 +65,9 @@ export default class LeaderboardRepository extends BaseRepository< LeaderboardEn
     const filters: Record<string, { gte: Date }> = {
       daily: { gte: new Date(new Date().setDate(new Date().getDate() - 1)) },
       weekly: { gte: new Date(new Date().setDate(new Date().getDate() - 7)) },
-      monthly: { gte: new Date(new Date().setMonth(new Date().getMonth() - 1)) },
+      monthly: {
+        gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+      },
       all: { gte: new Date(0) },
     };
     return filters[timeRange];

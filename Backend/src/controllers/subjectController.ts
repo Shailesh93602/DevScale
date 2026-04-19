@@ -66,8 +66,8 @@ export default class SubjectController {
         const userProgressList = await prisma.userProgress.findMany({
           where: {
             user_id: userId,
-            topic_id: { in: subject.topics.map((t) => t.topic_id) }
-          }
+            topic_id: { in: subject.topics.map((t) => t.topic_id) },
+          },
         });
 
         const completedMap = new Set(
@@ -78,16 +78,16 @@ export default class SubjectController {
           ...t,
           topic: {
             ...t.topic,
-            isCompleted: completedMap.has(t.topic_id)
-          }
+            isCompleted: completedMap.has(t.topic_id),
+          },
         }));
       }
 
       return sendResponse(res, 'TOPICS_FETCHED', {
         data: {
           ...subject,
-          topics: topicsWithProgress
-        }
+          topics: topicsWithProgress,
+        },
       });
     }
   );

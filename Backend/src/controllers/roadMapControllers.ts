@@ -6,7 +6,11 @@ import { Prisma, Difficulty, RoadmapCategory } from '@prisma/client';
 import UserRoadmapRepository from '../repositories/userRoadmapRepository.js';
 import RoadmapCategoryRepository from '../repositories/roadmapCategoryRepository.js';
 import prisma from '../lib/prisma.js';
-import { invalidatePattern, getCached, setCached } from '../services/memoryCache.js';
+import {
+  invalidatePattern,
+  getCached,
+  setCached,
+} from '../services/memoryCache.js';
 import { invalidateCachePattern } from '../services/cacheService.js';
 import { createAppError } from '../utils/errorHandler.js';
 import { assertOwnership } from '../utils/assertOwnership.js';
@@ -81,7 +85,7 @@ export default class RoadmapController {
       const roadmaps = await this.roadmapRepo.getAllRoadmaps(req, whereClause);
       return sendResponse(res, 'ROADMAPS_FETCHED', {
         data: roadmaps.data,
-        meta: roadmaps.meta
+        meta: roadmaps.meta,
       });
     } catch (error) {
       return sendResponse(res, 'ROADMAP_NOT_FOUND', { error: error as Error });
@@ -143,11 +147,12 @@ export default class RoadmapController {
 
     // Map frontend difficulty values to Prisma enum
     const difficultyMap: Record<string, Difficulty> = {
-      'BEGINNER': 'EASY',
-      'INTERMEDIATE': 'MEDIUM',
-      'ADVANCED': 'HARD',
+      BEGINNER: 'EASY',
+      INTERMEDIATE: 'MEDIUM',
+      ADVANCED: 'HARD',
     };
-    const prismaDifficulty = difficultyMap[difficulty?.toUpperCase()] || difficulty;
+    const prismaDifficulty =
+      difficultyMap[difficulty?.toUpperCase()] || difficulty;
 
     const createInput: Prisma.RoadmapCreateInput = {
       title,
@@ -222,7 +227,9 @@ export default class RoadmapController {
     const roadMapId = req.params.id;
     const { title, description } = req.body;
 
-    const roadMap = await this.roadmapRepo.getRoadmap(roadMapId) as RoadmapDetail | null;
+    const roadMap = (await this.roadmapRepo.getRoadmap(
+      roadMapId
+    )) as RoadmapDetail | null;
 
     if (!roadMap) {
       return sendResponse(res, 'ROADMAP_NOT_FOUND', {
@@ -248,7 +255,9 @@ export default class RoadmapController {
   public deleteRoadMap = catchAsync(async (req: Request, res: Response) => {
     const roadMapId = req.params.id;
 
-    const roadMap = await this.roadmapRepo.getRoadmap(roadMapId) as RoadmapDetail | null;
+    const roadMap = (await this.roadmapRepo.getRoadmap(
+      roadMapId
+    )) as RoadmapDetail | null;
 
     if (!roadMap) {
       return sendResponse(res, 'ROADMAP_NOT_FOUND', {
@@ -316,7 +325,7 @@ export default class RoadmapController {
     });
 
     invalidatePattern(`roadmap:detail:${roadmapId}`);
-    invalidatePattern(`roadmaps:list:${userId}`); 
+    invalidatePattern(`roadmaps:list:${userId}`);
     invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard shows new enrollment
     await invalidateCachePattern(`roadmap:detail:${roadmapId}:${userId}`);
 
@@ -368,7 +377,9 @@ export default class RoadmapController {
       return sendResponse(res, 'ROADMAP_UNLIKED', { data: null });
     }
 
-    await prisma.like.create({ data: { user_id: userId, roadmap_id: roadmapId } });
+    await prisma.like.create({
+      data: { user_id: userId, roadmap_id: roadmapId },
+    });
     invalidatePattern(`roadmap:detail:${roadmapId}`);
     return sendResponse(res, 'ROADMAP_LIKED', { data: null });
   });

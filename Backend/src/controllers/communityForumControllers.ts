@@ -67,7 +67,10 @@ export default class CommunityForumController {
       return sendResponse(res, 'FORUM_NOT_FOUND');
     }
 
-    if (assertOwnership(req, res, (forum as { created_by?: string }).created_by)) return;
+    if (
+      assertOwnership(req, res, (forum as { created_by?: string }).created_by)
+    )
+      return;
 
     const updatedForum = await this.forumRepo.update({
       where: { id: forumId },

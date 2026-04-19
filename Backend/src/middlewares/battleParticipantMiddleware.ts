@@ -38,7 +38,12 @@ export const battleParticipantMiddleware = async (
 
     // Can join in WAITING or LOBBY state
     if (battle.status !== 'WAITING' && battle.status !== 'LOBBY') {
-      return next(createAppError('Cannot join this battle — it has already started or ended', 403));
+      return next(
+        createAppError(
+          'Cannot join this battle — it has already started or ended',
+          403
+        )
+      );
     }
 
     next();

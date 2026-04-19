@@ -6,7 +6,11 @@ import { createAppError } from '../utils/errorHandler';
 import UserRoadmapRepository from '../repositories/userRoadmapRepository';
 import UserProgressRepository from '../repositories/userProgressRepository';
 import { clearAuthCache } from '../middlewares/authMiddleware';
-import { getCached, setCached, invalidatePattern } from '../services/memoryCache';
+import {
+  getCached,
+  setCached,
+  invalidatePattern,
+} from '../services/memoryCache';
 
 export default class UserController {
   private readonly userRepo: UserRepository;
@@ -132,8 +136,18 @@ export default class UserController {
       sanitizedData.experience_level = null;
     }
     // Also ensures specialization, bio etc. are null if empty (optional)
-    const optionalFields = ['specialization', 'bio', 'college', 'address', 'note', 'github_url', 'linkedin_url', 'twitter_url', 'website_url'];
-    optionalFields.forEach(field => {
+    const optionalFields = [
+      'specialization',
+      'bio',
+      'college',
+      'address',
+      'note',
+      'github_url',
+      'linkedin_url',
+      'twitter_url',
+      'website_url',
+    ];
+    optionalFields.forEach((field) => {
       if (sanitizedData[field] === '') {
         sanitizedData[field] = null;
       }

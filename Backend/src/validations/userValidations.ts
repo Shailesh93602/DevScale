@@ -35,7 +35,12 @@ export const userInsertionSchema = Joi.object({
   }),
   specialization: Joi.string().optional().allow(''),
   college: Joi.string().optional().allow(''),
-  graduation_year: Joi.number().integer().min(1900).max(2100).optional().allow(null),
+  graduation_year: Joi.number()
+    .integer()
+    .min(1900)
+    .max(2100)
+    .optional()
+    .allow(null),
   experience_level: Joi.string().optional().allow(''),
   github_url: Joi.string()
     .pattern(/^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/?$/)
@@ -46,7 +51,9 @@ export const userInsertionSchema = Joi.object({
       'string.pattern.base': 'Please provide a valid GitHub profile URL',
     }),
   linkedin_url: Joi.string()
-    .pattern(/^https?:\/\/(www\.)?linkedin\.com\/(in|company)\/[a-zA-Z0-9_-]+\/?$/)
+    .pattern(
+      /^https?:\/\/(www\.)?linkedin\.com\/(in|company)\/[a-zA-Z0-9_-]+\/?$/
+    )
     .optional()
     .allow('')
     .allow(null)
@@ -61,9 +68,14 @@ export const userInsertionSchema = Joi.object({
     .messages({
       'string.pattern.base': 'Please provide a valid X (Twitter) profile URL',
     }),
-  website_url: Joi.string().uri({ scheme: ['http', 'https'] }).optional().allow('').allow(null).messages({
-    'string.uri': 'Please provide a valid Website URL',
-  }),
+  website_url: Joi.string()
+    .uri({ scheme: ['http', 'https'] })
+    .optional()
+    .allow('')
+    .allow(null)
+    .messages({
+      'string.uri': 'Please provide a valid Website URL',
+    }),
   address: Joi.string().optional().allow(''),
   skills: Joi.array()
     .items(Joi.string().trim().min(1).max(50))

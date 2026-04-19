@@ -1,5 +1,9 @@
 import express, { Router } from 'express';
-import { createCheckoutSession, createPortalSession, handleWebhook } from '../services/subscriptionService.js';
+import {
+  createCheckoutSession,
+  createPortalSession,
+  handleWebhook,
+} from '../services/subscriptionService.js';
 import { stripe } from '../lib/stripe.js';
 import { env } from '../config/env.js';
 import logger from '../utils/logger.js';
@@ -24,7 +28,11 @@ export class SubscriptionRoutes {
         let event: Stripe.Event;
 
         try {
-          event = stripe.webhooks.constructEvent(req.body, sig, env.STRIPE_WEBHOOK_SECRET || '');
+          event = stripe.webhooks.constructEvent(
+            req.body,
+            sig,
+            env.STRIPE_WEBHOOK_SECRET || ''
+          );
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Unknown error';
           logger.error(`[Stripe Webhook Error] ${message}`);

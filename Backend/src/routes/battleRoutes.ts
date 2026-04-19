@@ -28,7 +28,7 @@ export class BattleRoutes extends BaseRouter {
   protected initializeRoutes(): void {
     // ── Public ────────────────────────────────────────────────────────────
     this.router.get('/', this.ctrl.getBattles);
-    this.router.get('/global-stats', this.ctrl.getGlobalStats);  // before /:id
+    this.router.get('/global-stats', this.ctrl.getGlobalStats); // before /:id
     this.router.get('/my', authMiddleware, this.ctrl.getMyBattles);
     this.router.get('/statistics/me', authMiddleware, this.ctrl.getStatistics);
     // question-pool must be before /:id to avoid Express matching 'question-pool' as a param
@@ -36,12 +36,29 @@ export class BattleRoutes extends BaseRouter {
       '/question-pool',
       authMiddleware,
       validateRequest(questionPoolQuerySchema, 'query'),
-      this.ctrl.getQuestionPool,
+      this.ctrl.getQuestionPool
     );
-    this.router.get('/:id', validateRequest(battleIdValidation, 'params'), this.ctrl.getBattle);
-    this.router.get('/:id/leaderboard', validateRequest(battleIdValidation, 'params'), this.ctrl.getBattleLeaderboard);
-    this.router.get('/:id/results', validateRequest(battleIdValidation, 'params'), this.ctrl.getBattleResults);
-    this.router.get('/:id/my-results', authMiddleware, validateRequest(battleIdValidation, 'params'), this.ctrl.getMyResults);
+    this.router.get(
+      '/:id',
+      validateRequest(battleIdValidation, 'params'),
+      this.ctrl.getBattle
+    );
+    this.router.get(
+      '/:id/leaderboard',
+      validateRequest(battleIdValidation, 'params'),
+      this.ctrl.getBattleLeaderboard
+    );
+    this.router.get(
+      '/:id/results',
+      validateRequest(battleIdValidation, 'params'),
+      this.ctrl.getBattleResults
+    );
+    this.router.get(
+      '/:id/my-results',
+      authMiddleware,
+      validateRequest(battleIdValidation, 'params'),
+      this.ctrl.getMyResults
+    );
 
     // ── Auth-required ─────────────────────────────────────────────────────
     this.router.get(

@@ -1,5 +1,8 @@
 import UserController from '../controllers/userControllers';
-import { userInsertionSchema, insertUserRoadmapSchema } from '../validations/userValidations';
+import {
+  userInsertionSchema,
+  insertUserRoadmapSchema,
+} from '../validations/userValidations';
 import { validateRequest } from '../middlewares/validateRequest';
 
 import { BaseRouter } from './BaseRouter';

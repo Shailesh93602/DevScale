@@ -22,16 +22,22 @@ interface UploadPayload {
 // Opens after 3 failures, resets after 30 s. Prevents Cloudinary outages
 // from blocking every request that tries to upload.
 const cloudinaryBreaker = new CircuitBreaker(_uploadToCloudinary, {
-  timeout: 20000,               // 20 s — Cloudinary p99 upload time
+  timeout: 20000, // 20 s — Cloudinary p99 upload time
   errorThresholdPercentage: 50,
   resetTimeout: 30000,
   volumeThreshold: 3,
   name: 'cloudinary',
 });
 
-cloudinaryBreaker.on('open',     () => logger.warn('Cloudinary circuit breaker OPEN'));
-cloudinaryBreaker.on('halfOpen', () => logger.info('Cloudinary circuit breaker HALF-OPEN'));
-cloudinaryBreaker.on('close',    () => logger.info('Cloudinary circuit breaker CLOSED'));
+cloudinaryBreaker.on('open', () =>
+  logger.warn('Cloudinary circuit breaker OPEN')
+);
+cloudinaryBreaker.on('halfOpen', () =>
+  logger.info('Cloudinary circuit breaker HALF-OPEN')
+);
+cloudinaryBreaker.on('close', () =>
+  logger.info('Cloudinary circuit breaker CLOSED')
+);
 
 async function _uploadToCloudinary(payload: UploadPayload): Promise<string> {
   const result = await new Promise<UploadApiResponse>((resolve, reject) => {
@@ -74,7 +80,9 @@ export class MediaHandler {
     } catch (error) {
       if (cloudinaryBreaker.opened) {
         logger.warn('Cloudinary circuit open — upload rejected');
-        throw new Error('Image upload temporarily unavailable. Please try again shortly.');
+        throw new Error(
+          'Image upload temporarily unavailable. Please try again shortly.'
+        );
       }
       logger.error('Image upload failed:', error);
       throw error;

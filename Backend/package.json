@@ -11,7 +11,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio",
-    "format:check": "prettier --check .",
+    "format:check": "prettier --check \"src/**/*.ts\"",
     "start": "node -r tsconfig-paths/register dist/main.js",
     "start:cluster": "pm2 start ecosystem.config.js --env production",
     "start:cluster:dev": "pm2 start ecosystem.config.js",
