@@ -1,5 +1,11 @@
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import moduleAlias from 'module-alias';
+
+// package.json has "type": "module" so __dirname is not defined here.
+// Derive it from import.meta.url — the ESM-standard equivalent.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Register aliases programmatically for Vercel
 moduleAlias.addAliases({
