@@ -3,7 +3,11 @@ import './instrument.js';
 // Validate env vars before anything else — crashes with a clear message on misconfiguration
 import './config/env.js';
 
-import 'module-alias/register';
+// Node ESM resolution requires the explicit .js extension on deep subpath
+// imports of CJS packages. Without it, the built dist/main.js crashes at
+// import time on Vercel with ERR_MODULE_NOT_FOUND, which surfaces in the
+// browser as "CORS error" (500 response has no Access-Control-Allow-Origin).
+import 'module-alias/register.js';
 
 import express, { Application } from 'express';
 import cookieParser from 'cookie-parser';
