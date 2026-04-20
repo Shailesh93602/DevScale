@@ -339,7 +339,7 @@ const DashboardPage: React.FC = () => {
           >
             <SectionHeader
               title="Recommended For You"
-              linkHref="/explore"
+              linkHref="/career-roadmap"
               linkLabel="Explore More"
             />
             <div className="grid grid-cols-1 gap-4">
