@@ -33,7 +33,7 @@ const FeaturesSection: React.FC = () => (
           title="Personalized Roadmaps"
           description="Tailored learning paths to help you reach your engineering goals."
           delay={0.1}
-          href="/roadmaps"
+          href="/career-roadmap"
         />
         <FeatureCard
           icon={
@@ -55,7 +55,7 @@ const FeaturesSection: React.FC = () => (
           title="Placement Preparation"
           description="Company-specific guides, interview questions, and tips."
           delay={0.3}
-          href="/interview-prep"
+          href="/placement-preparation"
         />
         <FeatureCard
           icon={

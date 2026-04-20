@@ -314,7 +314,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
       {/* Call to action */}
       <div className="border-t border-border p-6">
         <Link
-          href="/roadmaps"
+          href="/career-roadmap"
           className="hover:shadow-primary/30 group relative inline-flex items-center overflow-hidden rounded-full bg-primary px-6 py-3 text-lg font-semibold text-primary-foreground transition-all duration-300 hover:shadow-lg"
         >
           <span className="relative z-10">Explore Roadmaps</span>
