@@ -144,7 +144,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
                   {user.name}
                 </div>
                 <div className={`text-sm font-medium ${textColor}`}>
-                  {user.points.toLocaleString()} pts
+                  {user.points.toLocaleString("en-US")} pts
                 </div>
                 <div className="text-xs text-muted-foreground">
                   {user.college}
@@ -184,7 +184,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
               </div>
             </div>
             <div className="text-right text-xs font-semibold text-muted-foreground">
-              {user.points.toLocaleString()} pts
+              {user.points.toLocaleString("en-US")} pts
             </div>
           </div>
         ))}

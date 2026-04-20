@@ -323,7 +323,7 @@ export default function WeeklyLeaderboard({
                               : 'text-amber-400'
                         }`}
                       >
-                        {user.points.toLocaleString()} pts
+                        {user.points.toLocaleString("en-US")} pts
                       </span>
                       <span className="mt-0.5 text-[10px] text-muted-foreground">
                         {user.college}
@@ -383,7 +383,7 @@ export default function WeeklyLeaderboard({
                   </div>
                 </div>
                 <div className="text-right text-xs font-semibold text-muted-foreground">
-                  {user.points.toLocaleString()} pts
+                  {user.points.toLocaleString("en-US")} pts
                 </div>
               </motion.div>
             ))}
