@@ -125,6 +125,29 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Real-time infrastructure status — honest about current state.
+          The live Battle Zone depends on the Socket.io server, which at
+          time of writing is being migrated from the Vercel serverless
+          deploy (no long-lived connections) to a dedicated host. The
+          standalone redis-battle-demo is the working reference in the
+          meantime. */}
+      <div
+        role="status"
+        className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300"
+      >
+        ⚠️ Real-time matchmaking is being migrated to a dedicated WebSocket
+        host — some live-battle features may be unavailable. The working
+        distributed-lock sibling demo is at{' '}
+        <a
+          href="https://redis-battle-demo.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium underline underline-offset-2"
+        >
+          redis-battle-demo
+        </a>
+        .
+      </div>
       {/* Header Section */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">
