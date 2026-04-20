@@ -182,18 +182,36 @@ export class App {
       next();
     });
 
+    // Redis-backed rate limiter when Redis is reachable; silent fallback to
+    // the in-memory MemoryStore per-instance when it isn't. Previously a
+    // ENOTFOUND on the Upstash host 500d every request through the middleware.
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000,
       max: process.env.NODE_ENV === 'production' ? 100 : 10000,
       standardHeaders: true,
       legacyHeaders: false,
       message: 'Too many requests from this IP, please try again later.',
+      // Don't block the request path on Redis failures — degrade gracefully.
+      skip: () => false,
       store: new RedisStore({
         sendCommand: (...args: string[]) =>
           redis.call(...(args as [string, ...string[]])) as Promise<RedisReply>,
       }),
     });
-    this.app.use(limiter);
+    // Wrap so any RedisStore throw gets swallowed and the request continues.
+    // Serverless cold starts on a dead Redis would otherwise 500 every call.
+    this.app.use((req, res, next) => {
+      limiter(req, res, (err?: unknown) => {
+        if (err) {
+          console.warn(
+            '[rate-limit] degraded — continuing without throttle:',
+            err instanceof Error ? err.message : err
+          );
+          return next();
+        }
+        return next();
+      });
+    });
   }
 
   private initializeRoutes(): void {
