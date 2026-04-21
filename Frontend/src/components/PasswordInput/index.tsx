@@ -11,6 +11,12 @@ interface PasswordInputProps {
   id?: string;
   placeholder: string;
   error?: string;
+  /**
+   * WHATWG autocomplete hint. Pass "current-password" on login forms and
+   * "new-password" on register / reset-password forms so password managers
+   * + browser autofill behave correctly. Defaults to "current-password".
+   */
+  autoComplete?: 'current-password' | 'new-password' | 'off';
 }
 
 const PasswordInput: React.FC<PasswordInputProps> = ({
@@ -19,6 +25,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
   id,
   placeholder,
   error,
+  autoComplete = 'current-password',
 }) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -29,6 +36,9 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         id={id}
         type={showPassword ? 'text' : 'password'}
         placeholder={placeholder}
+        autoComplete={autoComplete}
+        autoCorrect="off"
+        spellCheck={false}
         className="w-full pr-10"
       />
       <Button

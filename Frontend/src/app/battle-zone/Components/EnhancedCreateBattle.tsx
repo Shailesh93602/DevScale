@@ -782,24 +782,45 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
 
               {/* ── Navigation buttons (steps 1-3) ───────────────────────── */}
               {activeStep < 4 && (
-                <div className="flex justify-between pt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={activeStep === 1 && onCancel ? onCancel : prevStep}
-                    disabled={activeStep === 1 && !onCancel}
-                  >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    {activeStep === 1 ? 'Cancel' : 'Back'}
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!isStepValid()}
-                  >
-                    Next
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                <div className="space-y-2 pt-2">
+                  {/* Inline reason when Next is blocked — without this, users
+                      click a dead button and assume the form is broken
+                      (Bug 20 triage: user entered title only, Next stayed
+                      disabled, progress bar advanced because it counts
+                      fields not steps — looked like a transition bug). */}
+                  {!isStepValid() && (
+                    <output className="block rounded-md border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
+                      {activeStep === 1 &&
+                        'Fill in both Title and Description to continue.'}
+                      {activeStep === 2 &&
+                        'Pick a question source to continue.'}
+                      {activeStep === 3 &&
+                        formValues.type === 'SCHEDULED' &&
+                        'Pick a date and time for the scheduled battle.'}
+                    </output>
+                  )}
+                  <div className="flex justify-between">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={
+                        activeStep === 1 && onCancel ? onCancel : prevStep
+                      }
+                      disabled={activeStep === 1 && !onCancel}
+                    >
+                      <ArrowLeft className="mr-2 h-4 w-4" />
+                      {activeStep === 1 ? 'Cancel' : 'Back'}
+                    </Button>
+                    <Button
+                      type="button"
+                      onClick={nextStep}
+                      disabled={!isStepValid()}
+                      aria-disabled={!isStepValid()}
+                    >
+                      Next
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               )}
 
