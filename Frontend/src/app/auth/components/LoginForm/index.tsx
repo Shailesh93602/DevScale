@@ -65,6 +65,9 @@ const LoginForm = () => {
           id="login-email"
           type="email"
           placeholder="you@example.com"
+          autoComplete="username"
+          autoCorrect="off"
+          spellCheck={false}
           className="w-full"
         />
         {errors.email && (
