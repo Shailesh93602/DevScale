@@ -60,6 +60,7 @@ const RegisterForm = () => {
             {...register('first_name')}
             id="register-first-name"
             placeholder="First Name"
+            autoComplete="given-name"
             className="w-full"
             aria-invalid={!!errors.first_name}
           />
@@ -80,6 +81,7 @@ const RegisterForm = () => {
             {...register('last_name')}
             id="register-last-name"
             placeholder="Last Name"
+            autoComplete="family-name"
             className="w-full"
             aria-invalid={!!errors.last_name}
           />
@@ -100,7 +102,11 @@ const RegisterForm = () => {
         <Input
           {...register('email')}
           id="register-email"
+          type="email"
           placeholder="Email"
+          autoComplete="email"
+          autoCorrect="off"
+          spellCheck={false}
           className="w-full"
           aria-invalid={!!errors.email}
           aria-describedby={errors.email ? 'register-email-error' : undefined}
@@ -127,6 +133,7 @@ const RegisterForm = () => {
           name="password"
           id="register-password"
           placeholder="Password"
+          autoComplete="new-password"
           error={errors.password?.message as string}
         />
       </div>
@@ -142,6 +149,7 @@ const RegisterForm = () => {
           name="confirmPassword"
           id="register-confirm-password"
           placeholder="Confirm Password"
+          autoComplete="new-password"
           error={errors.confirmPassword?.message as string}
         />
       </div>

@@ -69,10 +69,18 @@ export const registerSchema = yup.object({
     .max(50, 'Last name must be less than 50 characters'),
   email: emailSchema,
   password: passwordSchema(),
+  // Order matters: .required() fires first so an empty submit shows
+  // "Confirm Password is required" (not the confusing "Passwords must match"
+  // when both fields are empty strings). .test() only compares when both
+  // values are present, matching user-intuited validation order.
   confirmPassword: yup
     .string()
     .required('Confirm Password is required')
-    .oneOf([yup.ref('password')], 'Passwords must match'),
+    .test('passwords-match', 'Passwords must match', function (value) {
+      const { password } = this.parent as { password?: string };
+      if (!value || !password) return true; // required-error owns the empty case
+      return value === password;
+    }),
 });
 
 export const forgotPasswordSchema = yup.object({
@@ -84,7 +92,11 @@ export const resetPasswordSchema = yup.object({
   confirmPassword: yup
     .string()
     .required('Confirm Password is required')
-    .oneOf([yup.ref('password')], 'Passwords must match'),
+    .test('passwords-match', 'Passwords must match', function (value) {
+      const { password } = this.parent as { password?: string };
+      if (!value || !password) return true;
+      return value === password;
+    }),
 });
 
 export const profileSchema = yup.object({

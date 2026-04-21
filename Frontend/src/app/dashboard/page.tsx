@@ -154,6 +154,15 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     let cancelled = false;
 
+    // Hard ceiling on how long the skeleton can block the page. axios has
+    // a 20s timeout but a backend that returns a 200 stream-without-body
+    // would hang past it. Fall through to the empty-state view after 10s
+    // so a brand-new user always sees SOMETHING instead of a permanent
+    // skeleton (bug observed: new burner accounts saw > 2-min skeleton).
+    const skeletonCeiling = setTimeout(() => {
+      if (!cancelled) setIsLoading(false);
+    }, 10_000);
+
     const fetchSummary = async () => {
       // If we already have stale data, revalidate silently in the background
       const isRevalidating = summary !== null;
@@ -191,6 +200,7 @@ const DashboardPage: React.FC = () => {
     fetchSummary();
     return () => {
       cancelled = true;
+      clearTimeout(skeletonCeiling);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getDashboardSummary]);

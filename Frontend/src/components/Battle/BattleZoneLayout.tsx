@@ -133,7 +133,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
           meantime. */}
       <div
         role="status"
-        className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300"
+        className="border-b border-warning/30 bg-warning/10 px-4 py-2 text-center text-sm text-warning"
       >
         ⚠️ Real-time matchmaking is being migrated to a dedicated WebSocket
         host — some live-battle features may be unavailable. The working
