@@ -1,5 +1,35 @@
-import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll, jest } from '@jest/globals';
 import { BattleType, Difficulty } from '@prisma/client';
+
+// ─── Redis / Redlock stubs ──────────────────────────────────────────────────
+// The real cacheService connects to Upstash at module-load time. When the
+// hostname in CI is stale (deleted instance) every test times out on DNS
+// resolution — 4 tests × 30 s = 2+ min and "4 flaky failures" in CI logs.
+// Stub the module so lock acquisition is instant and no network I/O runs.
+jest.mock('../services/cacheService.js', () => {
+  const fakeLock = {
+    release: async () => {
+      /* noop */
+    },
+  };
+  return {
+    redlock: {
+      acquire: async () => fakeLock,
+    },
+    redis: {
+      call: async () => 'OK',
+      quit: async () => undefined,
+      disconnect: () => undefined,
+      on: () => undefined,
+    },
+    getCache: async () => null,
+    setCache: async () => undefined,
+    getCached: () => null,
+    setCached: () => undefined,
+    invalidatePattern: () => undefined,
+  };
+});
+
 import {
   BattleRepository,
   calculatePoints,
