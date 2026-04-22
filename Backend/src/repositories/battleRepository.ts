@@ -173,7 +173,7 @@ export class BattleRepository extends BaseRepository<
     callback: () => Promise<T>
   ): Promise<T> {
     const resource = `battle:lock:${battleId}`;
-    const lock = await redlock.acquire([resource], ttlMs);
+    const lock = await redlock.acquire([resource], ttlMs, { retryCount: 0 });
     try {
       return await callback();
     } finally {

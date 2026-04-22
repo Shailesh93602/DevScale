@@ -1,2 +1,5 @@
 .vercel
 .meta/
+
+# Quality audit artifact — kept local
+quality.md
