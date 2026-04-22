@@ -131,6 +131,23 @@ export class App {
           return callback(new Error(`Origin ${origin} not allowed by CORS`));
         },
         credentials: true,
+        // Explicitly allow the headers the frontend sends. Without this,
+        // express cors sometimes fails to echo the Access-Control-
+        // Request-Headers list on preflight responses, which makes
+        // browsers block the actual POST /roadmaps/enroll + POST /battles
+        // requests — surfacing to the user as 'CORS error' even though
+        // the origin check itself passed. Seen on Vercel serverless.
+        allowedHeaders: [
+          'Content-Type',
+          'Authorization',
+          'X-XSRF-TOKEN',
+          'X-Requested-With',
+          'Accept',
+          'Origin',
+        ],
+        exposedHeaders: ['Content-Length', 'X-Request-Id'],
+        methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+        maxAge: 600,
       })
     );
     const isProd = process.env.NODE_ENV === 'production';
