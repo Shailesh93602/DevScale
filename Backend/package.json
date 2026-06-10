@@ -100,8 +100,6 @@
     "json2csv": "^6.0.0-alpha.2",
     "jsonwebtoken": "^9.0.3",
     "luxon": "^3.6.1",
-    "ml": "^6.0.0",
-    "ml-logistic-regression": "^2.0.0",
     "module-alias": "^2.2.3",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.10.0",

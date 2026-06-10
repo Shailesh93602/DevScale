@@ -80,25 +80,28 @@ Redlock implements the [Redlock algorithm](https://redis.io/docs/manual/patterns
 ```ts
 import Redlock from 'redlock';
 
+// Shared Redlock instance (cacheService.ts). Retries are sensible for general
+// cache/section locks, so the shared config keeps a retry budget:
 const redlock = new Redlock([redis], {
-  retryCount: 0,    // fail-fast: if we can't get the lock, the other instance got it
-  retryDelay: 0,
+  retryCount: 10,
+  retryDelay: 200,
+  retryJitter: 200,
   driftFactor: 0.01,
 });
 
-async function startBattle(roomId: string) {
-  const lock = await redlock.acquire([`lock:battle:${roomId}`], 5000);
+// Battle start overrides to FAIL-FAST per acquisition (battleRepository.withBattleLock):
+async function withBattleLock<T>(battleId: string, ttlMs: number, fn: () => Promise<T>) {
+  // retryCount: 0 → if the lock is taken, the other instance already won the race
+  const lock = await redlock.acquire([`battle:lock:${battleId}`], ttlMs, { retryCount: 0 });
   try {
-    // only one instance reaches here
-    await initializeBattleState(roomId);
-    io.to(roomId).emit('battle:started', { roomId });
+    return await fn(); // only one instance reaches here
   } finally {
-    await lock.release();
+    await lock.release().catch(() => {}); // ignore "already expired/released"
   }
 }
 ```
 
-**Why `retryCount: 0`:** If the lock is taken, the other instance already won the race and is starting the battle. Retrying would queue up a second start attempt after the first completes — which would restart an already-running battle. Fail-fast is the correct behavior here.
+**Why fail-fast (`retryCount: 0`) on battle start specifically:** if the lock is taken, the other instance already won the race and is starting the battle. Retrying would queue a second start attempt that fires after the first completes — restarting an already-running battle. So the shared lock retries (good for caches), but the battle-start path overrides to fail-fast per acquisition. This override lives in `battleRepository.ts`.
 
 ### 3. opossum — circuit breaker on code execution
 
