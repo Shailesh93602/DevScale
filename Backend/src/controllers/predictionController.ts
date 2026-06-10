@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils/index';
-import { createAppError } from '../utils/errorHandler';
 
 /**
  * The ML "prediction" feature was never implemented — the previous version
@@ -12,7 +11,11 @@ import { createAppError } from '../utils/errorHandler';
  * entirely, or implement a real recommendation model over existing progress data.
  */
 export default class PredictionController {
-  public predict = catchAsync(async (_req: Request, _res: Response) => {
-    throw createAppError('Prediction is not available yet.', 501);
+  public predict = catchAsync(async (req: Request, res: Response) => {
+    void req; // part of the Express handler signature; unused here
+    return res.status(501).json({
+      status: 'error',
+      message: 'Prediction is not available yet.',
+    });
   });
 }
