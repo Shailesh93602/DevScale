@@ -60,6 +60,11 @@ jobs:
     defaults:
       run:
         working-directory: Backend
+    env:
+      # Stub URLs so `prisma generate`/`validate` can read the datasource env.
+      # No DB is contacted — these commands only parse the schema.
+      DATABASE_URL: postgresql://user:pass@localhost:5432/db?schema=public
+      DIRECT_URL: postgresql://user:pass@localhost:5432/db?schema=public
     steps:
       - uses: actions/checkout@v4
 
@@ -88,6 +93,10 @@ jobs:
     defaults:
       run:
         working-directory: Backend
+    env:
+      # Stub URLs for `prisma generate` (schema parse only; no DB contacted).
+      DATABASE_URL: postgresql://user:pass@localhost:5432/db?schema=public
+      DIRECT_URL: postgresql://user:pass@localhost:5432/db?schema=public
     steps:
       - uses: actions/checkout@v4
 
