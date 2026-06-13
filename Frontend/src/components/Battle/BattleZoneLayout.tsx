@@ -68,13 +68,19 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
       const statsResponse = await getStatistics();
       if (statsResponse.success && statsResponse.data) {
         const d = statsResponse.data;
-        // Use pre-calculated win_rate from backend, fall back to manual calc
+        // Use pre-calculated win_rate from backend, fall back to manual calc.
         const winRate =
           d.win_rate ??
           (d.wins != null && d.total_battles != null
             ? Math.round((d.wins / Math.max(d.total_battles, 1)) * 100)
-            : 0);
-        setUserWinRate(`${winRate}%`);
+            : null);
+        // `??` doesn't catch NaN — guard for a finite number so a bad/NaN
+        // backend value renders "--" instead of "NaN%".
+        setUserWinRate(
+          typeof winRate === 'number' && Number.isFinite(winRate)
+            ? `${winRate}%`
+            : '--',
+        );
         return;
       }
 
