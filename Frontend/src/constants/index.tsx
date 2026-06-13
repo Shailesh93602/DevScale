@@ -148,7 +148,7 @@ export const content = [
   {
     title: 'Personalized Learning Paths',
     description:
-      "Everyone's learning journey is unique. Our AI-powered platform creates personalized learning paths tailored to your goals, current skill level, and learning style. Stay motivated with a curriculum that adapts to your progress and challenges you at the right pace.",
+      "Everyone's learning journey is unique. EduScale builds personalized, node-based learning paths tailored to your goals, current skill level, and pace. Stay motivated with a roadmap that adapts as you progress and unlocks new challenges along the way.",
     content: (
       <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--purple-500),var(--pink-500))] text-white">
         Personalized Learning Paths
