@@ -174,10 +174,7 @@ export const quickLinks = [
     name: 'Roadmaps',
     href: '/career-roadmap',
   },
-  {
-    name: 'Community',
-    href: '/community',
-  },
+  // 'Community' hidden until built — see DEFERRED_FEATURES.md
   {
     name: 'Interview Prep',
     href: '/interview-question',
@@ -226,10 +223,7 @@ export const footerLinks = [
     name: 'Contact Us',
     href: '/contact',
   },
-  {
-    name: 'Discussion Forums',
-    href: '/discussion-forums',
-  },
+  // 'Discussion Forums' hidden until built — see DEFERRED_FEATURES.md
 ];
 
 export { BRANDING } from './branding';

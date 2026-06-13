@@ -170,10 +170,22 @@ export class BattleRepository extends BaseRepository<
   private async withBattleLock<T>(
     battleId: string,
     ttlMs: number,
-    callback: () => Promise<T>
+    callback: () => Promise<T>,
+    opts: { lockKeySuffix?: string; retryCount?: number } = {}
   ): Promise<T> {
-    const resource = `battle:lock:${battleId}`;
-    const lock = await redlock.acquire([resource], ttlMs, { retryCount: 0 });
+    // A per-user suffix lets different players act on the same battle
+    // concurrently while still serializing a single user's own concurrent
+    // requests (e.g. double-tapping submit on the same answer).
+    const resource = opts.lockKeySuffix
+      ? `battle:lock:${battleId}:${opts.lockKeySuffix}`
+      : `battle:lock:${battleId}`;
+    // retryCount 0 = fail fast — correct for single-actor admin actions (start /
+    // complete). High-concurrency paths (answer submission during a live battle)
+    // pass a retryCount so legitimate concurrent requests queue for the lock
+    // instead of erroring out.
+    const lock = await redlock.acquire([resource], ttlMs, {
+      retryCount: opts.retryCount ?? 0,
+    });
     try {
       return await callback();
     } finally {
@@ -679,7 +691,10 @@ export class BattleRepository extends BaseRepository<
     selectedOption: number,
     timeTakenMs: number
   ) {
-    const txResult = await this.withBattleLock(battleId, 15_000, async () => {
+    const txResult = await this.withBattleLock(
+      battleId,
+      15_000,
+      async () => {
       return prisma.$transaction(
         async (tx) => {
           const question = await tx.battleQuestion.findUnique({
@@ -787,7 +802,11 @@ export class BattleRepository extends BaseRepository<
         },
         { timeout: 15_000 }
       );
-    });
+      },
+      // Serialize per-battle (rank recalculation touches every participant) but
+      // retry so concurrent live-battle submissions queue instead of failing.
+      { retryCount: 10 }
+    );
 
     return txResult;
   }

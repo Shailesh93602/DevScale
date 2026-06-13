@@ -32,6 +32,8 @@ import prisma from './lib/prisma.js';
 import socketService from './services/socket.js';
 import { redis } from './services/cacheService.js';
 import { RedisStore, RedisReply } from 'rate-limit-redis';
+import { register, collectDefaultMetrics } from 'prom-client';
+import { PerformanceMonitor } from './services/monitoring/performanceMonitor.js';
 
 import { fileURLToPath } from 'node:url';
 
@@ -64,6 +66,37 @@ export class App {
   private initializeMiddlewares(): void {
     this.app.use(requestIdMiddleware);
     this.app.use(compression());
+
+    // ── Prometheus metrics ────────────────────────────────────────────────
+    // Exposed before auth/rate-limit/CSRF so scrapers are never throttled or
+    // blocked. Optionally gate with METRICS_TOKEN (Bearer) in production.
+    this.app.get('/metrics', async (req, res) => {
+      const token = process.env.METRICS_TOKEN;
+      if (token && req.headers.authorization !== `Bearer ${token}`) {
+        res.status(401).end();
+        return;
+      }
+      res.set('Content-Type', register.contentType);
+      res.end(await register.metrics());
+    });
+
+    // Record every request's duration into the histogram. Route label uses the
+    // matched route pattern (e.g. /:id) — not the raw path — to avoid
+    // high-cardinality series from ids/slugs.
+    this.app.use((req, res, next) => {
+      const start = process.hrtime.bigint();
+      res.on('finish', () => {
+        const durationSec = Number(process.hrtime.bigint() - start) / 1e9;
+        const route = req.route?.path ?? req.baseUrl ?? 'unmatched';
+        PerformanceMonitor.trackRequest(
+          req.method,
+          typeof route === 'string' && route ? route : 'unmatched',
+          durationSec,
+          res.statusCode
+        );
+      });
+      next();
+    });
 
     // Global body parsers — skip JSON for stripe webhooks to allow raw parsing in SubscriptionRoutes
     this.app.use((req, res, next) => {
@@ -282,6 +315,11 @@ export class App {
       });
       process.exit(1);
     });
+
+    // Collect Node/process default metrics (CPU, GC, heap, event loop lag) and
+    // start the heap gauge — both feed the Prometheus /metrics endpoint.
+    collectDefaultMetrics();
+    PerformanceMonitor.startMemoryMonitoring();
 
     try {
       await prisma.$connect();
