@@ -260,37 +260,23 @@ test.describe('Student Panel Features - Professional Grade', () => {
   });
 
   // --- Community ---
-  test('Community: Doubts Corner Form Validation', async ({ page }) => {
+  test('Community: Doubts Corner shows a Coming Soon placeholder (feature deferred)', async ({
+    page,
+  }) => {
     await page.goto('/doubts');
 
-    await expect(
-      page.getByRole('heading', { name: 'Doubts Corner' }),
-    ).toBeVisible();
+    // The old form faked submission (success toast, discarded the question), so
+    // it was replaced with an honest Coming Soon until wired to the forum
+    // backend — see EduScale/DEFERRED_FEATURES.md.
+    await expect(page.getByText('Doubts Corner').first()).toBeVisible();
 
     await checkAccessibility(page, 'Doubts Corner');
 
-    // Try empty submit
-    const submitBtn = page.getByRole('button', { name: 'Submit' });
-    await submitBtn.click();
-
-    // Expect validation message (HTML5 validation or custom)
-    // If it's HTML5 required, Playwright might not catch a visible error text easily,
-    // but we can check if the textarea is invalid.
-    const textarea = page.locator('textarea#question');
-    // Check if it's focused or has validation state
-    // For now, let's just ensure it didn't navigate or show success toast
+    // No fake question form should exist, and no false success toast.
+    await expect(page.locator('textarea#question')).toHaveCount(0);
     await expect(
       page.getByText('Your question has been submitted!'),
-    ).not.toBeVisible();
-
-    // Fill valid data
-    await textarea.fill('How do I test accessibility with Playwright?');
-    await submitBtn.click();
-
-    // Expect success toast
-    await expect(
-      page.getByText('Your question has been submitted!'),
-    ).toBeVisible();
+    ).toHaveCount(0);
   });
 
   test('Dashboard: Navbar keeps links centered with profile at right', async ({

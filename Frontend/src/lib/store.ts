@@ -9,7 +9,11 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+// Import the storage *factory*, not the default `redux-persist/lib/storage`.
+// The default module calls createWebStorage('local') at import time, which on
+// the server (no window) logs "redux-persist failed to create sync storage".
+// Calling the factory lazily — only in the browser — avoids that SSR warning.
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 import userReducer from './features/user/userSlice';
 import loaderReducer from './features/loader/loaderSlice';
 
@@ -26,6 +30,11 @@ const createNoopStorage = () => {
     },
   };
 };
+
+const storage =
+  typeof window !== 'undefined'
+    ? createWebStorage('local')
+    : createNoopStorage();
 
 const persistStorage =
   typeof window !== 'undefined' ? storage : createNoopStorage();
