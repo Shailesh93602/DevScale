@@ -68,7 +68,7 @@ test('regression: navbar alignment classes are stable and no redux-persist SSR w
   // Verify stable structural classes exist in the navbar
   expect(navbarContent).toContain('hidden flex-1 items-center justify-center');
   expect(navbarContent).toContain('flex items-center gap-1 rounded-full p-1');
-  expect(navbarContent).toContain('fixed inset-x-0 top-0 z-50');
+  expect(navbarContent).toContain('fixed inset-x-0 top-0 z-[1000]');
 
   const consoleMessages: string[] = [];
   page.on('console', (message) => {
