@@ -378,7 +378,11 @@ export default function StatisticsPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Win Rate"
-            value={`${statistics.winRate}%`}
+            value={
+              Number.isFinite(statistics.winRate)
+                ? `${statistics.winRate}%`
+                : '--'
+            }
             description={`${statistics.battlesWon} of ${statistics.totalBattles} battles`}
             icon={<Trophy className="h-5 w-5 text-primary" />}
           />
