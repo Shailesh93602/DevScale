@@ -34,6 +34,13 @@ _(from manifest.json — real runtime errors a user's browser hits)_
 
 ---
 
+## Dark-mode pass (2026-06-14)
+Captured the key pages (home, about, pricing, faq, contact, blogs, login, dashboard,
+battle-zone, create, statistics, profile, leaderboard) in **dark theme** (forced via
+`localStorage.theme=dark`). Result: dark mode is **well-implemented via design tokens** —
+no contrast/visibility bugs found. The one dark issue (the pricing page) was already
+fixed by the token conversion (#7), and now renders correctly in **both** themes.
+
 ## Details / notes
 - Screenshots reviewed at desktop (1440) + mobile (390), scroll-triggered so `whileInView` animations + lazy images render (an instant full-page shot otherwise shows false "empty section" gaps).
 - Pages that look clean so far: home (desktop+mobile), dashboard, battle-zone list, create wizard, profile, statistics, login — all have honest empty states and responsive layouts.
