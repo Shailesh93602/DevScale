@@ -66,6 +66,33 @@ interface CategoryOption {
   difficulties: string[];
 }
 
+// Load roadmaps with a few retries so a single transient/slow response doesn't
+// leave the dropdown stuck on "Loading..." forever (the placeholder only clears
+// once `roadmaps` is populated). Kept module-level to keep the component lean.
+async function fetchRoadmapsWithRetry(
+  fetcher: () => Promise<{ data: unknown }>,
+  onLoaded: (list: RoadmapOption[]) => void,
+  isCancelled: () => boolean,
+  attempt = 0,
+): Promise<void> {
+  try {
+    const res = await fetcher();
+    const list: RoadmapOption[] = Array.isArray(res.data)
+      ? (res.data as RoadmapOption[])
+      : ((res.data as { data?: RoadmapOption[] })?.data ?? []);
+    if (!isCancelled()) onLoaded(list);
+  } catch {
+    if (!isCancelled() && attempt < 3) {
+      setTimeout(
+        () => {
+          void fetchRoadmapsWithRetry(fetcher, onLoaded, isCancelled, attempt + 1);
+        },
+        1000 * (attempt + 1),
+      );
+    }
+  }
+}
+
 // ── Component ──────────────────────────────────────────────────────────────
 
 export default function QuestionSourceSelector({
@@ -120,16 +147,17 @@ export default function QuestionSourceSelector({
   // Debounce timer for pool fetching
   const poolTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Load roadmaps on mount
+  // Load roadmaps on mount (with retry — see fetchRoadmapsWithRetry).
   useEffect(() => {
-    getRoadmaps({ params: { limit: 100 } })
-      .then((res) => {
-        const list: RoadmapOption[] = Array.isArray(res.data)
-          ? (res.data as unknown as RoadmapOption[])
-          : ((res.data as unknown as { data?: RoadmapOption[] })?.data ?? []);
-        setRoadmaps(list);
-      })
-      .catch(() => {});
+    let cancelled = false;
+    void fetchRoadmapsWithRetry(
+      () => getRoadmaps({ params: { limit: 100 } }),
+      setRoadmaps,
+      () => cancelled,
+    );
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
