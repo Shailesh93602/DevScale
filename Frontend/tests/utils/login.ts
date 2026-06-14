@@ -63,8 +63,16 @@ async function authViaSavedStateOrLogin(
     await page.goto('/dashboard');
     if (/\/dashboard/.test(page.url())) return; // session valid
   }
-  // Fallback (e.g. running setup, or an expired/missing session).
+  // Self-heal: the saved session is missing or expired (we didn't land on
+  // /dashboard) — do a real login AND persist the refreshed session so the
+  // next tests reuse the good state instead of failing again.
   await realLogin(page, email, password);
+  try {
+    fs.mkdirSync(AUTH_DIR, { recursive: true });
+    await page.context().storageState({ path: stateFile });
+  } catch {
+    /* best-effort refresh */
+  }
 }
 
 /** Primary test user — creates/manages battles. Reuses the saved session. */

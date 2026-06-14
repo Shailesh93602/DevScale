@@ -235,7 +235,7 @@ export const RoadmapCard = ({
             ) : null}
 
             {roadmap.isEnrolled ? (
-              <Badge className="bg-primary/80">Enrolled</Badge>
+              <Badge>Enrolled</Badge>
             ) : null}
 
             {roadmap.isFeatured ? (
