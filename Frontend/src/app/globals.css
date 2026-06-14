@@ -78,7 +78,9 @@
     /* Status */
     --success: 142 76% 28%;
     --success-foreground: 355 100% 97%;
-    --warning: 38 92% 36%;
+    /* L28% (was 36%) so text-warning clears WCAG AA 4.5:1 on the light amber
+       status-badge background (amber-500/15 ≈ #f3ece2). */
+    --warning: 38 92% 28%;
     --warning-foreground: 355 100% 97%;
     --info: 217 91% 60%;
     --info-foreground: 355 100% 97%;
