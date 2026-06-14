@@ -42,3 +42,7 @@ next-env.d.ts
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Playwright saved auth sessions (contain tokens)
+Frontend/tests/.auth/
+tests/.auth/
