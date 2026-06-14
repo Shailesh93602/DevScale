@@ -405,12 +405,6 @@ const DashboardPage: React.FC = () => {
               <p className="text-sm font-semibold text-foreground">
                 Recent Activity
               </p>
-              <Link
-                href="/activity"
-                className="text-xs font-semibold text-muted-foreground no-underline hover:text-foreground"
-              >
-                See All
-              </Link>
             </div>
             <div className="px-5">
               {activities.map((activity) => (

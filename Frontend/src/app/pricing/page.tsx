@@ -102,12 +102,12 @@ export default function PricingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black px-4 py-20 text-white">
+    <div className="min-h-screen bg-background px-4 py-20 text-foreground">
       <div className="mx-auto mb-16 max-w-7xl text-center">
-        <h1 className="from-purple-400 to-pink-600 mb-6 bg-gradient-to-r bg-clip-text text-5xl font-bold text-transparent md:text-7xl">
+        <h1 className="mb-6 text-5xl font-bold text-foreground md:text-7xl">
           Unlock Your Potential with EduScale
         </h1>
-        <p className="mx-auto max-w-2xl text-xl text-gray-400">
+        <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
           Flexible plans to elevate your coding skills and career. Choose the
           one that fits your goals.
         </p>
@@ -119,35 +119,35 @@ export default function PricingPage() {
             key={plan.id}
             className={`relative transform rounded-3xl border p-8 transition-all duration-300 hover:-translate-y-2 ${
               plan.highlighted
-                ? 'from-purple-900/20 border-purple-500/50 bg-gradient-to-b to-black shadow-[0_0_30px_rgba(168,85,247,0.2)]'
-                : 'border-white/10 bg-zinc-900/50 hover:border-white/20'
+                ? 'border-primary/50 bg-card shadow-[0_0_30px_hsl(var(--primary)/0.18)] ring-1 ring-primary/30'
+                : 'border-border bg-card hover:border-primary/30'
             }`}
           >
             {plan.highlighted && (
-              <div className="bg-purple-500 absolute -top-4 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 text-sm font-bold uppercase tracking-wider text-white">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-sm font-bold uppercase tracking-wider text-primary-foreground">
                 Most Popular
               </div>
             )}
 
             <div className="mb-8">
               <h3 className="mb-2 text-2xl font-bold">{plan.name}</h3>
-              <p className="h-10 text-sm text-gray-400">{plan.description}</p>
+              <p className="h-10 text-sm text-muted-foreground">{plan.description}</p>
             </div>
 
             <div className="mb-8 flex items-baseline gap-1">
               <span className="text-5xl font-bold">{plan.price}</span>
-              <span className="text-gray-400">{plan.period}</span>
+              <span className="text-muted-foreground">{plan.period}</span>
             </div>
 
             <ul className="mb-10 space-y-4">
               {plan.features.map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <div
-                    className={`mt-1 rounded-full p-0.5 ${plan.highlighted ? 'bg-purple-500' : 'bg-gray-600'}`}
+                    className={`mt-1 rounded-full p-0.5 ${plan.highlighted ? 'bg-primary' : 'bg-muted-foreground/40'}`}
                   >
-                    <Check className="h-3 w-3 text-white" />
+                    <Check className="h-3 w-3 text-primary-foreground" />
                   </div>
-                  <span className="text-sm text-gray-300">{feature}</span>
+                  <span className="text-sm text-foreground/80">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -157,8 +157,8 @@ export default function PricingPage() {
               disabled={loading !== null}
               className={`flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-bold transition-all duration-300 ${
                 plan.highlighted
-                  ? 'from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-purple-500/20 bg-gradient-to-r shadow-lg'
-                  : 'bg-white/10 hover:bg-white/20'
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90'
+                  : 'bg-muted text-foreground hover:bg-muted/70'
               } disabled:opacity-50`}
             >
               {loading === plan.id ? (
@@ -172,7 +172,7 @@ export default function PricingPage() {
       </div>
 
       <div className="mt-24 text-center">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           Trusted by engineers at top companies worldwide.
           <span className="mt-4 block space-x-8 opacity-50 grayscale">
             <span className="text-xl font-bold">Google</span>
