@@ -98,18 +98,18 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
   } = form;
   const formValues = watch();
 
-  // Progress: title + description + questionSource + (date+time if SCHEDULED)
+  // Progress: title + questionSource + (date+time if SCHEDULED). Description is
+  // optional, so it doesn't gate progress.
   const completedFields = [
     !!formValues.title,
-    !!formValues.description,
     !!questionSource,
     formValues.type !== 'SCHEDULED' || (!!formValues.date && !!formValues.time),
   ].filter(Boolean).length;
-  const formProgress = (completedFields / 4) * 100;
+  const formProgress = (completedFields / 3) * 100;
 
   // Step validation
   const isStepValid = () => {
-    if (activeStep === 1) return !!formValues.title && !!formValues.description;
+    if (activeStep === 1) return !!formValues.title;
     if (activeStep === 2) return !!questionSource;
     if (activeStep === 3) {
       if (formValues.type === 'SCHEDULED')
@@ -791,7 +791,7 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                   {!isStepValid() && (
                     <output className="block rounded-md border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
                       {activeStep === 1 &&
-                        'Fill in both Title and Description to continue.'}
+                        'Add a battle title to continue.'}
                       {activeStep === 2 &&
                         'Pick a question source to continue.'}
                       {activeStep === 3 &&

@@ -285,7 +285,14 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
                         transition={{ delay: 0.4 }}
                       >
                         <Link
-                          href={`/${tabs[activeTab].name.toLowerCase().replace(' ', '-')}`}
+                          href={
+                            (
+                              {
+                                'Learning Paths': '/career-roadmap',
+                                Challenges: '/coding-challenges',
+                              } as Record<string, string>
+                            )[tabs[activeTab].name] ?? '/auth/register'
+                          }
                           className="bg-primary/10 hover:bg-primary/20 inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-primary transition-colors"
                         >
                           Learn more
