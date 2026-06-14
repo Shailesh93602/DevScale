@@ -20,9 +20,18 @@ export default defineConfig({
     actionTimeout: 15000,
   },
   projects: [
+    // Logs in once per user and saves the session (tests/.auth/*.json), so the
+    // authenticated specs reuse it instead of re-logging-in (avoids the Supabase
+    // auth rate limit). Public/unauthenticated tests don't call loginAs* and so
+    // stay logged out — no global storageState is applied.
+    {
+      name: 'setup',
+      testMatch: /auth\.setup\.ts/,
+    },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup'],
     },
   ],
   webServer: {
