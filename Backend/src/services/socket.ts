@@ -3,7 +3,8 @@ import { Server as HttpServer } from 'http';
 import { createAdapter } from '@socket.io/redis-adapter';
 import Redis from 'ioredis';
 import logger from '../utils/logger';
-import { verifyToken } from '../utils/jwt';
+import { verifySupabaseToken } from '../utils/verifySupabaseToken';
+import prisma from '../lib/prisma';
 import { CORS_ORIGIN, REDIS_URL } from '../config';
 
 // Define socket event types
@@ -28,12 +29,6 @@ export enum SocketEvents {
   CHAT_MESSAGE = 'chat:message',
   CHAT_JOIN = 'chat:join',
   CHAT_LEAVE = 'chat:leave',
-}
-
-interface DecodedToken {
-  userId: string;
-  username?: string;
-  avatar_url?: string;
 }
 
 // Define socket message types
@@ -175,16 +170,23 @@ class SocketService {
           return next(new Error('Authentication token is missing'));
         }
 
-        const decoded = (await verifyToken(token)) as DecodedToken;
-        if (!decoded || !decoded.userId) {
+        // Verify the Supabase access token the same way the REST API does,
+        // then resolve the internal user record (battles reference our own
+        // User.id, not the Supabase id).
+        const supabaseUser = await verifySupabaseToken(token);
+        const dbUser = await prisma.user.findUnique({
+          where: { supabase_id: supabaseUser.id },
+          select: { id: true, username: true, avatar_url: true },
+        });
+        if (!dbUser) {
           return next(new Error('Invalid authentication token'));
         }
 
         // Attach user data to socket
         socket.data.user = {
-          id: decoded.userId,
-          username: decoded.username || 'Anonymous',
-          avatar_url: decoded.avatar_url,
+          id: dbUser.id,
+          username: dbUser.username || 'Anonymous',
+          avatar_url: dbUser.avatar_url ?? undefined,
         };
 
         next();
