@@ -201,8 +201,10 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
-    // Battle cards show "0/4 participants" or "1/6 participants" format
-    await expect(page.getByText(/\d+\/\d+ participants/).first()).toBeVisible({
+    // Battle cards render the live/max fraction as "<n> / <m> players"
+    await expect(
+      page.getByText(/\d+\s*\/\s*\d+\s+players/i).first(),
+    ).toBeVisible({
       timeout: 10000,
     });
   });
@@ -211,7 +213,8 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
-    await expect(page.getByText(/Created by/i).first()).toBeVisible({
+    // Cards attribute the creator inline as "by <username>"
+    await expect(page.getByText(/\bby\s+\S+/i).first()).toBeVisible({
       timeout: 10000,
     });
   });
@@ -342,7 +345,12 @@ test.describe('Flow 2 — Filters and search', () => {
     });
 
     await searchInput.clear();
-    await page.waitForTimeout(800);
+    // Wait for the list to actually repopulate rather than racing a fixed delay:
+    // the empty state must clear and real battle cards must come back.
+    await expect(page.getByText(/no battles found/i)).toBeHidden({
+      timeout: 10000,
+    });
+    await waitForBattleList(page);
     const titles = await getBattleTitles(page);
     expect(titles.length).toBeGreaterThanOrEqual(1);
   });
@@ -500,8 +508,9 @@ test.describe('Flow 3 — Battle detail WAITING phase + slug navigation', () => 
     await goto(page, BZ);
     await waitForBattleList(page);
 
+    // Full battle cards expose a "Details" button that routes to the detail page
     await page
-      .getByRole('button', { name: 'View battle details' })
+      .getByRole('button', { name: /details/i })
       .first()
       .click();
     await page.waitForURL(/\/battle-zone\/[a-z0-9-]+/, { timeout: 10000 });
@@ -605,8 +614,8 @@ test.describe('Flow 4 — Join and leave a battle', () => {
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(2000);
 
-    // "Test" is the first name of testuser
-    await expect(page.getByText('testuser')).toBeVisible({ timeout: 8000 });
+    // The seeded student logs in as "teststudent"
+    await expect(page.getByText('teststudent')).toBeVisible({ timeout: 8000 });
   });
 
   test('join again shows error (already enrolled)', async ({ page }) => {
