@@ -65,12 +65,24 @@ async function shoot(
   browser: import('@playwright/test').Browser,
   route: string,
   authed: boolean,
+  theme: 'light' | 'dark' = 'light',
+  onlyViewports?: string[],
 ) {
   for (const vp of VIEWPORTS) {
+    if (onlyViewports && !onlyViewports.includes(vp.name)) continue;
     const ctx = await browser.newContext({
       viewport: { width: vp.width, height: vp.height },
       storageState: authed ? STUDENT_STATE : undefined,
+      colorScheme: theme,
     });
+    // next-themes reads localStorage key `theme` on load (attribute="class").
+    await ctx.addInitScript((t) => {
+      try {
+        window.localStorage.setItem('theme', t as string);
+      } catch {
+        /* ignore */
+      }
+    }, theme);
     const page = await ctx.newPage();
     const errors: string[] = [];
     const failedRequests: string[] = [];
@@ -106,7 +118,8 @@ async function shoot(
     await page.waitForTimeout(1200);
 
     const slug = route === '/' ? 'home' : route.replace(/^\//, '').replace(/\//g, '_');
-    const file = path.join(OUT, `${slug}__${vp.name}.png`);
+    const suffix = theme === 'dark' ? `__${vp.name}__dark` : `__${vp.name}`;
+    const file = path.join(OUT, `${slug}${suffix}.png`);
     await page.screenshot({ path: file, fullPage: true }).catch(() => {});
 
     manifest.push({
@@ -127,6 +140,13 @@ test('capture all user-facing pages', async ({ browser }) => {
   fs.mkdirSync(OUT, { recursive: true });
   for (const r of PUBLIC_ROUTES) await shoot(browser, r, false);
   for (const r of AUTHED_ROUTES) await shoot(browser, r, true);
+
+  // Dark-mode pass (desktop) on the key pages — dark themes are where
+  // contrast/visibility bugs hide.
+  const DARK_PUBLIC = ['/', '/about', '/pricing', '/faq', '/contact', '/blogs', '/auth/login'];
+  const DARK_AUTHED = ['/dashboard', '/battle-zone', '/battle-zone/create', '/battle-zone/statistics', '/profile', '/battle-zone/leaderboard'];
+  for (const r of DARK_PUBLIC) await shoot(browser, r, false, 'dark', ['desktop']);
+  for (const r of DARK_AUTHED) await shoot(browser, r, true, 'dark', ['desktop']);
   fs.writeFileSync(
     path.join(OUT, 'manifest.json'),
     JSON.stringify(manifest, null, 2),
