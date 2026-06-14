@@ -79,11 +79,11 @@ const BattleChat: React.FC<BattleChatProps> = ({
             <div ref={scrollRef} className="p-4">
               {messages.length === 0 ? (
                 <div className="flex h-48 flex-col items-center justify-center text-center">
-                  <MessageSquare className="mb-3 h-10 w-10 text-muted-foreground/40" />
+                  <MessageSquare className="mb-3 h-10 w-10 text-muted-foreground" />
                   <p className="text-sm font-medium text-muted-foreground">
                     No messages yet
                   </p>
-                  <p className="mt-1 text-xs text-muted-foreground/60">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     {isConnected
                       ? 'Be the first to say something!'
                       : 'Connecting to chat...'}
@@ -128,7 +128,7 @@ const BattleChat: React.FC<BattleChatProps> = ({
                             <span className="text-xs font-medium">
                               {isOwn ? 'You' : msg.username}
                             </span>
-                            <span className="text-xs text-muted-foreground/60">
+                            <span className="text-xs text-muted-foreground">
                               {new Date(msg.timestamp).toLocaleTimeString([], {
                                 hour: '2-digit',
                                 minute: '2-digit',

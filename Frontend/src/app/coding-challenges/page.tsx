@@ -195,7 +195,7 @@ export default function CodingChallengesPage() {
                           challenge.difficulty.toUpperCase() === 'EASY'
                             ? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-700'
                             : challenge.difficulty.toUpperCase() === 'MEDIUM'
-                              ? 'border border-amber-500/20 bg-amber-500/10 text-amber-700'
+                              ? 'border border-amber-500/20 bg-amber-500/10 text-warning'
                               : 'bg-red-500/10 text-red-700 border-red-500/20 border'
                         }`}
                       >
@@ -230,7 +230,7 @@ export default function CodingChallengesPage() {
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted/50">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-muted-foreground/70"
+                  className="h-8 w-8 text-muted-foreground"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

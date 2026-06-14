@@ -97,7 +97,7 @@ const AchievementItem: React.FC<AchievementItemProps> = ({
         <p className="mt-0.5 truncate text-xs text-muted-foreground">
           {description}
         </p>
-        <p className="mt-0.5 text-[10px] text-muted-foreground/60">
+        <p className="mt-0.5 text-[10px] text-muted-foreground">
           Unlocked {formattedDate}
         </p>
       </div>

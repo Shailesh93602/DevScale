@@ -546,7 +546,7 @@ export default function QuestionSourceSelector({
             <span
               className={cn(
                 'text-xs font-medium',
-                totalAvailable >= count ? 'text-green-600' : 'text-amber-600',
+                totalAvailable >= count ? 'text-green-600' : 'text-warning',
               )}
             >
               {totalAvailable >= count
