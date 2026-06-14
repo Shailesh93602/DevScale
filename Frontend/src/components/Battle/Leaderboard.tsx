@@ -238,7 +238,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
                               ? 'text-yellow-500'
                               : entry.rank === 2
                                 ? 'text-gray-400'
-                                : 'text-amber-600',
+                                : 'text-warning',
                           )}
                         />
                       )}

@@ -47,7 +47,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 const STATUS_COLORS: Record<string, string> = {
   WAITING: 'bg-blue-500/15 text-blue-600 border-blue-500/20',
-  LOBBY: 'bg-amber-500/15 text-amber-600 border-amber-500/20',
+  LOBBY: 'bg-amber-500/15 text-warning border-amber-500/20',
   IN_PROGRESS: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/20',
   COMPLETED: 'bg-muted text-muted-foreground',
   CANCELLED: 'bg-destructive/10 text-destructive border-destructive/20',
@@ -72,7 +72,7 @@ const getDifficultyColor = (difficulty: string) => {
     case 'easy':
       return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
     case 'medium':
-      return 'bg-amber-500/10 text-amber-600 border-amber-500/20';
+      return 'bg-amber-500/10 text-warning border-amber-500/20';
     case 'hard':
       return 'bg-red-500/10 text-red-600 border-red-500/20';
     default:
@@ -196,7 +196,7 @@ const BattleCard: React.FC<BattleCardProps> = ({
       const isUrgent = diffMs > 0 && diffMs < 3600000; // < 1 hour
       return {
         text: `Starts ${formatDistance(start, now, { addSuffix: true })}`,
-        color: isUrgent ? 'text-amber-600' : 'text-muted-foreground',
+        color: isUrgent ? 'text-warning' : 'text-muted-foreground',
       };
     }
     if (battle.status === 'COMPLETED') {
@@ -490,7 +490,7 @@ const BattleCard: React.FC<BattleCardProps> = ({
               </span>
             </div>
             {isFull && (
-              <span className="text-xs font-medium text-amber-600">Full</span>
+              <span className="text-xs font-medium text-warning">Full</span>
             )}
           </div>
           <Progress value={participantPercent} className="h-1.5" />

@@ -424,7 +424,7 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                       />
 
                       {!questionSource && (
-                        <p className="flex items-center gap-2 text-xs text-amber-600">
+                        <p className="flex items-center gap-2 text-xs text-warning">
                           <AlertCircle className="h-3 w-3" />
                           Select a roadmap, subject, or topic above to continue
                         </p>

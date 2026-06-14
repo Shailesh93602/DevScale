@@ -476,7 +476,7 @@ export default function EditProfilePage() {
                               Email Address
                             </FormLabel>
                             <div className="relative">
-                              <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                               <FormControl>
                                 <Input
                                   placeholder="john@example.com"
@@ -726,7 +726,7 @@ export default function EditProfilePage() {
                               GitHub URL
                             </FormLabel>
                             <div className="relative">
-                              <Github className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <Github className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                               <FormControl>
                                 <Input
                                   placeholder="https://github.com/username"
@@ -752,7 +752,7 @@ export default function EditProfilePage() {
                               LinkedIn URL
                             </FormLabel>
                             <div className="relative">
-                              <Linkedin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <Linkedin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                               <FormControl>
                                 <Input
                                   placeholder="https://linkedin.com/in/username"
@@ -778,7 +778,7 @@ export default function EditProfilePage() {
                               X (Twitter) URL
                             </FormLabel>
                             <div className="relative">
-                              <Twitter className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <Twitter className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                               <FormControl>
                                 <Input
                                   placeholder="https://x.com/username"
@@ -804,7 +804,7 @@ export default function EditProfilePage() {
                               Personal Website
                             </FormLabel>
                             <div className="relative">
-                              <Globe className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                              <Globe className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                               <FormControl>
                                 <Input
                                   placeholder="https://yourwebsite.com"
@@ -843,7 +843,7 @@ export default function EditProfilePage() {
                             Location / Address
                           </FormLabel>
                           <div className="relative">
-                            <MapPin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground/60" />
+                            <MapPin className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                             <FormControl>
                               <Input
                                 placeholder="City, Country"
