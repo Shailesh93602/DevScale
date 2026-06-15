@@ -173,7 +173,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~57 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads + moderation writes + XSS + Resources + Challenges + run-code + drafts + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket auth + live events**) — `qa/run.mjs` **53/53** + `qa/socket.mjs` **4/4** |
+| ✅ Verified | ~70 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads/writes + moderation + XSS + **submit→moderate→publish loop** + Resources + Challenges + run-code + drafts + submit + leaderboard + streak-update + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket**) — `qa/run.mjs` **70/70** + `qa/socket.mjs` **4/4** |
 | 🟡 Built, unverified | ~1 (article create/author path — confirm intended endpoint) |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
@@ -190,6 +190,9 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 6. **Article status endpoint was fully broken** (3 bugs): read `req.query` not body (always 404); Joi status enum didn't match the DB `Status` enum; `updateArticle` hardcoded status=PENDING ignoring the input. *(all fixed + verified)*
 7. **`getDraft` 500'd on a missing `language` query param** (raw Prisma composite-key error) → now returns null gracefully. *(fixed + verified)*
 8. **Admin Overview "Cache: error" was always wrong** — health check read a key named `'test'` that nothing ever wrote, so it reported `error` even when Redis was healthy. Now a real write-then-read probe → reports `healthy`. *(fixed + verified)*
+9. **Streak update 500 on first use** — `userDailyActivity.create` ran before the `UserStreak` FK parent existed → foreign-key violation for any user without a prior streak. Now ensures the streak row first. *(fixed + verified)*
+10. **Challenge submit 500** — controller read `req.params.challenge_id` but the route param is `:challengeId` → `findUnique({id: undefined})`. Fixed the param name. *(fixed + verified)*
+11. **`buildLeaderboard` nested-transaction deadlock** — see Battle Zone note (fixed; verified at connection_limit=1).
 8. (earlier) admin API entirely dead — routes never registered, searchUsers 500, audit wrong table. *(fixed + verified)*
 
 **Security checks passing:** XSS sanitization on article content (`<script>`/`onerror` stripped, safe markup kept); role gates (student denied admin/moderator writes); CSRF on mutations; logout token blocklist; battle anti-cheat (questions hidden until start).
