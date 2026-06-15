@@ -3,6 +3,7 @@ import BaseRepository from './baseRepository.js';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import prisma from '../lib/prisma.js';
+import { syncSupabaseUserRole } from '../services/supabaseAdmin.js';
 
 export default class UserRepository extends BaseRepository<
   User,
@@ -94,6 +95,22 @@ export default class UserRepository extends BaseRepository<
       });
 
       if (!user) throw createAppError('User not found', 404);
+
+      // Mirror the new role into Supabase app_metadata so the edge middleware
+      // (which gates /admin on app_metadata.role) stays in sync with the DB.
+      const withRole = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { supabase_id: true, role: { select: { name: true } } },
+      });
+      await syncSupabaseUserRole(
+        withRole?.supabase_id,
+        withRole?.role?.name
+      ).catch((err) =>
+        logger.error('Role sync to Supabase failed (DB role still updated)', {
+          err,
+        })
+      );
+
       return user;
     } catch (error) {
       logger.error('Error updating user role:', error);
