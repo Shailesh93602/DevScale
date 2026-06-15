@@ -116,14 +116,16 @@ export default class ChallengeController {
         return sendResponse(res, 'USER_NOT_FOUND');
       }
 
-      const { challenge_id } = req.params;
+      // Route param is ':challengeId' — reading 'challenge_id' gave undefined
+      // → findUnique({ id: undefined }) → 500.
+      const { challengeId } = req.params;
       const { code, language, quiz_id, answers, time_spent } = req.body;
 
       const submission = await this.challengeRepo.submitChallenge({
         code,
         language,
         user_id,
-        challenge_id,
+        challenge_id: challengeId,
         quiz_id,
         answers,
         time_spent,

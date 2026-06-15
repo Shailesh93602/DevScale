@@ -420,6 +420,36 @@ async function main() {
     }
   }
 
+  // ---------- MORE FLOWS (leaderboard, progress, streak, edges) ----------
+  if (!only || only === 'more') {
+    const lb = await api('GET', '/leaderboard', { token: tok.student });
+    rec('more', 'GET /leaderboard → 200', lb.status === 200, `status=${lb.status}`);
+
+    const prog = await api('GET', '/users/progress', { token: tok.student });
+    rec('more', 'GET /users/progress → 200', prog.status === 200, `status=${prog.status}`);
+
+    const enrolled = await api('GET', '/users/roadmap', { token: tok.student });
+    rec('more', 'GET /users/roadmap (enrolled list) → 200', enrolled.status === 200, `status=${enrolled.status}`);
+
+    // streak update (rate-limited) → then stats reflects
+    const su = await api('POST', '/streak/update', { token: tok.student, body: { activityType: 'TOPIC_COMPLETION', minutesSpent: 10, timezone: 'Asia/Kolkata' } });
+    rec('more', 'POST /streak/update → 2xx', su.status >= 200 && su.status < 300, `status=${su.status} ${su.status >= 300 ? JSON.stringify(su.json?.message).slice(0, 80) : ''}`);
+    const ss = await api('GET', '/streak/stats', { token: tok.student });
+    rec('more', 'GET /streak/stats → 200 after update', ss.status === 200, `status=${ss.status}`);
+
+    // enroll edge: non-existent roadmap must fail gracefully (4xx, not 500)
+    const badEnroll = await api('POST', '/roadmaps/enroll', { token: tok.student, body: { roadmapId: '00000000-0000-0000-0000-000000000000' } });
+    rec('more', 'enroll non-existent roadmap → graceful 4xx (not 500)', badEnroll.status >= 400 && badEnroll.status < 500, `status=${badEnroll.status}`);
+
+    // challenge submit (hits Judge0 — assert graceful, env may lack network)
+    const list = await api('GET', '/challenges?limit=1', { token: tok.student });
+    const ch = (list.json?.data?.challenges || list.json?.data?.data || (Array.isArray(list.json?.data) ? list.json.data : []))?.[0];
+    if (ch) {
+      const sub = await api('POST', `/challenges/${ch.id}/submit`, { token: tok.student, body: { code: 'function solve(){return 1}', language: 'javascript' } });
+      rec('more', 'POST /challenges/:id/submit responds gracefully (not 5xx hang)', sub.status > 0 && sub.status < 500, `status=${sub.status}`);
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);
