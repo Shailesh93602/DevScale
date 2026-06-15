@@ -1,4 +1,4 @@
-import { ActivityType } from '@prisma/client';
+import { ActivityType } from '../constants/enums';
 
 export interface StreakStats {
   currentStreak: number;
@@ -12,7 +12,8 @@ export interface StreakStats {
 export interface DailyActivity {
   date: Date;
   minutesSpent: number;
-  activityType: ActivityType;
+  // DB-derived (the column is now a plain string); validated on write, not here.
+  activityType: string;
 }
 
 export interface UpdateStreakInput {

@@ -1,4 +1,4 @@
-import { ExperienceLevel } from '@prisma/client';
+import { ExperienceLevel } from '../constants/enums';
 import type { UserProgress } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import logger from '../utils/logger.js';

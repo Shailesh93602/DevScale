@@ -1,4 +1,5 @@
-import { Mentorship, MentorshipStatus } from '@prisma/client';
+import { Mentorship } from '@prisma/client';
+import { MentorshipStatus } from '../constants/enums';
 import { createAppError } from '../utils/errorHandler.js';
 import { getCache, setCache, deleteCache } from '../services/cacheService';
 import BaseRepository from './baseRepository.js';

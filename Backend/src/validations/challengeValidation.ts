@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { Difficulty } from '@prisma/client';
+import { Difficulty } from '../constants/enums';
 
 export const createChallengeValidation = Joi.object({
   title: Joi.string().required().messages({

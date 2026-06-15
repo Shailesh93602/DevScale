@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { Status } from '../../constants/enums';
 import logger from '../../utils/logger';
 import { getUserProgress } from './analytics';
 

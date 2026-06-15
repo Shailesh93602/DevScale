@@ -1,4 +1,4 @@
-import { Difficulty } from '@prisma/client';
+import { Difficulty } from '../constants/enums';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';

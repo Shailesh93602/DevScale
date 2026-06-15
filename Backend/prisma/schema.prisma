@@ -13,7 +13,7 @@ model Article {
   title       String              @db.VarChar(255)
   content     String
   author_id   String
-  status      Status              @default(DRAFT)
+  status      String @default("DRAFT")
   topic_id    String
   resource_id String?
   created_at  DateTime            @default(now())
@@ -49,12 +49,12 @@ model Battle {
   slug                  String?             @unique
   title                 String              @db.VarChar(255)
   description           String?
-  type                  BattleType
-  status                BattleStatus        @default(WAITING)
+  type                  String
+  status                String @default("WAITING")
   topic_id              String?
   user_id               String
   winner_id             String?
-  difficulty            Difficulty
+  difficulty            String
   max_participants      Int                 @default(6)
   current_participants  Int                 @default(0)
   start_time            DateTime?
@@ -87,7 +87,7 @@ model BattleParticipant {
   id                   String                  @id @default(uuid())
   battle_id            String
   user_id              String
-  status               BattleParticipantStatus @default(JOINED)
+  status               String @default("JOINED")
   score                Int                     @default(0)
   rank                 Int?
   correct_count        Int                     @default(0)
@@ -169,8 +169,8 @@ model Challenge {
   title              String                @unique
   description        String
   points             Int
-  difficulty         Difficulty
-  category           ChallengeCategory
+  difficulty         String
+  category           String
   input_format       String
   output_format      String
   example_input      String
@@ -188,7 +188,7 @@ model Challenge {
   created_at         DateTime              @default(now())
   updated_at         DateTime              @updatedAt
   topic_id           String?
-  status             ChallengeStatus       @default(ACTIVE)
+  status             String @default("ACTIVE")
   topic              Topic?                @relation(fields: [topic_id], references: [id])
   submissions        ChallengeSubmission[]
   test_cases         TestCase[]
@@ -216,7 +216,7 @@ model Course {
   description  String?
   instructor   String?
   duration     Int?
-  level        CourseLevel?
+  level        String?
   start_date   DateTime?
   end_date     DateTime?
   created_at   DateTime      @default(now())
@@ -229,7 +229,7 @@ model Enrollment {
   id              String           @id @default(uuid())
   user_id         String
   course_id       String
-  status          EnrollmentStatus @default(ENROLLED)
+  status          String @default("ENROLLED")
   progress        Float            @default(0)
   enrollment_date DateTime         @default(now())
   completion_date DateTime?
@@ -263,7 +263,7 @@ model InterviewQuestion {
   id          String      @id @default(uuid())
   question    String
   answer      String?
-  difficulty  Difficulty?
+  difficulty  String?
   topic       String?
   tags        Json?
   created_at  DateTime    @default(now())
@@ -279,7 +279,7 @@ model Job {
   company              String
   location             String?
   salary               Decimal?  @db.Decimal(10, 2)
-  job_type             JobType?
+  job_type             String?
   posted_date          DateTime?
   application_deadline DateTime?
   created_at           DateTime  @default(now())
@@ -303,7 +303,7 @@ model Quiz {
   id              String           @id @default(uuid())
   title           String
   description     String
-  type            QuizType
+  type            String
   time_limit      Int?
   passing_score   Int
   topic_id        String?
@@ -368,7 +368,7 @@ model Resource {
   updated_at         DateTime            @updatedAt
   downloadCount      Int                 @default(0)
   rating             Decimal?            @db.Decimal(3, 2)
-  difficulty         Difficulty
+  difficulty         String
   language           String
   articles           Article[]
   moderations        ContentModeration[]
@@ -400,7 +400,7 @@ model Roadmap {
   created_at     DateTime             @default(now())
   updated_at     DateTime             @updatedAt
   deleted_at     DateTime?
-  difficulty     Difficulty?
+  difficulty     String?
   estimatedHours Int?
   popularity     Int                  @default(0)
   version        String               @default("1.0")
@@ -540,7 +540,7 @@ model User {
   college                         String?
   graduation_year                 Int?
   skills                          String[]
-  experience_level                ExperienceLevel?
+  experience_level                String?
   created_at                      DateTime                       @default(now())
   updated_at                      DateTime                       @updatedAt
   status                          String?                        @default("active")
@@ -697,8 +697,8 @@ model Project {
   tech_stack     String[]
   image_url      String?
   contributors   String[]
-  project_status ProjectStatus          @default(ongoing)
-  visibility     Visibility             @default(public)
+  project_status String @default("ongoing")
+  visibility     String @default("public")
   user_id        String
   created_at     DateTime               @default(now())
   updated_at     DateTime               @updatedAt
@@ -714,8 +714,8 @@ model TeamProject {
   demo_url       String?
   tech_stack     String[]
   image_url      String?
-  project_status ProjectStatus       @default(ongoing)
-  visibility     Visibility          @default(public)
+  project_status String @default("ongoing")
+  visibility     String @default("public")
   created_at     DateTime            @default(now())
   updated_at     DateTime            @default(now())
   members        TeamProjectMember[]
@@ -725,7 +725,7 @@ model TeamProjectMember {
   id              String      @id @default(uuid())
   user_id         String
   team_project_id String
-  role            ProjectRole @default(member)
+  role            String @default("member")
   created_at      DateTime    @default(now())
   updated_at      DateTime    @default(now())
   team_project    TeamProject @relation(fields: [team_project_id], references: [id])
@@ -779,7 +779,7 @@ model ChallengeSubmission {
   user_id        String
   code           String
   language       String
-  status         SubmissionStatus
+  status         String
   runtime_ms     Int?
   memory_used_kb Int?
   score          Int
@@ -825,7 +825,7 @@ model Notification {
   user_id    String
   title      String
   message    String
-  type       NotificationType
+  type       String
   is_read    Boolean          @default(false)
   link       String?
   created_at DateTime         @default(now())
@@ -837,7 +837,7 @@ model Mentorship {
   id          String              @id @default(uuid())
   mentor_id   String
   mentee_id   String
-  status      MentorshipStatus    @default(pending)
+  status      String @default("pending")
   topics      String[]
   description String?
   created_at  DateTime            @default(now())
@@ -879,7 +879,7 @@ model StudyGroupMember {
   id             String     @id @default(uuid())
   user_id        String
   study_group_id String
-  role           GroupRole  @default(member)
+  role           String @default("member")
   created_at     DateTime   @default(now())
   updated_at     DateTime   @default(now())
   study_group    StudyGroup @relation(fields: [study_group_id], references: [id])
@@ -1208,8 +1208,8 @@ model SupportTicket {
   id          String           @id @default(uuid())
   title       String
   description String
-  status      TicketStatus     @default(open)
-  priority    TicketPriority   @default(medium)
+  status      String @default("open")
+  priority    String @default("medium")
   category    String
   user_id     String
   assigned_to String?
@@ -1243,8 +1243,8 @@ model BugReport {
   id                 String       @id @default(uuid())
   title              String
   description        String
-  status             ReportStatus @default(pending)
-  severity           Severity     @default(medium)
+  status             String @default("pending")
+  severity           String @default("medium")
   environment        String?
   steps_to_reproduce String?
   expected_behavior  String?
@@ -1265,8 +1265,8 @@ model FeatureRequest {
   id          String               @id @default(uuid())
   title       String
   description String
-  status      RequestStatus        @default(pending)
-  priority    Priority             @default(medium)
+  status      String @default("pending")
+  priority    String @default("medium")
   category    String
   upvotes     Int                  @default(0)
   user_id     String
@@ -1324,7 +1324,7 @@ model Progress {
   user_id    String
   roadmap_id String
   topic_id   String
-  status     Status   @default(PENDING)
+  status     String @default("PENDING")
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   roadmap    Roadmap  @relation(fields: [roadmap_id], references: [id], onDelete: Cascade)
@@ -1339,7 +1339,7 @@ model ApprovalHistory {
   id          String   @id @default(uuid())
   content_id  String
   reviewer_id String
-  status      Status
+  status      String
   comments    String?
   created_at  DateTime @default(now())
   reviewer    User     @relation(fields: [reviewer_id], references: [id])
@@ -1448,7 +1448,7 @@ model InternshipApplication {
   user_id       String
   internship_id String
   resume_url    String
-  status        ApplicationStatus @default(pending)
+  status        String @default("pending")
   created_at    DateTime          @default(now())
   internship    Internship        @relation(fields: [internship_id], references: [id])
   user          User              @relation(fields: [user_id], references: [id])
@@ -1505,7 +1505,7 @@ model CodeReview {
   author_id   String
   reviewer_id String
   feedback    String
-  status      CodeReviewStatus @default(pending)
+  status      String @default("pending")
   created_at  DateTime         @default(now())
   author      User             @relation("CodeAuthor", fields: [author_id], references: [id])
   reviewer    User             @relation("CodeReviewer", fields: [reviewer_id], references: [id])
@@ -1528,7 +1528,7 @@ model DailyChallenge {
   id           String                     @id @default(uuid())
   title        String
   description  String
-  difficulty   Difficulty
+  difficulty   String
   streak_bonus Int                        @default(1)
   start_time   DateTime
   end_time     DateTime
@@ -1724,7 +1724,7 @@ model ActivityLog {
   activity    String
   metadata    Json?
   timestamp   DateTime   @default(now())
-  device_type DeviceType @default(WEB)
+  device_type String @default("WEB")
   user        User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
@@ -1786,7 +1786,7 @@ model PlacementTest {
   id         String          @id @default(uuid())
   user_id    String
   subject_id String
-  status     PlacementStatus @default(PENDING)
+  status     String @default("PENDING")
   results    Json?
   created_at DateTime        @default(now())
   updated_at DateTime        @updatedAt
@@ -1843,7 +1843,7 @@ model Content {
   id          String              @id @default(uuid())
   title       String
   body        String
-  status      ContentStatus       @default(PENDING_REVIEW)
+  status      String @default("PENDING_REVIEW")
   author_id   String
   created_at  DateTime            @default(now())
   updated_at  DateTime            @updatedAt
@@ -1895,7 +1895,7 @@ model UserStreak {
 model UserDailyActivity {
   id            String       @id @default(uuid())
   user_id       String
-  activity_type ActivityType
+  activity_type String
   minutes_spent Int
   created_at    DateTime     @default(now())
   user_streak   UserStreak   @relation(fields: [user_id], references: [user_id], map: "user_daily_activities_user_streak_fkey")
@@ -1904,244 +1904,4 @@ model UserDailyActivity {
   @@index([user_id])
   @@index([user_id, created_at])
   @@map("user_daily_activities")
-}
-
-enum BattleType {
-  QUICK
-  SCHEDULED
-  PRACTICE
-}
-
-enum BattleStatus {
-  WAITING
-  LOBBY
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
-}
-
-enum BattleParticipantStatus {
-  JOINED
-  READY
-  PLAYING
-  COMPLETED
-  DISCONNECTED
-}
-
-enum Status {
-  DRAFT
-  PENDING
-  APPROVED
-  REJECTED
-}
-
-enum Difficulty {
-  EASY
-  MEDIUM
-  HARD
-}
-
-enum Length {
-  short
-  medium
-  long
-}
-
-enum CourseLevel {
-  Beginner
-  Intermediate
-  Advanced
-}
-
-enum EnrollmentStatus {
-  ENROLLED
-  IN_PROGRESS
-  COMPLETED
-  DROPPED
-}
-
-enum JobType {
-  full_time
-  part_time
-  contract
-  internship
-}
-
-enum ProjectStatus {
-  planning
-  ongoing
-  completed
-  archived
-}
-
-enum Visibility {
-  public
-  private
-  unlisted
-}
-
-enum ProjectRole {
-  owner
-  admin
-  member
-}
-
-enum SubmissionStatus {
-  pending
-  running
-  accepted
-  wrong_answer
-  time_limit_exceeded
-  memory_limit_exceeded
-  runtime_error
-  compilation_error
-}
-
-enum NotificationType {
-  system
-  achievement
-  mention
-  comment
-  follow
-  project
-  challenge
-  course
-  mentorship
-}
-
-enum MentorshipStatus {
-  pending
-  active
-  completed
-  cancelled
-}
-
-enum ExperienceLevel {
-  beginner
-  intermediate
-  advanced
-  expert
-}
-
-enum GroupRole {
-  admin
-  moderator
-  member
-}
-
-enum ChallengeCategory {
-  algorithms
-  data_structures
-  system_design
-  databases
-  web_development
-  machine_learning
-  devops
-  security
-  frontend
-  backend
-  mobile
-  concurrency
-  mathematics
-  bit_manipulation
-  strings
-}
-
-enum QuizType {
-  multiple_choice
-  coding
-  theory
-}
-
-enum TicketStatus {
-  open
-  in_progress
-  resolved
-  closed
-}
-
-enum TicketPriority {
-  low
-  medium
-  high
-  urgent
-}
-
-enum ReportStatus {
-  pending
-  investigating
-  resolved
-  rejected
-}
-
-enum RequestStatus {
-  pending
-  approved
-  rejected
-}
-
-enum Severity {
-  low
-  medium
-  high
-  critical
-}
-
-enum Priority {
-  low
-  medium
-  high
-  critical
-}
-
-enum ApplicationStatus {
-  pending
-  reviewed
-  accepted
-  rejected
-}
-
-enum CodeReviewStatus {
-  pending
-  in_review
-  completed
-}
-
-enum DeviceType {
-  WEB
-  MOBILE
-  TABLET
-  DESKTOP
-  UNKNOWN
-}
-
-enum ChallengeStatus {
-  DRAFT
-  PENDING
-  ACTIVE
-  ARCHIVED
-  INACTIVE
-}
-
-enum PlacementStatus {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-  EVALUATED
-}
-
-enum ContentStatus {
-  DRAFT
-  PENDING_REVIEW
-  APPROVED
-  REJECTED
-  ARCHIVED
-}
-
-enum ActivityType {
-  TOPIC_COMPLETION
-  QUIZ_COMPLETION
-  CODE_CHALLENGE
-  RESOURCE_STUDY
-  PRACTICE_SESSION
 }

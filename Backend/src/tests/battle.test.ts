@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll, jest } from '@jest/globals';
-import { BattleType, Difficulty } from '@prisma/client';
+import { BattleType, Difficulty } from '../constants/enums';
 
 // ─── Redis / Redlock stubs ──────────────────────────────────────────────────
 // The real cacheService connects to Upstash at module-load time. When the

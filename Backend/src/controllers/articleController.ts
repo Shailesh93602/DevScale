@@ -1,4 +1,5 @@
-import { Prisma, Status } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { Status } from '../constants/enums';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';

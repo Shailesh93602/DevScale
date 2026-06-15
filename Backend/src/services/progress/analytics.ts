@@ -1,4 +1,4 @@
-import { Status, SubmissionStatus } from '@prisma/client';
+import { Status, SubmissionStatus } from '../../constants/enums';
 import logger from '../../utils/logger';
 
 import prisma from '../../lib/prisma';
