@@ -306,6 +306,54 @@ async function main() {
     }
   }
 
+  // ---------- ROADMAP SOCIAL (bookmark + comments) ----------
+  if (!only || only === 'social') {
+    const list = await api('GET', '/roadmaps?limit=1', { token: tok.student });
+    const arr0 = list.json?.data?.roadmaps || list.json?.data?.data || list.json?.data || [];
+    const rm = (Array.isArray(arr0) ? arr0[0] : arr0?.roadmaps?.[0]);
+    if (rm) {
+      const bm = await api('POST', `/roadmaps/${rm.id}/bookmark`, { token: tok.student });
+      rec('social', 'bookmark roadmap → 2xx', bm.status >= 200 && bm.status < 300, `status=${bm.status}`);
+
+      const cmt = await api('POST', `/roadmaps/${rm.id}/comments`, { token: tok.student, body: { content: 'QA test comment' } });
+      const commentId = cmt.json?.data?.id || cmt.json?.data?.comment?.id;
+      rec('social', 'add comment → 2xx + id', cmt.status >= 200 && cmt.status < 300 && !!commentId, `status=${cmt.status} id=${commentId ? 'yes' : 'no'}`);
+
+      const cmtBad = await api('POST', `/roadmaps/${rm.id}/comments`, { token: tok.student, body: {} });
+      rec('social', 'comment without content → 4xx (validation)', cmtBad.status >= 400 && cmtBad.status < 500, `status=${cmtBad.status}`);
+
+      if (commentId) {
+        const like = await api('POST', `/roadmaps/${rm.id}/comments/${commentId}/like`, { token: tok.student });
+        rec('social', 'toggle comment like → 2xx', like.status >= 200 && like.status < 300, `status=${like.status}`);
+      }
+      const get = await api('GET', `/roadmaps/${rm.id}/comments`, { token: tok.student });
+      rec('social', 'GET comments → 200', get.status === 200, `status=${get.status}`);
+    }
+  }
+
+  // ---------- CODE RUNNER + DRAFTS ----------
+  if (!only || only === 'code') {
+    // run-code hits Judge0 (external). Assert it responds gracefully (a result OR
+    // a clean error), NOT a 500 crash/hang — env may lack network to Judge0.
+    const run = await api('POST', '/run-code', { token: tok.student, body: { code: 'console.log(1+1)', language: 'javascript' } });
+    rec('code', 'POST /run-code responds gracefully (not 5xx hang)', run.status > 0 && run.status < 500, `status=${run.status}`);
+
+    // draft save + restore is DB-backed (no external dep).
+    const list = await api('GET', '/challenges?limit=1', { token: tok.student });
+    const cArr = list.json?.data?.challenges || list.json?.data?.data || (Array.isArray(list.json?.data) ? list.json.data : []);
+    const ch = cArr?.[0];
+    if (ch) {
+      const save = await api('POST', '/run-code/draft', { token: tok.student, body: { challengeId: ch.id, code: 'const x = 42;', language: 'javascript' } });
+      rec('code', 'save draft → 2xx', save.status >= 200 && save.status < 300, `status=${save.status} ${save.status >= 300 ? JSON.stringify(save.json?.message).slice(0,80) : ''}`);
+      const got = await api('GET', `/run-code/draft/${ch.id}?language=javascript`, { token: tok.student });
+      const code = got.json?.data?.code ?? got.json?.data?.draft?.code;
+      rec('code', 'restore draft → 200 + same code', got.status === 200 && code === 'const x = 42;', `status=${got.status} match=${code === 'const x = 42;'}`);
+      // missing language must not 500 (graceful null)
+      const noLang = await api('GET', `/run-code/draft/${ch.id}`, { token: tok.student });
+      rec('code', 'restore draft without language → graceful (not 5xx)', noLang.status < 500, `status=${noLang.status}`);
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);

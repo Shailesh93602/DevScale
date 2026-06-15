@@ -54,7 +54,10 @@ export default class CodeController {
     const { language } = req.query;
     const userId = req.user?.id;
 
-    if (!userId) {
+    // A draft is keyed by (user, challenge, language). Without a userId or a
+    // language there's nothing to look up — return null instead of letting Prisma
+    // throw a 500 on a missing composite-key field.
+    if (!userId || !language) {
       return sendResponse(res, 'DRAFT_FETCHED', { data: null });
     }
 
