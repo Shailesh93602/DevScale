@@ -457,9 +457,17 @@ export default class AdminDashboardRepository extends BaseRepository<
     try {
       const databaseStatus = 'healthy';
 
-      // Check cache status
-      const cacheStatus =
-        (await getCache('test')) !== null ? 'healthy' : 'error';
+      // Check cache status with a real round-trip. The old check read a key named
+      // 'test' that nothing ever wrote, so it ALWAYS reported 'error' even when
+      // Redis was healthy. Write-then-read a probe key instead.
+      let cacheStatus = 'error';
+      try {
+        const probeKey = 'health:cache-probe';
+        await setCache(probeKey, 'ok', { ttl: 30 });
+        cacheStatus = (await getCache<string>(probeKey)) === 'ok' ? 'healthy' : 'error';
+      } catch {
+        cacheStatus = 'error';
+      }
 
       // Get average response time from audit logs
       const responseTimes = await prisma.auditLog.findMany({
