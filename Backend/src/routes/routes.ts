@@ -20,7 +20,6 @@ import { JobRoutes } from './jobRoutes.js';
 import { LeaderboardRoutes } from './leaderBoardRoutes.js';
 import { PlacementRoutes } from './placementRoutes.js';
 import { ProgressRoutes } from './progressRoutes.js';
-import { QuestionRoutes } from './questionRoutes.js';
 import { QuizRouter } from './quizRoutes.js';
 import { RBACRoutes } from './rbacRoutes.js';
 import { SupportRoutes } from './supportRoutes.js';
@@ -70,7 +69,6 @@ export class AppRoutes {
     this.router.use('/leaderboard', new LeaderboardRoutes().getRouter());
     this.router.use('/placement', new PlacementRoutes().getRouter());
     this.router.use('/progress', new ProgressRoutes().getRouter());
-    this.router.use('/questions', new QuestionRoutes().getRouter());
     this.router.use('/quiz', new QuizRouter().getRouter());
     this.router.use('/rbac', new RBACRoutes().getRouter());
     this.router.use('/support', new SupportRoutes().getRouter());

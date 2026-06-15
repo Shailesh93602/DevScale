@@ -11,7 +11,6 @@ export class QuizRouter extends BaseRouter {
   }
 
   protected initializeRoutes(): void {
-    this.router.post('/create', this.quizController.createQuiz);
     this.router.post('/submit', this.quizController.submitQuiz);
   }
 }

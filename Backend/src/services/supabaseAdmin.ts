@@ -9,7 +9,11 @@ import logger from '../utils/logger.js';
 let adminClient: SupabaseClient | null = null;
 function getAdminClient(): SupabaseClient | null {
   const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // Supabase's new key system: SUPABASE_SECRET_KEY (sb_secret_…) replaces the
+  // legacy service_role key and has the same admin privileges. Prefer it; fall
+  // back to the legacy var for older environments.
+  const key =
+    process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) return null;
   adminClient ??= createClient(url, key, {
     auth: { autoRefreshToken: false, persistSession: false },
@@ -39,7 +43,7 @@ export async function syncSupabaseUserRole(
   const admin = getAdminClient();
   if (!admin) {
     logger.warn(
-      'SUPABASE_SERVICE_ROLE_KEY not set — skipping app_metadata role sync (admin gate may be stale)'
+      'SUPABASE_SECRET_KEY not set — skipping app_metadata role sync (admin gate may be stale)'
     );
     return;
   }

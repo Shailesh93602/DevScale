@@ -25,7 +25,7 @@ async function main(): Promise<void> {
   }
   if (!isSupabaseAdminConfigured()) {
     console.error(
-      'SUPABASE_SERVICE_ROLE_KEY is not set — cannot sync app_metadata (the /admin gate). Set it and re-run.'
+      'SUPABASE_SECRET_KEY is not set — cannot sync app_metadata (the /admin gate). Set it and re-run.'
     );
     process.exit(1);
   }

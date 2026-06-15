@@ -315,7 +315,6 @@ model Quiz {
   main_concept    MainConcept?     @relation(fields: [main_concept_id], references: [id])
   subject         Subject?         @relation(fields: [subject_id], references: [id])
   topic           Topic?           @relation(fields: [topic_id], references: [id])
-  quiz_questions  QuizQuestion[]
   submissions     QuizSubmission[]
 
   @@index([topic_id])
@@ -339,31 +338,6 @@ model Question {
   @@index([quiz_id])
 }
 
-model QuizAnswer {
-  id          String                 @id @default(uuid())
-  answer      String
-  is_correct  Boolean                @default(false)
-  question_id String
-  created_at  DateTime               @default(now())
-  updated_at  DateTime               @updatedAt
-  question    QuizQuestion           @relation(fields: [question_id], references: [id])
-  submissions QuizSubmissionAnswer[]
-
-  @@index([question_id])
-}
-
-model QuizOption {
-  id               String       @id @default(uuid())
-  answer_text      String
-  is_correct       Boolean
-  quiz_question_id String
-  created_at       DateTime     @default(now())
-  updated_at       DateTime     @updatedAt
-  quiz_question    QuizQuestion @relation(fields: [quiz_question_id], references: [id])
-
-  @@index([quiz_question_id])
-}
-
 model QuizSubmission {
   id         String                 @id @default(uuid())
   user_id    String
@@ -375,40 +349,8 @@ model QuizSubmission {
   created_at DateTime               @default(now())
   quiz       Quiz                   @relation(fields: [quiz_id], references: [id])
   user       User                   @relation(fields: [user_id], references: [id])
-  answers    QuizSubmissionAnswer[]
 
   @@index([user_id])
-  @@index([quiz_id])
-}
-
-model QuizSubmissionAnswer {
-  id            String         @id @default(uuid())
-  submission_id String
-  answer_id     String
-  question_id   String
-  created_at    DateTime       @default(now())
-  updated_at    DateTime       @updatedAt
-  answer        QuizAnswer     @relation(fields: [answer_id], references: [id])
-  question      QuizQuestion   @relation(fields: [question_id], references: [id])
-  submission    QuizSubmission @relation(fields: [submission_id], references: [id])
-
-  @@index([submission_id])
-  @@index([answer_id])
-  @@index([question_id])
-}
-
-model QuizQuestion {
-  id          String                 @id @default(uuid())
-  quiz_id     String
-  question    String
-  type        String
-  created_at  DateTime               @default(now())
-  updated_at  DateTime               @updatedAt
-  answers     QuizAnswer[]
-  options     QuizOption[]
-  quiz        Quiz                   @relation(fields: [quiz_id], references: [id])
-  submissions QuizSubmissionAnswer[]
-
   @@index([quiz_id])
 }
 
