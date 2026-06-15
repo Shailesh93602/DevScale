@@ -48,7 +48,7 @@ const STATUS_LABELS: Record<string, string> = {
 const STATUS_COLORS: Record<string, string> = {
   WAITING: 'bg-blue-500/15 text-blue-600 border-blue-500/20',
   LOBBY: 'bg-amber-500/15 text-warning border-amber-500/20',
-  IN_PROGRESS: 'bg-emerald-500/15 text-emerald-600 border-emerald-500/20',
+  IN_PROGRESS: 'bg-emerald-500/15 text-success border-emerald-500/20',
   COMPLETED: 'bg-muted text-muted-foreground',
   CANCELLED: 'bg-destructive/10 text-destructive border-destructive/20',
 };
@@ -70,7 +70,7 @@ const DIFFICULTY_LABELS: Record<string, string> = {
 const getDifficultyColor = (difficulty: string) => {
   switch (difficulty.toLowerCase()) {
     case 'easy':
-      return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
+      return 'bg-emerald-500/10 text-success border-emerald-500/20';
     case 'medium':
       return 'bg-amber-500/10 text-warning border-amber-500/20';
     case 'hard':
@@ -185,7 +185,7 @@ const BattleCard: React.FC<BattleCardProps> = ({
 
   const timeLabel = useMemo(() => {
     if (battle.status === 'IN_PROGRESS') {
-      return { text: 'Battle is live now', color: 'text-emerald-600' };
+      return { text: 'Battle is live now', color: 'text-success' };
     }
     if (
       (battle.status === 'WAITING' || battle.status === 'LOBBY') &&
@@ -493,7 +493,11 @@ const BattleCard: React.FC<BattleCardProps> = ({
               <span className="text-xs font-medium text-warning">Full</span>
             )}
           </div>
-          <Progress value={participantPercent} className="h-1.5" />
+          <Progress
+            value={participantPercent}
+            className="h-1.5"
+            aria-label="Participants joined"
+          />
         </div>
 
         {/* Creator */}

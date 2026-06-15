@@ -76,7 +76,8 @@
     --radius: 0.75rem;
 
     /* Status */
-    --success: 142 76% 28%;
+    /* L25% (was 28%) so text-success on a /10 tint clears WCAG AA 4.5:1 */
+    --success: 142 76% 25%;
     --success-foreground: 355 100% 97%;
     /* L28% (was 36%) so text-warning clears WCAG AA 4.5:1 on the light amber
        status-badge background (amber-500/15 ≈ #f3ece2). */
