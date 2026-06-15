@@ -142,12 +142,13 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Edit profile does NOT reset role | admin/mod | edge | ✅ FIXED | privileged role survives a save |
 | Streak stats + weekly activity → 200 | student | happy | ✅ | both endpoints |
 
-### 9. Resources 🟢 (read proven)
+### 9. Resources 🟢 (reads + writes proven)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
 | `GET /resources` (paginated) → 200 | student | happy | ✅ | |
+| Create resource → 201 + owned by user | student | happy | ✅ | ⚠️ no validation middleware on the route (low-risk gap) |
+| `POST /resources/save/:topicId` → PENDING article | student | happy | ✅ | ⚠️ **mislabeled** — creates an Article under a topic (redundant with `POST /articles`); 500s on a non-topic id. Candidate to merge/rename. |
 | Detail | student | happy | 🟡 | |
-| Create resource / subject · Save | student | happy | ❓ | |
 
 ### 10. Admin Panel ✅ (validated this session, prod read + 1 write)
 | Flow | Role | Type | Status | Notes |
@@ -173,7 +174,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~70 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads/writes + moderation + XSS + **submit→moderate→publish loop** + Resources + Challenges + run-code + drafts + submit + leaderboard + streak-update + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket**) — `qa/run.mjs` **70/70** + `qa/socket.mjs` **4/4** |
+| ✅ Verified | ~70 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads/writes + moderation + XSS + **submit→moderate→publish loop** + Resources + Challenges + run-code + drafts + submit + leaderboard + streak-update + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket**) — `qa/run.mjs` **72/72** + `qa/socket.mjs` **4/4** |
 | 🟡 Built, unverified | ~1 (article create/author path — confirm intended endpoint) |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
