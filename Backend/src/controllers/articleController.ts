@@ -14,15 +14,14 @@ export default class ArticleController {
     this.articleRepository = new ArticleRepository();
   }
 
+  // Public listing — force APPROVED so a client can't pass ?status=PENDING to
+  // see unpublished/draft articles. (Moderators use getModerationQueue instead.)
   public getArticles = catchAsync(async (req: Request, res: Response) => {
     try {
-      const { status, search } = req.query as {
-        status?: Status;
-        search?: string;
-      };
+      const { search } = req.query as { search?: string };
 
       const articles = await this.articleRepository.getArticles({
-        status,
+        status: Status.APPROVED,
         search,
       });
       sendResponse(res, 'ARTICLE_FETCHED', { data: articles });
@@ -33,6 +32,29 @@ export default class ArticleController {
       });
     }
   });
+
+  // Moderation queue — articles awaiting review. Gated to ADMIN + MODERATOR at
+  // the route. Optional ?status= overrides the default PENDING.
+  public getModerationQueue = catchAsync(
+    async (req: Request, res: Response) => {
+      try {
+        const { status, search } = req.query as {
+          status?: Status;
+          search?: string;
+        };
+        const articles = await this.articleRepository.getArticles({
+          status: status ?? Status.PENDING,
+          search,
+        });
+        sendResponse(res, 'ARTICLE_FETCHED', { data: articles });
+      } catch (error) {
+        logger.error('Failed to retrieve moderation queue:', error);
+        sendResponse(res, 'ARTICLE_NOT_FOUND', {
+          error: 'Failed to retrieve moderation queue',
+        });
+      }
+    }
+  );
 
   public updateArticleStatus = catchAsync(
     async (req: Request, res: Response) => {

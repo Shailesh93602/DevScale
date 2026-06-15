@@ -354,6 +354,32 @@ async function main() {
     }
   }
 
+  // ---------- MODERATION QUEUE (moderator panel backend) ----------
+  if (!only || only === 'mod') {
+    const adminUser = await prisma.user.findFirst({ where: { username: 'admin' }, select: { id: true } }).catch(() => null);
+    const topic = await prisma.topic.findFirst({ select: { id: true } }).catch(() => null);
+    if (adminUser && topic) {
+      const art = await prisma.article.create({ data: { title: 'QA Pending', content: '<p>p</p>', author_id: adminUser.id, topic_id: topic.id, status: 'PENDING' }, select: { id: true } }).catch(() => null);
+      if (art?.id) {
+        const id = art.id;
+        const modQ = await api('GET', '/articles/moderation/queue', { token: tok.moderator });
+        const arr = modQ.json?.data || [];
+        rec('mod', 'moderator → moderation queue 200 + includes pending', modQ.status === 200 && Array.isArray(arr) && arr.some((a) => a.id === id), `status=${modQ.status} found=${Array.isArray(arr) && arr.some((a) => a.id === id)}`);
+
+        const denied = await api('GET', '/articles/moderation/queue', { token: tok.student });
+        rec('mod', 'student → moderation queue → 403', denied.status === 403, `status=${denied.status}`);
+
+        // Leak fix: public /articles/all must NOT expose pending even with ?status=PENDING
+        const pub = await api('GET', '/articles/all?status=PENDING', {});
+        const pubArr = pub.json?.data || [];
+        const leaked = Array.isArray(pubArr) && pubArr.some((a) => a.id === id || a.status === 'PENDING');
+        rec('mod', 'public /articles/all cannot expose PENDING (leak fixed)', pub.status === 200 && !leaked, `status=${pub.status} leaked=${leaked}`);
+
+        await prisma.article.delete({ where: { id } }).catch(() => {});
+      }
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);
