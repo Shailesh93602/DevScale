@@ -109,7 +109,7 @@
     --dark-secondary: black;
     --light: rgb(255, 255, 255);
     --light-secondary: rgb(245, 245, 247);
-    --gray-text: #6b7280;
+    --gray-text: #4b5563; /* gray-600: AA-contrast on light tints (was #6b7280, 4.44:1) */
 
     /* CTA gradient (footer banner) */
     --cta-from: 220 14% 97%;
