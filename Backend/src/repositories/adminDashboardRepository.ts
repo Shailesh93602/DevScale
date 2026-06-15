@@ -2,7 +2,7 @@ import {
   Prisma,
   ContentStatus,
   Status,
-  AuditLog,
+  AdminAuditLog,
   Content,
 } from '@prisma/client';
 import type { User } from '@prisma/client';
@@ -233,21 +233,13 @@ export default class AdminDashboardRepository extends BaseRepository<
     }
   }
 
-  async getSystemAuditLogs(): Promise<AuditLog[]> {
+  async getSystemAuditLogs(): Promise<AdminAuditLog[]> {
     try {
-      return await prisma.auditLog.findMany({
-        orderBy: { timestamp: 'desc' },
+      // Admin actions (role changes, deletions, moderation) are recorded in
+      // adminAuditLog — not the general-purpose auditLog table.
+      return await prisma.adminAuditLog.findMany({
+        orderBy: { created_at: 'desc' },
         take: 100,
-        include: {
-          user: {
-            select: {
-              id: true,
-              first_name: true,
-              last_name: true,
-              email: true,
-            },
-          },
-        },
       });
     } catch (error) {
       logger.error('Error fetching audit logs:', error);

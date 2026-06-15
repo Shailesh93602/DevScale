@@ -30,6 +30,7 @@ type ResponseType =
   | 'INVALID_ROADMAP_ID'
   | 'ROADMAP_ALREADY_ENROLLED'
   | 'USERS_FETCHED'
+  | 'ROLES_FETCHED'
   | 'USER_ROLE_UPDATED'
   | 'PENDING_CONTENT_FETCHED'
   | 'CONTENT_MODERATED'
@@ -334,6 +335,11 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Users fetched successfully',
+  },
+  ROLES_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Roles fetched successfully',
   },
   USER_ROLE_UPDATED: {
     status: 200,

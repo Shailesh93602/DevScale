@@ -3,64 +3,80 @@
 import { RoleGuard } from '@/components/guards/RouteGuards';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import {
+  LayoutDashboard,
+  Users,
+  ShieldCheck,
+  ScrollText,
+} from 'lucide-react';
 import Link from 'next/link';
+import AdminOverview from './AdminOverview';
+import AdminUsers from './AdminUsers';
+import AdminModeration from './AdminModeration';
+import AdminAudit from './AdminAudit';
 
 export default function AdminPage() {
   const { user } = useAuth();
+  const name = user?.first_name
+    ? `${user.first_name}${user.last_name ? ` ${user.last_name}` : ''}`
+    : 'Administrator';
 
   return (
     <RoleGuard role="ADMIN">
-      <div className="container mx-auto px-4 py-10">
-        <div className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+      <div className="container mx-auto px-4 py-8 md:py-10">
+        {/* Header */}
+        <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <h1 className="mb-2 text-4xl font-bold">Admin Dashboard</h1>
-            <p className="text-muted-foreground">
-              Welcome back,{' '}
-              {user?.first_name
-                ? `${user.first_name}${user.last_name ? ` ${user.last_name}` : ''}`
-                : 'Administrator'}
-              . Manage your platform here.
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+              </span>
+              Admin Console
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+              Welcome back, {name}
+            </h1>
+            <p className="mt-1 text-muted-foreground">
+              Monitor platform health, manage users, and moderate content.
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button asChild variant="outline">
-              <Link href="/dashboard">View as Student</Link>
-            </Button>
-            <Button>Settings</Button>
-          </div>
+          <Button asChild variant="outline">
+            <Link href="/dashboard">View as student</Link>
+          </Button>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-            <h3 className="mb-2 text-lg font-semibold">User Management</h3>
-            <p className="mb-4 text-sm text-muted-foreground">
-              View and manage all registered EduScale users.
-            </p>
-            <Button variant="secondary" className="w-full">
-              Manage Users
-            </Button>
-          </div>
+        {/* Sections */}
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="mb-6 flex h-auto flex-wrap justify-start gap-1 bg-muted/50 p-1">
+            <TabsTrigger value="overview" className="gap-2">
+              <LayoutDashboard className="h-4 w-4" /> Overview
+            </TabsTrigger>
+            <TabsTrigger value="users" className="gap-2">
+              <Users className="h-4 w-4" /> Users
+            </TabsTrigger>
+            <TabsTrigger value="moderation" className="gap-2">
+              <ShieldCheck className="h-4 w-4" /> Moderation
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="gap-2">
+              <ScrollText className="h-4 w-4" /> Audit Log
+            </TabsTrigger>
+          </TabsList>
 
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-            <h3 className="mb-2 text-lg font-semibold">Content Moderation</h3>
-            <p className="mb-4 text-sm text-muted-foreground">
-              Review articles, roadmaps, and community posts.
-            </p>
-            <Button variant="secondary" className="w-full">
-              Review Content
-            </Button>
-          </div>
-
-          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-            <h3 className="mb-2 text-lg font-semibold">Platform Statistics</h3>
-            <p className="mb-4 text-sm text-muted-foreground">
-              View engagement metrics and growth analytics.
-            </p>
-            <Button variant="secondary" className="w-full">
-              View Analytics
-            </Button>
-          </div>
-        </div>
+          <TabsContent value="overview">
+            <AdminOverview />
+          </TabsContent>
+          <TabsContent value="users">
+            <AdminUsers />
+          </TabsContent>
+          <TabsContent value="moderation">
+            <AdminModeration />
+          </TabsContent>
+          <TabsContent value="audit">
+            <AdminAudit />
+          </TabsContent>
+        </Tabs>
       </div>
     </RoleGuard>
   );

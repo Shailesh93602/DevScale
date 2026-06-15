@@ -260,24 +260,27 @@ export default class UserRepository extends BaseRepository<
 
   async searchUsers(params: {
     query?: string;
+    search?: string;
     role?: string;
     status?: string;
     date_range?: { start: Date; end: Date };
-    page?: number;
-    limit?: number;
+    page?: number | string;
+    limit?: number | string;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
   }) {
     const {
-      query,
       role,
       status,
       date_range,
-      page = 1,
-      limit = 10,
       sortBy = 'created_at',
       sortOrder = 'desc',
     } = params;
+
+    // Query params arrive as strings — coerce + clamp so Prisma gets Ints.
+    const query = params.query ?? params.search;
+    const page = Math.max(1, Number(params.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(params.limit) || 10));
 
     const where: Prisma.UserWhereInput = {};
 
