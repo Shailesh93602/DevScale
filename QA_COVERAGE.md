@@ -53,33 +53,39 @@ authorized and expected.** The env is no longer a blocker; the find-vs-reality g
 
 ## Coverage matrix by area
 
-### 1. Auth & Authorization 🔴 (OAuth broken; rest unverified)
+### 1. Auth & Authorization 🟢 (core proven; OAuth still broken)
+Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backend).
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| Email/password login | guest | happy | 🟡 | works in manual use; no asserting test |
-| Email/password register | guest | happy | 🟡 | |
-| Logout invalidates token (Redis blocklist) | auth | happy | 🟡 | backend built; assert token rejected after |
+| Email/password login (all 4 role users) | all | happy | ✅ | real Supabase signIn returns token |
+| `GET /users/me` returns correct role | student/admin | happy | ✅ | STUDENT / ADMIN asserted |
+| Logout invalidates token (Redis blocklist) | auth | happy | ✅ | me 200 → logout → me **401** asserted |
+| No token / bad token → 401 | guest | error | ✅ | both asserted |
+| Non-admin → `GET /admin/users` → 403 | student | error | ✅ | role gate asserted |
+| Admin → `GET /admin/users` → 200 | admin | happy | ✅ | |
+| CSRF enforced on mutations (double-submit) | auth | error | ✅ | POST without token → 403 CSRF_INVALID (confirmed) |
+| **Lowercase-role authz bug** | admin | error | ✅ FIXED | `authorizeRoles('admin')` vs DB `ADMIN` → real admins got 403 on `/analytics/platform` + roadmap delete. Made `authorizeRoles` case-insensitive. admin 403→200, student stays 403. |
+| Email/password register | guest | happy | 🟡 | manual only |
 | Google OAuth | guest | happy | 🔴 | wrong Supabase project configured (known) |
-| Forgot/reset password | guest | happy | ❓ | |
-| Email verification | guest | happy | ❓ | |
-| Non-admin hitting `/admin` → denied | student | error | 🟡 | RoleGuard built; assert redirect/403 |
-| Expired/invalid JWT → 401 | auth | error | ❓ | |
+| Forgot/reset password · Email verification | guest | happy | ❓ | |
 
-### 2. Dashboard 🟡
+### 2. Dashboard 🟢
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| `/dashboard/summary` renders real aggregates | student | happy | 🟡 | |
+| `/dashboard/summary` → 200 + real aggregate shape | student | happy | ✅ | keys: stats, enrolledRoadmaps, recommendedRoadmaps, activities, achievements, streak, weeklyActivity |
 | Empty state (new user, no roadmaps) | student | edge | ❓ | |
 
-### 3. Career Roadmaps 🟡
+### 3. Career Roadmaps 🟢 (core proven)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| Browse + filter + search | student | happy | 🟡 | |
-| Enroll in roadmap (persists) | student | happy | 🟡 | assert UserRoadmap row created |
-| Like / bookmark (toggles + persists) | student | happy | 🟡 | |
+| `GET /roadmaps` → 200 non-empty | student | happy | ✅ | |
+| Enroll persists a `UserRoadmap` row | student | happy | ✅ | asserted against DB (row created) |
+| Enroll twice = idempotent (no dup, no 500) | student | edge | ✅ | row count stays 1 |
+| Enroll without roadmapId → 400 | student | error | ✅ | validation asserted |
+| Like roadmap → 2xx | student | happy | ✅ | |
+| Bookmark (toggles + persists) | student | happy | 🟡 | not yet asserted |
 | Comment + like comment | student | happy | 🟡 | |
 | Detail view (subjects/topics/progress) | student | happy | 🟡 | |
-| Enroll twice (idempotent) | student | edge | ❓ | |
 
 ### 4. Battle Zone 🟡 (real-time — highest risk)
 | Flow | Role | Type | Status | Notes |
@@ -152,14 +158,20 @@ authorized and expected.** The env is no longer a blocker; the find-vs-reality g
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | 4 (all admin) |
-| 🟡 Built, unverified | ~30 |
-| 🔴 Broken | 3 (OAuth, standalone quiz, …) |
+| ✅ Verified | ~18 (admin panel + Auth core + Dashboard + Roadmaps core) |
+| 🟡 Built, unverified | ~18 |
+| 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
-| ❓ Unknown | ~12 |
+| ❓ Unknown | ~8 |
 
-**EduScale is NOT production-ready or "100%".** Only the admin panel is verified. Everything else is
-built-but-unproven, deferred, or broken. This will be worked down area-by-area once a safe test env exists.
+**Bugs found + fixed via this matrix (without prompting):**
+1. Seeder never set Supabase `app_metadata.role` → seeded admin couldn't reach `/admin`. *(fixed + verified)*
+2. `authorizeRoles` case-sensitive vs uppercase DB roles → real admins 403'd on `/analytics/platform` + roadmap delete. *(fixed + verified)*
+3. (earlier) admin API entirely dead — routes never registered, searchUsers 500, audit wrong table. *(fixed + verified)*
+
+**EduScale is NOT "100%"** — but it's now honestly tracked and moving: Auth, Dashboard, Roadmaps (core),
+and the Admin panel are outcome-verified. Remaining areas (Battles, Challenges/Quiz, Articles, Profile,
+Resources) are next, worked area-by-area with `Backend/qa/run.mjs`.
 
 ---
 
