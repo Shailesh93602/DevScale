@@ -67,11 +67,13 @@ export default class UserRepository extends BaseRepository<
       where: { id: data.id },
       create: {
         ...data,
+        // New users default to STUDENT.
         role: { connect: { name: 'STUDENT' } },
       },
       update: {
         ...data,
-        role: { connect: { name: 'STUDENT' } },
+        // Do NOT reset role on profile edit — this previously demoted any
+        // admin/moderator back to STUDENT whenever they saved their profile.
         updated_at: new Date(),
       },
       select: {
