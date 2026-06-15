@@ -128,7 +128,7 @@ export default function QuestionSourceSelector({
   // All hooks declared at top level
   const [getRoadmaps] = useAxiosGet<RoadmapOption[]>('/roadmaps');
   const [getMainConceptsForRoadmap] = useAxiosGet<NamedOption[]>(
-    '/roadmaps/{{id}}/main_concepts',
+    '/roadmaps/{{id}}/main-concepts',
   );
   const [getSubjectsForConcept] = useAxiosGet<SubjectOption[]>(
     '/main-concepts/{{id}}/subjects',

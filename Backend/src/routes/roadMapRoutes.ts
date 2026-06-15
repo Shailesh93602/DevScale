@@ -61,7 +61,7 @@ export class RoadMapRoutes extends BaseRouter {
     );
 
     this.router.get(
-      '/:id/main_concepts',
+      '/:id/main-concepts',
       authMiddleware,
       this.bindRoute(this.roadMapController.getMainConceptsInRoadmap)
     );
