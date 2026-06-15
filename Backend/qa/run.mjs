@@ -380,6 +380,41 @@ async function main() {
     }
   }
 
+  // ---------- ARTICLE SUBMISSION → MODERATION LOOP ----------
+  if (!only || only === 'submit') {
+    const topic = await prisma.topic.findFirst({ select: { id: true } }).catch(() => null);
+    if (topic) {
+      // student submits a new article
+      const create = await api('POST', '/articles', { token: tok.student, body: { title: 'QA Submitted Article', content: '<p>real body</p><script>alert(1)</script>', topic_id: topic.id } });
+      const id = create.json?.data?.id;
+      const row = id ? await prisma.article.findUnique({ where: { id }, select: { status: true, content: true, author_id: true } }).catch(() => null) : null;
+      rec('submit', 'student submits article → 2xx + PENDING row', create.status >= 200 && create.status < 300 && row?.status === 'PENDING', `status=${create.status} db=${row?.status}`);
+      rec('submit', 'submitted content is XSS-sanitized', !!row && !/<script/i.test(row.content) && /real body/.test(row.content), `hasScript=${row ? /<script/i.test(row.content) : 'n/a'}`);
+
+      const bad = await api('POST', '/articles', { token: tok.student, body: { content: 'x', topic_id: topic.id } });
+      rec('submit', 'submit without title → 4xx (validation)', bad.status >= 400 && bad.status < 500, `status=${bad.status}`);
+
+      const noAuth = await api('POST', '/articles', { body: { title: 'no auth', content: 'body here', topic_id: topic.id } });
+      rec('submit', 'submit without auth → 401', noAuth.status === 401, `status=${noAuth.status}`);
+
+      if (id) {
+        // it shows up in the moderator queue, then moderator approves → APPROVED
+        const q = await api('GET', '/articles/moderation/queue', { token: tok.moderator });
+        const inQueue = Array.isArray(q.json?.data) && q.json.data.some((a) => a.id === id);
+        rec('submit', 'submitted article appears in moderator queue', inQueue, `found=${inQueue}`);
+
+        const appr = await api('POST', '/articles/status', { token: tok.moderator, body: { articleId: id, status: 'APPROVED' } });
+        const after = await prisma.article.findUnique({ where: { id }, select: { status: true } }).catch(() => null);
+        rec('submit', 'moderator approves → APPROVED (loop closed)', appr.status >= 200 && appr.status < 300 && after?.status === 'APPROVED', `status=${appr.status} db=${after?.status}`);
+
+        await prisma.version.deleteMany({ where: { article_id: id } }).catch(() => {});
+        await prisma.submissionLog.deleteMany({ where: { article_id: id } }).catch(() => {});
+        await prisma.contentModeration.deleteMany({ where: { article_id: id } }).catch(() => {});
+        await prisma.article.delete({ where: { id } }).catch(() => {});
+      }
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);

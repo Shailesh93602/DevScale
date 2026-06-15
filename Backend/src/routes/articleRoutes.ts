@@ -3,6 +3,7 @@ import ArticleController from '../controllers/articleController';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
+  createArticleSchema,
   updateArticleStatusSchema,
   updateModerationNotesSchema,
   updateArticleContentSchema,
@@ -40,6 +41,14 @@ export class ArticleRoutes extends BaseRouter {
 
     this.router.get('/:id', this.articleController.getArticleById);
     this.router.get('/:id/comments', this.articleController.getArticleComments);
+
+    // Author submits a new article (any authenticated user) → enters review queue
+    this.router.post(
+      '/',
+      authMiddleware,
+      validateRequest(createArticleSchema),
+      this.articleController.createArticle
+    );
 
     // Admin/moderator only — content writes
     this.router.post(
