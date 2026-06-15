@@ -96,6 +96,8 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | GET /battles/:id · join · leaderboard | both | happy | ✅ | |
 | **Anti-cheat: questions blocked (403) until IN_PROGRESS** | student | error | ✅ | confirmed correct gating |
 | Ready → start → IN_PROGRESS | both | happy | ✅ | needs ≥2 participants (creator must join) |
+| **Realtime: socket auth handshake** (valid connects, no/bad token rejected) | both | happy/error | ✅ | `qa/socket.mjs` — the prior Supabase-vs-HMAC auth bug stays fixed |
+| **Realtime: live event delivered after start** (`battle:status_changed`) | both | happy | ✅ | 2-client socket test |
 | **Submit correct option → is_correct=true + score** | student | happy | ✅ | validates the correct-answer index mapping |
 | **Submit wrong option → is_correct=false** | student | error | ✅ | |
 | Instant 1-v-1 matchmaking | student | happy | ⚪ | `/instant-battle` Coming Soon — no backend |
@@ -170,8 +172,8 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~53 (Admin + Auth + Dashboard + Roadmaps **+ bookmark/comments** + Profile/Streak + Articles reads **+ moderation writes + XSS** + Resources + Challenges **+ run-code + draft save/restore** + **full Battle lifecycle incl. gameplay scoring**) — `Backend/qa/run.mjs` **53/53** |
-| 🟡 Built, unverified | ~2 (battle realtime WebSocket sync, article create path) |
+| ✅ Verified | ~57 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads + moderation writes + XSS + Resources + Challenges + run-code + drafts + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket auth + live events**) — `qa/run.mjs` **53/53** + `qa/socket.mjs` **4/4** |
+| 🟡 Built, unverified | ~1 (article create/author path — confirm intended endpoint) |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
 | ❓ Unknown | ~4 |
