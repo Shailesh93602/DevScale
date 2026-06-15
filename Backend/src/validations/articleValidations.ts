@@ -33,6 +33,14 @@ export const updateArticleContentSchema = Joi.object({
     'object.min': 'Provide at least one field to update (title or content)',
   });
 
+// POST /articles — author submits a new article (enters the review queue)
+export const createArticleSchema = Joi.object({
+  title: Joi.string().min(3).max(300).required(),
+  content: Joi.string().min(10).required(),
+  topic_id: Joi.string().min(2).max(120).required(),
+  tags: Joi.array().items(Joi.string()).optional(),
+});
+
 // Param validator reused across article routes
 export const articleIdParamSchema = Joi.object({
   id: Joi.string().min(2).max(120).required(),

@@ -3,6 +3,7 @@ import { Status } from '../constants/enums';
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
+import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 import { ArticleRepository } from '../repositories/articleRepository';
 import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
@@ -124,6 +125,27 @@ export default class ArticleController {
       }
     }
   );
+
+  // Author submits a new article → status PENDING → appears in /moderate queue.
+  // Any authenticated user can submit; content is sanitized (XSS-safe).
+  public createArticle = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      throw createAppError('Authentication required', 401);
+    }
+    const { topic_id, tags } = req.body as { topic_id: string; tags?: string[] };
+    const title = sanitizeText(req.body.title);
+    const content = sanitizeRichText(req.body.content);
+
+    const article = await this.articleRepository.submitArticle({
+      title,
+      content,
+      author_id: userId,
+      topic_id,
+      tags,
+    });
+    sendResponse(res, 'ARTICLE_CREATED', { data: article });
+  });
 
   public getArticleById = catchAsync(async (req: Request, res: Response) => {
     try {

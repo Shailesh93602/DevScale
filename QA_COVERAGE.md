@@ -131,7 +131,8 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Moderation action (APPROVE/notes) | moderator | happy | ✅ | |
 | **HTML sanitization — `<script>` + `onerror` stripped, safe markup kept** | admin | error | ✅ | XSS payload neutralized; verified in DB |
 | Article detail + comments | public | happy | 🟡 | |
-| Create article (author flow) | student | happy | ❓ | no POST create endpoint — confirm intended path |
+| **Submit article (author flow) → PENDING** | student | happy | ✅ NEW | added `POST /articles` (auth, any user); content XSS-sanitized; validation 400; no-auth 401 |
+| **Full submission→moderation loop** | student+mod | happy | ✅ NEW | submit → appears in `/moderate` queue → moderator approves → APPROVED. The moderation queue now has a real content source. |
 
 ### 8. Profile & Streak 🟢
 | Flow | Role | Type | Status | Notes |
