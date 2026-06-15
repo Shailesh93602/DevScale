@@ -87,15 +87,19 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Comment + like comment | student | happy | 🟡 | |
 | Detail view (subjects/topics/progress) | student | happy | 🟡 | |
 
-### 4. Battle Zone 🟡 (real-time — highest risk)
+### 4. Battle Zone 🟢 (REST lifecycle proven; realtime gameplay still 🟡)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| Create battle | student | happy | 🟡 | assert Battle row |
-| Join battle | student#2 | happy | 🟡 | |
-| Ready → start → answer → results | both | happy | 🟡 | WebSocket; needs 2-client test |
-| Leaderboard updates after answers | both | happy | 🟡 | |
-| Anti-cheat / rate limit on submit | student | error | ❓ | |
+| Create battle → 201 + Battle row (WAITING) | student | happy | ✅ | asserted in DB |
+| Empty question pool → graceful 422 | student | error | ✅ | (not a 500) |
+| GET /battles/:id | student | happy | ✅ | |
+| Second player joins → 200 | student#2 | happy | ✅ | |
+| **Anti-cheat: questions blocked (403) until IN_PROGRESS** | student | error | ✅ | confirmed correct gating |
+| Leaderboard endpoint → 200 | student | happy | ✅ | |
+| Ready → start → answer → results (realtime) | both | happy | 🟡 | WebSocket 2-client gameplay — next |
 | Instant 1-v-1 matchmaking | student | happy | ⚪ | `/instant-battle` Coming Soon — no backend |
+
+> **⚠️ Observation (needs your call, not a confirmed bug):** the battle question pool reads the **`QuizQuestion`** table, which is nearly empty in staging (4 rows / 2 topics), while the seeded quiz content lives in **`Question`** (3773 rows). So `question_source` only works for the few topics that have `QuizQuestion` data — most topics/roadmaps yield "No questions available." Decide: seed `QuizQuestion` from existing content, or have the pool also read `Question`. (Lifecycle above proven via `topic_id` create, which skips the pool.)
 
 ### 5. Coding Challenges 🟢 (list/detail proven)
 | Flow | Role | Type | Status | Notes |
@@ -161,11 +165,13 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~28 (Admin panel + Auth + Dashboard + Roadmaps + Profile/Streak + Articles/Resources/Challenges reads) — `Backend/qa/run.mjs` 28/28 |
-| 🟡 Built, unverified | ~12 |
+| ✅ Verified | ~35 (Admin + Auth + Dashboard + Roadmaps + Profile/Streak + Articles/Resources/Challenges reads + Battle REST lifecycle) — `Backend/qa/run.mjs` **35/35** |
+| 🟡 Built, unverified | ~8 (battle realtime gameplay, code-runner, article writes, XSS, comments) |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
-| ❓ Unknown | ~6 |
+| ❓ Unknown | ~4 |
+
+⚠️ **1 observation needing your decision:** battle `QuizQuestion` pool is near-empty vs the `Question` table (see Battle Zone note).
 
 **Bugs found + fixed via this matrix (without prompting):**
 1. Seeder never set Supabase `app_metadata.role` → seeded admin couldn't reach `/admin`. *(fixed + verified)*

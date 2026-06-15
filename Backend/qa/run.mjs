@@ -175,6 +175,69 @@ async function main() {
     }
   }
 
+  // ---------- BATTLE ZONE (REST lifecycle) ----------
+  if (!only || only === 'battles') {
+    // Any valid topic works: we create via topic_id (skips the pool) for the
+    // lifecycle, and use the same topic to prove empty-pool rejection is graceful.
+    const t = await prisma.topic.findFirst({ select: { id: true } }).catch(() => null);
+    const topicId = t?.id;
+    // KNOWN GAP (documented in QA_COVERAGE): the pool service reads QuizQuestion
+    // (≈empty in staging) not Question (3773 rows), so question_source almost
+    // always yields "No questions available". Assert that empty-pool rejection
+    // is graceful, then test the rest of the lifecycle via topic_id-only create
+    // (which skips the pool fetch).
+    if (!topicId) {
+      rec('battles', 'precondition: a topic exists', false, 'none found');
+    } else {
+      // A roadmap source has no QuizQuestions → empty pool → must be a graceful 422.
+      const list = await api('GET', '/roadmaps?limit=1', { token: tok.student });
+      const rmArr = list.json?.data?.roadmaps || list.json?.data?.data || list.json?.data || [];
+      const rmId = (Array.isArray(rmArr) ? rmArr[0] : rmArr?.roadmaps?.[0])?.id;
+      if (rmId) {
+        const emptyPool = await api('POST', '/battles', {
+          token: tok.student,
+          body: { title: 'QA EmptyPool ' + rmId.slice(0, 6), difficulty: 'EASY', type: 'QUICK', total_questions: 5, question_source: { type: 'roadmap', id: rmId, count: 5 } },
+        });
+        rec('battles', 'empty question pool → graceful 422 (not 500)', emptyPool.status === 422, `status=${emptyPool.status}`);
+      }
+
+      const create = await api('POST', '/battles', {
+        token: tok.student,
+        body: {
+          title: 'QA Battle ' + topicId.slice(0, 6),
+          difficulty: 'EASY',
+          type: 'QUICK',
+          max_participants: 4,
+          total_questions: 5,
+          topic_id: topicId,
+        },
+      });
+      const battleId = create.json?.data?.id || create.json?.data?.battle?.id;
+      rec('battles', 'create battle → 2xx + Battle row', create.status >= 200 && create.status < 300 && !!battleId, `status=${create.status} id=${battleId ? 'yes' : 'no'} ${battleId ? '' : JSON.stringify(create.json?.message || create.json).slice(0, 120)}`);
+
+      if (battleId) {
+        const row = await prisma.battle.findUnique({ where: { id: battleId } }).catch(() => null);
+        rec('battles', 'created battle persisted in DB', !!row, `row=${!!row} status=${row?.status}`);
+
+        const get = await api('GET', `/battles/${battleId}`, { token: tok.student });
+        rec('battles', 'GET /battles/:id → 200', get.status === 200, `status=${get.status}`);
+
+        const join = await api('POST', `/battles/${battleId}/join`, { token: tok.student2 });
+        rec('battles', 'second player joins → 2xx', join.status >= 200 && join.status < 300, `status=${join.status} ${join.status >= 300 ? JSON.stringify(join.json?.message).slice(0,100) : ''}`);
+
+        // Anti-cheat: questions must NOT be fetchable before the battle starts.
+        const q = await api('GET', `/battles/${battleId}/questions`, { token: tok.student });
+        rec('battles', 'anti-cheat: questions blocked (403) while WAITING', q.status === 403, `status=${q.status}`);
+
+        const lb = await api('GET', `/battles/${battleId}/leaderboard`, { token: tok.student });
+        rec('battles', 'GET /battles/:id/leaderboard → 200', lb.status === 200, `status=${lb.status}`);
+
+        // cleanup: cancel the battle to keep staging tidy
+        await api('PATCH', `/battles/${battleId}/cancel`, { token: tok.student });
+      }
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);
