@@ -3,12 +3,14 @@ import Joi from 'joi';
 // POST /articles/status
 export const updateArticleStatusSchema = Joi.object({
   articleId: Joi.string().min(2).max(120).required(),
+  // Must match the Prisma `Status` enum (DRAFT/PENDING/APPROVED/REJECTED).
+  // It previously advertised PENDING_REVIEW/PUBLISHED/ARCHIVED, which the DB
+  // enum can't store, so valid-per-contract requests failed.
   status: Joi.string()
-    .valid('DRAFT', 'PENDING_REVIEW', 'PUBLISHED', 'ARCHIVED', 'REJECTED')
+    .valid('DRAFT', 'PENDING', 'APPROVED', 'REJECTED')
     .required()
     .messages({
-      'any.only':
-        'status must be DRAFT, PENDING_REVIEW, PUBLISHED, ARCHIVED, or REJECTED',
+      'any.only': 'status must be DRAFT, PENDING, APPROVED, or REJECTED',
     }),
 });
 

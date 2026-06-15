@@ -119,15 +119,17 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Standalone `/quiz` page | student | happy | 🔴 | hardcoded demo questions, no backend wiring |
 | Topic quiz (in roadmap) submit + score | student | happy | 🟡 | real path via `/topics/:id/quiz` |
 
-### 7. Articles 🟢 (reads proven)
+### 7. Articles 🟢 (reads + moderation writes proven)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
 | `GET /articles/all` (public) → 200 | public | happy | ✅ | |
 | `GET /articles/my-articles` → 200 | student | happy | ✅ FIXED | was 404 (shadowed by `/:id`); reordered |
+| Set status (APPROVED) → persists | admin | happy | ✅ FIXED | 3 bugs: controller read `req.query` not body (always 404); Joi enum mismatch (PUBLISHED/PENDING_REVIEW vs real DRAFT/PENDING/APPROVED/REJECTED); `updateArticle` hardcoded status=PENDING |
+| Non-admin set status → 403 | student | error | ✅ | role gate |
+| Moderation action (APPROVE/notes) | moderator | happy | ✅ | |
+| **HTML sanitization — `<script>` + `onerror` stripped, safe markup kept** | admin | error | ✅ | XSS payload neutralized; verified in DB |
 | Article detail + comments | public | happy | 🟡 | |
-| Create / edit article | student | happy | ❓ | confirm write endpoint exists |
-| Moderate (status/notes) | admin/mod | happy | 🟡 | endpoint built; no mod UI |
-| HTML sanitization (XSS payload stripped) | admin/mod | error | ❓ | sanitizer built; assert it strips |
+| Create article (author flow) | student | happy | ❓ | no POST create endpoint — confirm intended path |
 
 ### 8. Profile & Streak 🟢
 | Flow | Role | Type | Status | Notes |
@@ -168,8 +170,8 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~39 (Admin + Auth + Dashboard + Roadmaps + Profile/Streak + Articles/Resources/Challenges reads + **full Battle lifecycle incl. gameplay scoring**) — `Backend/qa/run.mjs` **39/39** |
-| 🟡 Built, unverified | ~8 (battle realtime gameplay, code-runner, article writes, XSS, comments) |
+| ✅ Verified | ~44 (Admin + Auth + Dashboard + Roadmaps + Profile/Streak + Articles reads **+ moderation writes + XSS** + Resources/Challenges reads + **full Battle lifecycle incl. gameplay scoring**) — `Backend/qa/run.mjs` **44/44** |
+| 🟡 Built, unverified | ~5 (battle realtime WebSocket sync, code-runner/Judge0, comments, article create path) |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
 | ❓ Unknown | ~4 |
@@ -179,9 +181,13 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 **Bugs found + fixed via this matrix (without prompting):**
 1. Seeder never set Supabase `app_metadata.role` → seeded admin couldn't reach `/admin`. *(fixed + verified)*
 2. `authorizeRoles` case-sensitive vs uppercase DB roles → real admins 403'd on `/analytics/platform` + roadmap delete. *(fixed + verified)*
-3. **Profile edit demoted privileged users:** `PUT /users/me` forced `role: connect STUDENT` on update, so any admin/moderator who saved their profile silently became a STUDENT. *(fixed: default STUDENT only on create; verified moderator stays MODERATOR after a profile save)*
-4. **`GET /articles/my-articles` was unreachable (404):** registered after `GET /:id`, so Express matched `id="my-articles"`. Reordered literal paths before the param route. *(fixed + verified)*
-5. (earlier) admin API entirely dead — routes never registered, searchUsers 500, audit wrong table. *(fixed + verified)*
+3. **Profile edit demoted privileged users:** `PUT /users/me` forced `role: connect STUDENT` on update, so any admin/moderator who saved their profile silently became a STUDENT. *(fixed + verified)*
+4. **`GET /articles/my-articles` was unreachable (404):** registered after `GET /:id`. Reordered. *(fixed + verified)*
+5. **Battle pool read the wrong (near-empty) question table** → battles couldn't find questions. Unified onto canonical `Question/Option`; removed the duplicate System B. *(fixed + verified, incl. gameplay scoring)*
+6. **Article status endpoint was fully broken** (3 bugs): read `req.query` not body (always 404); Joi status enum didn't match the DB `Status` enum; `updateArticle` hardcoded status=PENDING ignoring the input. *(all fixed + verified)*
+7. (earlier) admin API entirely dead — routes never registered, searchUsers 500, audit wrong table. *(fixed + verified)*
+
+**Security checks passing:** XSS sanitization on article content (`<script>`/`onerror` stripped, safe markup kept); role gates (student denied admin/moderator writes); CSRF on mutations; logout token blocklist; battle anti-cheat (questions hidden until start).
 
 **EduScale is NOT "100%"** — but it's now honestly tracked and moving: Auth, Dashboard, Roadmaps (core),
 and the Admin panel are outcome-verified. Remaining areas (Battles, Challenges/Quiz, Articles, Profile,

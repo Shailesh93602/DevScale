@@ -36,27 +36,26 @@ export default class ArticleController {
   public updateArticleStatus = catchAsync(
     async (req: Request, res: Response) => {
       try {
-        const { id, status } = req.query as {
-          id: string;
+        // Body params (validated by updateArticleStatusSchema). This previously
+        // read req.query.id/status — always undefined for this POST — and used a
+        // bogus APPROVED/REJECTED whitelist that didn't match the Status enum, so
+        // the endpoint always 404'd. Status is already validated to the enum.
+        const { articleId, status } = req.body as {
+          articleId: string;
           status: Status;
         };
 
-        if (!['APPROVED', 'REJECTED'].includes(status)) {
-          return sendResponse(res, 'ARTICLE_NOT_FOUND', {
-            error: 'Invalid status value. Please use APPROVED or REJECTED.',
-          });
-        }
-
-        const article = await this.articleRepository.getArticleById(id);
+        const article = await this.articleRepository.getArticleById(articleId);
         if (!article) {
           return sendResponse(res, 'ARTICLE_NOT_FOUND', {
             error: 'Article not found',
           });
         }
 
-        const updatedArticle = await this.articleRepository.updateArticle(id, {
-          status,
-        });
+        const updatedArticle = await this.articleRepository.updateArticle(
+          articleId,
+          { status }
+        );
         sendResponse(res, 'ARTICLE_UPDATED', { data: updatedArticle });
       } catch (error) {
         logger.error('Failed to update article status:', error);
