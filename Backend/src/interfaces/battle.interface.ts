@@ -1,9 +1,4 @@
-import {
-  BattleStatus,
-  BattleType,
-  BattleParticipantStatus,
-  Difficulty,
-} from '@prisma/client';
+import { BattleStatus, BattleType, BattleParticipantStatus, Difficulty } from '../constants/enums';
 
 export interface IBattle {
   id: string;

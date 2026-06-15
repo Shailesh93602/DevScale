@@ -1,4 +1,5 @@
-import { ActivityType, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { ActivityType } from '../constants/enums';
 import type { UserStreak } from '@prisma/client';
 import { DateTime } from 'luxon';
 import BaseRepository from './baseRepository.js';

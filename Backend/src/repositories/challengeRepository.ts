@@ -1,9 +1,5 @@
-import {
-  Challenge,
-  ChallengeSubmission,
-  Difficulty,
-  ChallengeCategory,
-} from '@prisma/client';
+import { Challenge, ChallengeSubmission } from '@prisma/client';
+import { Difficulty, ChallengeCategory } from '../constants/enums';
 import { createAppError } from '../utils/errorHandler.js';
 import BaseRepository from './baseRepository.js';
 import logger from '../utils/logger.js';
@@ -207,7 +203,7 @@ export class ChallengeRepository extends BaseRepository<
     await invalidateCachePattern(`challenge:${challenge_id}:*`);
   }
 
-  private calculatePoints(difficulty: Difficulty) {
+  private calculatePoints(difficulty: string) {
     switch (difficulty) {
       case Difficulty.EASY:
         return 10;

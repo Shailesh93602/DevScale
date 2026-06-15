@@ -1,4 +1,4 @@
-import { JobType } from '@prisma/client';
+import { JobType } from '../constants/enums';
 import type { Job } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 

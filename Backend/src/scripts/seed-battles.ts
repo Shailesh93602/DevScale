@@ -13,12 +13,8 @@
  *       (or: cd Backend && npm run seed:battles)
  */
 
-import {
-  PrismaClient,
-  BattleType,
-  Difficulty,
-  BattleStatus,
-} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { BattleType, Difficulty, BattleStatus } from '../constants/enums';
 import { generateBattleSlug } from '../utils/slugify';
 
 const prisma = new PrismaClient();

@@ -1,10 +1,5 @@
-import {
-  PrismaClient,
-  Status,
-  Prisma,
-  ContentModeration,
-  Article,
-} from '@prisma/client';
+import { PrismaClient, Prisma, ContentModeration, Article } from '@prisma/client';
+import { Status } from '../constants/enums';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import BaseRepository from './baseRepository.js';

@@ -1,10 +1,5 @@
-import {
-  Battle,
-  BattleStatus,
-  BattleType,
-  Difficulty,
-  Prisma,
-} from '@prisma/client';
+import { Battle, Prisma } from '@prisma/client';
+import { BattleStatus, BattleType, Difficulty } from '../constants/enums';
 import BaseRepository from './baseRepository.js';
 import { createAppError } from '../utils/errorHandler.js';
 import prisma from '../lib/prisma.js';

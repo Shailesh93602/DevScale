@@ -1,10 +1,5 @@
-import {
-  Prisma,
-  ContentStatus,
-  Status,
-  AdminAuditLog,
-  Content,
-} from '@prisma/client';
+import { Prisma, AdminAuditLog, Content } from '@prisma/client';
+import { ContentStatus, Status } from '../constants/enums';
 import type { User } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';

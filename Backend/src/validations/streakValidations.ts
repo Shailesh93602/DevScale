@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { ActivityType } from '@prisma/client';
+import { ActivityType } from '../constants/enums';
 
 export const updateStreakSchema = Joi.object({
   activityType: Joi.string()
