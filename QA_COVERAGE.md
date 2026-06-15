@@ -87,19 +87,22 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Comment + like comment | student | happy | 🟡 | |
 | Detail view (subjects/topics/progress) | student | happy | 🟡 | |
 
-### 4. Battle Zone 🟢 (REST lifecycle proven; realtime gameplay still 🟡)
+### 4. Battle Zone 🟢 (full lifecycle + gameplay scoring proven)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| Create battle → 201 + Battle row (WAITING) | student | happy | ✅ | asserted in DB |
+| Create battle from real topic source → 201 + Battle row | student | happy | ✅ | now sources canonical content (see decision below) |
+| Battle seeded with questions (BattleQuestion rows) | student | happy | ✅ | 5 questions snapshotted from the pool |
 | Empty question pool → graceful 422 | student | error | ✅ | (not a 500) |
-| GET /battles/:id | student | happy | ✅ | |
-| Second player joins → 200 | student#2 | happy | ✅ | |
+| GET /battles/:id · join · leaderboard | both | happy | ✅ | |
 | **Anti-cheat: questions blocked (403) until IN_PROGRESS** | student | error | ✅ | confirmed correct gating |
-| Leaderboard endpoint → 200 | student | happy | ✅ | |
-| Ready → start → answer → results (realtime) | both | happy | 🟡 | WebSocket 2-client gameplay — next |
+| Ready → start → IN_PROGRESS | both | happy | ✅ | needs ≥2 participants (creator must join) |
+| **Submit correct option → is_correct=true + score** | student | happy | ✅ | validates the correct-answer index mapping |
+| **Submit wrong option → is_correct=false** | student | error | ✅ | |
 | Instant 1-v-1 matchmaking | student | happy | ⚪ | `/instant-battle` Coming Soon — no backend |
 
-> **⚠️ Observation (needs your call, not a confirmed bug):** the battle question pool reads the **`QuizQuestion`** table, which is nearly empty in staging (4 rows / 2 topics), while the seeded quiz content lives in **`Question`** (3773 rows). So `question_source` only works for the few topics that have `QuizQuestion` data — most topics/roadmaps yield "No questions available." Decide: seed `QuizQuestion` from existing content, or have the pool also read `Question`. (Lifecycle above proven via `topic_id` create, which skips the pool.)
+> **✅ RESOLVED — architectural decision (the question-table duplication):** EduScale had **two parallel question systems** — `Quiz.questions → Question/Option` (3773 rows, used by the real topic-quiz feature) and `Quiz.quiz_questions → QuizQuestion/QuizOption` (4 rows, used only by the battle pool + two unused admin endpoints). The battle pool read the near-empty duplicate, so battles couldn't find questions. **Decision: unify on `Question`/`Option` as the single source of truth.** The pool now reads `Question`, deriving the correct answer exactly as quiz scoring does (`Option.text === Question.correct_answer`, since `Option.is_correct` is unreliable in the data). Verified: battles now source real content from any topic/subject/roadmap, and gameplay scores correctly. **Follow-up (System B removal):** migrate/remove the `/questions` + `/quiz` QuizQuestion endpoints and drop the `QuizQuestion`/`QuizOption`/`QuizAnswer`/`QuizSubmissionAnswer` tables via a Prisma migration (planned next).
+>
+> **⚠️ Note (latent, low-prod-risk):** `submitAnswer` runs `buildLeaderboard` as a separate query inside its `$transaction`+lock; with a 1-connection pool (the `DIRECT_URL` has `connection_limit=1`) it deadlocks → 500. Fine with a normal pool (verified at 10), but the runtime should use a pooled `DATABASE_URL`, and ideally `buildLeaderboard` should use the transaction client.
 
 ### 5. Coding Challenges 🟢 (list/detail proven)
 | Flow | Role | Type | Status | Notes |
@@ -165,13 +168,13 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~35 (Admin + Auth + Dashboard + Roadmaps + Profile/Streak + Articles/Resources/Challenges reads + Battle REST lifecycle) — `Backend/qa/run.mjs` **35/35** |
+| ✅ Verified | ~39 (Admin + Auth + Dashboard + Roadmaps + Profile/Streak + Articles/Resources/Challenges reads + **full Battle lifecycle incl. gameplay scoring**) — `Backend/qa/run.mjs` **39/39** |
 | 🟡 Built, unverified | ~8 (battle realtime gameplay, code-runner, article writes, XSS, comments) |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
 | ❓ Unknown | ~4 |
 
-⚠️ **1 observation needing your decision:** battle `QuizQuestion` pool is near-empty vs the `Question` table (see Battle Zone note).
+✅ **Architectural decision made + implemented:** unified the battle question pool onto the canonical `Question`/`Option` table (was reading the near-empty `QuizQuestion` duplicate). Battles now source real content + gameplay scoring verified. Follow-up: drop the redundant `QuizQuestion` System B tables via migration.
 
 **Bugs found + fixed via this matrix (without prompting):**
 1. Seeder never set Supabase `app_metadata.role` → seeded admin couldn't reach `/admin`. *(fixed + verified)*
