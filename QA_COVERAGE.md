@@ -13,19 +13,17 @@
 
 ---
 
-## 🚧 ROOT BLOCKER — no safe test environment
+## ✅ TEST ENV — resolved (2026-06-15)
 
-Local dev points at **production Supabase** (`DATABASE_URL`/`DIRECT_URL`/`SUPABASE_URL` are all prod).
-There is no local/staging Supabase. **This is the #1 reason the find-vs-reality gap exists:** the
-destructive/edge tests that would *prove* flows (seed users, change roles, delete records, submit bad
-input, hit rate limits) can't be run safely, so they don't get run.
+The Supabase project EduScale's `.env` points at is **STAGING / disposable** — the user is deploying a
+**fresh, separate project for production**. So **destructive + edge-case QA against the current project is
+authorized and expected.** The env is no longer a blocker; the find-vs-reality gap can now actually be closed.
 
-**To reach real 100% we need one of:**
-1. A **local Supabase** (`supabase start`) + local Postgres + local Redis → a throwaway env where exhaustive/destructive QA is free and safe. *(Recommended.)*
-2. A **dedicated staging Supabase project** (mirrors prod, disposable data).
-3. Explicit per-run authorization to exercise prod with seeded throwaway users (slow, risky, not repeatable).
-
-Until then, coverage is capped at read-only/non-destructive checks against prod.
+- **Roles + role users: VERIFIED** ✅ — `seed:roles` + `seed:user` run against staging; all 4 users carry the
+  correct Supabase `app_metadata.role` (admin=ADMIN, moderator=MODERATOR, both students=STUDENT), proven by
+  querying the auth API (not assumed). `admin@eduscale.io` reaches `/admin`; `teststudent` reverted to STUDENT.
+- **When the fresh prod project is created:** run `seed:roles` there (roles only). **Do NOT** seed the demo
+  users (`admin@eduscale.io`, etc.) into prod.
 
 ---
 
@@ -49,7 +47,7 @@ Until then, coverage is capped at read-only/non-destructive checks against prod.
 | MODERATOR | `moderator@eduscale.io` | `Mod@123` | Article/forum moderation (no UI yet — see Moderator Plan) |
 
 > Seeder (`prisma/seeders/user.seeder.ts`) now sets Supabase **`app_metadata.role`** (the field the
-> route middleware actually reads) on both create + re-seed. **Run requires a non-prod target** (see Root Blocker).
+> route middleware actually reads) on both create + re-seed. **Verified ✅** against staging on 2026-06-15.
 
 ---
 
