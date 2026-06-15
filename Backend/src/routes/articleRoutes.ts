@@ -30,6 +30,14 @@ export class ArticleRoutes extends BaseRouter {
       this.articleController.getMyArticles
     );
 
+    // Moderation queue (ADMIN + MODERATOR) — literal path, before '/:id'.
+    this.router.get(
+      '/moderation/queue',
+      authMiddleware,
+      authorizeRoles('ADMIN', 'MODERATOR'),
+      this.articleController.getModerationQueue
+    );
+
     this.router.get('/:id', this.articleController.getArticleById);
     this.router.get('/:id/comments', this.articleController.getArticleComments);
 
