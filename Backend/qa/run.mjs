@@ -177,29 +177,23 @@ async function main() {
 
   // ---------- BATTLE ZONE (REST lifecycle) ----------
   if (!only || only === 'battles') {
-    // Any valid topic works: we create via topic_id (skips the pool) for the
-    // lifecycle, and use the same topic to prove empty-pool rejection is graceful.
-    const t = await prisma.topic.findFirst({ select: { id: true } }).catch(() => null);
-    const topicId = t?.id;
-    // KNOWN GAP (documented in QA_COVERAGE): the pool service reads QuizQuestion
-    // (≈empty in staging) not Question (3773 rows), so question_source almost
-    // always yields "No questions available". Assert that empty-pool rejection
-    // is graceful, then test the rest of the lifecycle via topic_id-only create
-    // (which skips the pool fetch).
+    // A topic that actually has canonical Question rows (post-unification the
+    // pool reads Question/Option, so battles can now source from real content).
+    const qrow = await prisma.question.findFirst({ where: { quiz: { topic_id: { not: null } } }, select: { quiz: { select: { topic_id: true } } } }).catch(() => null);
+    const topicId = qrow?.quiz?.topic_id;
+    // Post-unification the pool reads canonical Question/Option, so a battle can
+    // be sourced from real topic content. We assert: (1) a genuinely-empty source
+    // is rejected gracefully (422, not 500); (2) a real topic source creates a
+    // battle WITH populated BattleQuestions; (3) the rest of the lifecycle.
     if (!topicId) {
-      rec('battles', 'precondition: a topic exists', false, 'none found');
+      rec('battles', 'precondition: a topic with questions exists', false, 'none found');
     } else {
-      // A roadmap source has no QuizQuestions → empty pool → must be a graceful 422.
-      const list = await api('GET', '/roadmaps?limit=1', { token: tok.student });
-      const rmArr = list.json?.data?.roadmaps || list.json?.data?.data || list.json?.data || [];
-      const rmId = (Array.isArray(rmArr) ? rmArr[0] : rmArr?.roadmaps?.[0])?.id;
-      if (rmId) {
-        const emptyPool = await api('POST', '/battles', {
-          token: tok.student,
-          body: { title: 'QA EmptyPool ' + rmId.slice(0, 6), difficulty: 'EASY', type: 'QUICK', total_questions: 5, question_source: { type: 'roadmap', id: rmId, count: 5 } },
-        });
-        rec('battles', 'empty question pool → graceful 422 (not 500)', emptyPool.status === 422, `status=${emptyPool.status}`);
-      }
+      // Guaranteed-empty source: a non-existent topic id → no questions → 422.
+      const emptyPool = await api('POST', '/battles', {
+        token: tok.student,
+        body: { title: 'QA EmptyPool xx', difficulty: 'EASY', type: 'QUICK', total_questions: 5, question_source: { type: 'topic', id: '00000000-0000-0000-0000-000000000000', count: 5 } },
+      });
+      rec('battles', 'empty question pool → graceful 422 (not 500)', emptyPool.status === 422, `status=${emptyPool.status}`);
 
       const create = await api('POST', '/battles', {
         token: tok.student,
@@ -209,19 +203,25 @@ async function main() {
           type: 'QUICK',
           max_participants: 4,
           total_questions: 5,
-          topic_id: topicId,
+          question_source: { type: 'topic', id: topicId, count: 5 },
         },
       });
       const battleId = create.json?.data?.id || create.json?.data?.battle?.id;
-      rec('battles', 'create battle → 2xx + Battle row', create.status >= 200 && create.status < 300 && !!battleId, `status=${create.status} id=${battleId ? 'yes' : 'no'} ${battleId ? '' : JSON.stringify(create.json?.message || create.json).slice(0, 120)}`);
+      rec('battles', 'create battle from real topic source → 2xx + Battle row', create.status >= 200 && create.status < 300 && !!battleId, `status=${create.status} id=${battleId ? 'yes' : 'no'} ${battleId ? '' : JSON.stringify(create.json?.message || create.json).slice(0, 120)}`);
 
       if (battleId) {
         const row = await prisma.battle.findUnique({ where: { id: battleId } }).catch(() => null);
         rec('battles', 'created battle persisted in DB', !!row, `row=${!!row} status=${row?.status}`);
 
+        // The unification payoff: the battle has real questions snapshotted in.
+        const bqCount = await prisma.battleQuestion.count({ where: { battle_id: battleId } }).catch(() => 0);
+        rec('battles', 'battle has questions from canonical pool (BattleQuestion rows)', bqCount > 0, `count=${bqCount}`);
+
         const get = await api('GET', `/battles/${battleId}`, { token: tok.student });
         rec('battles', 'GET /battles/:id → 200', get.status === 200, `status=${get.status}`);
 
+        // Creator joins their own battle too (not auto-added as a participant).
+        await api('POST', `/battles/${battleId}/join`, { token: tok.student });
         const join = await api('POST', `/battles/${battleId}/join`, { token: tok.student2 });
         rec('battles', 'second player joins → 2xx', join.status >= 200 && join.status < 300, `status=${join.status} ${join.status >= 300 ? JSON.stringify(join.json?.message).slice(0,100) : ''}`);
 
@@ -231,6 +231,28 @@ async function main() {
 
         const lb = await api('GET', `/battles/${battleId}/leaderboard`, { token: tok.student });
         rec('battles', 'GET /battles/:id/leaderboard → 200', lb.status === 200, `status=${lb.status}`);
+
+        // ── Gameplay: prove the converted correct-answer INDEX is actually right ──
+        await api('POST', `/battles/${battleId}/lobby`, { token: tok.student });
+        await api('POST', `/battles/${battleId}/ready`, { token: tok.student });
+        await api('POST', `/battles/${battleId}/ready`, { token: tok.student2 });
+        const start = await api('POST', `/battles/${battleId}/start`, { token: tok.student });
+        rec('battles', 'start battle → 2xx (IN_PROGRESS)', start.status >= 200 && start.status < 300, `status=${start.status} ${start.status >= 300 ? JSON.stringify(start.json?.message).slice(0,90) : ''}`);
+
+        if (start.status >= 200 && start.status < 300) {
+          const bqs = await prisma.battleQuestion.findMany({ where: { battle_id: battleId }, orderBy: { order: 'asc' }, select: { id: true, correct_answer: true } }).catch(() => []);
+          if (bqs[0]) {
+            // Submit the STORED-correct option → must score correct (validates the
+            // Question→pool→BattleQuestion correct-index mapping end to end).
+            const good = await api('POST', '/battles/answer', { token: tok.student, body: { battle_id: battleId, question_id: bqs[0].id, selected_option: bqs[0].correct_answer, time_taken_ms: 1500 } });
+            rec('battles', 'correct option scores is_correct=true', (good.status >= 200 && good.status < 300) && good.json?.data?.is_correct === true, `status=${good.status} is_correct=${good.json?.data?.is_correct}`);
+          }
+          if (bqs[1]) {
+            const wrongIdx = (bqs[1].correct_answer + 1) % 4;
+            const bad = await api('POST', '/battles/answer', { token: tok.student, body: { battle_id: battleId, question_id: bqs[1].id, selected_option: wrongIdx, time_taken_ms: 1500 } });
+            rec('battles', 'wrong option scores is_correct=false', (bad.status >= 200 && bad.status < 300) && bad.json?.data?.is_correct === false, `status=${bad.status} is_correct=${bad.json?.data?.is_correct}`);
+          }
+        }
 
         // cleanup: cancel the battle to keep staging tidy
         await api('PATCH', `/battles/${battleId}/cancel`, { token: tok.student });
