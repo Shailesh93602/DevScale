@@ -81,17 +81,22 @@ async function main() {
   await api("POST", `/battles/${battleId}/join`, tok);
   await api("POST", `/battles/${battleId}/join`, tok2);
 
+  // Both players connect + join the battle room.
   const s1 = connect(tok);
-  await waitConnect(s1);
-  // listen for ANY of the start-related events broadcast to the room
-  const started = new Promise((resolve) => {
-    for (const ev of ["battle:started", "battle:status_changed", "battle:question", "battle:state"]) {
-      s1.on(ev, () => resolve(ev));
-    }
-    setTimeout(() => resolve(null), 7000);
-  });
+  const s2 = connect(tok2);
+  await Promise.all([waitConnect(s1), waitConnect(s2)]);
+
+  const onceAny = (sock, events, ms = 8000) =>
+    new Promise((resolve) => {
+      for (const ev of events) sock.on(ev, (d) => resolve({ ev, d }));
+      setTimeout(() => resolve(null), ms);
+    });
+
+  // s1 listens for a start-related broadcast.
+  const started = onceAny(s1, ["battle:started", "battle:status_changed", "battle:question", "battle:state"]);
   s1.emit("battle:join", { battle_id: battleId });
-  await new Promise((r) => setTimeout(r, 500)); // let the room-join settle
+  s2.emit("battle:join", { battle_id: battleId });
+  await new Promise((r) => setTimeout(r, 600)); // let room-joins settle
 
   await api("POST", `/battles/${battleId}/lobby`, tok);
   await api("POST", `/battles/${battleId}/ready`, tok);
@@ -99,9 +104,24 @@ async function main() {
   const start = await api("POST", `/battles/${battleId}/start`, tok);
 
   const ev = await started;
-  rec("socket receives a live battle event after start", !!ev, ev ? `event=${ev}` : `none within 7s (start status=${start.status})`);
+  rec("socket receives a live battle event after start", !!ev, ev ? `event=${ev.ev}` : `none within 8s (start=${start.status})`);
+
+  // Gameplay sync: player1 answers → the OTHER player's socket gets a live
+  // score_update (room broadcast); the submitter gets answer_result.
+  const bqs = await prisma.battleQuestion.findMany({ where: { battle_id: battleId }, orderBy: { order: "asc" }, select: { id: true, correct_answer: true } }).catch(() => []);
+  if (bqs[0] && start.status >= 200 && start.status < 300) {
+    const p2Update = onceAny(s2, ["battle:score_update", "battle:leaderboard", "battle:participant_answered"]);
+    const p1Result = onceAny(s1, ["battle:answer_result"]);
+    await api("POST", "/battles/answer", tok, { battle_id: battleId, question_id: bqs[0].id, selected_option: bqs[0].correct_answer, time_taken_ms: 1200 });
+    const [u, r] = await Promise.all([p2Update, p1Result]);
+    rec("answer broadcasts score_update to the OTHER player's socket", !!u, u ? `event=${u.ev}` : "none within 8s");
+    rec("submitter's socket receives answer_result", !!r, r ? `event=${r.ev}` : "none within 8s");
+  } else {
+    rec("realtime gameplay precondition (questions + started)", false, `bq=${bqs.length} start=${start.status}`);
+  }
 
   s1.disconnect();
+  s2.disconnect();
   await api("PATCH", `/battles/${battleId}/cancel`, tok).catch(() => {});
   finish();
 }

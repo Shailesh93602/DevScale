@@ -98,6 +98,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Ready → start → IN_PROGRESS | both | happy | ✅ | needs ≥2 participants (creator must join) |
 | **Realtime: socket auth handshake** (valid connects, no/bad token rejected) | both | happy/error | ✅ | `qa/socket.mjs` — the prior Supabase-vs-HMAC auth bug stays fixed |
 | **Realtime: live event delivered after start** (`battle:status_changed`) | both | happy | ✅ | 2-client socket test |
+| **Realtime gameplay sync**: an answer broadcasts `score_update` to the OTHER player + `answer_result` to the submitter | both | happy | ✅ | `qa/socket.mjs` 2-client, proves live room broadcasts |
 | **Submit correct option → is_correct=true + score** | student | happy | ✅ | validates the correct-answer index mapping |
 | **Submit wrong option → is_correct=false** | student | error | ✅ | |
 | Instant 1-v-1 matchmaking | student | happy | ⚪ | `/instant-battle` Coming Soon — no backend |
@@ -146,7 +147,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
 | `GET /resources` (paginated) → 200 | student | happy | ✅ | |
-| Create resource → 201 + owned by user | student | happy | ✅ | ⚠️ no validation middleware on the route (low-risk gap) |
+| Create resource → 201 + owned by user | student | happy | ✅ | now validated (createResourceValidation); no-title → 400 |
 | `POST /resources/save/:topicId` → PENDING article | student | happy | ✅ | ⚠️ **mislabeled** — creates an Article under a topic (redundant with `POST /articles`); 500s on a non-topic id. Candidate to merge/rename. |
 | Detail | student | happy | 🟡 | |
 
@@ -174,7 +175,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~70 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads/writes + moderation + XSS + **submit→moderate→publish loop** + Resources + Challenges + run-code + drafts + submit + leaderboard + streak-update + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket**) — `qa/run.mjs` **72/72** + `qa/socket.mjs` **4/4** |
+| ✅ Verified | ~70 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads/writes + moderation + XSS + **submit→moderate→publish loop** + Resources + Challenges + run-code + drafts + submit + leaderboard + streak-update + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket**) — `qa/run.mjs` **72/72** + `qa/socket.mjs` **6/6** |
 | 🟡 Built, unverified | ~1 (article create/author path — confirm intended endpoint) |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
