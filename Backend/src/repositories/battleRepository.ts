@@ -120,8 +120,15 @@ export function calculatePoints(
 
 // ─── Leaderboard helper ────────────────────────────────────────────────────
 
-async function buildLeaderboard(battleId: string) {
-  const participants = await prisma.battleParticipant.findMany({
+// Accepts the active client. When called INSIDE a transaction, the caller must
+// pass its `tx` client — otherwise this issues a separate query needing a 2nd
+// pooled connection, which deadlocks the transaction on a small pool (the
+// DIRECT_URL default is connection_limit=1).
+async function buildLeaderboard(
+  battleId: string,
+  client: Prisma.TransactionClient = prisma
+) {
+  const participants = await client.battleParticipant.findMany({
     where: { battle_id: battleId },
     include: { user: { select: creatorSelect } },
     orderBy: [{ score: 'desc' }, { avg_time_per_answer_ms: 'asc' }],
@@ -783,7 +790,7 @@ export class BattleRepository extends BaseRepository<
             });
           }
 
-          const leaderboard = await buildLeaderboard(battleId);
+          const leaderboard = await buildLeaderboard(battleId, tx);
 
           return {
             answer,
