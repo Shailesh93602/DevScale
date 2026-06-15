@@ -198,7 +198,14 @@ Resources) are next, worked area-by-area with `Backend/qa/run.mjs`.
 
 ---
 
-## Moderator role & panel — plan (item 6)
+## Moderator panel — ✅ BUILT + VERIFIED (2026-06-15)
+The MODERATOR role existed + was enforced on article routes but had no UI. Now shipped:
+- **Backend:** `GET /articles/moderation/queue` (ADMIN+MODERATOR) lists pending articles; closed a leak where public `/articles/all?status=PENDING` exposed unpublished content (now forces APPROVED). Verified `qa/run.mjs mod` 3/3 (moderator sees queue, student 403, no public leak).
+- **Frontend:** `/moderate` page — `RoleGuard roles={['ADMIN','MODERATOR']}`, review queue, approve (→status APPROVED) / reject (optional note → status REJECTED). Mirrors the admin console.
+- **Real-UI validated (Playwright, 3/3):** moderator reaches `/moderate` + sees the panel; **student is redirected to /dashboard** (RoleGuard blocks). Typecheck 0, eslint clean.
+- 3-tier model now live: STUDENT → MODERATOR (`/moderate`) → ADMIN (`/admin`). Future: INSTRUCTOR/AUTHOR, SUPPORT.
+
+## Moderator role & panel — original plan (item 6, now implemented above)
 
 The `MODERATOR` role already exists in the schema + is enforced on `articleRoutes` (status/moderation/update)
 and `forums DELETE`. **It has no UI** — a moderator literally cannot do their job in the app today.
