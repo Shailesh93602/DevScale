@@ -1,51 +1,18 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils/index';
 import QuizRepository from '../repositories/quizRepository';
-import QuizQuestionsRepository from '../repositories/quizQuestionsRepository';
-import QuizAnswerRepository from '../repositories/quizAnswerRepository';
 import QuizSubmissionRepository from '../repositories/quizSubmissionRepository';
 import { sendResponse } from '../utils/apiResponse';
 import { createAppError } from '../utils/errorHandler';
 
 export default class QuizController {
   private readonly quizRepo: QuizRepository;
-  private readonly quizQuestionRepo: QuizQuestionsRepository;
-  private readonly quizAnswerRepo: QuizAnswerRepository;
   private readonly quizSubmissionRepo: QuizSubmissionRepository;
 
   constructor() {
     this.quizRepo = new QuizRepository();
-    this.quizQuestionRepo = new QuizQuestionsRepository();
-    this.quizAnswerRepo = new QuizAnswerRepository();
     this.quizSubmissionRepo = new QuizSubmissionRepository();
   }
-
-  public createQuiz = catchAsync(async (req: Request, res: Response) => {
-    const { topic_id, passing_score, questions, type } = req.body;
-
-    const quiz = await this.quizRepo.create({
-      data: {
-        topic_id,
-        passing_score,
-        title: 'Quiz',
-        description: 'Quiz',
-        type,
-      },
-    });
-
-    if (questions && questions.length > 0) {
-      const quizQuestions = questions.map((question: { question: string }) => ({
-        quizId: quiz.id,
-        question: question.question,
-      }));
-
-      await this.quizQuestionRepo.createMany({ data: quizQuestions });
-    }
-
-    sendResponse(res, 'QUIZ_CREATED', {
-      data: quiz,
-    });
-  });
 
   public submitQuiz = catchAsync(async (req: Request, res: Response) => {
     const user_id = req.user?.id;
