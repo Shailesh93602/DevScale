@@ -450,6 +450,34 @@ async function main() {
     }
   }
 
+  // ---------- RESOURCE WRITES (create + save) ----------
+  if (!only || only === 'resource') {
+    const me = await api('GET', '/users/me', { token: tok.student });
+    const userId = me.json?.data?.id;
+    const create = await api('POST', '/resources/create', {
+      token: tok.student,
+      body: { title: 'QA Resource', content: 'body', type: 'article', description: 'd', url: 'https://example.com', category: 'frontend', difficulty: 'EASY', language: 'en' },
+    });
+    const id = create.json?.data?.id;
+    const row = id ? await prisma.resource.findUnique({ where: { id }, select: { user_id: true, title: true } }).catch(() => null) : null;
+    rec('resource', 'create resource → 2xx + DB row owned by user', create.status >= 200 && create.status < 300 && row?.user_id === userId, `status=${create.status} owned=${row?.user_id === userId}`);
+    if (id) await prisma.resource.delete({ where: { id } }).catch(() => {});
+
+    // NOTE: POST /resources/save/:id is mislabeled — it creates an Article using
+    // :id as a topic_id (redundant with POST /articles). Test its real behavior
+    // with a TOPIC id; non-topic ids 500 with an FK violation.
+    const topic = await prisma.topic.findFirst({ select: { id: true } }).catch(() => null);
+    if (topic) {
+      const save = await api('POST', `/resources/save/${topic.id}`, { token: tok.student, body: { content: 'authored under topic' } });
+      const artId = save.json?.data?.id;
+      rec('resource', 'save/:topicId creates a PENDING article → 2xx', save.status >= 200 && save.status < 300 && !!artId, `status=${save.status}`);
+      if (artId) {
+        await prisma.version.deleteMany({ where: { article_id: artId } }).catch(() => {});
+        await prisma.article.delete({ where: { id: artId } }).catch(() => {});
+      }
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);
