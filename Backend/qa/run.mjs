@@ -461,6 +461,9 @@ async function main() {
     const id = create.json?.data?.id;
     const row = id ? await prisma.resource.findUnique({ where: { id }, select: { user_id: true, title: true } }).catch(() => null) : null;
     rec('resource', 'create resource → 2xx + DB row owned by user', create.status >= 200 && create.status < 300 && row?.user_id === userId, `status=${create.status} owned=${row?.user_id === userId}`);
+
+    const badCreate = await api('POST', '/resources/create', { token: tok.student, body: { content: 'no title' } });
+    rec('resource', 'create resource without title → 400 (validation)', badCreate.status === 400, `status=${badCreate.status}`);
     if (id) await prisma.resource.delete({ where: { id } }).catch(() => {});
 
     // NOTE: POST /resources/save/:id is mislabeled — it creates an Article using
