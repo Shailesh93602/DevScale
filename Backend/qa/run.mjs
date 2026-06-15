@@ -260,6 +260,52 @@ async function main() {
     }
   }
 
+  // ---------- ARTICLE WRITES (admin/moderator) + XSS SANITIZATION ----------
+  if (!only || only === 'artwrite') {
+    const adminUser = await prisma.user.findFirst({ where: { username: 'admin' }, select: { id: true } }).catch(() => null);
+    const topic = await prisma.topic.findFirst({ select: { id: true } }).catch(() => null);
+    if (!adminUser || !topic) {
+      rec('artwrite', 'precondition: admin user + a topic exist', false, `admin=${!!adminUser} topic=${!!topic}`);
+    } else {
+      // Throwaway article to mutate safely.
+      const art = await prisma.article.create({
+        data: { title: 'QA Article', content: '<p>original</p>', author_id: adminUser.id, topic_id: topic.id, status: 'DRAFT' },
+        select: { id: true },
+      }).catch((e) => ({ err: e.message }));
+      if (art.err || !art.id) {
+        rec('artwrite', 'create throwaway article', false, art.err?.slice(0, 100));
+      } else {
+        const id = art.id;
+        // Role gate: a student must NOT be able to change article status.
+        const denied = await api('POST', '/articles/status', { token: tok.student, body: { articleId: id, status: 'PUBLISHED' } });
+        rec('artwrite', 'student → POST /articles/status → 403', denied.status === 403, `status=${denied.status}`);
+
+        // Admin approves (publishes) → persists. APPROVED is the real enum value.
+        const pub = await api('POST', '/articles/status', { token: tok.admin, body: { articleId: id, status: 'APPROVED' } });
+        const afterPub = await prisma.article.findUnique({ where: { id }, select: { status: true } });
+        rec('artwrite', 'admin sets status APPROVED → persists', pub.status >= 200 && pub.status < 300 && afterPub?.status === 'APPROVED', `status=${pub.status} db=${afterPub?.status}`);
+
+        // Moderator moderation action.
+        const mod = await api('POST', `/articles/${id}/moderation`, { token: tok.moderator, body: { action: 'APPROVE', notes: 'looks good' } });
+        rec('artwrite', 'moderator → moderation action → 2xx', mod.status >= 200 && mod.status < 300, `status=${mod.status} ${mod.status >= 300 ? JSON.stringify(mod.json?.message).slice(0,80) : ''}`);
+
+        // XSS: content update must strip <script> but keep safe tags.
+        const xss = '<script>alert(1)</script><p>safe content</p><img src=x onerror=alert(2)>';
+        const upd = await api('POST', `/articles/${id}/update`, { token: tok.admin, body: { content: xss } });
+        const afterUpd = await prisma.article.findUnique({ where: { id }, select: { content: true } });
+        const c = afterUpd?.content ?? '';
+        rec('artwrite', 'content update strips <script> + onerror (XSS sanitized)', upd.status >= 200 && upd.status < 300 && !/<script/i.test(c) && !/onerror/i.test(c), `status=${upd.status} hasScript=${/<script/i.test(c)} hasOnerror=${/onerror/i.test(c)}`);
+        rec('artwrite', 'content update keeps safe markup', /safe content/.test(c), `kept=${/safe content/.test(c)}`);
+
+        // cleanup
+        await prisma.contentModeration.deleteMany({ where: { article_id: id } }).catch(() => {});
+        await prisma.version.deleteMany({ where: { article_id: id } }).catch(() => {});
+        await prisma.submissionLog.deleteMany({ where: { article_id: id } }).catch(() => {});
+        await prisma.article.delete({ where: { id } }).catch(() => {});
+      }
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);

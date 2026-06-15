@@ -201,7 +201,9 @@ export class ArticleRepository extends BaseRepository<
       data: {
         title: data.title,
         content: processedContent,
-        status: Status.PENDING,
+        // Respect an explicit status (the status endpoint sets APPROVED/REJECTED);
+        // a plain content edit (no status) defaults back to PENDING for re-review.
+        status: (data.status as Status) ?? Status.PENDING,
       },
       include: {
         author: { select: { username: true, avatar_url: true } },
