@@ -215,8 +215,12 @@ export const authorizeRoles = (...allowedRoles: string[]) => {
     if (!req.user) {
       return next(createAppError('Unauthorized - Login required', 401));
     }
-    const userRoleName = req.user.role?.name;
-    if (!userRoleName || !allowedRoles.includes(userRoleName)) {
+    // Compare case-insensitively: DB role names are uppercase ('ADMIN') but some
+    // routes pass lowercase ('admin'). A case-sensitive check silently 403s real
+    // admins on those routes (e.g. /analytics/platform, roadmap delete).
+    const userRoleName = req.user.role?.name?.toUpperCase();
+    const allowed = allowedRoles.map((r) => r.toUpperCase());
+    if (!userRoleName || !allowed.includes(userRoleName)) {
       return next(createAppError('Insufficient permissions', 403));
     }
     next();
