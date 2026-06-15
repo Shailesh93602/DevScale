@@ -189,6 +189,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 5. **Battle pool read the wrong (near-empty) question table** → battles couldn't find questions. Unified onto canonical `Question/Option`; removed the duplicate System B. *(fixed + verified, incl. gameplay scoring)*
 6. **Article status endpoint was fully broken** (3 bugs): read `req.query` not body (always 404); Joi status enum didn't match the DB `Status` enum; `updateArticle` hardcoded status=PENDING ignoring the input. *(all fixed + verified)*
 7. **`getDraft` 500'd on a missing `language` query param** (raw Prisma composite-key error) → now returns null gracefully. *(fixed + verified)*
+8. **Admin Overview "Cache: error" was always wrong** — health check read a key named `'test'` that nothing ever wrote, so it reported `error` even when Redis was healthy. Now a real write-then-read probe → reports `healthy`. *(fixed + verified)*
 8. (earlier) admin API entirely dead — routes never registered, searchUsers 500, audit wrong table. *(fixed + verified)*
 
 **Security checks passing:** XSS sanitization on article content (`<script>`/`onerror` stripped, safe markup kept); role gates (student denied admin/moderator writes); CSRF on mutations; logout token blocklist; battle anti-cheat (questions hidden until start).

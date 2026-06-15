@@ -102,6 +102,11 @@ async function main() {
     const r = await api('GET', '/dashboard/summary', { token: tok.student });
     const d = r.json?.data;
     rec('dashboard', 'GET /dashboard/summary (student) → 200 + shape', r.status === 200 && !!d && ('stats' in d || 'enrolledRoadmaps' in d || 'streak' in d), `status=${r.status} keys=${d ? Object.keys(d).join(',') : 'none'}`);
+
+    // admin metrics system health — cacheStatus was hardcoded-broken (always 'error')
+    const m = await api('GET', '/admin/dashboard/metrics', { token: tok.admin });
+    const cache = m.json?.data?.systemHealth?.cacheStatus;
+    rec('dashboard', "admin metrics cacheStatus = 'healthy' (real probe, was always error)", m.status === 200 && cache === 'healthy', `status=${m.status} cache=${cache}`);
   }
 
   // ---------- ROADMAPS ----------
