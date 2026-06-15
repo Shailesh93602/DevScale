@@ -97,11 +97,12 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Anti-cheat / rate limit on submit | student | error | ❓ | |
 | Instant 1-v-1 matchmaking | student | happy | ⚪ | `/instant-battle` Coming Soon — no backend |
 
-### 5. Coding Challenges 🟡
+### 5. Coding Challenges 🟢 (list/detail proven)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| List + paginate + search | student | happy | 🟡 | |
-| Open challenge + run code | student | happy | 🟡 | assert execution result |
+| `GET /challenges` (paginated) → 200 | student | happy | ✅ | |
+| `GET /challenges/:id` → 200 | student | happy | ✅ | |
+| Open challenge + run code | student | happy | 🟡 | assert execution result (next) |
 | Save + restore draft | student | happy | 🟡 | |
 | Submit solution | student | happy | ❓ | |
 
@@ -111,28 +112,30 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Standalone `/quiz` page | student | happy | 🔴 | hardcoded demo questions, no backend wiring |
 | Topic quiz (in roadmap) submit + score | student | happy | 🟡 | real path via `/topics/:id/quiz` |
 
-### 7. Articles 🟡
+### 7. Articles 🟢 (reads proven)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| Public article list + detail + comments | public | happy | 🟡 | |
-| My articles | student | happy | 🟡 | |
+| `GET /articles/all` (public) → 200 | public | happy | ✅ | |
+| `GET /articles/my-articles` → 200 | student | happy | ✅ FIXED | was 404 (shadowed by `/:id`); reordered |
+| Article detail + comments | public | happy | 🟡 | |
 | Create / edit article | student | happy | ❓ | confirm write endpoint exists |
 | Moderate (status/notes) | admin/mod | happy | 🟡 | endpoint built; no mod UI |
-| HTML sanitization (XSS payload rejected) | student | error | ❓ | sanitizer built; assert it strips |
+| HTML sanitization (XSS payload stripped) | admin/mod | error | ❓ | sanitizer built; assert it strips |
 
-### 8. Profile & Streak 🟡
+### 8. Profile & Streak 🟢
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| View profile | student | happy | 🟡 | |
-| Edit profile (persists) | student | happy | ❓ | |
-| Streak stats + weekly activity | student | happy | 🟡 | |
+| View profile (`/users/me`) | student | happy | ✅ | |
+| Edit profile persists (`PUT /users/me`) | moderator | happy | ✅ | first_name change reflected |
+| Edit profile does NOT reset role | admin/mod | edge | ✅ FIXED | privileged role survives a save |
+| Streak stats + weekly activity → 200 | student | happy | ✅ | both endpoints |
 
-### 9. Resources 🟡
+### 9. Resources 🟢 (read proven)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| List + detail | student | happy | 🟡 | |
-| Create resource / subject | student | happy | ❓ | |
-| Save/bookmark resource | student | happy | ❓ | |
+| `GET /resources` (paginated) → 200 | student | happy | ✅ | |
+| Detail | student | happy | 🟡 | |
+| Create resource / subject · Save | student | happy | ❓ | |
 
 ### 10. Admin Panel ✅ (validated this session, prod read + 1 write)
 | Flow | Role | Type | Status | Notes |
@@ -158,16 +161,18 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~18 (admin panel + Auth core + Dashboard + Roadmaps core) |
-| 🟡 Built, unverified | ~18 |
+| ✅ Verified | ~28 (Admin panel + Auth + Dashboard + Roadmaps + Profile/Streak + Articles/Resources/Challenges reads) — `Backend/qa/run.mjs` 28/28 |
+| 🟡 Built, unverified | ~12 |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |
-| ❓ Unknown | ~8 |
+| ❓ Unknown | ~6 |
 
 **Bugs found + fixed via this matrix (without prompting):**
 1. Seeder never set Supabase `app_metadata.role` → seeded admin couldn't reach `/admin`. *(fixed + verified)*
 2. `authorizeRoles` case-sensitive vs uppercase DB roles → real admins 403'd on `/analytics/platform` + roadmap delete. *(fixed + verified)*
-3. (earlier) admin API entirely dead — routes never registered, searchUsers 500, audit wrong table. *(fixed + verified)*
+3. **Profile edit demoted privileged users:** `PUT /users/me` forced `role: connect STUDENT` on update, so any admin/moderator who saved their profile silently became a STUDENT. *(fixed: default STUDENT only on create; verified moderator stays MODERATOR after a profile save)*
+4. **`GET /articles/my-articles` was unreachable (404):** registered after `GET /:id`, so Express matched `id="my-articles"`. Reordered literal paths before the param route. *(fixed + verified)*
+5. (earlier) admin API entirely dead — routes never registered, searchUsers 500, audit wrong table. *(fixed + verified)*
 
 **EduScale is NOT "100%"** — but it's now honestly tracked and moving: Auth, Dashboard, Roadmaps (core),
 and the Admin panel are outcome-verified. Remaining areas (Battles, Challenges/Quiz, Articles, Profile,

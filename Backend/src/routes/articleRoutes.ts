@@ -18,17 +18,20 @@ export class ArticleRoutes extends BaseRouter {
   }
 
   protected initializeRoutes(): void {
-    // Public reads
+    // Public reads. NOTE: literal paths (/all, /my-articles) MUST be registered
+    // before the '/:id' param route, otherwise Express matches '/:id' first and
+    // e.g. /my-articles is read as id="my-articles" → 404.
     this.router.get('/all', this.articleController.getArticles);
-    this.router.get('/:id', this.articleController.getArticleById);
-    this.router.get('/:id/comments', this.articleController.getArticleComments);
 
-    // Authenticated — own articles
+    // Authenticated — own articles (literal path, before '/:id')
     this.router.get(
       '/my-articles',
       authMiddleware,
       this.articleController.getMyArticles
     );
+
+    this.router.get('/:id', this.articleController.getArticleById);
+    this.router.get('/:id/comments', this.articleController.getArticleComments);
 
     // Admin/moderator only — content writes
     this.router.post(

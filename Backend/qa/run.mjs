@@ -133,6 +133,48 @@ async function main() {
     }
   }
 
+  // ---------- PROFILE (edit must persist + must NOT reset role) ----------
+  if (!only || only === 'profile') {
+    // Use moderator to prove a privileged role survives a profile save.
+    const me = await api('GET', '/users/me', { token: tok.moderator });
+    const u = me.json?.data;
+    const roleBefore = u?.role?.name;
+    const newFirst = (u?.first_name === 'Mod' ? 'Moder' : 'Mod');
+    const put = await api('PUT', '/users/me', {
+      token: tok.moderator,
+      body: { email: u?.email, username: u?.username, first_name: newFirst, last_name: u?.last_name || 'User' },
+    });
+    const after = await api('GET', '/users/me', { token: tok.moderator });
+    const roleAfter = after.json?.data?.role?.name;
+    rec('profile', 'PUT /users/me persists first_name', put.status >= 200 && put.status < 300 && after.json?.data?.first_name === newFirst, `status=${put.status} first=${after.json?.data?.first_name}`);
+    rec('profile', 'PUT /users/me does NOT reset role (moderator stays moderator)', roleBefore === roleAfter && roleAfter === 'MODERATOR', `before=${roleBefore} after=${roleAfter}`);
+  }
+
+  // ---------- ARTICLES / STREAK / RESOURCES (reads) ----------
+  if (!only || only === 'content') {
+    const pub = await api('GET', '/articles/all', {});
+    rec('content', 'GET /articles/all (public) → 200', pub.status === 200, `status=${pub.status}`);
+    const mine = await api('GET', '/articles/my-articles', { token: tok.student });
+    rec('content', 'GET /articles/my-articles (auth) → 200', mine.status === 200, `status=${mine.status}`);
+    const ss = await api('GET', '/streak/stats', { token: tok.student });
+    rec('content', 'GET /streak/stats → 200', ss.status === 200, `status=${ss.status}`);
+    const sw = await api('GET', '/streak/weekly-activity', { token: tok.student });
+    rec('content', 'GET /streak/weekly-activity → 200', sw.status === 200, `status=${sw.status}`);
+    const rl = await api('GET', '/resources?page=1&limit=5', { token: tok.student });
+    rec('content', 'GET /resources → 200', rl.status === 200, `status=${rl.status}`);
+  }
+
+  // ---------- CODING CHALLENGES ----------
+  if (!only || only === 'challenges') {
+    const list = await api('GET', '/challenges?page=1&limit=5', { token: tok.student });
+    const arr = list.json?.data?.challenges || list.json?.data?.data || (Array.isArray(list.json?.data) ? list.json.data : []);
+    rec('challenges', 'GET /challenges → 200', list.status === 200, `status=${list.status} count=${arr?.length ?? '?'}`);
+    if (arr && arr[0]) {
+      const det = await api('GET', `/challenges/${arr[0].id}`, { token: tok.student });
+      rec('challenges', 'GET /challenges/:id → 200', det.status === 200, `status=${det.status}`);
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);
