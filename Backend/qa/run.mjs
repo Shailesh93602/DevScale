@@ -481,6 +481,76 @@ async function main() {
     }
   }
 
+  // ---------- DETAIL VIEWS (roadmap / resource / article detail + comments) ----------
+  if (!only || only === 'detail') {
+    // Roadmap detail + main-concepts sub-view
+    const list = await api('GET', '/roadmaps?limit=1', { token: tok.student });
+    const arr0 = list.json?.data?.roadmaps || list.json?.data?.data || list.json?.data || [];
+    const rm = Array.isArray(arr0) ? arr0[0] : arr0?.roadmaps?.[0];
+    if (rm?.id) {
+      const d = await api('GET', `/roadmaps/${rm.id}`, { token: tok.student });
+      const detailId = d.json?.data?.id || d.json?.data?.roadmap?.id;
+      rec('detail', 'roadmap detail GET /roadmaps/:id → 200 + same id', d.status === 200 && detailId === rm.id, `status=${d.status} id=${detailId === rm.id}`);
+      const mc = await api('GET', `/roadmaps/${rm.id}/main-concepts`, { token: tok.student });
+      rec('detail', 'roadmap main-concepts sub-view → 200', mc.status === 200, `status=${mc.status}`);
+    } else {
+      rec('detail', 'roadmap detail (precondition: a roadmap exists)', false, 'no roadmap in DB');
+    }
+
+    // "Resource detail" in this app is a SUBJECT detail: the /resources/* routes
+    // operate on Subjects (GET /resources/:id → getResource → subject + its
+    // topics). The separately-created `Resource` rows (POST /resources/create)
+    // are NOT what /resources/:id fetches — the frontend /resources/[id] page is
+    // a subject detail (subject → topics → quiz). So assert with a real Subject id.
+    const subject = await prisma.subject.findFirst({ select: { id: true } }).catch(() => null);
+    if (subject) {
+      const rd = await api('GET', `/resources/${subject.id}`, { token: tok.student });
+      rec('detail', 'resource (subject) detail GET /resources/:id → 200', rd.status === 200, `status=${rd.status}`);
+    } else {
+      rec('detail', 'resource detail (precondition: a subject exists)', false, 'none');
+    }
+
+    // Article detail + comments (public read of an APPROVED article)
+    const article = await prisma.article.findFirst({ where: { status: 'APPROVED' }, select: { id: true } }).catch(() => null);
+    if (article) {
+      const ad = await api('GET', `/articles/${article.id}`, {});
+      rec('detail', 'article detail GET /articles/:id (public) → 200', ad.status === 200, `status=${ad.status}`);
+      const ac = await api('GET', `/articles/${article.id}/comments`, {});
+      rec('detail', 'article comments GET /articles/:id/comments → 200', ac.status === 200, `status=${ac.status}`);
+    } else {
+      rec('detail', 'article detail (precondition: an APPROVED article exists)', false, 'none in DB');
+    }
+  }
+
+  // ---------- TOPIC QUIZ (submit + real computed score, persisted) ----------
+  if (!only || only === 'quiz') {
+    const quiz = await prisma.quiz
+      .findFirst({ where: { questions: { some: {} } }, select: { id: true, passing_score: true, questions: { select: { id: true, correct_answer: true } } } })
+      .catch(() => null);
+    if (quiz?.questions?.length) {
+      // Submit the real correct answers so scoring is exercised end to end.
+      const answers = quiz.questions.map((q) => ({ question_id: q.id, answer: q.correct_answer }));
+      // Regression: the route had no authMiddleware, so a valid student always
+      // got 401 (controller reads req.user.id). Assert auth is enforced AND a
+      // logged-in submit succeeds.
+      const noAuth = await api('POST', '/quiz/submit', { body: { quiz_id: quiz.id, answers, time_spent: 5 } });
+      rec('quiz', 'POST /quiz/submit without token → 401', noAuth.status === 401, `status=${noAuth.status}`);
+
+      const sub = await api('POST', '/quiz/submit', { token: tok.student, body: { quiz_id: quiz.id, answers, time_spent: 5 } });
+      const submission = sub.json?.data?.submission;
+      const score = submission?.score;
+      rec('quiz', 'submit topic quiz → 2xx + numeric score + boolean is_passed', sub.status >= 200 && sub.status < 300 && typeof score === 'number' && typeof submission?.is_passed === 'boolean', `status=${sub.status} score=${score} passed=${submission?.is_passed}`);
+      // Correct answers must score above zero (real scoring, not a stub returning 0).
+      rec('quiz', 'correct answers yield a positive score', typeof score === 'number' && score > 0, `score=${score}`);
+      // The submission is durably persisted for the user with the same score.
+      const row = submission?.id ? await prisma.quizSubmission.findUnique({ where: { id: submission.id }, select: { score: true } }).catch(() => null) : null;
+      rec('quiz', 'submission persisted to DB with matching score', !!row && row.score === score, `db=${row ? row.score : 'none'}`);
+      if (submission?.id) await prisma.quizSubmission.delete({ where: { id: submission.id } }).catch(() => {});
+    } else {
+      rec('quiz', 'quiz submit (precondition: a quiz with questions exists)', false, 'no quiz in DB');
+    }
+  }
+
   // ---------- SUMMARY ----------
   const fail = results.filter((r) => !r.pass);
   console.log(`\n──────── ${results.length - fail.length}/${results.length} passed ────────`);

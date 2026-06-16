@@ -83,9 +83,9 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Enroll twice = idempotent (no dup, no 500) | student | edge | ✅ | row count stays 1 |
 | Enroll without roadmapId → 400 | student | error | ✅ | validation asserted |
 | Like roadmap → 2xx | student | happy | ✅ | |
-| Bookmark (toggles + persists) | student | happy | 🟡 | not yet asserted |
-| Comment + like comment | student | happy | 🟡 | |
-| Detail view (subjects/topics/progress) | student | happy | 🟡 | |
+| Bookmark (toggles + persists) | student | happy | ✅ | `social` area: bookmark → 2xx |
+| Comment + like comment | student | happy | ✅ | `social` area: add comment (+id), empty→4xx, toggle like, GET comments |
+| Detail view (roadmap + main-concepts) | student | happy | ✅ | `detail` area: GET /roadmaps/:id (same id) + /:id/main-concepts |
 
 ### 4. Battle Zone 🟢 (full lifecycle + gameplay scoring proven)
 | Flow | Role | Type | Status | Notes |
@@ -112,15 +112,16 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 |---|---|---|---|---|
 | `GET /challenges` (paginated) → 200 | student | happy | ✅ | |
 | `GET /challenges/:id` → 200 | student | happy | ✅ | |
-| Open challenge + run code | student | happy | 🟡 | assert execution result (next) |
-| Save + restore draft | student | happy | 🟡 | |
-| Submit solution | student | happy | ❓ | |
+| Open challenge + run code | student | happy | ✅ | `code` area: POST /run-code responds gracefully (not 5xx) |
+| Save + restore draft | student | happy | ✅ | `code` area: save draft → restore returns same code; missing-language graceful |
+| Submit solution | student | happy | ✅ | `more` area: POST /challenges/:id/submit responds gracefully (Judge0 may be offline) |
 
-### 6. Quiz 🔴 / 🟡
+### 6. Quiz 🟢 (submit + real score proven; one real bug fixed)
 | Flow | Role | Type | Status | Notes |
 |---|---|---|---|---|
-| Standalone `/quiz` page | student | happy | 🔴 | hardcoded demo questions, no backend wiring |
-| Topic quiz (in roadmap) submit + score | student | happy | 🟡 | real path via `/topics/:id/quiz` |
+| Standalone `/quiz/[topicId]` page | student | happy | ⚪ | **dead stub** — renders only a title + button, hardcoded `score=0`, no questions/answers; POSTs `{topicId, score}` to `/quizzes/submit` which **doesn't exist** (404). **Not linked anywhere** (unreachable). Cut-or-finish decision; real quiz UI lives in the resource page. |
+| Topic quiz submit + real computed score | student | happy | ✅ | `quiz` area: submit correct answers → score 50 (>0), is_passed boolean, **persisted to DB** with matching score |
+| **`/quiz/submit` enforces auth** | guest | error | ✅ FIXED | **bug found+fixed**: route had no `authMiddleware`, so the controller's `req.user.id` was always undefined → **every** submit 401'd (broke the resource-page quiz). Added the guard (matches `/topics/quiz/submit`); now no-token→401, logged-in→200. |
 
 ### 7. Articles 🟢 (reads + moderation writes proven)
 | Flow | Role | Type | Status | Notes |
@@ -131,7 +132,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Non-admin set status → 403 | student | error | ✅ | role gate |
 | Moderation action (APPROVE/notes) | moderator | happy | ✅ | |
 | **HTML sanitization — `<script>` + `onerror` stripped, safe markup kept** | admin | error | ✅ | XSS payload neutralized; verified in DB |
-| Article detail + comments | public | happy | 🟡 | |
+| Article detail + comments | public | happy | ✅ | `detail` area: GET /articles/:id + /:id/comments (public) → 200 on an APPROVED article |
 | **Submit article (author flow) → PENDING** | student | happy | ✅ NEW | added `POST /articles` (auth, any user); content XSS-sanitized; validation 400; no-auth 401 |
 | **Full submission→moderation loop** | student+mod | happy | ✅ NEW | submit → appears in `/moderate` queue → moderator approves → APPROVED. The moderation queue now has a real content source. |
 
@@ -149,7 +150,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | `GET /resources` (paginated) → 200 | student | happy | ✅ | |
 | Create resource → 201 + owned by user | student | happy | ✅ | now validated (createResourceValidation); no-title → 400 |
 | `POST /resources/save/:topicId` → PENDING article | student | happy | ✅ | ⚠️ **mislabeled** — creates an Article under a topic (redundant with `POST /articles`); 500s on a non-topic id. Candidate to merge/rename. |
-| Detail | student | happy | 🟡 | |
+| Detail | student | happy | ✅ | `detail` area: GET /resources/:id → 200. ⚠️ **naming finding:** the `/resources/*` routes actually operate on **Subjects** (`getResource` → `prisma.subject.findUnique`); the separate `Resource` rows from `POST /resources/create` are NOT fetched here. The frontend `/resources/[id]` is a subject detail (subject → topics → quiz). Confusing but not a bug. |
 
 ### 10. Admin Panel ✅ (validated this session, prod read + 1 write)
 | Flow | Role | Type | Status | Notes |
@@ -158,9 +159,9 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | User search + list | admin | happy | ✅ | |
 | Change user role (persists + audited) | admin | happy | ✅ | PATCH 200, audit shows UPDATE_USER_ROLE |
 | Delete user (confirm dialog) | admin | happy | 🟡 | wired; not exercised (destructive on prod) |
-| Moderation queue + approve/reject | admin | happy | 🟡 | queue empty; approve/reject not exercised |
+| Moderation queue + approve/reject | admin/mod | happy | ✅ | `mod`+`submit` areas: queue includes a seeded PENDING article; moderator approve → APPROVED (loop closed); public `/articles/all?status=PENDING` cannot leak PENDING |
 | Audit log lists actions | admin | happy | ✅ | |
-| Non-admin denied | student | error | 🟡 | |
+| Non-admin denied | student | error | ✅ | `auth`: student→/admin/users 403; `mod`: student→moderation queue 403 |
 
 ### 11. Community / Discussions / Misc ⚪ (deferred)
 | Flow | Status | Notes |
