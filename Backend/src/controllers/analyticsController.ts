@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
-import { ChallengeStatus } from '@prisma/client';
+import { ChallengeStatus } from '../constants/enums';
 import UserRepository from '../repositories/userRepository';
 import UserProgressRepository from '../repositories/userProgressRepository';
 import ResourceRepository from '../repositories/resourceRepository';

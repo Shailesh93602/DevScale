@@ -13,12 +13,8 @@
  *       (or: cd Backend && npm run seed:battles)
  */
 
-import {
-  PrismaClient,
-  BattleType,
-  Difficulty,
-  BattleStatus,
-} from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { BattleType, Difficulty, BattleStatus } from '../constants/enums';
 import { generateBattleSlug } from '../utils/slugify';
 
 const prisma = new PrismaClient();
@@ -423,8 +419,27 @@ const BATTLE_DEFS: Omit<BattleSeedDef, 'source_type'>[] = [
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
+// Safety guard: this script DELETES all battle data, then reseeds. Running it
+// against a remote/production database (e.g. the Supabase pooler) would wipe
+// real data. Refuse unless the DB is local, or the caller explicitly opts in
+// with ALLOW_REMOTE_SEED=true. (The e2e global-setup calls this — without this
+// guard a local `playwright test` would nuke prod.)
+function assertSafeToSeed() {
+  const url = process.env.DATABASE_URL ?? '';
+  const isLocal = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
+  if (!isLocal && process.env.ALLOW_REMOTE_SEED !== 'true') {
+    throw new Error(
+      'Refusing to seed: DATABASE_URL is not local and ALLOW_REMOTE_SEED!=true. ' +
+        'This script deletes all battle data. Point DATABASE_URL at a local/test ' +
+        'database, or set ALLOW_REMOTE_SEED=true to override intentionally.'
+    );
+  }
+}
+
 async function main() {
   console.log('=== Battle Seeder (5-type coverage) ===\n');
+
+  assertSafeToSeed();
 
   // ── 1. Clean up all existing battle data (cascade order) ──────────────────
   console.log('Deleting all existing battle data...');

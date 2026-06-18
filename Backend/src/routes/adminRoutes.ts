@@ -1,4 +1,3 @@
-import { Router } from 'express';
 import AdminController from '../controllers/adminController.js';
 import {
   authMiddleware,
@@ -27,6 +26,7 @@ export class AdminRoutes extends BaseRouter {
     );
 
     // User Management Routes
+    this.router.get('/roles', this.adminController.getRoles);
     this.router.get('/users', this.adminController.searchUsers);
 
     this.router.patch(
@@ -73,9 +73,5 @@ export class AdminRoutes extends BaseRouter {
 
     // Audit System Routes
     this.router.get('/audit/logs', this.adminController.getSystemAuditLogs);
-  }
-
-  public getRouter(): Router {
-    return this.router;
   }
 }

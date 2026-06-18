@@ -3,7 +3,11 @@ dist
 logs
 backups
 coverage
-monitoring
+# Anchor to the Backend root: ignore Backend/monitoring/ (prometheus config)
+# WITHOUT also stripping src/services/monitoring/* which main.ts imports
+# (an unanchored "monitoring" matched both → Vercel build failed: Cannot find
+# module './services/monitoring/performanceMonitor.js').
+/monitoring
 *.log
 .env
 .env.*

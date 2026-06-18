@@ -1,15 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { createClient, User as SupabaseUser } from '@supabase/supabase-js';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import prisma from '../lib/prisma.js';
 import crypto from 'node:crypto';
 import { redis } from '../services/cacheService.js';
-
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_PUBLISHABLE_KEY!
-);
+import { verifySupabaseToken } from '../utils/verifySupabaseToken.js';
 
 // ─── Token Blocklist ─────────────────────────────────────────────────────────
 const TOKEN_BLOCKLIST_PREFIX = 'eduscale:auth:blocklist:';
@@ -78,31 +74,10 @@ const splitFullName = (fullName?: string) => {
   return { firstName, lastName };
 };
 
-const verifyToken = async (token: string): Promise<SupabaseUser> => {
-  try {
-    const { jwtVerify, createRemoteJWKSet } = await import('jose');
-    const JWKS_INTERNAL = createRemoteJWKSet(
-      new URL(`${process.env.SUPABASE_URL}/auth/v1/.well-known/jwks.json`)
-    );
-    const { payload } = await jwtVerify(token, JWKS_INTERNAL);
-
-    return {
-      id: payload.sub,
-      email: payload.email as string,
-      user_metadata: (payload.user_metadata as Record<string, unknown>) || {},
-    } as unknown as SupabaseUser;
-  } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error';
-    logger.warn(
-      `Local JWT verification failed: ${errorMessage}. Falling back to Supabase HTTP API.`
-    );
-    const { data, error } = await supabase.auth.getUser(token);
-    if (error || !data?.user) {
-      throw createAppError('Invalid authentication token', 401);
-    }
-    return data.user;
-  }
-};
+// Shared with the WebSocket handshake so REST and realtime accept the same
+// tokens — see src/utils/verifySupabaseToken.ts.
+const verifyToken = (token: string): Promise<SupabaseUser> =>
+  verifySupabaseToken(token);
 
 const syncUser = async (user: SupabaseUser): Promise<Request['user']> => {
   let userData = (await prisma.user.findUnique({
@@ -240,8 +215,12 @@ export const authorizeRoles = (...allowedRoles: string[]) => {
     if (!req.user) {
       return next(createAppError('Unauthorized - Login required', 401));
     }
-    const userRoleName = req.user.role?.name;
-    if (!userRoleName || !allowedRoles.includes(userRoleName)) {
+    // Compare case-insensitively: DB role names are uppercase ('ADMIN') but some
+    // routes pass lowercase ('admin'). A case-sensitive check silently 403s real
+    // admins on those routes (e.g. /analytics/platform, roadmap delete).
+    const userRoleName = req.user.role?.name?.toUpperCase();
+    const allowed = allowedRoles.map((r) => r.toUpperCase());
+    if (!userRoleName || !allowed.includes(userRoleName)) {
       return next(createAppError('Insufficient permissions', 403));
     }
     next();

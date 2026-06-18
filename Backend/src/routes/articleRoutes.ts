@@ -3,6 +3,7 @@ import ArticleController from '../controllers/articleController';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
+  createArticleSchema,
   updateArticleStatusSchema,
   updateModerationNotesSchema,
   updateArticleContentSchema,
@@ -18,16 +19,35 @@ export class ArticleRoutes extends BaseRouter {
   }
 
   protected initializeRoutes(): void {
-    // Public reads
+    // Public reads. NOTE: literal paths (/all, /my-articles) MUST be registered
+    // before the '/:id' param route, otherwise Express matches '/:id' first and
+    // e.g. /my-articles is read as id="my-articles" → 404.
     this.router.get('/all', this.articleController.getArticles);
-    this.router.get('/:id', this.articleController.getArticleById);
-    this.router.get('/:id/comments', this.articleController.getArticleComments);
 
-    // Authenticated — own articles
+    // Authenticated — own articles (literal path, before '/:id')
     this.router.get(
       '/my-articles',
       authMiddleware,
       this.articleController.getMyArticles
+    );
+
+    // Moderation queue (ADMIN + MODERATOR) — literal path, before '/:id'.
+    this.router.get(
+      '/moderation/queue',
+      authMiddleware,
+      authorizeRoles('ADMIN', 'MODERATOR'),
+      this.articleController.getModerationQueue
+    );
+
+    this.router.get('/:id', this.articleController.getArticleById);
+    this.router.get('/:id/comments', this.articleController.getArticleComments);
+
+    // Author submits a new article (any authenticated user) → enters review queue
+    this.router.post(
+      '/',
+      authMiddleware,
+      validateRequest(createArticleSchema),
+      this.articleController.createArticle
     );
 
     // Admin/moderator only — content writes

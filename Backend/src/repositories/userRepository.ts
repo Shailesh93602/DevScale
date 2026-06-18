@@ -3,6 +3,7 @@ import BaseRepository from './baseRepository.js';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import prisma from '../lib/prisma.js';
+import { syncSupabaseUserRole } from '../services/supabaseAdmin.js';
 
 export default class UserRepository extends BaseRepository<
   User,
@@ -66,11 +67,13 @@ export default class UserRepository extends BaseRepository<
       where: { id: data.id },
       create: {
         ...data,
+        // New users default to STUDENT.
         role: { connect: { name: 'STUDENT' } },
       },
       update: {
         ...data,
-        role: { connect: { name: 'STUDENT' } },
+        // Do NOT reset role on profile edit — this previously demoted any
+        // admin/moderator back to STUDENT whenever they saved their profile.
         updated_at: new Date(),
       },
       select: {
@@ -94,6 +97,22 @@ export default class UserRepository extends BaseRepository<
       });
 
       if (!user) throw createAppError('User not found', 404);
+
+      // Mirror the new role into Supabase app_metadata so the edge middleware
+      // (which gates /admin on app_metadata.role) stays in sync with the DB.
+      const withRole = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { supabase_id: true, role: { select: { name: true } } },
+      });
+      await syncSupabaseUserRole(
+        withRole?.supabase_id,
+        withRole?.role?.name
+      ).catch((err) =>
+        logger.error('Role sync to Supabase failed (DB role still updated)', {
+          err,
+        })
+      );
+
       return user;
     } catch (error) {
       logger.error('Error updating user role:', error);
@@ -243,24 +262,27 @@ export default class UserRepository extends BaseRepository<
 
   async searchUsers(params: {
     query?: string;
+    search?: string;
     role?: string;
     status?: string;
     date_range?: { start: Date; end: Date };
-    page?: number;
-    limit?: number;
+    page?: number | string;
+    limit?: number | string;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
   }) {
     const {
-      query,
       role,
       status,
       date_range,
-      page = 1,
-      limit = 10,
       sortBy = 'created_at',
       sortOrder = 'desc',
     } = params;
+
+    // Query params arrive as strings — coerce + clamp so Prisma gets Ints.
+    const query = params.query ?? params.search;
+    const page = Math.max(1, Number(params.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(params.limit) || 10));
 
     const where: Prisma.UserWhereInput = {};
 

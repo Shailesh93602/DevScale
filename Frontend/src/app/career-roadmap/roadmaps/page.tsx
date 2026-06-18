@@ -211,7 +211,11 @@ const RoadmapsPage = () => {
       const response = await getRoadmaps({ params });
       const responseData = response.data;
 
-      const { data: apiData, meta } = responseData;
+      // Defensive: the API can return null/empty (no roadmaps seeded, or an
+      // error envelope). Destructuring null here used to throw
+      // "Cannot destructure property 'data' of 'responseData' as it is null".
+      const apiData = Array.isArray(responseData?.data) ? responseData.data : [];
+      const meta = responseData?.meta;
       const transformedRoadmaps = apiData.map(transformRoadmap);
 
       if (page === 1) {
@@ -220,7 +224,7 @@ const RoadmapsPage = () => {
         setRoadmaps((prev) => [...prev, ...transformedRoadmaps]);
       }
 
-      setHasMore(meta.hasNextPage);
+      setHasMore(Boolean(meta?.hasNextPage));
     } catch (error) {
       console.error('Error fetching roadmaps:', error);
       toast.error('Failed to fetch roadmaps');

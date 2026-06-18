@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { BattleType, Difficulty } from '@prisma/client';
+import { BattleType, Difficulty } from '../constants/enums';
 
 export const battleIdValidation = Joi.object({
   id: Joi.string().min(2).max(120).required(),

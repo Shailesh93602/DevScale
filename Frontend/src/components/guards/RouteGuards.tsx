@@ -76,10 +76,19 @@ export function RoleGuard({
   fallback,
   accessDenied,
 }: RoleGuardProps) {
-  const { status, isAuthenticated, hasAnyRole } = useAuth();
+  const { status, isAuthenticated, hasAnyRole, user } = useAuth();
   const router = useRouter();
 
   const allowedRoles = roles ?? (role ? [role] : []);
+
+  // The role is only "resolved" once the real profile (with a role) has loaded.
+  // On a full page-load of a guarded route, the session can be authenticated for
+  // a moment before /users/me returns — during which `user` is a roleless
+  // fallback. We must NOT decide access (or redirect) until the role is known,
+  // otherwise a real admin gets bounced off /admin on a direct load.
+  const roleResolved = !!user?.role?.name;
+  const awaitingRole =
+    status === 'authenticated' && allowedRoles.length > 0 && !roleResolved;
 
   const hasAccess =
     isAuthenticated && (allowedRoles.length === 0 || hasAnyRole(allowedRoles));
@@ -90,18 +99,20 @@ export function RoleGuard({
       return;
     }
 
-    if (status === 'authenticated' && !hasAccess && !accessDenied) {
+    // Only redirect once we actually know the role and access is denied.
+    if (status === 'authenticated' && !awaitingRole && !hasAccess && !accessDenied) {
       router.replace(redirectTo);
     }
-  }, [status, hasAccess, router, redirectTo, accessDenied]);
+  }, [status, awaitingRole, hasAccess, router, redirectTo, accessDenied]);
 
   if (
     status === 'loading' ||
+    awaitingRole ||
     (!isAuthenticated && !accessDenied) ||
     (status === 'authenticated' && !hasAccess && !accessDenied)
   ) {
-    // Show fallback/loader during loading AND while awaiting redirect.
-    // Previously returning null caused a brief blank-screen flash.
+    // Show fallback/loader during loading, while the role resolves, AND while
+    // awaiting redirect. Previously returning null caused a brief blank flash.
     return fallback ? <>{fallback}</> : <Loader type="SiteLoader" />;
   }
 

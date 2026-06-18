@@ -8,6 +8,24 @@ const eslintConfig = defineConfig([
   {
     rules: {
       'react-hooks/exhaustive-deps': 'off',
+      // Naming conventions (see ../../CONVENTIONS.md). React components are
+      // PascalCase functions; the data layer is snake_case.
+      '@typescript-eslint/naming-convention': [
+        'error',
+        { selector: 'typeLike', format: ['PascalCase'] },
+        {
+          selector: 'function',
+          format: ['camelCase', 'PascalCase'],
+          leadingUnderscore: 'allow',
+        },
+        {
+          selector: ['variable', 'parameter'],
+          format: ['camelCase', 'UPPER_CASE', 'snake_case', 'PascalCase'],
+          leadingUnderscore: 'allowSingleOrDouble',
+        },
+        { selector: ['objectLiteralProperty', 'typeProperty'], format: null },
+        { selector: 'import', format: null },
+      ],
       'no-restricted-syntax': [
         'error',
         {

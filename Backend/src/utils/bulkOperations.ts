@@ -1,4 +1,5 @@
-import { PrismaClient, Difficulty } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Difficulty } from '../constants/enums';
 import prisma from '../lib/prisma';
 import logger from './logger';
 

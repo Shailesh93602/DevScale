@@ -2,6 +2,11 @@ import { BaseRouter } from './BaseRouter';
 import ResourceController from '../controllers/resourceController';
 import paginationMiddleware from '../middlewares/paginationMiddleware';
 import { authMiddleware } from '../middlewares/authMiddleware';
+import { validateRequest } from '../middlewares/validateRequest';
+import {
+  createResourceValidation,
+  saveResourceValidation,
+} from '../validations/resourceValidations';
 
 export class ResourceRoutes extends BaseRouter {
   private readonly resourceController: ResourceController;
@@ -25,7 +30,15 @@ export class ResourceRoutes extends BaseRouter {
       this.resourceController.deleteSubjects
     );
     this.router.get('/details/:id', this.resourceController.getResourceDetails);
-    this.router.post('/create', this.resourceController.createResource);
-    this.router.post('/save/:id', this.resourceController.saveResource);
+    this.router.post(
+      '/create',
+      validateRequest(createResourceValidation),
+      this.resourceController.createResource
+    );
+    this.router.post(
+      '/save/:id',
+      validateRequest(saveResourceValidation),
+      this.resourceController.saveResource
+    );
   }
 }

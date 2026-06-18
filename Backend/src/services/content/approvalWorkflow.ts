@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { Status } from '../../constants/enums';
 import { EventSystem } from '../../utils/eventSystem';
 
 import prisma from '../../lib/prisma';

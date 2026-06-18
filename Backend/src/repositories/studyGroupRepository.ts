@@ -1,4 +1,5 @@
-import { StudyGroup, GroupRole } from '@prisma/client';
+import { StudyGroup } from '@prisma/client';
+import { GroupRole } from '../constants/enums';
 import { createAppError } from '../utils/errorHandler.js';
 import BaseRepository from './baseRepository.js';
 
