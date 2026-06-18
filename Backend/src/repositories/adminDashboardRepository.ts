@@ -1,10 +1,5 @@
-import {
-  Prisma,
-  ContentStatus,
-  Status,
-  AuditLog,
-  Content,
-} from '@prisma/client';
+import { Prisma, AdminAuditLog, Content } from '@prisma/client';
+import { ContentStatus, Status } from '../constants/enums';
 import type { User } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
@@ -233,21 +228,13 @@ export default class AdminDashboardRepository extends BaseRepository<
     }
   }
 
-  async getSystemAuditLogs(): Promise<AuditLog[]> {
+  async getSystemAuditLogs(): Promise<AdminAuditLog[]> {
     try {
-      return await prisma.auditLog.findMany({
-        orderBy: { timestamp: 'desc' },
+      // Admin actions (role changes, deletions, moderation) are recorded in
+      // adminAuditLog — not the general-purpose auditLog table.
+      return await prisma.adminAuditLog.findMany({
+        orderBy: { created_at: 'desc' },
         take: 100,
-        include: {
-          user: {
-            select: {
-              id: true,
-              first_name: true,
-              last_name: true,
-              email: true,
-            },
-          },
-        },
       });
     } catch (error) {
       logger.error('Error fetching audit logs:', error);
@@ -470,9 +457,17 @@ export default class AdminDashboardRepository extends BaseRepository<
     try {
       const databaseStatus = 'healthy';
 
-      // Check cache status
-      const cacheStatus =
-        (await getCache('test')) !== null ? 'healthy' : 'error';
+      // Check cache status with a real round-trip. The old check read a key named
+      // 'test' that nothing ever wrote, so it ALWAYS reported 'error' even when
+      // Redis was healthy. Write-then-read a probe key instead.
+      let cacheStatus = 'error';
+      try {
+        const probeKey = 'health:cache-probe';
+        await setCache(probeKey, 'ok', { ttl: 30 });
+        cacheStatus = (await getCache<string>(probeKey)) === 'ok' ? 'healthy' : 'error';
+      } catch {
+        cacheStatus = 'error';
+      }
 
       // Get average response time from audit logs
       const responseTimes = await prisma.auditLog.findMany({

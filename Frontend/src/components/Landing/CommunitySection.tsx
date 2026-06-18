@@ -42,7 +42,7 @@ const CommunitySection: React.FC = () => (
         className="mt-16 flex justify-center"
       >
         <Link
-          href="/community"
+          href="/auth/register"
           className="hover:shadow-primary/30 inline-flex items-center rounded-full bg-gradient-to-r from-primary to-primary2 px-6 py-3 text-lg font-semibold text-white transition-all duration-300 hover:shadow-lg"
         >
           Join the Community

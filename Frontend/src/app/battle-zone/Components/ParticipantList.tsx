@@ -70,7 +70,7 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
   const getRankBadge = (index: number) => {
     if (index === 0) return <Trophy className="text-yellow-500 h-4 w-4" />;
     if (index === 1) return <Medal className="h-4 w-4 text-gray-400" />;
-    if (index === 2) return <Medal className="h-4 w-4 text-amber-700" />;
+    if (index === 2) return <Medal className="h-4 w-4 text-warning" />;
     return (
       <span className="flex h-5 w-5 items-center justify-center text-xs font-medium text-muted-foreground">
         {index + 1}
@@ -130,7 +130,7 @@ const ParticipantList: React.FC<ParticipantListProps> = ({
           <div className="flex flex-col items-center justify-center py-6 text-center">
             <Users className="mb-2 h-10 w-10 text-muted-foreground opacity-50" />
             <p className="text-sm text-muted-foreground">No participants yet</p>
-            <p className="mt-1 text-xs text-muted-foreground/60">
+            <p className="mt-1 text-xs text-muted-foreground">
               Be the first to join!
             </p>
           </div>

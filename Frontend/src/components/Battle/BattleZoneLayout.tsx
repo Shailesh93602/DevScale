@@ -68,13 +68,19 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
       const statsResponse = await getStatistics();
       if (statsResponse.success && statsResponse.data) {
         const d = statsResponse.data;
-        // Use pre-calculated win_rate from backend, fall back to manual calc
+        // Use pre-calculated win_rate from backend, fall back to manual calc.
         const winRate =
           d.win_rate ??
           (d.wins != null && d.total_battles != null
             ? Math.round((d.wins / Math.max(d.total_battles, 1)) * 100)
-            : 0);
-        setUserWinRate(`${winRate}%`);
+            : null);
+        // `??` doesn't catch NaN — guard for a finite number so a bad/NaN
+        // backend value renders "--" instead of "NaN%".
+        setUserWinRate(
+          typeof winRate === 'number' && Number.isFinite(winRate)
+            ? `${winRate}%`
+            : '--',
+        );
         return;
       }
 
@@ -125,29 +131,6 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Real-time infrastructure status — honest about current state.
-          The live Battle Zone depends on the Socket.io server, which at
-          time of writing is being migrated from the Vercel serverless
-          deploy (no long-lived connections) to a dedicated host. The
-          standalone redis-battle-demo is the working reference in the
-          meantime. */}
-      <div
-        role="status"
-        className="border-b border-warning/30 bg-warning/10 px-4 py-2 text-center text-sm text-warning"
-      >
-        ⚠️ Real-time matchmaking is being migrated to a dedicated WebSocket
-        host — some live-battle features may be unavailable. The working
-        distributed-lock sibling demo is at{' '}
-        <a
-          href="https://redis-battle-demo.onrender.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-medium underline underline-offset-2"
-        >
-          redis-battle-demo
-        </a>
-        .
-      </div>
       {/* Header Section */}
       <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-4">

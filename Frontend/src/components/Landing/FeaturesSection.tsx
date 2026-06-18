@@ -44,7 +44,7 @@ const FeaturesSection: React.FC = () => (
           title="Active Community"
           description="Connect, collaborate, and grow with fellow students."
           delay={0.2}
-          href="/community"
+          href="/auth/register"
         />
         <FeatureCard
           icon={

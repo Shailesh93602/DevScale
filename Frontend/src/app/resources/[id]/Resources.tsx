@@ -426,7 +426,7 @@ export default function Resources({ id }: { id: string }) {
             <Button
               variant="ghost"
               size="icon"
-              className="text-foreground/50 hover:text-foreground lg:hidden"
+              className="text-foreground/80 hover:text-foreground lg:hidden"
               onClick={() => setSidebarOpen(false)}
             >
               <X className="h-5 w-5" />

@@ -7,6 +7,7 @@ import UserRepository from '../repositories/userRepository.js';
 import SystemConfigRepository from '../repositories/systemConfigRepository.js';
 import AdminAuditLogRepository from '../repositories/adminAuditLogRepository.js';
 import { sendResponse } from '../utils/apiResponse.js';
+import prisma from '../lib/prisma.js';
 
 export default class AdminController {
   private readonly adminDashboardRepo: AdminDashboardRepository;
@@ -27,6 +28,15 @@ export default class AdminController {
   getDashboardMetrics = catchAsync(async (req: Request, res: Response) => {
     const metrics = await this.adminDashboardRepo.getDashboardMetrics();
     sendResponse(res, 'METRICS_FETCHED', { data: metrics });
+  });
+
+  // Roles list (for the user-management role picker)
+  getRoles = catchAsync(async (_req: Request, res: Response) => {
+    const roles = await prisma.role.findMany({
+      select: { id: true, name: true, description: true },
+      orderBy: { name: 'asc' },
+    });
+    sendResponse(res, 'ROLES_FETCHED', { data: roles });
   });
 
   // User Management

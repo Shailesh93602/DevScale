@@ -1,10 +1,5 @@
-import {
-  Prisma,
-  Quiz,
-  Question,
-  QuizSubmission,
-  QuizType,
-} from '@prisma/client';
+import { Prisma, Quiz, Question, QuizSubmission } from '@prisma/client';
+import { QuizType } from '../constants/enums';
 import BaseRepository from './baseRepository.js';
 import { QuizData, QuizSubmissionData, TestCase } from '../types/index.js';
 import { executeCode } from '../utils/codeExecutor';

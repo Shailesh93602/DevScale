@@ -50,7 +50,7 @@ const MedalIcon = ({ rank }: { rank: number }) => {
   } else if (rank === 2) {
     return <FaMedal className="h-8 w-8 text-gray-400" />;
   } else if (rank === 3) {
-    return <FaAward className="h-8 w-8 text-amber-600" />;
+    return <FaAward className="h-8 w-8 text-warning" />;
   }
   return null;
 };
@@ -144,7 +144,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
                   {user.name}
                 </div>
                 <div className={`text-sm font-medium ${textColor}`}>
-                  {user.points.toLocaleString("en-US")} pts
+                  {user.points.toLocaleString('en-US')} pts
                 </div>
                 <div className="text-xs text-muted-foreground">
                   {user.college}
@@ -184,7 +184,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
               </div>
             </div>
             <div className="text-right text-xs font-semibold text-muted-foreground">
-              {user.points.toLocaleString("en-US")} pts
+              {user.points.toLocaleString('en-US')} pts
             </div>
           </div>
         ))}

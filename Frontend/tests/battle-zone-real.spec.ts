@@ -44,9 +44,11 @@ async function clickBack(page: Page) {
  * This is the only roadmap that has QuizQuestion records with QuizOptions seeded.
  */
 async function selectWorkingRoadmap(page: Page) {
-  // Wait for roadmaps to load (placeholder changes from 'Loading...' to 'Select a roadmap')
+  // Wait for roadmaps to load (placeholder changes from 'Loading...' to 'Select a roadmap').
+  // Generous timeout: this runner talks to a remote Supabase, so list latency
+  // compounds across a full suite run (it's fast when co-located in prod/CI).
   const roadmapCombo = page.getByRole('combobox').first();
-  await expect(roadmapCombo).not.toHaveText('Loading...', { timeout: 20000 });
+  await expect(roadmapCombo).not.toHaveText('Loading...', { timeout: 45000 });
 
   // Wait for pool check response so questionSource is set before we proceed
   const poolResponsePromise = page
@@ -201,8 +203,10 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
-    // Battle cards show "0/4 participants" or "1/6 participants" format
-    await expect(page.getByText(/\d+\/\d+ participants/).first()).toBeVisible({
+    // Battle cards render the live/max fraction as "<n> / <m> players"
+    await expect(
+      page.getByText(/\d+\s*\/\s*\d+\s+players/i).first(),
+    ).toBeVisible({
       timeout: 10000,
     });
   });
@@ -211,7 +215,8 @@ test.describe('Flow 1 — Battle Zone list (authenticated)', () => {
     await loginAsStudent(page);
     await goto(page, BZ);
     await waitForBattleList(page);
-    await expect(page.getByText(/Created by/i).first()).toBeVisible({
+    // Cards attribute the creator inline as "by <username>"
+    await expect(page.getByText(/\bby\s+\S+/i).first()).toBeVisible({
       timeout: 10000,
     });
   });
@@ -342,7 +347,12 @@ test.describe('Flow 2 — Filters and search', () => {
     });
 
     await searchInput.clear();
-    await page.waitForTimeout(800);
+    // Wait for the list to actually repopulate rather than racing a fixed delay:
+    // the empty state must clear and real battle cards must come back.
+    await expect(page.getByText(/no battles found/i)).toBeHidden({
+      timeout: 10000,
+    });
+    await waitForBattleList(page);
     const titles = await getBattleTitles(page);
     expect(titles.length).toBeGreaterThanOrEqual(1);
   });
@@ -500,8 +510,9 @@ test.describe('Flow 3 — Battle detail WAITING phase + slug navigation', () => 
     await goto(page, BZ);
     await waitForBattleList(page);
 
+    // Full battle cards expose a "Details" button that routes to the detail page
     await page
-      .getByRole('button', { name: 'View battle details' })
+      .getByRole('button', { name: /details/i })
       .first()
       .click();
     await page.waitForURL(/\/battle-zone\/[a-z0-9-]+/, { timeout: 10000 });
@@ -605,8 +616,8 @@ test.describe('Flow 4 — Join and leave a battle', () => {
     await goto(page, `/battle-zone/${battleId}`);
     await page.waitForTimeout(2000);
 
-    // "Test" is the first name of testuser
-    await expect(page.getByText('testuser')).toBeVisible({ timeout: 8000 });
+    // The seeded student logs in as "teststudent"
+    await expect(page.getByText('teststudent')).toBeVisible({ timeout: 8000 });
   });
 
   test('join again shows error (already enrolled)', async ({ page }) => {
@@ -1221,10 +1232,10 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
       timeout: 8000,
     });
 
-    // Player1 username must appear in the participant username spans
+    // Player1 (the student) username must appear in the participant username spans
     // (scope to font-medium spans to avoid matching avatar fallback which prepends first letter)
     await expect(
-      page.locator('span.font-medium', { hasText: 'testuser' }).first(),
+      page.locator('span.font-medium', { hasText: 'teststudent' }).first(),
     ).toBeVisible({ timeout: 5000 });
   });
 
@@ -1323,10 +1334,25 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
         );
         expect(startResp.status()).toBe(200);
       }
-      await page.waitForTimeout(2000);
-      const text = await page.locator('body').innerText();
-      // Status should change to IN_PROGRESS — "Start Battle" button disappears
-      expect(text).not.toContain('Start Battle');
+      // The battle is IN_PROGRESS server-side now. The lobby auto-transitions on
+      // the battle:started socket event; if that event is missed (socket
+      // reconnecting under test load), fall back to a fresh fetch — same
+      // tolerance Flow 11 uses.
+      const startGone = await page
+        .getByRole('button', { name: 'Start Battle' })
+        .isHidden({ timeout: 6000 })
+        .catch(() => false);
+      if (!startGone) {
+        await goto(page, `/battle-zone/${battleId}`);
+        await page
+          .waitForFunction(() => !document.querySelector('.animate-pulse'), {
+            timeout: 15000,
+          })
+          .catch(() => {});
+      }
+      await expect(
+        page.getByText(/In Progress|Battle in progress/i)
+      ).toBeVisible({ timeout: 15000 });
     } else {
       const text = await page.locator('body').innerText();
       console.log(
@@ -1368,26 +1394,26 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     const hasOptions = await optionA.isVisible().catch(() => false);
 
     if (hasOptions) {
-      // Select option A (first option)
+      // Each option button renders a letter badge (A–D) next to the answer text.
+      // Match on that badge so selection doesn't depend on how the answer reads
+      // (the old /^A.../ text match broke for answers starting with a digit).
       const option = page
-        .locator('button')
-        .filter({ hasText: /^A[A-Za-z\s]/ })
+        .getByRole('button')
+        .filter({ has: page.locator('span').filter({ hasText: /^[A-D]$/ }) })
         .first();
-      await option.click().catch(() => {});
+      await option.click();
       await page.waitForTimeout(500);
 
       // Submit answer
       const submitBtn = page.getByRole('button', { name: /submit answer/i });
       if (await submitBtn.isVisible().catch(() => false)) {
         await submitBtn.click();
-        await page.waitForTimeout(2000);
-        // Should show answer feedback (correct/incorrect)
-        const feedbackText = await page.locator('body').innerText();
-        const hasFeedback =
-          feedbackText.includes('Correct') ||
-          feedbackText.includes('Incorrect') ||
-          feedbackText.includes('points');
-        expect(hasFeedback).toBe(true);
+        // Feedback renders once the submit response lands ("✓ Correct! +N points"
+        // or "✗ Incorrect — 0 points"). Wait for it rather than racing a fixed
+        // delay — the submit round-trips to a remote DB in this environment.
+        await expect(
+          page.getByText(/Correct!|Incorrect|points/i).first()
+        ).toBeVisible({ timeout: 12000 });
       }
     } else {
       // Battle may not be in IN_PROGRESS state in this test run
@@ -2529,8 +2555,8 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
       await lbTab.click();
       await page.waitForTimeout(1000);
       const lbText = await page.locator('body').innerText();
-      // At minimum Player1 username should appear
-      expect(lbText).toMatch(/testuser/i);
+      // At minimum Player1 (the student) username should appear
+      expect(lbText).toMatch(/teststudent/i);
       // At minimum 1 "correct" count entry
       expect(lbText).toMatch(/\d+ correct/i);
     }

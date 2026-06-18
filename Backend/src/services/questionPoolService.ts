@@ -42,39 +42,49 @@ function shuffle<T>(arr: T[]): T[] {
   return arr;
 }
 
+const DEFAULT_TIME_LIMIT = 30;
+
 /**
- * Convert a QuizQuestion (with QuizOption[]) into a PoolQuestion.
- * Returns null if the question has fewer than 2 options or no correct answer.
+ * Convert a canonical `Question` (with `Option[]`) into a PoolQuestion.
+ *
+ * The battle pool sources from the SAME table the quiz feature uses (Question/
+ * Option), so battles and quizzes stay consistent and battles can draw from all
+ * real content. The correct answer is derived exactly the way quiz scoring does
+ * (`Option.text === Question.correct_answer`) because `Option.is_correct` is
+ * unreliable in the seeded data — many rows have it unset while correct_answer
+ * holds the real answer text. Falls back to is_correct, then gives up (null) so
+ * we never serve a question whose correct answer we can't key.
  */
-function convertQuizQuestion(
-  q: {
-    id: string;
-    question: string;
-    options: { answer_text: string; is_correct: boolean }[];
-  },
-  defaultPoints: number,
-  defaultTimeLimit: number
-): PoolQuestion | null {
+function convertQuestion(q: {
+  id: string;
+  question: string;
+  correct_answer: string;
+  points: number;
+  options: { text: string; is_correct: boolean }[];
+}): PoolQuestion | null {
   if (!q.options || q.options.length < 2) return null;
 
   // Pad to exactly 4 options, or trim if more
   const opts = q.options.slice(0, 4);
   while (opts.length < 4) {
-    opts.push({ answer_text: 'N/A', is_correct: false });
+    opts.push({ text: 'N/A', is_correct: false });
   }
 
-  const correctIndex = opts.findIndex((o) => o.is_correct);
+  // Primary signal: text match against correct_answer (matches quiz scoring).
+  let correctIndex = opts.findIndex((o) => o.text === q.correct_answer);
+  // Fallback: the is_correct flag, when present.
+  if (correctIndex === -1) correctIndex = opts.findIndex((o) => o.is_correct);
   if (correctIndex === -1) return null;
 
   return {
     source_quiz_question_id: q.id,
     source_challenge_id: null,
     question: q.question,
-    options: opts.map((o) => o.answer_text),
+    options: opts.map((o) => o.text),
     correct_answer: correctIndex,
     explanation: null,
-    points: defaultPoints,
-    time_limit: defaultTimeLimit,
+    points: q.points ?? 100,
+    time_limit: DEFAULT_TIME_LIMIT,
   };
 }
 
@@ -104,14 +114,14 @@ async function getRecentlyUsedIds(
 }
 
 /**
- * Fetch all QuizQuestions for a set of quiz IDs, with their QuizOptions.
+ * Fetch all canonical Questions for a set of quiz IDs, with their Options.
  */
 async function fetchQuestionsForQuizIds(
   quizIds: string[]
 ): Promise<PoolQuestion[]> {
   if (quizIds.length === 0) return [];
 
-  const quizQuestions = await prisma.quizQuestion.findMany({
+  const questions = await prisma.question.findMany({
     where: { quiz_id: { in: quizIds } },
     include: {
       options: { orderBy: { id: 'asc' } },
@@ -119,8 +129,8 @@ async function fetchQuestionsForQuizIds(
   });
 
   const results: PoolQuestion[] = [];
-  for (const q of quizQuestions) {
-    const converted = convertQuizQuestion(q, 100, 30);
+  for (const q of questions) {
+    const converted = convertQuestion(q);
     if (converted) results.push(converted);
   }
   return results;

@@ -1,4 +1,5 @@
-import { ActivityType, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { ActivityType } from '../constants/enums';
 import type { UserStreak } from '@prisma/client';
 import { DateTime } from 'luxon';
 import BaseRepository from './baseRepository.js';
@@ -145,7 +146,16 @@ export default class StreakRepository extends BaseRepository<
     const now = DateTime.now().setZone(timezone);
 
     await this.prismaClient.$transaction(async (tx) => {
-      // Record the activity
+      // Ensure the streak row exists FIRST — it's the FK parent of the daily
+      // activity, and on a user's first-ever activity it wouldn't exist yet,
+      // so creating the activity first 500'd with a foreign-key violation.
+      await tx.userStreak.upsert({
+        where: { user_id: userId },
+        create: { user_id: userId, current_streak: 0, longest_streak: 0 },
+        update: {},
+      });
+
+      // Record the activity (FK parent now guaranteed to exist)
       await tx.userDailyActivity.create({
         data: {
           user_id: userId,
@@ -155,22 +165,10 @@ export default class StreakRepository extends BaseRepository<
         },
       });
 
-      // Update streak
       const userStreak = await tx.userStreak.findUnique({
         where: { user_id: userId },
       });
-
-      if (!userStreak) {
-        await tx.userStreak.create({
-          data: {
-            user_id: userId,
-            current_streak: 1,
-            longest_streak: 1,
-            last_activity_date: now.toJSDate(),
-          },
-        });
-        return;
-      }
+      if (!userStreak) return; // just upserted; satisfies the type + defensive
 
       if (!userStreak.last_activity_date) {
         await tx.userStreak.update({

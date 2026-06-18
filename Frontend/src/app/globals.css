@@ -76,9 +76,12 @@
     --radius: 0.75rem;
 
     /* Status */
-    --success: 142 76% 28%;
+    /* L25% (was 28%) so text-success on a /10 tint clears WCAG AA 4.5:1 */
+    --success: 142 76% 25%;
     --success-foreground: 355 100% 97%;
-    --warning: 38 92% 36%;
+    /* L28% (was 36%) so text-warning clears WCAG AA 4.5:1 on the light amber
+       status-badge background (amber-500/15 ≈ #f3ece2). */
+    --warning: 38 92% 28%;
     --warning-foreground: 355 100% 97%;
     --info: 217 91% 60%;
     --info-foreground: 355 100% 97%;
@@ -106,7 +109,7 @@
     --dark-secondary: black;
     --light: rgb(255, 255, 255);
     --light-secondary: rgb(245, 245, 247);
-    --gray-text: #6b7280;
+    --gray-text: #4b5563; /* gray-600: AA-contrast on light tints (was #6b7280, 4.44:1) */
 
     /* CTA gradient (footer banner) */
     --cta-from: 220 14% 97%;

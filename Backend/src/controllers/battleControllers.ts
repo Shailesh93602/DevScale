@@ -4,7 +4,7 @@ import { BattleRepository } from '../repositories/battleRepository';
 import logger from '../utils/logger';
 import { sendResponse } from '../utils/apiResponse';
 import { createAppError } from '../utils/errorHandler';
-import { BattleType, Difficulty } from '@prisma/client';
+import { BattleType, Difficulty } from '../constants/enums';
 import battleSocketService from '../services/battleSocket';
 import {
   getQuestionPool,

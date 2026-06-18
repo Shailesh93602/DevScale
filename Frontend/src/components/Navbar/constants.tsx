@@ -24,7 +24,7 @@ export const navItems: NavItem[] = [
   { path: '/career-roadmap', label: 'Career Roadmap' },
   { path: '/coding-challenges', label: 'Challenges' },
   { path: '/battle-zone', label: 'Battle Zone' },
-  { path: '/community', label: 'Community' },
+  // '/community' hidden until the public community area is built — see DEFERRED_FEATURES.md
 ];
 
 export const publicNavItems: NavItem[] = [

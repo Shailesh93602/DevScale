@@ -58,6 +58,11 @@ async function createUserInSupabase(userData: (typeof defaultUsers)[0]) {
         last_name: userData.last_name,
         username: userData.username,
       },
+      // The edge middleware gates /admin on app_metadata.role, so it MUST be
+      // set here — user_metadata alone is not read by the route guard.
+      app_metadata: {
+        role: userData.role.toUpperCase(),
+      },
     });
 
     if (error) {
@@ -71,6 +76,18 @@ async function createUserInSupabase(userData: (typeof defaultUsers)[0]) {
       error
     );
     throw error;
+  }
+}
+
+// Keep Supabase app_metadata.role in sync for users that already exist (the
+// create path only runs once; without this, re-seeding never repairs a missing
+// or stale role claim on the JWT).
+async function syncSupabaseRole(supabaseId: string, role: string) {
+  const { error } = await supabase.auth.admin.updateUserById(supabaseId, {
+    app_metadata: { role: role.toUpperCase() },
+  });
+  if (error) {
+    console.error(`Failed to sync app_metadata.role for ${supabaseId}:`, error);
   }
 }
 
@@ -134,12 +151,16 @@ async function seedUsers() {
       } else {
         console.log(`User ${userData.email} already exists in Supabase`);
         supabaseUser = existingUser;
+        // Repair the role claim on existing users too (idempotent re-seed).
+        await syncSupabaseRole(supabaseUser.id, userData.role);
       }
 
       // Create or update user in database
       await createUserInDatabase(userData, supabaseUser.id);
 
-      console.log(`Successfully created/updated user: ${userData.email}`);
+      console.log(
+        `Successfully created/updated user: ${userData.email} (role=${userData.role})`
+      );
     }
 
     console.log('User seeding completed successfully');

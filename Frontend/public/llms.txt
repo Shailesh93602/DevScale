@@ -1,0 +1,37 @@
+# EduScale
+
+> Real-time engineering learning platform with 1v1 coding battles, distributed locking, circuit breakers, and Prometheus metrics. Built for engineering students preparing for placements.
+
+EduScale is a side project by Shailesh Chaudhari (Software Engineer at ContextQA, Ahmedabad, India). Author portfolio: https://shaileshchaudhari.vercel.app.
+
+## Live
+
+- App: https://eduscale.vercel.app
+- Source: https://github.com/Shailesh93602/devscale
+
+## Why this exists
+
+Real-time coding battles look simple — two users, one problem, sync state. The hard part is making sync correct under concurrency: when many battles run simultaneously across multiple Node processes, naive in-memory state breaks. EduScale's backend uses `@socket.io/redis-adapter` for horizontal Socket.io scaling, redlock (Redlock distributed locks) to prevent race conditions in battle-state writes, opossum for circuit-breaker protection on the code-execution sandbox, prom-client for Prometheus metrics, and Bull queues for background work (leaderboard recompute, async grading).
+
+## Tech stack
+
+- **Frontend**: Next.js 15 (App Router), React 19, Tailwind CSS, Framer Motion, Redux Toolkit
+- **Backend**: Node.js + Express.js (TypeScript), Prisma ORM + PostgreSQL, Socket.io with @socket.io/redis-adapter, redlock, opossum, prom-client, Bull queues
+- **Infrastructure**: Redis Cluster (adapter + locks + cache), Supabase Auth, Vercel hosting
+
+## Pages
+
+- [Home](https://eduscale.vercel.app/)
+- [About](https://eduscale.vercel.app/about)
+- [Articles](https://eduscale.vercel.app/articles)
+- [Coding Challenges](https://eduscale.vercel.app/coding-challenges)
+- [Career Roadmap](https://eduscale.vercel.app/career-roadmap)
+- [FAQ](https://eduscale.vercel.app/faq)
+
+## Author
+
+- Shailesh Chaudhari — Software Engineer, ContextQA
+- Portfolio: https://shaileshchaudhari.vercel.app
+- GitHub: https://github.com/Shailesh93602
+- LinkedIn: https://www.linkedin.com/in/shaileshbhaichaudhari
+- X / Twitter: https://twitter.com/ShaileshWork
