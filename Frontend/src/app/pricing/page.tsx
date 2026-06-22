@@ -173,13 +173,9 @@ export default function PricingPage() {
 
       <div className="mt-24 text-center">
         <p className="text-sm text-muted-foreground">
-          Trusted by engineers at top companies worldwide.
-          <span className="mt-4 block space-x-8 opacity-50 grayscale">
-            <span className="text-xl font-bold">Google</span>
-            <span className="text-xl font-bold">GitHub</span>
-            <span className="text-xl font-bold">Stripe</span>
-            <span className="text-xl font-bold">Microsoft</span>
-          </span>
+          Real-time coding battles, adaptive roadmaps, and a sandboxed code
+          runner — built on a production-grade stack (Next.js · PostgreSQL ·
+          Redis).
         </p>
       </div>
     </div>
