@@ -85,7 +85,12 @@ async function fetchRoadmapsWithRetry(
     if (!isCancelled() && attempt < 3) {
       setTimeout(
         () => {
-          void fetchRoadmapsWithRetry(fetcher, onLoaded, isCancelled, attempt + 1);
+          void fetchRoadmapsWithRetry(
+            fetcher,
+            onLoaded,
+            isCancelled,
+            attempt + 1,
+          );
         },
         1000 * (attempt + 1),
       );
@@ -158,7 +163,6 @@ export default function QuestionSourceSelector({
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Load categories when DSA mode activated
@@ -172,7 +176,6 @@ export default function QuestionSourceSelector({
         setCategories(list);
       })
       .catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
   // Load main concepts when roadmap changes
@@ -193,7 +196,6 @@ export default function QuestionSourceSelector({
         setMainConcepts(list);
       })
       .catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRoadmap]);
 
   // Load subjects when main concept changes
@@ -212,7 +214,6 @@ export default function QuestionSourceSelector({
         setSubjects(list);
       })
       .catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedMainConcept]);
 
   // Load topics when subject changes
@@ -230,7 +231,6 @@ export default function QuestionSourceSelector({
         setTopics(normalized);
       })
       .catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedSubject]);
 
   // Determine active source
@@ -331,7 +331,6 @@ export default function QuestionSourceSelector({
     return () => {
       if (poolTimer.current) clearTimeout(poolTimer.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     selectedRoadmap,
     selectedMainConcept,

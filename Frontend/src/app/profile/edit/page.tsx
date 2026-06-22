@@ -17,7 +17,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import {
   Card,
@@ -47,7 +46,6 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
-  AlertCircle,
   Code2,
   ArrowLeft,
   Save,

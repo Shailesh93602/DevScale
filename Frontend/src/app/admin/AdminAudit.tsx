@@ -41,7 +41,6 @@ export default function AdminAudit() {
 
   useEffect(() => {
     void getLogs({ params: { limit: 100 } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logs = Array.isArray(state.data) ? state.data : [];

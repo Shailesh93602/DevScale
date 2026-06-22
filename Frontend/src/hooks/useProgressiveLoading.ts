@@ -20,16 +20,14 @@ export function useProgressiveLoading<T>({
 
   useEffect(() => {
     if (!data.length) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisibleItems([]);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+
       setIsLoading(false);
       return;
     }
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisibleItems(data.slice(0, initialCount));
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     setIsLoading(true);
 
     let currentCount = initialCount;

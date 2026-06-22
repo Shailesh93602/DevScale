@@ -27,35 +27,27 @@ export const BRANDING = {
       icon: 'FaDiscord',
     },
   ],
-  trustedColleges: [
-    'IIT Delhi',
-    'NIT Trichy',
-    'BITS Pilani',
-    'VIT Vellore',
-    'DTU Delhi',
-    'COEP Pune',
-  ],
-  testimonials: [
+  // What the platform offers — honest, capability-based highlights shown on the
+  // landing page in place of fabricated user testimonials (EduScale is new, so
+  // we don't claim users/quotes we don't have).
+  communityHighlights: [
     {
-      name: 'Rahul Sharma',
-      role: 'Computer Science, IIT Delhi',
-      quote:
-        'EduScale helped me structure my learning journey and connect with like-minded peers. The roadmaps were exactly what I needed to prepare for placements.',
-      image: 'https://i.pravatar.cc/150?img=11',
+      title: 'Real-time Battle Zone',
+      description:
+        'Go head-to-head in live coding battles with shared problems and a synced timer — practice under real pressure.',
+      icon: 'FaBolt',
     },
     {
-      name: 'Priya Patel',
-      role: 'Electronics Engineering, BITS Pilani',
-      quote:
-        'The community support is incredible! I got answers to my questions within minutes, and the company-specific preparation guides were invaluable for my interviews.',
-      image: 'https://i.pravatar.cc/150?img=32',
+      title: 'Adaptive roadmaps',
+      description:
+        'Follow structured, company-aligned roadmaps and track your progress through each milestone.',
+      icon: 'FaRoad',
     },
     {
-      name: 'Arjun Mehta',
-      role: 'Mechanical Engineering, NIT Trichy',
-      quote:
-        "Battle Zone challenges pushed me to improve my problem-solving skills. I've earned several achievement badges that actually impressed recruiters during my interviews!",
-      image: 'https://i.pravatar.cc/150?img=12',
+      title: 'Sandboxed code runner',
+      description:
+        'Write and run code against test cases in a sandboxed environment, with instant feedback on every attempt.',
+      icon: 'FaLaptopCode',
     },
   ],
 };

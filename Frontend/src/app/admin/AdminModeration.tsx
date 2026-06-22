@@ -29,9 +29,11 @@ interface ContentItem {
 }
 
 export default function AdminModeration() {
-  const [getQueue, state] = useAxiosGet<ContentItem[]>('/admin/moderation/queue');
+  const [getQueue, state] = useAxiosGet<ContentItem[]>(
+    '/admin/moderation/queue',
+  );
   const [moderate] = useAxiosPost<unknown, { action: string; reason: string }>(
-    '/admin/moderation/{{contentId}}'
+    '/admin/moderation/{{contentId}}',
   );
   const { toast } = useToast();
   const [rejecting, setRejecting] = useState<ContentItem | null>(null);
@@ -40,12 +42,15 @@ export default function AdminModeration() {
 
   useEffect(() => {
     void getQueue();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const items = Array.isArray(state.data) ? state.data : [];
 
-  const act = async (item: ContentItem, action: 'approve' | 'reject', why = '') => {
+  const act = async (
+    item: ContentItem,
+    action: 'approve' | 'reject',
+    why = '',
+  ) => {
     setBusy(item.id);
     const res = await moderate({ action, reason: why }, undefined, {
       contentId: item.id,
@@ -151,10 +156,7 @@ export default function AdminModeration() {
         </div>
       )}
 
-      <Dialog
-        open={!!rejecting}
-        onOpenChange={(o) => !o && setRejecting(null)}
-      >
+      <Dialog open={!!rejecting} onOpenChange={(o) => !o && setRejecting(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Reject content</DialogTitle>

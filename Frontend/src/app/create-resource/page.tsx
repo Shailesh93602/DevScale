@@ -38,7 +38,6 @@ export default function ResourcesPage() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchResources();
   }, []);
 

@@ -91,11 +91,7 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
     mode: 'onChange',
   });
 
-  const {
-    watch,
-    control,
-    formState: { errors },
-  } = form;
+  const { watch, control } = form;
   const formValues = watch();
 
   // Progress: title + questionSource + (date+time if SCHEDULED). Description is
@@ -790,8 +786,7 @@ const EnhancedCreateBattleForm: React.FC<EnhancedCreateBattleFormProps> = ({
                       fields not steps — looked like a transition bug). */}
                   {!isStepValid() && (
                     <output className="block rounded-md border border-warning/30 bg-warning/10 px-3 py-2 text-sm text-warning">
-                      {activeStep === 1 &&
-                        'Add a battle title to continue.'}
+                      {activeStep === 1 && 'Add a battle title to continue.'}
                       {activeStep === 2 &&
                         'Pick a question source to continue.'}
                       {activeStep === 3 &&

@@ -34,11 +34,6 @@ async function clickNext(page: Page) {
   await page.getByRole('button', { name: 'Next', exact: true }).click();
 }
 
-/** Click the first visible "Back" button */
-async function clickBack(page: Page) {
-  await page.getByRole('button', { name: 'Back', exact: true }).click();
-}
-
 /**
  * Select the "Full Stack Web Development" roadmap in the QuestionSourceSelector.
  * This is the only roadmap that has QuizQuestion records with QuizOptions seeded.
@@ -326,7 +321,6 @@ test.describe('Flow 2 — Filters and search', () => {
     });
 
     // Should NOT show unrelated battles
-    const text = await page.locator('body').innerText();
     const titles = await getBattleTitles(page);
     // All visible titles should be related to data structures
     for (const t of titles) {
@@ -1148,7 +1142,6 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
   });
 
   test('Player2 (different account) can see the battle in the list', async ({
-    page,
     browser,
   }) => {
     if (!battleId) {
@@ -1167,7 +1160,7 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     expect(text).toContain('Battle Zone Arena');
   });
 
-  test('Player2 joins the created battle', async ({ page }) => {
+  test('Player2 joins the created battle', async () => {
     if (!battleId || !player2Page) {
       test.skip();
       return;
@@ -1282,7 +1275,7 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
     }
   });
 
-  test('Player2 marks ready', async ({ page }) => {
+  test('Player2 marks ready', async () => {
     if (!battleId || !player2Page) {
       test.skip();
       return;
@@ -1351,7 +1344,7 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
           .catch(() => {});
       }
       await expect(
-        page.getByText(/In Progress|Battle in progress/i)
+        page.getByText(/In Progress|Battle in progress/i),
       ).toBeVisible({ timeout: 15000 });
     } else {
       const text = await page.locator('body').innerText();
@@ -1412,7 +1405,7 @@ test.describe('Flow 6 — Multi-user gameplay (Player1 creates, Player2 joins)',
         // or "✗ Incorrect — 0 points"). Wait for it rather than racing a fixed
         // delay — the submit round-trips to a remote DB in this environment.
         await expect(
-          page.getByText(/Correct!|Incorrect|points/i).first()
+          page.getByText(/Correct!|Incorrect|points/i).first(),
         ).toBeVisible({ timeout: 12000 });
       }
     } else {

@@ -80,7 +80,6 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
 
   useEffect(() => {
     if (isConnected) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasConnectedOnce(true);
     }
   }, [isConnected]);

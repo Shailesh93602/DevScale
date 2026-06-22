@@ -91,20 +91,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           className="mt-16 flex flex-wrap items-center justify-center gap-8 text-muted-foreground"
         >
           <p className="text-sm font-medium uppercase tracking-wider text-foreground/80">
-            Trusted by students from
+            Built on a production-grade stack
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8">
-            {BRANDING.trustedColleges.slice(0, 4).map((college) => (
+            {['Next.js', 'PostgreSQL', 'Redis', 'Socket.io'].map((tech) => (
               <span
-                key={college}
+                key={tech}
                 className="text-lg font-semibold text-foreground/90"
               >
-                {college}
+                {tech}
               </span>
             ))}
-            <span className="text-lg font-semibold text-foreground/90">
-              + 100 more
-            </span>
           </div>
         </motion.div>
       </div>

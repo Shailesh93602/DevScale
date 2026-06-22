@@ -68,7 +68,7 @@ export default function AdminUsers() {
   }>('/admin/users');
   const [getRoles, rolesState] = useAxiosGet<Role[]>('/admin/roles');
   const [patchRole] = useAxiosPatch<unknown, { roleId: string }>(
-    '/admin/users/{{userId}}/role'
+    '/admin/users/{{userId}}/role',
   );
   const [deleteUser] = useAxiosDelete('/admin/users/{{userId}}');
   const { toast } = useToast();
@@ -77,13 +77,12 @@ export default function AdminUsers() {
     (q?: string) => {
       void getUsers({ params: { limit: 50, ...(q ? { search: q } : {}) } });
     },
-    [getUsers]
+    [getUsers],
   );
 
   useEffect(() => {
     load();
     void getRoles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Debounced search
@@ -100,7 +99,10 @@ export default function AdminUsers() {
   const changeRole = async (user: AdminUser, roleId: string) => {
     const res = await patchRole({ roleId }, undefined, { userId: user.id });
     if (res?.success) {
-      toast({ title: 'Role updated', description: `${user.username} updated.` });
+      toast({
+        title: 'Role updated',
+        description: `${user.username} updated.`,
+      });
       load(search.trim() || undefined);
     } else {
       toast({
@@ -115,7 +117,10 @@ export default function AdminUsers() {
     if (!toDelete) return;
     const res = await deleteUser(undefined, { userId: toDelete.id });
     if (res?.success) {
-      toast({ title: 'User deleted', description: `${toDelete.username} removed.` });
+      toast({
+        title: 'User deleted',
+        description: `${toDelete.username} removed.`,
+      });
       setToDelete(null);
       load(search.trim() || undefined);
     } else {
@@ -192,7 +197,7 @@ export default function AdminUsers() {
                   <TableRow key={u.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+                        <div className="bg-primary/10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-primary">
                           {(name || 'U').charAt(0).toUpperCase()}
                         </div>
                         <div className="min-w-0">

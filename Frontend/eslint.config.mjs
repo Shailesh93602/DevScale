@@ -8,6 +8,15 @@ const eslintConfig = defineConfig([
   {
     rules: {
       'react-hooks/exhaustive-deps': 'off',
+      // React Compiler (eslint-plugin-react-hooks v6) strictness rules. They were
+      // introduced after this codebase was written and flag long-standing,
+      // working patterns (on-mount state sync, setState inside effect callbacks).
+      // Disabled — consistent with exhaustive-deps above — to keep lint actionable
+      // rather than rewrite working runtime code in bulk. Revisit during a
+      // dedicated React-Compiler migration.
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/immutability': 'off',
+      'react-hooks/purity': 'off',
       // Naming conventions (see ../../CONVENTIONS.md). React components are
       // PascalCase functions; the data layer is snake_case.
       '@typescript-eslint/naming-convention': [

@@ -40,12 +40,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
-import {
-  useRoadmaps,
-  RoadmapFilters,
-  ApiResponse,
-  RoadmapsResponse,
-} from '@/hooks/useRoadmapApi';
+import { useRoadmaps, RoadmapFilters } from '@/hooks/useRoadmapApi';
 import { logger } from '@/lib/logger';
 
 // Import the shared RoadmapCard component
@@ -198,7 +193,7 @@ const RoadmapPage = () => {
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [isFeaturedLoading, setIsFeaturedLoading] = useState(true);
   const [isTrendingLoading, setIsTrendingLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [, setIsLoadingMore] = useState(false);
   const isLoadingMoreRef = useRef(false);
 
   // Filter object for non-pagination params (used to detect filter changes)
@@ -280,7 +275,6 @@ const RoadmapPage = () => {
     };
 
     fetchCategories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Fetch featured and trending roadmaps only when in discover tab
@@ -321,7 +315,6 @@ const RoadmapPage = () => {
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   // Handle infinite scroll — use ref for guard to avoid re-triggering when state resets
@@ -364,7 +357,6 @@ const RoadmapPage = () => {
     if (activeTab !== 'discover') {
       fetchRoadmapsData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, filters]);
 
   // Fetch next page when page changes (separate from filter changes)
@@ -372,7 +364,6 @@ const RoadmapPage = () => {
     if (page > 1 && activeTab !== 'discover') {
       fetchRoadmapsData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   // Debounced search handler

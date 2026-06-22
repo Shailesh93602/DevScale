@@ -41,7 +41,6 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     if (status === 'waiting') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       verifyEmail();
     }
   }, [verifyEmail, status]);

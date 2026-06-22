@@ -13,7 +13,7 @@
  */
 
 import { ReactNode, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Loader from '@/components/Loader';
 import type { UserRole } from '@/types';
@@ -34,12 +34,21 @@ export function AuthGuard({
 }: AuthGuardProps) {
   const { status, isAuthenticated, session } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.replace(redirectTo);
+      // Preserve the attempted URL so login can return the user here, mirroring
+      // the server middleware's ?callbackUrl= behavior (ES-04).
+      const target =
+        redirectTo === '/auth/login' &&
+        pathname &&
+        !pathname.startsWith('/auth')
+          ? `/auth/login?callbackUrl=${encodeURIComponent(pathname)}`
+          : redirectTo;
+      router.replace(target);
     }
-  }, [status, router, redirectTo]);
+  }, [status, router, redirectTo, pathname]);
 
   // Already confirmed authenticated — render children.
   if (isAuthenticated) return <>{children}</>;
@@ -78,6 +87,7 @@ export function RoleGuard({
 }: RoleGuardProps) {
   const { status, isAuthenticated, hasAnyRole, user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   const allowedRoles = roles ?? (role ? [role] : []);
 
@@ -95,15 +105,32 @@ export function RoleGuard({
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.replace('/auth/login');
+      const target =
+        pathname && !pathname.startsWith('/auth')
+          ? `/auth/login?callbackUrl=${encodeURIComponent(pathname)}`
+          : '/auth/login';
+      router.replace(target);
       return;
     }
 
     // Only redirect once we actually know the role and access is denied.
-    if (status === 'authenticated' && !awaitingRole && !hasAccess && !accessDenied) {
+    if (
+      status === 'authenticated' &&
+      !awaitingRole &&
+      !hasAccess &&
+      !accessDenied
+    ) {
       router.replace(redirectTo);
     }
-  }, [status, awaitingRole, hasAccess, router, redirectTo, accessDenied]);
+  }, [
+    status,
+    awaitingRole,
+    hasAccess,
+    router,
+    redirectTo,
+    accessDenied,
+    pathname,
+  ]);
 
   if (
     status === 'loading' ||

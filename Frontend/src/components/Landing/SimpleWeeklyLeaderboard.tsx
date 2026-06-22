@@ -76,11 +76,17 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
 
       {/* Header */}
       <div className="relative z-10 mb-6 text-center">
-        <h2 className="text-2xl font-bold text-foreground">
-          Weekly Leaderboard
-        </h2>
+        <div className="mb-2 flex items-center justify-center gap-2">
+          <h2 className="text-2xl font-bold text-foreground">
+            Weekly Leaderboard
+          </h2>
+          <span className="rounded-full border border-border bg-muted/50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+            Preview
+          </span>
+        </div>
         <p className="mt-1 text-center text-sm text-muted-foreground">
-          Compete, climb, and claim your spot among the best engineers.
+          A preview of how weekly rankings appear — compete in the Battle Zone
+          to claim your spot.
         </p>
       </div>
 
