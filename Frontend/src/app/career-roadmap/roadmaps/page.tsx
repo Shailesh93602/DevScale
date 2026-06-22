@@ -214,7 +214,9 @@ const RoadmapsPage = () => {
       // Defensive: the API can return null/empty (no roadmaps seeded, or an
       // error envelope). Destructuring null here used to throw
       // "Cannot destructure property 'data' of 'responseData' as it is null".
-      const apiData = Array.isArray(responseData?.data) ? responseData.data : [];
+      const apiData = Array.isArray(responseData?.data)
+        ? responseData.data
+        : [];
       const meta = responseData?.meta;
       const transformedRoadmaps = apiData.map(transformRoadmap);
 
@@ -232,16 +234,14 @@ const RoadmapsPage = () => {
   }, [page, searchQuery, difficultyFilter, sortBy, type, getRoadmaps]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPage(1);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     setRoadmaps([]);
     fetchRoadmaps();
   }, [type, fetchRoadmaps]);
 
   useEffect(() => {
     if (isIntersecting && hasMore) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPage((prev) => prev + 1);
     }
   }, [isIntersecting, hasMore]);

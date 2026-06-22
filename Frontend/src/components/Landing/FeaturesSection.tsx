@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import FeatureCard from '@/components/FeatureCard';
-import Image from 'next/image';
 import {
   FaCogs,
   FaUsers,

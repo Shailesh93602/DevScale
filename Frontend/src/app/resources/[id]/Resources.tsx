@@ -108,7 +108,7 @@ export default function Resources({ id }: { id: string }) {
       } else {
         toast.error('Failed to enroll. Please try again.');
       }
-    } catch (e) {
+    } catch {
       toast.error('Failed to enroll. Please try again.');
     } finally {
       setIsEnrolling(false);
@@ -197,7 +197,7 @@ export default function Resources({ id }: { id: string }) {
       } else {
         toast.error('Failed to update progress');
       }
-    } catch (e) {
+    } catch {
       toast.error('Error updating progress');
     }
   };

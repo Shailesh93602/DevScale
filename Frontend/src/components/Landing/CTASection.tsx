@@ -35,10 +35,9 @@ const CTASection: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          Join thousands of engineering students who are already using{' '}
-          {companyInfo.name}
-          to accelerate their learning, prepare for placements, and build a
-          successful career.
+          Use {companyInfo.name} to accelerate your learning with real-time
+          coding battles, structured roadmaps, and a sandboxed code runner — and
+          build toward the career you want.
         </motion.p>
         <motion.div
           className="flex flex-col items-center justify-center gap-4 sm:flex-row"

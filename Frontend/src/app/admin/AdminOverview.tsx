@@ -55,7 +55,8 @@ interface DashboardMetrics {
 }
 
 const ACCENTS = {
-  violet: 'from-violet-500/15 to-violet-500/5 text-violet-600 dark:text-violet-400',
+  violet:
+    'from-violet-500/15 to-violet-500/5 text-violet-600 dark:text-violet-400',
   emerald:
     'from-emerald-500/15 to-emerald-500/5 text-emerald-600 dark:text-emerald-400',
   sky: 'from-sky-500/15 to-sky-500/5 text-sky-600 dark:text-sky-400',
@@ -111,9 +112,7 @@ function HealthPill({ label, ok }: { label: string; ok: boolean }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-        ok
-          ? 'bg-success/10 text-success'
-          : 'bg-destructive/10 text-destructive'
+        ok ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
       }`}
     >
       <span
@@ -126,12 +125,11 @@ function HealthPill({ label, ok }: { label: string; ok: boolean }) {
 
 export default function AdminOverview() {
   const [getMetrics, state] = useAxiosGet<DashboardMetrics>(
-    '/admin/dashboard/metrics'
+    '/admin/dashboard/metrics',
   );
 
   useEffect(() => {
     void getMetrics();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (state.isLoading || (!state.data && !state.isError)) {
@@ -163,9 +161,25 @@ export default function AdminOverview() {
     <div>
       <SectionTitle>Users</SectionTitle>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard icon={Users} label="Total Users" value={userStats.totalUsers} accent="violet" />
-        <StatCard icon={UserCheck} label="Active Users" value={userStats.activeUsers} accent="emerald" />
-        <StatCard icon={UserPlus} label="New Users" value={userStats.newUsers} sub="recent signups" accent="sky" />
+        <StatCard
+          icon={Users}
+          label="Total Users"
+          value={userStats.totalUsers}
+          accent="violet"
+        />
+        <StatCard
+          icon={UserCheck}
+          label="Active Users"
+          value={userStats.activeUsers}
+          accent="emerald"
+        />
+        <StatCard
+          icon={UserPlus}
+          label="New Users"
+          value={userStats.newUsers}
+          sub="recent signups"
+          accent="sky"
+        />
         <StatCard
           icon={TrendingUp}
           label="Engagement"
@@ -176,17 +190,52 @@ export default function AdminOverview() {
 
       <SectionTitle>Platform Content</SectionTitle>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard icon={Map} label="Roadmaps" value={platformMetrics.totalRoadmaps} accent="violet" />
-        <StatCard icon={Swords} label="Challenges" value={platformMetrics.totalChallenges} accent="rose" />
-        <StatCard icon={FileText} label="Articles" value={platformMetrics.totalArticles} accent="sky" />
-        <StatCard icon={HelpCircle} label="Quizzes" value={platformMetrics.totalQuizzes} accent="emerald" />
+        <StatCard
+          icon={Map}
+          label="Roadmaps"
+          value={platformMetrics.totalRoadmaps}
+          accent="violet"
+        />
+        <StatCard
+          icon={Swords}
+          label="Challenges"
+          value={platformMetrics.totalChallenges}
+          accent="rose"
+        />
+        <StatCard
+          icon={FileText}
+          label="Articles"
+          value={platformMetrics.totalArticles}
+          accent="sky"
+        />
+        <StatCard
+          icon={HelpCircle}
+          label="Quizzes"
+          value={platformMetrics.totalQuizzes}
+          accent="emerald"
+        />
       </div>
 
       <SectionTitle>Activity</SectionTitle>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard icon={Activity} label="Daily Active" value={activityMetrics.dailyActiveUsers} accent="emerald" />
-        <StatCard icon={CalendarDays} label="Weekly Active" value={activityMetrics.weeklyActiveUsers} accent="sky" />
-        <StatCard icon={CalendarRange} label="Monthly Active" value={activityMetrics.monthlyActiveUsers} accent="violet" />
+        <StatCard
+          icon={Activity}
+          label="Daily Active"
+          value={activityMetrics.dailyActiveUsers}
+          accent="emerald"
+        />
+        <StatCard
+          icon={CalendarDays}
+          label="Weekly Active"
+          value={activityMetrics.weeklyActiveUsers}
+          accent="sky"
+        />
+        <StatCard
+          icon={CalendarRange}
+          label="Monthly Active"
+          value={activityMetrics.monthlyActiveUsers}
+          accent="violet"
+        />
         <StatCard
           icon={Timer}
           label="Avg Session"
@@ -201,13 +250,19 @@ export default function AdminOverview() {
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Database className="h-4 w-4" /> Database
           </div>
-          <HealthPill label={systemHealth.databaseStatus || 'unknown'} ok={dbOk} />
+          <HealthPill
+            label={systemHealth.databaseStatus || 'unknown'}
+            ok={dbOk}
+          />
         </div>
         <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Zap className="h-4 w-4" /> Cache
           </div>
-          <HealthPill label={systemHealth.cacheStatus || 'unknown'} ok={cacheOk} />
+          <HealthPill
+            label={systemHealth.cacheStatus || 'unknown'}
+            ok={cacheOk}
+          />
         </div>
         <StatCard
           icon={Gauge}

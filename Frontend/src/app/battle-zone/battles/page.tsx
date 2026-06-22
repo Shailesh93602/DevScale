@@ -22,7 +22,7 @@ export default function BattlesPage() {
     sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
   };
 
-  const handleJoinBattle = async (battleId: string, status?: string) => {
+  const handleJoinBattle = async (battleId: string) => {
     try {
       const response = await joinExistingBattle(battleId);
       if (response) {

@@ -5,11 +5,13 @@ import { motion } from 'framer-motion';
 import { Shield, Zap, Users, Target, Rocket, Code2 } from 'lucide-react';
 import { BRANDING } from '@/constants';
 
+// Honest product capabilities — EduScale is a new platform, so we lead with
+// what it does, not fabricated user counts (see QA: no fabricated social proof).
 const stats = [
-  { label: 'Active Students', value: '10,000+' },
-  { label: 'Coding Challenges', value: '500+' },
-  { label: 'Success Rate', value: '92%' },
-  { label: 'Community Members', value: '25,000+' },
+  { label: 'Battle Zones', value: 'Real-Time' },
+  { label: 'Career Roadmaps', value: 'Adaptive' },
+  { label: 'Code Runner', value: 'Sandboxed' },
+  { label: 'Production Stack', value: 'Next · PG · Redis' },
 ];
 
 const values = [
@@ -35,7 +37,7 @@ const values = [
     icon: <Shield className="h-6 w-6" />,
     title: 'Trust & Integrity',
     description:
-      'Standardized roadmaps curated by FAANG engineers to guarantee you are learning what actually matters.',
+      'Structured roadmaps mapped to what the industry actually hires for, so you spend your time on the skills that matter.',
   },
 ];
 
@@ -231,7 +233,9 @@ export default function About() {
 
           <div className="relative z-10 flex flex-col items-center">
             <Rocket className="mb-6 h-12 w-12 text-primary" />
-            <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground"></h2>
+            <h2 className="mb-4 text-3xl font-bold tracking-tight text-foreground">
+              One engineer, one mission.
+            </h2>
             <p className="mb-8 text-lg text-muted-foreground">
               {BRANDING.name} is built and maintained by Shailesh Chaudhari, a
               dedicated individual pushing the boundaries of what specialized

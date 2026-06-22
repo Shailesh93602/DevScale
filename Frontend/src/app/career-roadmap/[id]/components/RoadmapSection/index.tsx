@@ -1,6 +1,5 @@
 import { useInView } from 'react-intersection-observer';
 import { motion } from 'framer-motion';
-import { ProgressCircle } from '../ProgressCircle';
 import { RoadmapStep } from '../RoadmapStep';
 
 const sectionVariants = {

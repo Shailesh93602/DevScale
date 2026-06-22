@@ -202,7 +202,6 @@ const DashboardPage: React.FC = () => {
       cancelled = true;
       clearTimeout(skeletonCeiling);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getDashboardSummary]);
 
   if (isLoading) return <DashboardSkeleton />;

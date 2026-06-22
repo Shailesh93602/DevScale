@@ -17,7 +17,7 @@ export default function MyBattlesPage() {
     'created' | 'joined' | 'upcoming' | 'completed'
   >('created');
 
-  const handleJoinBattle = async (battleId: string, status?: string) => {
+  const handleJoinBattle = async (battleId: string) => {
     try {
       const response = await joinExistingBattle(battleId);
       if (response) {

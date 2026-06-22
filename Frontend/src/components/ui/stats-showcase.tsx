@@ -6,7 +6,6 @@ import {
   FaUsers,
   FaRoad,
   FaLaptopCode,
-  FaTrophy,
   FaGraduationCap,
   FaChartLine,
   FaLightbulb,
@@ -21,6 +20,27 @@ interface StatsShowcaseProps {
 export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
   const [activeTab, setActiveTab] = useState<number>(0);
 
+  // Honest platform highlights — EduScale is a new product, so we showcase
+  // what it does rather than fabricated user counts (QA: no fabricated proof).
+  const platformStats = [
+    {
+      label: 'Coding Battles',
+      value: 'Real-Time',
+      icon: <FaLaptopCode size={24} />,
+    },
+    { label: 'Career Roadmaps', value: 'Adaptive', icon: <FaRoad size={24} /> },
+    {
+      label: 'Code Runner',
+      value: 'Sandboxed',
+      icon: <FaLightbulb size={24} />,
+    },
+    {
+      label: 'Built On',
+      value: 'Next · PG · Redis',
+      icon: <FaChartLine size={24} />,
+    },
+  ];
+
   // Define the tabs with their content
   const tabs = [
     {
@@ -29,20 +49,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
       title: 'Choose Your Path',
       description:
         'Select from curated roadmaps or create your own custom learning journey.',
-      stats: [
-        {
-          label: 'Active Users',
-          value: '10,000+',
-          icon: <FaUsers size={24} />,
-        },
-        { label: 'Roadmaps', value: '50+', icon: <FaRoad size={24} /> },
-        {
-          label: 'Company Guides',
-          value: '200+',
-          icon: <FaLaptopCode size={24} />,
-        },
-        { label: 'Achievements', value: '100+', icon: <FaTrophy size={24} /> },
-      ],
+      stats: platformStats,
       features: [
         'Personalized learning recommendations',
         'Progress tracking and milestones',
@@ -56,20 +63,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
       title: 'Track Progress',
       description:
         'Monitor your advancement with visual indicators and completion metrics.',
-      stats: [
-        {
-          label: 'Active Users',
-          value: '10,000+',
-          icon: <FaUsers size={24} />,
-        },
-        { label: 'Roadmaps', value: '50+', icon: <FaRoad size={24} /> },
-        {
-          label: 'Company Guides',
-          value: '200+',
-          icon: <FaLaptopCode size={24} />,
-        },
-        { label: 'Achievements', value: '100+', icon: <FaTrophy size={24} /> },
-      ],
+      stats: platformStats,
       features: [
         'Peer code reviews and feedback',
         'Live coding sessions and workshops',
@@ -83,20 +77,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
       title: 'Accelerate Your Career',
       description:
         'Get the skills, credentials, and connections to advance your career.',
-      stats: [
-        {
-          label: 'Active Users',
-          value: '10,000+',
-          icon: <FaUsers size={24} />,
-        },
-        { label: 'Roadmaps', value: '50+', icon: <FaRoad size={24} /> },
-        {
-          label: 'Company Guides',
-          value: '200+',
-          icon: <FaLaptopCode size={24} />,
-        },
-        { label: 'Achievements', value: '100+', icon: <FaTrophy size={24} /> },
-      ],
+      stats: platformStats,
       features: [
         'Resume building and review',
         'Mock interviews with feedback',
@@ -110,20 +91,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
       title: 'Earn Achievements',
       description:
         'Unlock badges and certificates as you master new skills and concepts.',
-      stats: [
-        {
-          label: 'Active Users',
-          value: '10,000+',
-          icon: <FaUsers size={24} />,
-        },
-        { label: 'Roadmaps', value: '50+', icon: <FaRoad size={24} /> },
-        {
-          label: 'Company Guides',
-          value: '200+',
-          icon: <FaLaptopCode size={24} />,
-        },
-        { label: 'Achievements', value: '100+', icon: <FaTrophy size={24} /> },
-      ],
+      stats: platformStats,
       features: [
         'Coding competitions with prizes',
         'Real-world problem solving',

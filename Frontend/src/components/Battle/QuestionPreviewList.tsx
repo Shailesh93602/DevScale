@@ -62,7 +62,6 @@ export default function QuestionPreviewList({
     } finally {
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     source.type,
     source.id,

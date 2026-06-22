@@ -152,9 +152,8 @@ export default function ProfilePage() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     getCurrentUser();
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     getSupabaseUser();
   }, []);
 

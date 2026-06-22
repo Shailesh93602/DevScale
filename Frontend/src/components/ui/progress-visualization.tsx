@@ -40,7 +40,6 @@ export const ProgressVisualization = ({
 
   useEffect(() => {
     if (!animate) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentStep(activeStep);
     }
   }, [animate, activeStep]);

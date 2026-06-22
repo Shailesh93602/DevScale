@@ -15,8 +15,6 @@ import {
   Target,
   Award,
   Calendar,
-  CalendarOff,
-  BarChart2,
 } from 'lucide-react';
 
 type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline';

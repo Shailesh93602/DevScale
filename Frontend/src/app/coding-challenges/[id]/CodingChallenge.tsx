@@ -218,7 +218,7 @@ export default function CodingChallenge({ id }: { id: string }) {
                 ...data.boilerplates,
               }));
             }
-          } catch (e) {
+          } catch {
             if (data.boilerplates) {
               setUserCode((prev) => ({
                 ...prev,
@@ -254,7 +254,7 @@ export default function CodingChallenge({ id }: { id: string }) {
             language: language,
           });
           console.log('[DEBUG] Draft synced to cloud');
-        } catch (e) {
+        } catch {
           // Silently fail, local storage is still there
         }
       }
@@ -284,7 +284,7 @@ export default function CodingChallenge({ id }: { id: string }) {
               [language]: cloudResp.data.data.code,
             }));
           }
-        } catch (e) {
+        } catch {
           // Ignore
         }
       }

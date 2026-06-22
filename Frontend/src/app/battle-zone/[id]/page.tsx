@@ -154,7 +154,6 @@ export default function BattleDetailPage() {
     return () => {
       disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [battleId]);
 
   // ── Timer with local fallback ─────────────────────────────────────────────
@@ -364,7 +363,6 @@ export default function BattleDetailPage() {
       setLoading(false);
     };
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [battleId]);
 
   // Load questions when IN_PROGRESS and participant
