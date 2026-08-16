@@ -36,6 +36,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
+import { useMediaQuery } from '@/hooks/use-media-query';
 
 function ChallengeSkeleton() {
   return (
@@ -128,6 +129,9 @@ export default function CodingChallenge({ id }: { id: string }) {
   const [testResults, setTestResults] = useState<ITestResult[]>([]);
   const [activeTestTab, setActiveTestTab] = useState<string>('0');
   const [isRunning, setIsRunning] = useState(false);
+  // Below the md breakpoint the problem/editor split stacks instead of sitting
+  // side by side — see the ResizablePanelGroup below (ED-7).
+  const isNarrow = useMediaQuery('(max-width: 767px)');
   const [activeTab, setActiveTab] = useState('description');
   const [consoleExpanded, setConsoleExpanded] = useState(true);
 
@@ -313,14 +317,19 @@ export default function CodingChallenge({ id }: { id: string }) {
   return (
     <div className="flex h-[calc(100vh-80px)] w-full flex-col bg-background text-foreground">
       {/* Top Toolbar */}
-      <div className="flex items-center justify-between border-b border-border bg-card px-4 py-2">
-        <div className="flex items-center gap-4">
+      {/* Wraps on narrow viewports — the controls total ~500px, which overflowed
+          a 390px screen and left the whole page scrolling sideways (ED-7). */}
+      <div className="flex flex-wrap items-center justify-between gap-y-2 border-b border-border bg-card px-4 py-2">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <Badge variant="outline" className="px-3 py-1 text-xs">
             {challenge.difficulty}
           </Badge>
           <div className="flex items-center gap-2">
             <Select value={language} onValueChange={setLanguage}>
-              <SelectTrigger className="h-9 w-[140px] border-none bg-accent/50 hover:bg-accent">
+              <SelectTrigger
+                aria-label="Programming language"
+                className="h-9 w-[120px] border-none bg-accent/50 hover:bg-accent sm:w-[140px]"
+              >
                 <SelectValue placeholder="Language" />
               </SelectTrigger>
               <SelectContent>
@@ -336,6 +345,7 @@ export default function CodingChallenge({ id }: { id: string }) {
               size="icon"
               onClick={resetCode}
               title="Reset Code"
+              aria-label="Reset code to the starting template"
               className="h-9 w-9 text-muted-foreground hover:text-foreground"
             >
               <RotateCcw className="h-4 w-4" />
@@ -343,7 +353,7 @@ export default function CodingChallenge({ id }: { id: string }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <Button
             variant="secondary"
             className="h-9 gap-2 px-4 font-semibold"
@@ -365,12 +375,15 @@ export default function CodingChallenge({ id }: { id: string }) {
       </div>
 
       {/* Main Content Area */}
+      {/* On a phone a horizontal split leaves ~150px for the problem text and
+          ~230px for the editor — neither is usable — so the panes stack
+          vertically below the md breakpoint (ED-7). */}
       <ResizablePanelGroup
-        direction="horizontal"
+        direction={isNarrow ? 'vertical' : 'horizontal'}
         className="flex-grow overflow-hidden"
       >
-        {/* Left Side: Problem Description */}
-        <ResizablePanel defaultSize={40} minSize={25}>
+        {/* Left Side (top on mobile): Problem Description */}
+        <ResizablePanel defaultSize={isNarrow ? 45 : 40} minSize={25}>
           <div className="flex h-full flex-col bg-card">
             <Tabs
               value={activeTab}
@@ -563,10 +576,15 @@ export default function CodingChallenge({ id }: { id: string }) {
           </div>
         </ResizablePanel>
 
-        <ResizableHandle className="hover:bg-primary/20 w-1.5 bg-background transition-colors" />
+        <ResizableHandle
+          className={cn(
+            'hover:bg-primary/20 bg-background transition-colors',
+            isNarrow ? 'h-1.5 w-full' : 'w-1.5',
+          )}
+        />
 
         {/* Right Side: Editor & Console */}
-        <ResizablePanel defaultSize={60}>
+        <ResizablePanel defaultSize={isNarrow ? 55 : 60}>
           <ResizablePanelGroup direction="vertical">
             {/* Editor */}
             <ResizablePanel defaultSize={70} minSize={20}>
@@ -612,6 +630,11 @@ export default function CodingChallenge({ id }: { id: string }) {
             >
               <div className="flex h-full flex-col bg-card">
                 <button
+                  type="button"
+                  aria-expanded={consoleExpanded}
+                  aria-label={
+                    consoleExpanded ? 'Collapse console' : 'Expand console'
+                  }
                   className="focus:ring-primary/50 flex h-12 w-full cursor-pointer items-center justify-between border-b border-border px-4 transition-colors hover:bg-accent/30 focus:outline-none focus:ring-1"
                   onClick={() => setConsoleExpanded(!consoleExpanded)}
                 >
@@ -620,9 +643,16 @@ export default function CodingChallenge({ id }: { id: string }) {
                     Console
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    {/* Decorative only. This was a <Button>, i.e. a <button>
+                        nested inside the toggle <button> above — invalid HTML
+                        that React reported as a hydration error — and it had
+                        no click handler to begin with. */}
+                    <span
+                      aria-hidden="true"
+                      className="flex h-8 w-8 items-center justify-center text-muted-foreground"
+                    >
                       <Maximize2 className="h-4 w-4" />
-                    </Button>
+                    </span>
                     <ChevronRight
                       className={cn(
                         'h-4 w-4 transition-transform',

@@ -42,7 +42,11 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "verify": "npm run lint && npm run test",
-    "deploy:prepare": "npm run build:clean && npm run verify"
+    "deploy:prepare": "npm run build:clean && npm run verify",
+    "qa:seed": "node qa/seed-e2e.mjs",
+    "qa:api": "node qa/run.mjs",
+    "qa:socket": "node qa/socket.mjs",
+    "qa": "npm run qa:api && npm run qa:socket"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

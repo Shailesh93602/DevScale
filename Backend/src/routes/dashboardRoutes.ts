@@ -14,6 +14,7 @@ export class DashboardRoutes extends BaseRouter {
       windowMs: 60 * 1000, // 1 minute
       max: 20, // 20 requests per minute
       message: 'Too many dashboard requests, please try again later',
+      keyPrefix: 'rate-limit-dashboard',
     });
     this.initializeRoutes();
   }

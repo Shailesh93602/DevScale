@@ -27,6 +27,14 @@ export default class AnalyticsController {
 
   public getUserAnalytics = catchAsync(async (req: Request, res: Response) => {
     const { userId } = req.params;
+    // The route is behind authMiddleware but has no role gate, so without this
+    // check any logged-in user could read any other user's learning analytics
+    // by swapping the id in the URL. Self-or-admin only.
+    const isSelf = req.user?.id === userId;
+    const isAdmin = req.user?.role?.name?.toUpperCase() === 'ADMIN';
+    if (!isSelf && !isAdmin) {
+      throw createAppError('You can only view your own analytics', 403);
+    }
     const analytics = await this.userProgressRepo.getUserAnalytics(userId);
     sendResponse(res, 'USER_ANALYTICS_FETCHED', { data: analytics });
   });

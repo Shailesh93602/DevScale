@@ -3,32 +3,20 @@ import Link from 'next/link';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import { EmptyState } from '@/components/ui/empty-state';
 
-const blogs = [
-  {
-    id: 1,
-    title: 'Understanding JavaScript Closures',
-    description:
-      'A deep dive into closures in JavaScript and how to use them effectively.',
-    link: '/blogs/js-closures',
-    category: 'JavaScript',
-  },
-  {
-    id: 2,
-    title: 'A Guide to Responsive Web Design',
-    description:
-      'Learn how to make your websites look great on all devices with responsive design techniques.',
-    link: '/blogs/responsive-web-design',
-    category: 'CSS',
-  },
-  {
-    id: 3,
-    title: 'Top 10 CSS Tricks for Beginners',
-    description:
-      'Improve your CSS skills with these 10 essential tricks every beginner should know.',
-    link: '/blogs/css-tricks',
-    category: 'CSS',
-  },
-];
+// No blog posts are published yet.
+//
+// This array previously held three invented posts ("Understanding JavaScript
+// Closures", "Top 10 CSS Tricks for Beginners") linking to hardcoded stub
+// pages, presented as real published content. The empty-state branch below
+// already existed — it was simply unreachable. Wire real posts in here when
+// there are real posts.
+const blogs: {
+  id: number;
+  title: string;
+  description: string;
+  link: string;
+  category: string;
+}[] = [];
 
 export default function Blogs() {
   return (

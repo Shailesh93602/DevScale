@@ -16,8 +16,12 @@ export class CodeRoutes extends BaseRouter {
   }
 
   protected initializeRoutes(): void {
+    // Every call here forwards to Judge0, which is metered and billed. Left
+    // unauthenticated this is a free compute faucet for anyone who finds the
+    // route (and a way to burn the RapidAPI quota the editor depends on).
     this.router.post(
       '/',
+      authMiddleware,
       validateRequest(runCodeValidation),
       this.codeController.runCode
     );

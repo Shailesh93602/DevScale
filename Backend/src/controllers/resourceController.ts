@@ -6,6 +6,7 @@ import { catchAsync } from '../utils';
 import Joi from 'joi';
 import { sendResponse } from '../utils/apiResponse';
 import { createAppError } from '../utils/errorHandler';
+import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
 
 // Root directory of the project (for resource file paths)
 const projectRoot = process.cwd();
@@ -142,7 +143,10 @@ export default class ResourceController {
   // Save a new resource article
   public saveResource = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { content } = req.body;
+    // This creates an Article, which the frontend renders through
+    // dangerouslySetInnerHTML. POST /articles sanitises; this path did not, so
+    // it was a stored-XSS bypass around the article sanitiser.
+    const content = sanitizeRichText(req.body.content ?? '');
     const article = await prisma.article.create({
       data: {
         title: 'General Resource',
@@ -174,16 +178,12 @@ export default class ResourceController {
 
   // Create Resource (generic)
   public createResource = catchAsync(async (req: Request, res: Response) => {
-    const {
-      title,
-      content,
-      type,
-      description,
-      url,
-      category,
-      difficulty,
-      language,
-    } = req.body;
+    const { type, url, category, difficulty, language } = req.body;
+    // Resource content is rendered as HTML on /resources/[id]. Titles and
+    // descriptions are plain text; content is rich text.
+    const title = sanitizeText(req.body.title ?? '');
+    const description = sanitizeText(req.body.description ?? '');
+    const content = sanitizeRichText(req.body.content ?? '');
     const resource = await prisma.resource.create({
       data: {
         title,

@@ -185,9 +185,25 @@ export class BattleRepository extends BaseRepository<
     // complete). High-concurrency paths (answer submission during a live battle)
     // pass a retryCount so legitimate concurrent requests queue for the lock
     // instead of erroring out.
-    const lock = await redlock.acquire([resource], ttlMs, {
-      retryCount: opts.retryCount ?? 0,
-    });
+    // Losing the race for the lock is a normal outcome under concurrency (two
+    // players tapping "start" on the same battle), not a server fault. Redlock
+    // surfaces it as an ExecutionError, which used to escape as a raw 500 with
+    // "unable to achieve a quorum" in the response body. Translate it to 409.
+    let lock;
+    try {
+      lock = await redlock.acquire([resource], ttlMs, {
+        retryCount: opts.retryCount ?? 0,
+      });
+    } catch (err) {
+      const name = (err as Error)?.name;
+      if (name === 'ExecutionError' || name === 'LockError') {
+        throw createAppError(
+          'Another action on this battle is already in progress — try again.',
+          409
+        );
+      }
+      throw err;
+    }
     try {
       return await callback();
     } finally {
@@ -440,10 +456,25 @@ export class BattleRepository extends BaseRepository<
           throw createAppError('You are already enrolled in this battle', 409);
         }
 
-        const participant = await tx.battleParticipant.create({
-          data: { battle_id: battleId, user_id: userId, status: 'JOINED' },
-          include: { user: { select: creatorSelect } },
-        });
+        // The read-then-write guard above is not atomic: two join requests from
+        // the same user can both pass it and race into the create, where the
+        // (battle_id, user_id) unique index decides the winner. Catch that and
+        // report the same 409 the guard would have, instead of leaking a raw
+        // Prisma "Unique constraint failed" as a 500.
+        const participant = await tx.battleParticipant
+          .create({
+            data: { battle_id: battleId, user_id: userId, status: 'JOINED' },
+            include: { user: { select: creatorSelect } },
+          })
+          .catch((err: { code?: string }) => {
+            if (err?.code === 'P2002') {
+              throw createAppError(
+                'You are already enrolled in this battle',
+                409
+              );
+            }
+            throw err;
+          });
 
         const updated = await tx.battle.update({
           where: { id: battleId },
@@ -697,113 +728,145 @@ export class BattleRepository extends BaseRepository<
       battleId,
       15_000,
       async () => {
-      return prisma.$transaction(
-        async (tx) => {
-          const question = await tx.battleQuestion.findUnique({
-            where: { id: questionId },
-          });
-          if (question?.battle_id !== battleId) {
-            throw createAppError('Invalid question', 400);
-          }
+        return prisma.$transaction(
+          async (tx) => {
+            const question = await tx.battleQuestion.findUnique({
+              where: { id: questionId },
+            });
+            if (question?.battle_id !== battleId) {
+              throw createAppError('Invalid question', 400);
+            }
 
-          // Reject answers submitted well after the time limit (2-second network grace period)
-          const timeLimit = question?.time_limit ?? 0;
-          const maxAllowedMs = timeLimit * 1000 + 2000;
-          if (timeTakenMs > maxAllowedMs) {
-            throw createAppError('Answer submitted after the time limit', 400);
-          }
+            // Reject answers submitted well after the time limit (2-second network grace period)
+            const timeLimit = question?.time_limit ?? 0;
+            const maxAllowedMs = timeLimit * 1000 + 2000;
+            if (timeTakenMs > maxAllowedMs) {
+              throw createAppError(
+                'Answer submitted after the time limit',
+                400
+              );
+            }
 
-          const isCorrect = question.correct_answer === selectedOption;
-          const pointsEarned = calculatePoints(
-            isCorrect,
-            question.points,
-            timeTakenMs,
-            question.time_limit
-          );
+            const isCorrect = question.correct_answer === selectedOption;
+            const pointsEarned = calculatePoints(
+              isCorrect,
+              question.points,
+              timeTakenMs,
+              question.time_limit
+            );
 
-          // Persist the answer
-          const answer = await tx.battleAnswer.create({
-            data: {
-              battle_id: battleId,
-              question_id: questionId,
-              user_id: userId,
-              selected_option: selectedOption,
-              is_correct: isCorrect,
-              time_taken_ms: timeTakenMs,
-              points_earned: pointsEarned,
-            },
-          });
+            // One answer per (question, user) — enforced by a unique index. A
+            // double-tapped submit button used to hit that index and return a 500
+            // with the raw Prisma error; it is a client mistake, so answer 409.
+            const alreadyAnswered = await tx.battleAnswer.findUnique({
+              where: {
+                question_id_user_id: {
+                  question_id: questionId,
+                  user_id: userId,
+                },
+              },
+              select: { id: true },
+            });
+            if (alreadyAnswered) {
+              throw createAppError(
+                'You have already answered this question',
+                409
+              );
+            }
 
-          // Update participant totals
-          const answeredCount = await tx.battleAnswer.count({
-            where: { battle_id: battleId, user_id: userId },
-          });
+            // Persist the answer
+            const answer = await tx.battleAnswer
+              .create({
+                data: {
+                  battle_id: battleId,
+                  question_id: questionId,
+                  user_id: userId,
+                  selected_option: selectedOption,
+                  is_correct: isCorrect,
+                  time_taken_ms: timeTakenMs,
+                  points_earned: pointsEarned,
+                },
+              })
+              .catch((err: { code?: string }) => {
+                if (err?.code === 'P2002') {
+                  throw createAppError(
+                    'You have already answered this question',
+                    409
+                  );
+                }
+                throw err;
+              });
 
-          const allAnswers = await tx.battleAnswer.findMany({
-            where: { battle_id: battleId, user_id: userId },
-            select: {
-              time_taken_ms: true,
-              is_correct: true,
-              points_earned: true,
-            },
-          });
+            // Update participant totals
+            const answeredCount = await tx.battleAnswer.count({
+              where: { battle_id: battleId, user_id: userId },
+            });
 
-          const totalScore = allAnswers.reduce(
-            (sum, a) => sum + a.points_earned,
-            0
-          );
-          const correctCount = allAnswers.filter((a) => a.is_correct).length;
-          const wrongCount = allAnswers.filter((a) => !a.is_correct).length;
-          const avgTimeMs = Math.floor(
-            allAnswers.reduce((sum, a) => sum + a.time_taken_ms, 0) /
-              allAnswers.length
-          );
+            const allAnswers = await tx.battleAnswer.findMany({
+              where: { battle_id: battleId, user_id: userId },
+              select: {
+                time_taken_ms: true,
+                is_correct: true,
+                points_earned: true,
+              },
+            });
 
-          await tx.battleParticipant.update({
-            where: {
-              battle_id_user_id: { battle_id: battleId, user_id: userId },
-            },
-            data: {
-              score: totalScore,
-              correct_count: correctCount,
-              wrong_count: wrongCount,
-              avg_time_per_answer_ms: avgTimeMs,
-            },
-          });
+            const totalScore = allAnswers.reduce(
+              (sum, a) => sum + a.points_earned,
+              0
+            );
+            const correctCount = allAnswers.filter((a) => a.is_correct).length;
+            const wrongCount = allAnswers.filter((a) => !a.is_correct).length;
+            const avgTimeMs = Math.floor(
+              allAnswers.reduce((sum, a) => sum + a.time_taken_ms, 0) /
+                allAnswers.length
+            );
 
-          // Recalculate ranks (tiebreaker: lower avg time = better rank)
-          await this.recalculateRanks(tx, battleId);
-
-          // Check if this participant has finished all questions
-          const battle = await tx.battle.findUnique({
-            where: { id: battleId },
-            select: { total_questions: true },
-          });
-          const totalQuestions = battle?.total_questions || 0;
-
-          if (answeredCount >= totalQuestions) {
             await tx.battleParticipant.update({
               where: {
                 battle_id_user_id: { battle_id: battleId, user_id: userId },
               },
-              data: { status: 'COMPLETED', completed_at: new Date() },
+              data: {
+                score: totalScore,
+                correct_count: correctCount,
+                wrong_count: wrongCount,
+                avg_time_per_answer_ms: avgTimeMs,
+              },
             });
-          }
 
-          const leaderboard = await buildLeaderboard(battleId, tx);
+            // Recalculate ranks (tiebreaker: lower avg time = better rank)
+            await this.recalculateRanks(tx, battleId);
 
-          return {
-            answer,
-            is_correct: isCorrect,
-            points_earned: pointsEarned,
-            correct_answer: question.correct_answer,
-            explanation: question.explanation,
-            participant_done: answeredCount >= totalQuestions,
-            leaderboard,
-          };
-        },
-        { timeout: 15_000 }
-      );
+            // Check if this participant has finished all questions
+            const battle = await tx.battle.findUnique({
+              where: { id: battleId },
+              select: { total_questions: true },
+            });
+            const totalQuestions = battle?.total_questions || 0;
+
+            if (answeredCount >= totalQuestions) {
+              await tx.battleParticipant.update({
+                where: {
+                  battle_id_user_id: { battle_id: battleId, user_id: userId },
+                },
+                data: { status: 'COMPLETED', completed_at: new Date() },
+              });
+            }
+
+            const leaderboard = await buildLeaderboard(battleId, tx);
+
+            return {
+              answer,
+              is_correct: isCorrect,
+              points_earned: pointsEarned,
+              correct_answer: question.correct_answer,
+              explanation: question.explanation,
+              participant_done: answeredCount >= totalQuestions,
+              leaderboard,
+            };
+          },
+          { timeout: 15_000 }
+        );
       },
       // Serialize per-battle (rank recalculation touches every participant) but
       // retry so concurrent live-battle submissions queue instead of failing.

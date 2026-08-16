@@ -5,9 +5,9 @@
  * Every test hits the live frontend (localhost:3000) and the live backend (localhost:4000).
  * Two real Supabase accounts are used for multi-user flows.
  *
- * Accounts:
- *   Player 1 (creator):  testuser@yopmail.com / E2E_STUDENT_PASSWORD_REDACTED
- *   Player 2 (joiner):   battleplayer2@yopmail.com / E2E_STUDENT2_PASSWORD_REDACTED
+ * Accounts (passwords come from E2E_*_PASSWORD — see tests/utils/testUsers.ts):
+ *   Player 1 (creator):  testuser@yopmail.com
+ *   Player 2 (joiner):   battleplayer2@yopmail.com
  *
  * Prerequisites:
  *   - npm run seed:battles   (in Backend) — ensures 5 WAITING battles exist

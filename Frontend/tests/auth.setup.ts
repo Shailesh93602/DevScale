@@ -6,6 +6,7 @@ import {
   STUDENT_STATE,
   PLAYER2_STATE,
 } from './utils/login';
+import { testUser } from './utils/testUsers';
 
 /**
  * Authenticate ONCE per user and persist the session. Every authenticated test
@@ -17,11 +18,13 @@ setup.beforeAll(() => {
 });
 
 setup('authenticate as student', async ({ page }) => {
-  await realLogin(page, 'testuser@yopmail.com', 'E2E_STUDENT_PASSWORD_REDACTED');
+  const { email, password } = testUser('student');
+  await realLogin(page, email, password);
   await page.context().storageState({ path: STUDENT_STATE });
 });
 
 setup('authenticate as player2', async ({ page }) => {
-  await realLogin(page, 'battleplayer2@yopmail.com', 'E2E_STUDENT2_PASSWORD_REDACTED');
+  const { email, password } = testUser('student2');
+  await realLogin(page, email, password);
   await page.context().storageState({ path: PLAYER2_STATE });
 });

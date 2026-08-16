@@ -96,20 +96,29 @@ export const createRateLimiter = (
   };
 };
 
-// Different rate limits for different routes
+// Different rate limits for different routes.
+//
+// Every limiter MUST pass its own keyPrefix. Left on the default they all share
+// one Redis counter (`rate-limit:<ip>`), so unrelated traffic spends each
+// other's budget AND each call rewrites the TTL with its own window — an api
+// call would reset the 15-minute auth window to 60 seconds, defeating the
+// login throttle entirely.
 export const authLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // 5 attempts per 15 minutes
   message: 'Too many login attempts, please try again later',
+  keyPrefix: 'rate-limit-auth',
 });
 
 export const apiLimiter = createRateLimiter({
   windowMs: 60 * 1000, // 1 minute
   max: 60, // 60 requests per minute
+  keyPrefix: 'rate-limit-api',
 });
 
 export const uploadLimiter = createRateLimiter({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 10, // 10 uploads per hour
   message: 'Upload limit exceeded, please try again later',
+  keyPrefix: 'rate-limit-upload',
 });

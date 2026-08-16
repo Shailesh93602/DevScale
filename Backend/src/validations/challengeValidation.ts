@@ -79,9 +79,17 @@ export const runCodeValidation = Joi.object({
   code: Joi.string().required().messages({
     'any.required': 'Code is required',
   }),
-  language: Joi.string().required().messages({
-    'any.required': 'Language is required',
-  }),
+  // Must be constrained here, not deep inside the executor. An unknown language
+  // used to reach getLanguageId() *inside* the opossum circuit breaker, so its
+  // throw counted as a Judge0 failure — three junk requests could trip the
+  // breaker and disable code execution for every user for 30 seconds.
+  language: Joi.string()
+    .valid('javascript', 'python', 'java', 'cpp', 'go')
+    .required()
+    .messages({
+      'any.required': 'Language is required',
+      'any.only': 'Unsupported programming language',
+    }),
   input: Joi.string().optional().allow(''),
   challengeId: Joi.string().optional(),
   challenge_id: Joi.string().optional(),

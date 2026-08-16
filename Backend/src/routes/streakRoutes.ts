@@ -18,6 +18,7 @@ export class StreakRoutes extends BaseRouter {
       windowMs: 60 * 1000, // 1 minute
       max: 10, // 10 requests per minute
       message: 'Too many streak updates, please try again later',
+      keyPrefix: 'rate-limit-streak',
     });
     this.initializeRoutes();
   }
