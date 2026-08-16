@@ -4,6 +4,7 @@ import type { UserStreak } from '@prisma/client';
 import { DateTime } from 'luxon';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
+import { createAppError } from '../utils/errorHandler.js';
 import {
   StreakStats,
   DailyActivity,
@@ -145,64 +146,103 @@ export default class StreakRepository extends BaseRepository<
     const { activityType, minutesSpent, timezone } = params;
     const now = DateTime.now().setZone(timezone);
 
-    await this.prismaClient.$transaction(async (tx) => {
-      // Ensure the streak row exists FIRST — it's the FK parent of the daily
-      // activity, and on a user's first-ever activity it wouldn't exist yet,
-      // so creating the activity first 500'd with a foreign-key violation.
-      await tx.userStreak.upsert({
-        where: { user_id: userId },
-        create: { user_id: userId, current_streak: 0, longest_streak: 0 },
-        update: {},
-      });
+    // Concurrent updates from the same user all upsert the SAME userStreak row,
+    // so they serialise on that row's lock. With Prisma's 2s default maxWait /
+    // 5s timeout, a burst made the queued transactions expire mid-flight and
+    // return a raw 500 ("Unable to start a transaction in the given time" /
+    // "Transaction already closed"). Give the queue room, and translate a
+    // genuine contention timeout into a 409 the client can retry — a duplicate
+    // streak ping is a client-side race, not a server fault.
+    try {
+      await this.runStreakTransaction(userId, activityType, minutesSpent, now);
+    } catch (err) {
+      const code = (err as { code?: string }).code;
+      const message = (err as Error).message ?? '';
+      if (
+        code === 'P2028' ||
+        /Unable to start a transaction|Transaction already closed|Transaction not found/i.test(
+          message
+        )
+      ) {
+        throw createAppError(
+          'Streak update is already in progress — please retry.',
+          409
+        );
+      }
+      throw err;
+    }
+  }
 
-      // Record the activity (FK parent now guaranteed to exist)
-      await tx.userDailyActivity.create({
-        data: {
-          user_id: userId,
-          activity_type: activityType,
-          minutes_spent: minutesSpent,
-          created_at: now.toJSDate(),
-        },
-      });
+  private async runStreakTransaction(
+    userId: string,
+    activityType: ActivityType,
+    minutesSpent: number,
+    now: DateTime
+  ): Promise<void> {
+    await this.prismaClient.$transaction(
+      async (tx) => {
+        // Ensure the streak row exists FIRST — it's the FK parent of the daily
+        // activity, and on a user's first-ever activity it wouldn't exist yet,
+        // so creating the activity first 500'd with a foreign-key violation.
+        await tx.userStreak.upsert({
+          where: { user_id: userId },
+          create: { user_id: userId, current_streak: 0, longest_streak: 0 },
+          update: {},
+        });
 
-      const userStreak = await tx.userStreak.findUnique({
-        where: { user_id: userId },
-      });
-      if (!userStreak) return; // just upserted; satisfies the type + defensive
+        // Record the activity (FK parent now guaranteed to exist)
+        await tx.userDailyActivity.create({
+          data: {
+            user_id: userId,
+            activity_type: activityType,
+            minutes_spent: minutesSpent,
+            created_at: now.toJSDate(),
+          },
+        });
 
-      if (!userStreak.last_activity_date) {
+        const userStreak = await tx.userStreak.findUnique({
+          where: { user_id: userId },
+        });
+        if (!userStreak) return; // just upserted; satisfies the type + defensive
+
+        if (!userStreak.last_activity_date) {
+          await tx.userStreak.update({
+            where: { user_id: userId },
+            data: {
+              current_streak: 1,
+              longest_streak: 1,
+              last_activity_date: now.toJSDate(),
+            },
+          });
+          return;
+        }
+
+        const lastActivityDate = DateTime.fromJSDate(
+          userStreak.last_activity_date
+        );
+        const daysSinceLastActivity = now.diff(lastActivityDate, 'days').days;
+
+        let newCurrentStreak = userStreak.current_streak;
+        if (daysSinceLastActivity <= 1) {
+          newCurrentStreak += 1;
+        } else {
+          newCurrentStreak = 1;
+        }
+
         await tx.userStreak.update({
           where: { user_id: userId },
           data: {
-            current_streak: 1,
-            longest_streak: 1,
+            current_streak: newCurrentStreak,
+            longest_streak: Math.max(
+              newCurrentStreak,
+              userStreak.longest_streak
+            ),
             last_activity_date: now.toJSDate(),
           },
         });
-        return;
-      }
-
-      const lastActivityDate = DateTime.fromJSDate(
-        userStreak.last_activity_date
-      );
-      const daysSinceLastActivity = now.diff(lastActivityDate, 'days').days;
-
-      let newCurrentStreak = userStreak.current_streak;
-      if (daysSinceLastActivity <= 1) {
-        newCurrentStreak += 1;
-      } else {
-        newCurrentStreak = 1;
-      }
-
-      await tx.userStreak.update({
-        where: { user_id: userId },
-        data: {
-          current_streak: newCurrentStreak,
-          longest_streak: Math.max(newCurrentStreak, userStreak.longest_streak),
-          last_activity_date: now.toJSDate(),
-        },
-      });
-    });
+      },
+      { maxWait: 10_000, timeout: 15_000 }
+    );
   }
 
   async resetStreak(userId: string): Promise<void> {

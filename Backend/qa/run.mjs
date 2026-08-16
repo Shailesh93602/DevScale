@@ -4,17 +4,12 @@
 import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 import { PrismaClient } from '@prisma/client';
+import { TEST_USERS as USERS } from './testUsers.mjs';
 
 const BASE = process.env.QA_BASE || 'http://localhost:4000/api/v1';
 const sb = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLISHABLE_KEY);
 const prisma = new PrismaClient();
 
-const USERS = {
-  student: { email: 'testuser@yopmail.com', password: 'Test@123' },
-  student2: { email: 'battleplayer2@yopmail.com', password: 'Test@1234' },
-  admin: { email: 'admin@eduscale.io', password: 'Admin@123' },
-  moderator: { email: 'moderator@eduscale.io', password: 'Mod@123' },
-};
 
 const results = [];
 let only = process.argv[2]; // optional area filter
@@ -549,6 +544,328 @@ async function main() {
     } else {
       rec('quiz', 'quiz submit (precondition: a quiz with questions exists)', false, 'no quiz in DB');
     }
+  }
+
+  // ---------- ROLE ENFORCEMENT MATRIX (assert the DENY paths) ----------
+  // The admin panel once "passed" render checks while every route 404'd. The
+  // only assertion that catches a broken gate is the negative one: for each
+  // privileged route, a STUDENT and an unauthenticated caller must be refused.
+  if (!only || only === 'rbac') {
+    const me = await api('GET', '/users/me', { token: tok.student });
+    const studentId = me.json?.data?.id;
+    const roleRow = await prisma.role.findFirst({ where: { name: 'STUDENT' }, select: { id: true } }).catch(() => null);
+
+    // [method, path, body, allowed-roles]. Only DENY paths are exercised for
+    // destructive verbs — we never fire a real DELETE as an admin.
+    const ADMIN_ONLY = [
+      ['GET', '/admin/dashboard/metrics'],
+      ['GET', '/admin/roles'],
+      ['GET', '/admin/users'],
+      ['GET', '/admin/moderation/queue'],
+      ['GET', '/admin/audit/logs'],
+      ['GET', '/admin/config/general'],
+      ['PATCH', `/admin/users/${studentId}/role`, { roleId: roleRow?.id }],
+      ['DELETE', `/admin/users/${studentId}`],
+      ['PATCH', '/admin/config', { category: 'general', key: 'k', value: 'v' }],
+      ['POST', '/admin/reports/custom', { type: 'users' }],
+      ['POST', '/admin/resources/allocate', { amount: 1 }],
+      ['POST', '/rbac/roles', { name: 'QA_SHOULD_NOT_EXIST' }],
+      ['POST', '/rbac/permissions', { name: 'QA_SHOULD_NOT_EXIST' }],
+      ['GET', '/analytics/platform'],
+      ['GET', '/analytics/report/engagement'],
+    ];
+
+    for (const [method, path, body] of ADMIN_ONLY) {
+      const anon = await api(method, path, { body });
+      rec('rbac', `${method} ${path} — no token → 401`, anon.status === 401, `status=${anon.status}`);
+
+      const stu = await api(method, path, { token: tok.student, body });
+      rec('rbac', `${method} ${path} — STUDENT → 403`, stu.status === 403, `status=${stu.status}`);
+
+      const mod = await api(method, path, { token: tok.moderator, body });
+      rec('rbac', `${method} ${path} — MODERATOR → 403 (admin-only)`, mod.status === 403, `status=${mod.status}`);
+    }
+
+    // ADMIN *or* MODERATOR routes: a student is still refused, a moderator is not.
+    const article = await prisma.article.findFirst({ where: { status: 'APPROVED' }, select: { id: true } }).catch(() => null);
+    const MOD_ROUTES = [
+      ['GET', '/articles/moderation/queue'],
+      ['POST', '/articles/status', { articleId: article?.id, status: 'APPROVED' }],
+      ['POST', `/articles/${article?.id}/moderation`, { action: 'APPROVE', notes: 'qa' }],
+      ['POST', `/articles/${article?.id}/update`, { content: '<p>qa</p>' }],
+    ];
+    for (const [method, path, body] of MOD_ROUTES) {
+      const anon = await api(method, path, { body });
+      rec('rbac', `${method} ${path} — no token → 401`, anon.status === 401, `status=${anon.status}`);
+      const stu = await api(method, path, { token: tok.student, body });
+      rec('rbac', `${method} ${path} — STUDENT → 403`, stu.status === 403, `status=${stu.status}`);
+      const mod = await api(method, path, { token: tok.moderator, body });
+      rec('rbac', `${method} ${path} — MODERATOR allowed (not 401/403)`, mod.status !== 401 && mod.status !== 403, `status=${mod.status}`);
+    }
+
+    // The admin's own happy path on the read-only admin surface must still work,
+    // otherwise a blanket 403 would make every DENY assertion above vacuous.
+    for (const path of ['/admin/dashboard/metrics', '/admin/roles', '/admin/users', '/admin/moderation/queue', '/admin/audit/logs']) {
+      const r = await api('GET', path, { token: tok.admin });
+      rec('rbac', `GET ${path} — ADMIN → 200 (gate is not a blanket deny)`, r.status === 200, `status=${r.status}`);
+    }
+
+    // Privilege escalation: a student must not be able to hand themselves ADMIN.
+    const adminRole = await prisma.role.findFirst({ where: { name: 'ADMIN' }, select: { id: true } }).catch(() => null);
+    if (adminRole && studentId) {
+      await api('PATCH', `/admin/users/${studentId}/role`, { token: tok.student, body: { roleId: adminRole.id } });
+      await api('POST', '/rbac/users/role', { token: tok.student, body: { userId: studentId, roleId: adminRole.id } });
+      const stillStudent = await prisma.user.findUnique({ where: { id: studentId }, include: { role: true } }).catch(() => null);
+      rec('rbac', 'student cannot self-escalate to ADMIN (DB role unchanged)', stillStudent?.role?.name === 'STUDENT', `role=${stillStudent?.role?.name}`);
+    }
+  }
+
+  // ---------- OWNERSHIP / IDOR (horizontal privilege) ----------
+  if (!only || only === 'idor') {
+    const me = await api('GET', '/users/me', { token: tok.student });
+    const studentId = me.json?.data?.id;
+    const adminRow = await prisma.user.findFirst({ where: { username: 'admin' }, select: { id: true } }).catch(() => null);
+
+    // Reading ANOTHER user's analytics must be refused. The route sits behind
+    // authMiddleware only — no role gate, no `req.user.id === :userId` check.
+    if (adminRow) {
+      const other = await api('GET', `/analytics/user/${adminRow.id}`, { token: tok.student });
+      rec('idor', 'student cannot read another user\'s analytics (GET /analytics/user/:id)', other.status === 403 || other.status === 404, `status=${other.status}`);
+      const self = await api('GET', `/analytics/user/${studentId}`, { token: tok.student });
+      rec('idor', 'student CAN read their own analytics (guard is not a blanket deny)', self.status === 200, `status=${self.status}`);
+      const asAdmin = await api('GET', `/analytics/user/${studentId}`, { token: tok.admin });
+      rec('idor', 'admin can read any user\'s analytics', asAdmin.status === 200, `status=${asAdmin.status}`);
+    }
+
+    // A roadmap owned by someone else must not be editable.
+    const foreign = await prisma.roadmap.findFirst({ where: { user_id: { not: studentId } }, select: { id: true, title: true, description: true } }).catch(() => null);
+    if (foreign) {
+      const upd = await api('PUT', `/roadmaps/${foreign.id}`, { token: tok.student, body: { title: foreign.title, description: 'HIJACKED', difficulty: 'BEGINNER' } });
+      const after = await prisma.roadmap.findUnique({ where: { id: foreign.id }, select: { description: true } });
+      rec('idor', 'student cannot edit a roadmap they do not own', upd.status === 403 && after?.description !== 'HIJACKED', `status=${upd.status} desc_changed=${after?.description === 'HIJACKED'}`);
+    }
+
+    // A battle you never joined must not leak its questions or accept answers.
+    const qrow = await prisma.question.findFirst({ where: { quiz: { topic_id: { not: null } } }, select: { quiz: { select: { topic_id: true } } } }).catch(() => null);
+    const topicId = qrow?.quiz?.topic_id;
+    if (topicId) {
+      const create = await api('POST', '/battles', {
+        token: tok.student,
+        body: { title: 'QA IDOR ' + Date.now(), difficulty: 'EASY', type: 'QUICK', max_participants: 4, total_questions: 5, question_source: { type: 'topic', id: topicId, count: 5 } },
+      });
+      const bId = create.json?.data?.id;
+      if (bId) {
+        await api('POST', `/battles/${bId}/join`, { token: tok.student });
+        await api('POST', `/battles/${bId}/lobby`, { token: tok.student });
+        await api('POST', `/battles/${bId}/ready`, { token: tok.student });
+        const start = await api('POST', `/battles/${bId}/start`, { token: tok.student });
+
+        // student2 never joined this battle.
+        const peek = await api('GET', `/battles/${bId}/questions`, { token: tok.student2 });
+        rec('idor', 'non-participant cannot read an in-progress battle\'s questions', peek.status === 403 || peek.status === 404, `status=${peek.status} (start=${start.status})`);
+
+        const bq = await prisma.battleQuestion.findFirst({ where: { battle_id: bId }, orderBy: { order: 'asc' }, select: { id: true, correct_answer: true } }).catch(() => null);
+        if (bq) {
+          const ans = await api('POST', '/battles/answer', { token: tok.student2, body: { battle_id: bId, question_id: bq.id, selected_option: bq.correct_answer, time_taken_ms: 900 } });
+          const stored = await prisma.battleAnswer.count({ where: { question_id: bq.id } });
+          rec('idor', 'non-participant cannot submit an answer to a battle they never joined', ans.status >= 400 && stored === 0, `status=${ans.status} rows=${stored}`);
+        }
+        await api('PATCH', `/battles/${bId}/cancel`, { token: tok.student });
+        await prisma.battle.delete({ where: { id: bId } }).catch(() => {});
+      }
+    }
+  }
+
+  // ---------- CONCURRENCY GUARANTEES ----------
+  // A battle is the one place in this app where two humans race on the same
+  // row. These assert the invariants at the DB, not just the HTTP status.
+  if (!only || only === 'concurrency') {
+    const qrow = await prisma.question.findFirst({ where: { quiz: { topic_id: { not: null } } }, select: { quiz: { select: { topic_id: true } } } }).catch(() => null);
+    const topicId = qrow?.quiz?.topic_id;
+    if (!topicId) {
+      rec('concurrency', 'precondition: a topic with questions exists', false, 'none');
+    } else {
+      const create = await api('POST', '/battles', {
+        token: tok.student,
+        body: { title: 'QA Concurrency ' + Date.now(), difficulty: 'EASY', type: 'QUICK', max_participants: 4, total_questions: 5, question_source: { type: 'topic', id: topicId, count: 5 } },
+      });
+      const bId = create.json?.data?.id;
+      if (!bId) {
+        rec('concurrency', 'precondition: battle created', false, `status=${create.status}`);
+      } else {
+        // Two players join AT THE SAME TIME — no duplicate participant rows.
+        const joins = await Promise.all([
+          api('POST', `/battles/${bId}/join`, { token: tok.student }),
+          api('POST', `/battles/${bId}/join`, { token: tok.student }),
+          api('POST', `/battles/${bId}/join`, { token: tok.student2 }),
+          api('POST', `/battles/${bId}/join`, { token: tok.student2 }),
+        ]);
+        const participants = await prisma.battleParticipant.count({ where: { battle_id: bId } });
+        rec('concurrency', 'concurrent duplicate joins → exactly 2 participant rows', participants === 2, `rows=${participants} statuses=${joins.map((j) => j.status).join(',')}`);
+
+        const battleAfterJoin = await prisma.battle.findUnique({ where: { id: bId }, select: { current_participants: true } });
+        rec('concurrency', 'current_participants counter matches the real row count', battleAfterJoin?.current_participants === participants, `counter=${battleAfterJoin?.current_participants} rows=${participants}`);
+
+        await api('POST', `/battles/${bId}/lobby`, { token: tok.student });
+        await Promise.all([
+          api('POST', `/battles/${bId}/ready`, { token: tok.student }),
+          api('POST', `/battles/${bId}/ready`, { token: tok.student2 }),
+        ]);
+
+        // TWO CLIENTS START THE SAME BATTLE AT ONCE — exactly one must win, and
+        // the questions must not be dealt twice.
+        const bqBefore = await prisma.battleQuestion.count({ where: { battle_id: bId } });
+        const starts = await Promise.all([
+          api('POST', `/battles/${bId}/start`, { token: tok.student }),
+          api('POST', `/battles/${bId}/start`, { token: tok.student }),
+        ]);
+        const ok = starts.filter((s) => s.status >= 200 && s.status < 300).length;
+        const server5xx = starts.filter((s) => s.status >= 500).length;
+        const bqAfter = await prisma.battleQuestion.count({ where: { battle_id: bId } });
+        const state = await prisma.battle.findUnique({ where: { id: bId }, select: { status: true, start_time: true } });
+        rec('concurrency', 'two concurrent starts → no 5xx (redlock serialises them)', server5xx === 0, `statuses=${starts.map((s) => s.status).join(',')}`);
+        rec('concurrency', 'two concurrent starts → battle ends up IN_PROGRESS exactly once', state?.status === 'IN_PROGRESS' && ok >= 1, `status=${state?.status} ok=${ok}`);
+        rec('concurrency', 'two concurrent starts do NOT duplicate the question set', bqAfter === bqBefore, `before=${bqBefore} after=${bqAfter}`);
+
+        const bqs = await prisma.battleQuestion.findMany({ where: { battle_id: bId }, orderBy: { order: 'asc' }, select: { id: true, correct_answer: true, points: true } });
+        if (bqs[0] && state?.status === 'IN_PROGRESS') {
+          // DUPLICATE submitAnswer, fired in parallel: one row, one score.
+          const q0 = bqs[0];
+          const dup = await Promise.all([
+            api('POST', '/battles/answer', { token: tok.student, body: { battle_id: bId, question_id: q0.id, selected_option: q0.correct_answer, time_taken_ms: 1000 } }),
+            api('POST', '/battles/answer', { token: tok.student, body: { battle_id: bId, question_id: q0.id, selected_option: q0.correct_answer, time_taken_ms: 1000 } }),
+            api('POST', '/battles/answer', { token: tok.student, body: { battle_id: bId, question_id: q0.id, selected_option: q0.correct_answer, time_taken_ms: 1000 } }),
+          ]);
+          const rows = await prisma.battleAnswer.count({ where: { question_id: q0.id, user_id: (await api('GET', '/users/me', { token: tok.student })).json?.data?.id } });
+          rec('concurrency', 'triple-fired duplicate submitAnswer → exactly 1 BattleAnswer row', rows === 1, `rows=${rows} statuses=${dup.map((d) => d.status).join(',')}`);
+          rec('concurrency', 'duplicate submitAnswer never 5xx (unique violation handled)', dup.every((d) => d.status < 500), `statuses=${dup.map((d) => d.status).join(',')}`);
+
+          const meId = (await api('GET', '/users/me', { token: tok.student })).json?.data?.id;
+          const part = await prisma.battleParticipant.findFirst({ where: { battle_id: bId, user_id: meId }, select: { score: true, correct_count: true } });
+          rec('concurrency', 'score counted ONCE for a triple-submitted question', part?.correct_count === 1, `correct_count=${part?.correct_count} score=${part?.score}`);
+        }
+
+        // Leaderboard under load: the build once nested a transaction inside a
+        // transaction and deadlocked on a small pool. Hammer it in parallel.
+        const lbs = await Promise.all(Array.from({ length: 12 }, () => api('GET', `/battles/${bId}/leaderboard`, { token: tok.student })));
+        rec('concurrency', '12 parallel leaderboard builds → no 5xx / no pool deadlock', lbs.every((l) => l.status === 200), `statuses=${[...new Set(lbs.map((l) => l.status))].join(',')}`);
+
+        // Play the battle out. There is no explicit "complete" endpoint — the
+        // battle ends itself once every participant has answered every question
+        // (battleSocket.handleAnswerSubmitted → checkAllParticipantsDone).
+        for (const bq of bqs) {
+          await api('POST', '/battles/answer', { token: tok.student, body: { battle_id: bId, question_id: bq.id, selected_option: bq.correct_answer, time_taken_ms: 800 } });
+          await api('POST', '/battles/answer', { token: tok.student2, body: { battle_id: bId, question_id: bq.id, selected_option: (bq.correct_answer + 1) % 4, time_taken_ms: 900 } });
+        }
+        let finalBattle = null;
+        for (let i = 0; i < 20; i++) {
+          finalBattle = await prisma.battle.findUnique({ where: { id: bId }, select: { status: true, winner_id: true } });
+          if (finalBattle?.status === 'COMPLETED') break;
+          await new Promise((r) => setTimeout(r, 300));
+        }
+        const lbRows = await prisma.battleLeaderboard.findMany({ where: { battle_id: bId }, orderBy: { rank: 'asc' }, select: { rank: true, score: true } });
+        rec('concurrency', 'battle auto-completes once every participant has answered', finalBattle?.status === 'COMPLETED', `status=${finalBattle?.status}`);
+        rec('concurrency', 'final leaderboard persisted with one row per participant', lbRows.length === participants, `rows=${lbRows.length} participants=${participants}`);
+        rec('concurrency', 'final leaderboard ranks are 1..n, sorted by score desc', lbRows.length > 0 && lbRows.every((r, i) => r.rank === i + 1) && lbRows.every((r, i) => i === 0 || lbRows[i - 1].score >= r.score), `ranks=${lbRows.map((r) => `${r.rank}:${r.score}`).join(' ')}`);
+        rec('concurrency', 'a completed battle has a winner recorded', !!finalBattle?.winner_id, `winner=${finalBattle?.winner_id ? 'set' : 'null'}`);
+
+        await prisma.battle.delete({ where: { id: bId } }).catch(() => {});
+      }
+    }
+  }
+
+  // ---------- RATE LIMITING ----------
+  if (!only || only === 'ratelimit') {
+    // POST /streak/update is capped at 10/min. Fire a burst and require the
+    // limiter to actually bite (429), not silently pass everything through.
+    const burst = await Promise.all(
+      Array.from({ length: 16 }, () => api('POST', '/streak/update', { token: tok.student, body: { activityType: 'TOPIC_COMPLETION', minutesSpent: 1, timezone: 'Asia/Kolkata' } }))
+    );
+    const throttled = burst.filter((b) => b.status === 429).length;
+    rec('ratelimit', 'burst of 16 streak updates trips the 10/min limiter (429s seen)', throttled > 0, `429s=${throttled}/16`);
+    rec('ratelimit', 'rate limiter returns 429, never 5xx', burst.every((b) => b.status < 500), `statuses=${[...new Set(burst.map((b) => b.status))].join(',')}`);
+
+    // Every limiter must own its Redis bucket. They all defaulted to the same
+    // `rate-limit:<ip>` key, so unrelated traffic spent each other's budget and
+    // each call rewrote the TTL with its own window. The streak burst above
+    // already pushed the shared counter past 16; the dashboard limiter allows
+    // 20/min, so 10 more dashboard calls must all succeed if — and only if —
+    // the buckets are separate.
+    const dashCalls = [];
+    for (let i = 0; i < 10; i++) dashCalls.push(await api('GET', '/dashboard/summary', { token: tok.student }));
+    rec('ratelimit', 'dashboard has its own bucket (10 calls after a 16-request streak burst all pass)', dashCalls.every((d) => d.status === 200), `statuses=${[...new Set(dashCalls.map((d) => d.status))].join(',')}`);
+  }
+
+  // ---------- STORED-XSS WRITE PATHS ----------
+  // Article content is rendered with dangerouslySetInnerHTML on the frontend and
+  // the client-side DOMPurify is a no-op during SSR, so the ONLY thing standing
+  // between a payload and execution is server-side sanitisation on write. Every
+  // write path that can reach Article.content / Resource.content is asserted.
+  if (!only || only === 'xss') {
+    const PAYLOAD = '<img src=x onerror="window.__XSS=1"><script>window.__XSS=1</script><p>legit body</p>';
+    const topic = await prisma.topic.findFirst({ select: { id: true } }).catch(() => null);
+    const clean = (s) => !/<script/i.test(s || '') && !/onerror/i.test(s || '');
+
+    if (topic) {
+      // POST /resources/save/:topicId — creates an Article. Previously the ONLY
+      // article write path with no sanitisation.
+      const save = await api('POST', `/resources/save/${topic.id}`, { token: tok.student, body: { content: PAYLOAD } });
+      const savedId = save.json?.data?.id;
+      const savedRow = savedId ? await prisma.article.findUnique({ where: { id: savedId }, select: { content: true } }) : null;
+      rec('xss', 'POST /resources/save/:topicId sanitises article content', save.status < 300 && clean(savedRow?.content), `status=${save.status} stored=${JSON.stringify(savedRow?.content || '').slice(0, 80)}`);
+      rec('xss', 'POST /resources/save/:topicId keeps the safe markup', /legit body/.test(savedRow?.content || ''), `kept=${/legit body/.test(savedRow?.content || '')}`);
+      if (savedId) {
+        await prisma.version.deleteMany({ where: { article_id: savedId } }).catch(() => {});
+        await prisma.article.delete({ where: { id: savedId } }).catch(() => {});
+      }
+    }
+
+    // POST /resources/create — Resource.content is rendered the same way.
+    const rc = await api('POST', '/resources/create', {
+      token: tok.student,
+      body: { title: `QA XSS ${PAYLOAD}`, content: PAYLOAD, type: 'article', description: PAYLOAD, url: 'https://example.com', category: 'frontend', difficulty: 'EASY', language: 'en' },
+    });
+    const resId = rc.json?.data?.id;
+    const resRow = resId ? await prisma.resource.findUnique({ where: { id: resId }, select: { title: true, content: true, description: true } }) : null;
+    rec('xss', 'POST /resources/create sanitises resource content', rc.status < 300 && clean(resRow?.content), `status=${rc.status} stored=${JSON.stringify(resRow?.content || '').slice(0, 80)}`);
+    rec('xss', 'POST /resources/create strips tags from the plain-text title', clean(resRow?.title) && !/</.test(resRow?.title || ''), `title=${JSON.stringify(resRow?.title || '')}`);
+    if (resId) await prisma.resource.delete({ where: { id: resId } }).catch(() => {});
+
+    // Regression guard on the paths that were already sanitised.
+    if (topic) {
+      const art = await api('POST', '/articles', { token: tok.student, body: { title: `QA XSS ${PAYLOAD}`, content: PAYLOAD, topic_id: topic.id } });
+      const artId = art.json?.data?.id;
+      const artRow = artId ? await prisma.article.findUnique({ where: { id: artId }, select: { title: true, content: true } }) : null;
+      rec('xss', 'POST /articles still sanitises (regression)', clean(artRow?.content) && clean(artRow?.title), `content_clean=${clean(artRow?.content)} title_clean=${clean(artRow?.title)}`);
+      if (artId) {
+        await prisma.version.deleteMany({ where: { article_id: artId } }).catch(() => {});
+        await prisma.submissionLog.deleteMany({ where: { article_id: artId } }).catch(() => {});
+        await prisma.article.delete({ where: { id: artId } }).catch(() => {});
+      }
+    }
+  }
+
+  // ---------- CODE EXECUTION SURFACE ----------
+  if (!only || only === 'exec') {
+    // Judge0 costs money per call. An unauthenticated execution endpoint is a
+    // free compute faucet for anyone who finds it.
+    const anon = await api('POST', '/run-code', { body: { code: 'console.log(1)', language: 'javascript' } });
+    rec('exec', 'POST /run-code requires authentication', anon.status === 401, `status=${anon.status}`);
+
+    const authed = await api('POST', '/run-code', { token: tok.student, body: { code: 'console.log(1)', language: 'javascript' } });
+    rec('exec', 'POST /run-code works for an authenticated user (guard is not a blanket deny)', authed.status === 200, `status=${authed.status}`);
+
+    // An unknown language must be rejected up front, not forwarded to Judge0.
+    const badLang = await api('POST', '/run-code', { token: tok.student, body: { code: 'x', language: 'brainfuck' } });
+    rec('exec', 'unsupported language → 4xx (never a 5xx or a paid Judge0 call)', badLang.status >= 400 && badLang.status < 500, `status=${badLang.status}`);
+
+    // When the executor is unreachable the request must still resolve — the
+    // opossum breaker is what stops a Judge0 outage becoming a 15s hang per
+    // test case. Assert the endpoint answers well inside that ceiling.
+    const t0 = Date.now();
+    const r = await api('POST', '/run-code', { token: tok.student, body: { code: 'console.log(1)', language: 'javascript' } });
+    const ms = Date.now() - t0;
+    rec('exec', 'run-code answers within 20s even when the executor is degraded', r.status < 500 && ms < 20000, `status=${r.status} ms=${ms}`);
   }
 
   // ---------- SUMMARY ----------

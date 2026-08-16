@@ -237,7 +237,7 @@ class SocketService {
 
       // Handle battle join (also used for reconnect)
       socket.on(SocketEvents.BATTLE_JOIN, (data: { battle_id: string }) => {
-        this.joinBattleRoom(socket, userId, data.battle_id);
+        void this.joinBattleRoom(socket, userId, data.battle_id);
         // battle:state is sent by the battleSocketService via emitToSocket
         // after the HTTP join call; on reconnect the client re-emits battle:join
         // and the state broadcast is triggered externally by the controller.
@@ -260,7 +260,36 @@ class SocketService {
     });
   }
 
-  private joinBattleRoom(socket: Socket, userId: string, battleId: string) {
+  /**
+   * Join a battle's realtime room.
+   *
+   * Membership used to be unconditional: any authenticated socket could emit
+   * `battle:join` with an arbitrary battle id and then receive that battle's
+   * question changes, timer ticks and full `battle:score_update` leaderboards
+   * without ever being a participant.
+   *
+   * A battle that is still WAITING/LOBBY is a public lobby — the battle-zone
+   * detail page joins the room before the user clicks Join, so that has to keep
+   * working. Once the battle is live (or finished) the room is restricted to
+   * the people actually playing it.
+   */
+  private async joinBattleRoom(
+    socket: Socket,
+    userId: string,
+    battleId: string
+  ) {
+    const allowed = await this.canObserveBattle(userId, battleId);
+    if (!allowed) {
+      socket.emit(SocketEvents.ERROR, {
+        message: 'You are not a participant in this battle',
+        battle_id: battleId,
+      });
+      logger.warn(
+        `User ${userId} refused battle room ${battleId} (not a participant)`
+      );
+      return;
+    }
+
     socket.join(`battle:${battleId}`);
 
     // Track user ↔ battle membership in Redis
@@ -282,6 +311,37 @@ class SocketService {
     } as ParticipantUpdate);
 
     logger.info(`User ${userId} joined battle ${battleId}`);
+  }
+
+  /**
+   * True when `userId` may receive this battle's realtime stream: they are a
+   * participant or its creator, or the battle has not started yet (open lobby).
+   * Fails OPEN if the battle can't be read, so a transient DB blip never locks
+   * real players out of their own game.
+   */
+  private async canObserveBattle(
+    userId: string,
+    battleId: string
+  ): Promise<boolean> {
+    try {
+      const battle = await prisma.battle.findUnique({
+        where: { id: battleId },
+        select: {
+          status: true,
+          user_id: true,
+          participants: { where: { user_id: userId }, select: { id: true } },
+        },
+      });
+      if (!battle) return false;
+      if (battle.user_id === userId) return true;
+      if (battle.participants.length > 0) return true;
+      return battle.status === 'WAITING' || battle.status === 'LOBBY';
+    } catch (err) {
+      logger.warn(`canObserveBattle ${battleId} check failed — allowing`, {
+        err,
+      });
+      return true;
+    }
   }
 
   private leaveBattleRoom(socket: Socket, userId: string, battleId: string) {

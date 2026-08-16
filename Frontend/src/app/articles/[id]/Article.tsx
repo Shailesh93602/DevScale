@@ -15,6 +15,14 @@ interface IArticle {
   moderationNotes: string;
 }
 const sanitizeContent = (content: string) => {
+  // DOMPurify needs a DOM. During server rendering its default export is an
+  // uninitialised factory — `DOMPurify.sanitize` is not a function — so this
+  // call THREW on every request and Next.js silently fell back to client-only
+  // rendering for the whole page (no SSR HTML, no SEO, a logged error per
+  // view). The content is already sanitised server-side on every write path
+  // (Backend/src/utils/sanitize.ts); DOMPurify here is browser-side defence in
+  // depth, so skip it when there is no DOM instead of crashing the render.
+  if (typeof window === 'undefined') return content;
   return DOMPurify.sanitize(content);
 };
 

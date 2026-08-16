@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
+import { testUser } from './utils/testUsers';
 
 test.describe('Create Roadmap Modal Validation', () => {
   test('Find UI/UX and Usability Issues', async ({ page }) => {
     // 0. Login
     await page.goto('/auth/login');
-    await page.fill('input[id="login-email"]', 'admin@eduscale.io');
-    await page.fill('input[name="password"]', 'Admin@123');
+    const admin = testUser('admin');
+    await page.fill('input[id="login-email"]', admin.email);
+    await page.fill('input[name="password"]', admin.password);
     await page.click('button[type="submit"]');
     await page.waitForURL('**/dashboard');
 

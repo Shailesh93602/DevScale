@@ -39,12 +39,18 @@ authorized and expected.** The env is no longer a blocker; the find-vs-reality g
 
 ## Roles & test users
 
-| Role | Seeded user | Password | Powers |
+| Role | Seeded user | Password env var | Powers |
 |---|---|---|---|
-| STUDENT | `testuser@yopmail.com` (teststudent) | `Test@123` | Core learner journey |
-| STUDENT #2 | `battleplayer2@yopmail.com` | `Test@1234` | 2nd participant for battles |
-| ADMIN | `admin@eduscale.io` | `Admin@123` | Full admin panel |
-| MODERATOR | `moderator@eduscale.io` | `Mod@123` | Article/forum moderation (no UI yet — see Moderator Plan) |
+| STUDENT | `testuser@yopmail.com` (teststudent) | `E2E_STUDENT_PASSWORD` | Core learner journey |
+| STUDENT #2 | `battleplayer2@yopmail.com` | `E2E_STUDENT2_PASSWORD` | 2nd participant for battles |
+| ADMIN | `admin@eduscale.io` | `E2E_ADMIN_PASSWORD` | Full admin panel |
+| MODERATOR | `moderator@eduscale.io` | `E2E_MODERATOR_PASSWORD` | Article/forum moderation (no UI yet — see Moderator Plan) |
+
+> 🔐 **Passwords are never committed.** They were, in ten files across Backend and Frontend including
+> the ADMIN account, in a repo mirrored to a public remote — the exposure this table used to be part
+> of. They now come from the environment with no fallback, from one source per side
+> (`Backend/qa/testUsers.mjs`, `Frontend/tests/utils/testUsers.ts`), and the seeder that creates the
+> accounts reads the same variables. See `.env.example`.
 
 > Seeder (`prisma/seeders/user.seeder.ts`) now sets Supabase **`app_metadata.role`** (the field the
 > route middleware actually reads) on both create + re-seed. **Verified ✅** against staging on 2026-06-15.
@@ -172,11 +178,103 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 
 ---
 
+## 2026-08-15 — E2E suite session (QA2-EDU)
+
+**The harness now runs against a throwaway LOCAL database, not the shared Supabase.** Every
+destructive assertion in `qa/run.mjs` used to mutate the real project. `qa/seed-e2e.mjs` builds the
+whole fixture graph (roadmap → main concept → subject → topic → quiz → questions/options, two coding
+challenges, an XSS probe challenge, an approved article, a resource) into a local Postgres, and
+refuses to run unless `DATABASE_URL` points at localhost.
+
+```bash
+# 1. throwaway DB
+createdb eduscale_e2e
+cd Backend
+DATABASE_URL=postgresql://localhost:5432/eduscale_e2e DIRECT_URL=postgresql://localhost:5432/eduscale_e2e \
+  npx prisma migrate deploy && npm run seed:all && npm run qa:seed
+
+# 2. COMPILED server on 4010 (tsx mis-transpiles redlock — always run dist)
+npm run build
+DATABASE_URL=... DIRECT_URL=... REDIS_URL=redis://localhost:6379/5 PORT=4010 \
+  node -r module-alias/register dist/main.js
+
+# 3. suites
+npm run qa                       # Backend: 176 HTTP+DB assertions, 10 realtime
+cd ../Frontend && npm run test:e2e:journeys   # Playwright journeys on :3220
+```
+
+### New coverage
+
+| Area | Where | What it proves |
+|---|---|---|
+| Role-enforcement matrix | `qa/run.mjs` area `rbac` (67 assertions) | Every admin/moderator route asserted for **no-token → 401**, **STUDENT → 403**, **MODERATOR → 403** (admin-only), plus the admin happy path so the gate can't be a blanket deny. Includes a self-escalation attempt that must leave the DB role untouched. |
+| Ownership / IDOR | `qa/run.mjs` area `idor` | Cross-user analytics read, foreign roadmap edit, non-participant reading a live battle's questions, non-participant submitting an answer. |
+| Concurrency | `qa/run.mjs` area `concurrency` | Concurrent duplicate joins → exactly 2 participant rows; two clients starting the same battle → one winner, no 5xx, questions not dealt twice; triple-fired `submitAnswer` → 1 `BattleAnswer` row and one score; 12 parallel leaderboard builds; auto-completion + ranked final leaderboard. |
+| Rate limiting | `qa/run.mjs` area `ratelimit` | The 10/min streak limiter actually bites (429, never 5xx) and each limiter owns its own Redis bucket. |
+| Stored XSS | `qa/run.mjs` area `xss` + `Frontend/tests/e2e/xss.spec.ts` | Every write path that reaches `Article.content` / `Resource.content` is sanitised server-side, and the rendered page executes nothing. |
+| Code execution | `qa/run.mjs` area `exec` | `/run-code` requires auth, rejects unknown languages before they reach the metered executor, and answers inside the breaker's ceiling. |
+| Realtime | `qa/socket.mjs` (10 assertions) | Handshake auth (valid/none/bad), `battle:started` broadcast, score sync between two live clients, **reconnect mid-battle**, and **room isolation** — a non-participant is refused and receives nothing. |
+| Browser journeys | `Frontend/tests/e2e/` | Student (land → sign in → challenge → run code → result), moderator (submit → queue → approve → public), admin (every admin route 200 for admin / 403 for student, admin UI unreachable for a student), and a **two-browser-context battle** played to completion. |
+| Page health | `Frontend/tests/e2e/page-health.spec.ts` | Per public page × {1440, 390}: 0 console errors, 0 uncaught errors, 0 failed requests, every image loads, axe WCAG 2 A/AA, no horizontal overflow. |
+| Honesty | `Frontend/tests/e2e/honesty.spec.ts` | No invented people/institutions, no third-party stock avatars, no placeholder posts presented as published content, no unsourced metrics. |
+
+### Bugs found + fixed this session
+
+1. **Stored XSS — `POST /resources/save/:topicId` wrote `Article.content` with no sanitisation** while
+   `POST /articles` sanitised. Article bodies render through `dangerouslySetInnerHTML`. *(fixed:
+   `sanitizeRichText`; regression test in area `xss`)*
+2. **`POST /resources/create` stored title/description/content raw.** *(fixed + tested)*
+3. **`/articles/[id]` and `/resources/[id]` threw during SSR** — `DOMPurify.sanitize is not a
+   function` with no DOM, so Next silently fell back to client-only rendering on every article view
+   (no SSR HTML, no SEO, an error logged per request). *(fixed; asserted in `xss.spec.ts`)*
+4. **IDOR: `GET /analytics/user/:userId`** returned any user's analytics to any logged-in user.
+   *(fixed: self-or-admin)*
+5. **Duplicate `POST /battles/:id/join` under a race → 500** leaking a raw Prisma unique-constraint
+   error. *(fixed: P2002 → 409)*
+6. **Duplicate `POST /battles/answer` → 500**, same leak. *(fixed: pre-check + P2002 → 409)*
+7. **Concurrent `POST /battles/:id/start` → 500** `"unable to achieve a quorum"` straight from
+   redlock. *(fixed: lock contention → 409)*
+8. **Realtime room isolation: `battle:join` had no participant check** — any authenticated socket
+   could subscribe to any battle and watch its questions, timers and full score leaderboard.
+   *(fixed: participants + creator always, strangers only while the lobby is open)*
+9. **`POST /run-code` was unauthenticated** — an open, metered Judge0 faucet. *(fixed: authMiddleware)*
+10. **An unknown `language` reached the circuit breaker** and counted as a Judge0 failure, so three
+    junk requests could open the breaker and disable code execution for everyone for 30s.
+    *(fixed: validated at the edge)*
+11. **Every rate limiter shared one Redis key** (`rate-limit:<ip>`), so unrelated traffic spent each
+    other's budget and each call rewrote the TTL with its own window — an api call reset the
+    15-minute auth window to 60 seconds. *(fixed: per-limiter keyPrefix)*
+12. **`POST /streak/update` 500'd under concurrency** — every request opened an interactive
+    transaction on the same row and Prisma's 2s/5s defaults expired the queue. *(fixed: real
+    timeouts + contention → 409)*
+13. **Every handled 4xx was logged as `error` "Unexpected Error" with `status: 500`** — the
+    `instanceof AppError` check compared against a different class from the one `createAppError`
+    builds, so it was always false. Real 500s were unfindable in Sentry. *(fixed: branch on status,
+    4xx at `warn`)*
+14. **ED-5 fabricated social proof** — the landing leaderboard carried five invented students at real
+    institutions with `i.pravatar.cc` portraits; `/blogs` carried three invented posts.
+    *(fixed: anonymous placeholders, real empty state, unknown blog id → 404 not a permanent
+    "Loading...")*
+15. **ED-7 coding-challenge layout** was a fixed horizontal split at every width. *(fixed: stacks
+    below the `md` breakpoint)*
+
+### Verdicts on pre-QA findings
+
+- **ED-1 (ReactMarkdown XSS) — PARTLY FALSE POSITIVE.** `react-markdown` v10 does not render raw HTML
+  without `rehype-raw` (not installed) and its default `urlTransform` drops `javascript:` hrefs, so
+  the challenge fields are safe — proven with a live payload fixture. The **real** stored-XSS exposure
+  was the `dangerouslySetInnerHTML` + client-only DOMPurify path, and it was reachable through the two
+  unsanitised write paths above (items 1–2).
+- **ED-5 — CONFIRMED, fixed.**
+- **ED-7 — CONFIRMED, fixed.**
+
+---
+
 ## Tally (honest)
 
 | Status | Count (approx flows) |
 |---|---|
-| ✅ Verified | ~70 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads/writes + moderation + XSS + **submit→moderate→publish loop** + Resources + Challenges + run-code + drafts + submit + leaderboard + streak-update + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket**) — `qa/run.mjs` **72/72** + `qa/socket.mjs` **6/6** |
+| ✅ Verified | ~120 (Admin + Auth + Dashboard + Roadmaps + bookmark/comments + Profile/Streak + Articles reads/writes + moderation + XSS + **submit→moderate→publish loop** + Resources + Challenges + run-code + drafts + submit + leaderboard + streak-update + **full Battle lifecycle incl. gameplay scoring** + **realtime WebSocket**) + **role-enforcement matrix** + **IDOR guards** + **battle concurrency** + **rate limiting** + **code-execution surface**) — `qa/run.mjs` **176/176** + `qa/socket.mjs` **10/10** + Playwright journeys |
 | 🟡 Built, unverified | ~1 (article create/author path — confirm intended endpoint) |
 | 🔴 Broken | 2 (OAuth, standalone quiz) |
 | ⚪ Deferred (intentional) | ~12 pages / 7 backend-only |

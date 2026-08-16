@@ -1,6 +1,7 @@
 import { Page, expect } from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
+import { testUser } from './testUsers';
 
 export const AUTH_DIR = path.join(__dirname, '..', '.auth');
 export const STUDENT_STATE = path.join(AUTH_DIR, 'student.json');
@@ -77,20 +78,12 @@ async function authViaSavedStateOrLogin(
 
 /** Primary test user — creates/manages battles. Reuses the saved session. */
 export async function loginAsStudent(page: Page) {
-  await authViaSavedStateOrLogin(
-    page,
-    STUDENT_STATE,
-    'testuser@yopmail.com',
-    'Test@123',
-  );
+  const { email, password } = testUser('student');
+  await authViaSavedStateOrLogin(page, STUDENT_STATE, email, password);
 }
 
 /** Secondary test user — joins battles as an opponent. Reuses the saved session. */
 export async function loginAsPlayer2(page: Page) {
-  await authViaSavedStateOrLogin(
-    page,
-    PLAYER2_STATE,
-    'battleplayer2@yopmail.com',
-    'Test@1234',
-  );
+  const { email, password } = testUser('student2');
+  await authViaSavedStateOrLogin(page, PLAYER2_STATE, email, password);
 }

@@ -1,20 +1,12 @@
-const blogPosts = {
-  'js-closures': {
-    title: 'Understanding JavaScript Closures',
-    content:
-      'A deep dive into closures in JavaScript and how to use them effectively...',
-  },
-  'responsive-web-design': {
-    title: 'A Guide to Responsive Web Design',
-    content:
-      'Learn how to make your websites look great on all devices with responsive design techniques...',
-  },
-  'css-tricks': {
-    title: 'Top 10 CSS Tricks for Beginners',
-    content:
-      'Improve your CSS skills with these 10 essential tricks every beginner should know...',
-  },
-};
+import { notFound } from 'next/navigation';
+
+// Blog posts are not implemented yet.
+//
+// This module used to hold three hardcoded stub posts and, for any id that
+// wasn't one of them, rendered a permanent "Loading..." — a page that never
+// loads and never errors. Until posts come from real data, an unknown post is
+// a 404, which is both honest and what Next's not-found handling expects.
+const blogPosts: Record<string, { title: string; content: string }> = {};
 
 export default async function BlogPost({
   params,
@@ -22,19 +14,18 @@ export default async function BlogPost({
   params: Promise<{ id?: string }>;
 }) {
   const { id } = await params;
-  const blog: { title: string; content: string } =
-    blogPosts[id as keyof object];
+  const blog = id ? blogPosts[id] : undefined;
 
-  if (!blog) {
-    return <p>Loading...</p>;
-  }
+  if (!blog) notFound();
 
   return (
-    <div className="min-h-screen bg-gray-100 py-12">
+    <div className="min-h-screen bg-background py-12">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <h1 className="mb-6 text-4xl font-bold text-gray-900">{blog.title}</h1>
-        <div className="rounded-lg bg-light p-6 shadow">
-          <p className="text-gray-600">{blog.content}</p>
+        <h1 className="mb-6 text-4xl font-bold text-foreground">
+          {blog.title}
+        </h1>
+        <div className="rounded-lg bg-card p-6 shadow">
+          <p className="text-muted-foreground">{blog.content}</p>
         </div>
       </div>
     </div>

@@ -1,46 +1,22 @@
 import React from 'react';
-import Image from 'next/image';
-import { FaTrophy, FaMedal, FaAward } from 'react-icons/fa';
+import { FaTrophy, FaMedal, FaAward, FaUser } from 'react-icons/fa';
 import Link from 'next/link';
 import { ctaLinks } from '@/constants';
 
-// Sample leaderboard data
+// Illustrative placeholder rankings.
+//
+// This block used to carry five invented students ("Abhinav — IIT Bombay",
+// 1540 pts) with i.pravatar.cc stock portraits. Even behind the "Preview"
+// badge that reads as real social proof: real institutions, real-looking
+// people, precise-looking scores, none of it backed by a single row in the
+// database. Anonymous rank labels keep the layout demonstration honest, and
+// drop a third-party image host from the landing page's critical path.
 const leaderboardData = [
-  {
-    rank: 1,
-    name: 'Abhinav',
-    points: 1540,
-    college: 'IIT Bombay',
-    avatar: 'https://i.pravatar.cc/150?img=1',
-  },
-  {
-    rank: 2,
-    name: 'Adarsh',
-    points: 1420,
-    college: 'IIT Kharagpur',
-    avatar: 'https://i.pravatar.cc/150?img=2',
-  },
-  {
-    rank: 3,
-    name: 'Aryan',
-    points: 1380,
-    college: 'BITS Pilani',
-    avatar: 'https://i.pravatar.cc/150?img=3',
-  },
-  {
-    rank: 4,
-    name: 'Vikas',
-    points: 1250,
-    college: 'IIT Delhi',
-    avatar: 'https://i.pravatar.cc/150?img=4',
-  },
-  {
-    rank: 5,
-    name: 'Deepak',
-    points: 1100,
-    college: 'VIT Vellore',
-    avatar: 'https://i.pravatar.cc/150?img=5',
-  },
+  { rank: 1, name: 'Top player' },
+  { rank: 2, name: 'Runner-up' },
+  { rank: 3, name: 'Third place' },
+  { rank: 4, name: 'Fourth place' },
+  { rank: 5, name: 'Fifth place' },
 ];
 
 // Medal icon component
@@ -117,15 +93,11 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
           return (
             <div key={user.rank} className="flex flex-col items-center">
               {/* Avatar */}
-              <div className="mb-2 h-14 w-14 overflow-hidden rounded-full border-2 border-border shadow-md">
-                <Image
-                  src={user.avatar}
-                  alt={user.name}
-                  width={56}
-                  height={56}
-                  className="h-full w-full object-cover"
-                  unoptimized={user.avatar.startsWith('http')}
-                />
+              <div
+                aria-hidden="true"
+                className="mb-2 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-muted shadow-md"
+              >
+                <FaUser className="h-6 w-6 text-muted-foreground" />
               </div>
 
               {/* Medal */}
@@ -150,10 +122,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
                   {user.name}
                 </div>
                 <div className={`text-sm font-medium ${textColor}`}>
-                  {user.points.toLocaleString('en-US')} pts
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {user.college}
+                  &mdash; pts
                 </div>
               </div>
             </div>
@@ -171,26 +140,19 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = () => {
             <div className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-muted text-xs font-bold text-muted-foreground shadow-sm">
               {user.rank}
             </div>
-            <div className="mr-2">
-              <Image
-                src={user.avatar}
-                alt={user.name}
-                width={28}
-                height={28}
-                className="h-7 w-7 rounded-full border border-border object-cover shadow-sm"
-                unoptimized={user.avatar.startsWith('http')}
-              />
+            <div
+              aria-hidden="true"
+              className="mr-2 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted shadow-sm"
+            >
+              <FaUser className="h-3 w-3 text-muted-foreground" />
             </div>
             <div className="flex-1">
               <div className="text-xs font-medium text-foreground">
                 {user.name}
               </div>
-              <div className="text-[10px] text-muted-foreground">
-                {user.college}
-              </div>
             </div>
             <div className="text-right text-xs font-semibold text-muted-foreground">
-              {user.points.toLocaleString('en-US')} pts
+              &mdash; pts
             </div>
           </div>
         ))}

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { testUser } from './utils/testUsers';
 
 test.describe('Authentication and Dashboard Flow', () => {
   test('successful login redirects to dashboard with user content', async ({
@@ -7,9 +8,10 @@ test.describe('Authentication and Dashboard Flow', () => {
     // 1. Go to login page
     await page.goto('/auth/login');
 
-    // 2. Fill in credentials (use testuser@yopmail.com — confirmed working with dashboard)
-    await page.fill('input[id="login-email"]', 'testuser@yopmail.com');
-    await page.fill('input[id="login-password"]', 'Test@123');
+    // 2. Fill in credentials (the seeded student account)
+    const student = testUser('student');
+    await page.fill('input[id="login-email"]', student.email);
+    await page.fill('input[id="login-password"]', student.password);
 
     // 3. Submit form
     await page.click('button[type="submit"]');

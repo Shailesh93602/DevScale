@@ -4,6 +4,7 @@ import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
 import { PrismaClient } from "@prisma/client";
 import { io } from "socket.io-client";
+import { TEST_USERS } from "./testUsers.mjs";
 
 const BASE = process.env.QA_BASE || "http://localhost:4000/api/v1";
 const WS = process.env.QA_WS || "http://localhost:4000";
@@ -47,8 +48,11 @@ function waitConnect(socket) {
 }
 
 async function main() {
-  const tok = await login("testuser@yopmail.com", "Test@123");
-  const tok2 = await login("battleplayer2@yopmail.com", "Test@1234");
+  const tok = await login(TEST_USERS.student.email, TEST_USERS.student.password);
+  const tok2 = await login(
+    TEST_USERS.student2.email,
+    TEST_USERS.student2.password
+  );
 
   // 1) Auth handshake
   const sOk = connect(tok);
@@ -120,9 +124,81 @@ async function main() {
     rec("realtime gameplay precondition (questions + started)", false, `bq=${bqs.length} start=${start.status}`);
   }
 
+  // 3) RECONNECT MID-BATTLE. A dropped player must be able to come back and
+  //    resume receiving the live stream — a mobile network blip mid-battle is
+  //    the single most likely realtime failure in production.
+  if (start.status >= 200 && start.status < 300) {
+    s2.disconnect();
+    await new Promise((r) => setTimeout(r, 500));
+    const s2b = connect(tok2);
+    const reRes = await waitConnect(s2b);
+    rec("player can reconnect mid-battle", reRes.ok === true, reRes.err || "");
+
+    if (reRes.ok) {
+      const backOnline = onceAny(s2b, ["battle:score_update", "battle:leaderboard", "battle:question", "battle:timer_tick", "battle:state"], 12000);
+      s2b.emit("battle:join", { battle_id: battleId });
+      await new Promise((r) => setTimeout(r, 600));
+      // Drive an event so there's something to receive.
+      const bqs2 = await prisma.battleQuestion.findMany({ where: { battle_id: battleId }, orderBy: { order: "asc" }, select: { id: true, correct_answer: true } }).catch(() => []);
+      const unanswered = [];
+      for (const q of bqs2) {
+        const existing = await prisma.battleAnswer.findFirst({ where: { question_id: q.id } }).catch(() => null);
+        if (!existing) unanswered.push(q);
+      }
+      if (unanswered[0]) {
+        await api("POST", "/battles/answer", tok, { battle_id: battleId, question_id: unanswered[0].id, selected_option: unanswered[0].correct_answer, time_taken_ms: 1100 });
+      }
+      const ev2 = await backOnline;
+      rec("reconnected player resumes receiving the live stream", !!ev2, ev2 ? `event=${ev2.ev}` : "nothing within 12s");
+      s2b.disconnect();
+    }
+  } else {
+    rec("player can reconnect mid-battle", false, `battle never started (start=${start.status})`);
+    rec("reconnected player resumes receiving the live stream", false, "skipped");
+  }
+
+  // 4) ROOM ISOLATION. A logged-in stranger must not be able to subscribe to a
+  //    battle they are not in and watch its scores. `battle:join` used to join
+  //    ANY room on request, with no participant check at all.
+  const modTok = await login(
+    TEST_USERS.moderator.email,
+    TEST_USERS.moderator.password
+  ).catch(() => null);
+  if (modTok) {
+    const spy = connect(modTok);
+    const spyRes = await waitConnect(spy);
+    if (spyRes.ok) {
+      const refused = new Promise((resolve) => {
+        spy.on("error", (d) => resolve(d));
+        setTimeout(() => resolve(null), 4000);
+      });
+      const leaked = onceAny(spy, ["battle:score_update", "battle:question", "battle:timer_tick", "battle:completed"], 5000);
+      spy.emit("battle:join", { battle_id: battleId });
+      const refusal = await refused;
+      rec("non-participant's battle:join is refused", !!refusal, refusal ? `error=${JSON.stringify(refusal).slice(0, 80)}` : "no refusal emitted");
+
+      // Generate traffic in the room while the stranger is listening.
+      const bqs3 = await prisma.battleQuestion.findMany({ where: { battle_id: battleId }, orderBy: { order: "asc" }, select: { id: true, correct_answer: true } }).catch(() => []);
+      for (const q of bqs3) {
+        const existing = await prisma.battleAnswer.findFirst({ where: { question_id: q.id, user_id: { not: undefined } } }).catch(() => null);
+        if (!existing) {
+          await api("POST", "/battles/answer", tok, { battle_id: battleId, question_id: q.id, selected_option: q.correct_answer, time_taken_ms: 1000 });
+          break;
+        }
+      }
+      const leak = await leaked;
+      rec("non-participant receives NO events from another battle's stream", !leak, leak ? `LEAKED event=${leak.ev}` : "silent");
+      spy.disconnect();
+    } else {
+      rec("non-participant's battle:join is refused", false, `spy could not connect: ${spyRes.err}`);
+      rec("non-participant receives NO events from another battle's stream", false, "skipped");
+    }
+  }
+
   s1.disconnect();
   s2.disconnect();
   await api("PATCH", `/battles/${battleId}/cancel`, tok).catch(() => {});
+  await prisma.battle.delete({ where: { id: battleId } }).catch(() => {});
   finish();
 }
 

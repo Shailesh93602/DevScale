@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { testUser } from './utils/testUsers';
 
 test.describe('Roadmap interactions tests', () => {
   test.use({ viewport: { width: 1280, height: 720 } });
@@ -9,8 +10,9 @@ test.describe('Roadmap interactions tests', () => {
   test.beforeEach(async ({ page }) => {
     // Authenticate as a regular user or admin
     await page.goto('/auth/login');
-    await page.fill('input[id="login-email"]', 'admin@eduscale.io');
-    await page.fill('input[id="login-password"]', 'Admin@123');
+    const admin = testUser('admin');
+    await page.fill('input[id="login-email"]', admin.email);
+    await page.fill('input[id="login-password"]', admin.password);
     await page.click('button[type="submit"]');
     await page.waitForURL('**/dashboard');
   });

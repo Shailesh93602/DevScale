@@ -24,6 +24,7 @@ export class RoadMapRoutes extends BaseRouter {
       windowMs: 60 * 1000, // 1 minute
       max: 30, // 30 requests per minute
       message: 'Too many roadmap requests, please try again later',
+      keyPrefix: 'rate-limit-roadmap',
     });
   }
 

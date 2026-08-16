@@ -8,11 +8,31 @@ const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SECRET_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+/**
+ * Seed-account passwords are read from the environment, never hardcoded.
+ *
+ * These used to be inline — including the ADMIN password — in a repo mirrored
+ * to a public remote. Anyone reading the source had working credentials for
+ * whichever Supabase project the app pointed at. See Backend/qa/testUsers.mjs
+ * for the same rule on the QA side, and .env.example for the variable names.
+ */
+function requirePassword(envName: string): string {
+  const value = process.env[envName];
+  if (!value) {
+    throw new Error(
+      `${envName} is not set. Seed-account passwords come from the environment ` +
+        `(see .env.example) so they are never committed. Set the four ` +
+        `E2E_*_PASSWORD variables and re-run the seeder.`
+    );
+  }
+  return value;
+}
+
 const defaultUsers = [
   {
     email: 'admin@eduscale.io',
     username: 'admin',
-    password: 'Admin@123',
+    password: requirePassword('E2E_ADMIN_PASSWORD'),
     first_name: 'Admin',
     last_name: 'User',
     role: 'ADMIN',
@@ -21,7 +41,7 @@ const defaultUsers = [
   {
     email: 'moderator@eduscale.io',
     username: 'moderator',
-    password: 'Mod@123',
+    password: requirePassword('E2E_MODERATOR_PASSWORD'),
     first_name: 'Moderator',
     last_name: 'User',
     role: 'MODERATOR',
@@ -30,7 +50,7 @@ const defaultUsers = [
   {
     email: 'testuser@yopmail.com',
     username: 'teststudent',
-    password: 'Test@123',
+    password: requirePassword('E2E_STUDENT_PASSWORD'),
     first_name: 'Test',
     last_name: 'Student',
     role: 'STUDENT',
@@ -39,7 +59,7 @@ const defaultUsers = [
   {
     email: 'battleplayer2@yopmail.com',
     username: 'testplayer2',
-    password: 'Test@1234',
+    password: requirePassword('E2E_STUDENT2_PASSWORD'),
     first_name: 'Battle',
     last_name: 'Player 2',
     role: 'STUDENT',
