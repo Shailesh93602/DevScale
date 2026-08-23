@@ -104,6 +104,69 @@ jobs:
       - name: TypeScript type-check
         run: npx tsc --noEmit
 
+  backend-test:
+    name: Backend — unit tests
+    runs-on: ubuntu-latest
+    #
+    # 143 backend tests existed and NONE of them ran in CI. The pipeline was
+    # audit + lint + typecheck + build only, so a change could break every
+    # assertion in the repo and still merge green. This job closes that.
+    #
+    # It excludes src/tests/battle.test.ts deliberately, and the reason is not
+    # "it is slow" (though it is — 220s of the ~230s total). That suite talks to
+    # a REAL Upstash Redis and a REAL database, neither of which exists in CI,
+    # and it is measurably flaky as a result: run locally three times it failed
+    # twice with 2 failures and passed once, with no code change in between.
+    #
+    # Wiring a flaky suite into a required check trains people to re-run CI
+    # until it goes green, which destroys the value of every other check in the
+    # file. The remaining 109 tests are hermetic — verified stable across three
+    # consecutive local runs — so those are the ones that gate.
+    #
+    # Making battle.test.ts runnable in CI (a postgres service container and a
+    # Redis service container, or mocking both) is worth doing separately.
+    defaults:
+      run:
+        working-directory: Backend
+    env:
+      # Stub URLs so `prisma generate` can read the datasource. The tests that
+      # run here mock their data access; no database is contacted.
+      DATABASE_URL: postgresql://user:pass@localhost:5432/db?schema=public
+      DIRECT_URL: postgresql://user:pass@localhost:5432/db?schema=public
+      # supabaseClient.ts calls createClient() at MODULE level, so importing
+      # anything that transitively reaches it throws "supabaseUrl is required"
+      # without these — even though the tests then mock every call.
+      #
+      # This is why the job earned its keep on its first run: rbac.test.ts
+      # passed locally and failed here, because a local .env was quietly
+      # supplying these and CI has no .env. Tests that read ambient config are
+      # only "hermetic" on the machine that happens to have it.
+      #
+      # Deliberately fake. If a test ever actually reaches Supabase it should
+      # fail loudly rather than silently talk to a real project.
+      SUPABASE_URL: https://stub.supabase.co
+      SUPABASE_PUBLISHABLE_KEY: stub-anon-key-for-tests
+      SUPABASE_SERVICE_ROLE_KEY: stub-service-role-key-for-tests
+      JWT_SECRET: stub-jwt-secret-for-tests
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: Backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Unit tests (hermetic suites)
+        run: npm run test:ci
+
   backend-build:
     name: Backend — build
     runs-on: ubuntu-latest
@@ -160,6 +223,30 @@ jobs:
       # Full tree, informational — see the backend note.
       - name: Security audit — full tree (informational)
         run: npm audit --audit-level=high || true
+
+  frontend-test:
+    name: Frontend — unit tests
+    runs-on: ubuntu-latest
+    # Added with the backend job for the same reason: the vitest suite landed
+    # in #5 and nothing ran it. Small now, which is exactly when to wire it up —
+    # a suite that has never been enforced grows stale silently.
+    defaults:
+      run:
+        working-directory: Frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm run test:unit
 
   frontend-build:
     name: Frontend — build

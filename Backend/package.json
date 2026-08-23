@@ -46,7 +46,8 @@
     "qa:seed": "node qa/seed-e2e.mjs",
     "qa:api": "node qa/run.mjs",
     "qa:socket": "node qa/socket.mjs",
-    "qa": "npm run qa:api && npm run qa:socket"
+    "qa": "npm run qa:api && npm run qa:socket",
+    "test:ci": "jest --config jest.config.cjs --ci --testPathIgnorePatterns 'src/tests/battle.test.ts'"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
