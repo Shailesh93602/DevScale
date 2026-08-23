@@ -1,54 +1,19 @@
-import Link from 'next/link';
+import { Metadata } from 'next';
+import { ComingSoon } from '@/components/ui/coming-soon';
 
-const MastermindForge = () => (
-  <div>
-    <h1>Mastermind Forge</h1>
-    <ul>
-      <li>
-        <Link href="/mastermind-forge/interview-presentation-training">
-          Interview & Presentation Training
-        </Link>
-      </li>
-      <li>
-        <Link href="/mastermind-forge/resume-building">Resume Building</Link>
-      </li>
-      <li>
-        <Link href="/mastermind-forge/projects-provision">
-          Projects Provision
-        </Link>
-      </li>
-      <li>
-        <Link href="/mastermind-forge/aptitude-and-reasoning-training">
-          Aptitude & Reasoning Training
-        </Link>
-      </li>
-      <li>
-        <Link href="/mastermind-forge/companies-names-list">
-          Companies Names List
-        </Link>
-      </li>
-      <li>
-        <Link href="/mastermind-forge/internship-provision">
-          Internship Provision
-        </Link>
-      </li>
-      <li>
-        <Link href="/mastermind-forge/can-work-in-our-company">
-          Can Work in Our Company
-        </Link>
-      </li>
-      <li>
-        <Link href="/mastermind-forge/one-on-one-sessions">
-          One-on-One Sessions
-        </Link>
-      </li>
-      <li>
-        <Link href="/mastermind-forge/limited-features-access">
-          Limited Features Access
-        </Link>
-      </li>
-    </ul>
-  </div>
-);
+export const metadata: Metadata = {
+  title: 'Mastermind Forge',
+  description:
+    'Interview prep, resume building, aptitude training, mentorship, and more — coming soon.',
+};
 
-export default MastermindForge;
+// None of the sub-routes exist yet — this page previously linked to 9 dead
+// 404s. Show an honest Coming Soon until those features are built.
+export default function MastermindForgePage() {
+  return (
+    <ComingSoon
+      title="Mastermind Forge"
+      description="Interview & presentation training, resume building, aptitude & reasoning prep, mentorship, and more are on the way. Check back soon."
+    />
+  );
+}

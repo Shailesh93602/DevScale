@@ -45,8 +45,10 @@ const MyArticles = () => {
     router.push(`/edit-article/${id}`);
   };
 
-  const handleViewComments = (id: string) => {
-    router.push(`/viewComments/${id}`);
+  // There is no /viewComments route — send the author to the article's own
+  // page (which is where the article + its discussion live).
+  const handleViewArticle = (id: string) => {
+    router.push(`/articles/${id}`);
   };
 
   if (isLoading) {
@@ -110,11 +112,11 @@ const MyArticles = () => {
                         Edit
                       </Button>
                       <Button
-                        onClick={() => handleViewComments(article.id)}
+                        onClick={() => handleViewArticle(article.id)}
                         variant="ghost"
                         size="sm"
                       >
-                        View Comments
+                        View Article
                       </Button>
                     </div>
                   </td>
