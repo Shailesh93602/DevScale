@@ -42,6 +42,18 @@ describe('ContentEmbeddingRepository', () => {
     expect(mockQueryRaw).toHaveBeenCalledTimes(1);
   });
 
+  it('findSimilarToContent queries by the seed item and returns nearest rows', async () => {
+    mockQueryRaw.mockResolvedValue([{ content_id: 'x', distance: 0.3 }]);
+    const rows = await repo.findSimilarToContent({
+      contentType: 'challenge',
+      contentId: 'seed-1',
+      limit: 3,
+      excludeContentIds: ['seed-1', 'done-1'],
+    });
+    expect(rows).toEqual([{ content_id: 'x', distance: 0.3 }]);
+    expect(mockQueryRaw).toHaveBeenCalledTimes(1);
+  });
+
   it('getStoredHash returns the hash when present, null otherwise', async () => {
     mockQueryRaw.mockResolvedValueOnce([{ content_hash: 'abc' }]);
     expect(await repo.getStoredHash('challenge', 'c1')).toBe('abc');
