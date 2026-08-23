@@ -110,29 +110,45 @@ jobs:
     #
     # 143 backend tests existed and NONE of them ran in CI. The pipeline was
     # audit + lint + typecheck + build only, so a change could break every
-    # assertion in the repo and still merge green. This job closes that.
+    # assertion in the repo and still merge green.
     #
-    # It excludes src/tests/battle.test.ts deliberately, and the reason is not
-    # "it is slow" (though it is — 220s of the ~230s total). That suite talks to
-    # a REAL Upstash Redis and a REAL database, neither of which exists in CI,
-    # and it is measurably flaky as a result: run locally three times it failed
-    # twice with 2 failures and passed once, with no code change in between.
+    # This job now runs ALL of them, battle.test.ts included, against the
+    # postgres service below. That suite was previously excluded as "flaky" —
+    # and it was, but not inherently: its DATABASE_URL resolved to REMOTE
+    # production Supabase, so every query was a network round-trip. It took 220
+    # of the run's ~230 seconds and failed intermittently on latency.
     #
-    # Wiring a flaky suite into a required check trains people to re-run CI
-    # until it goes green, which destroys the value of every other check in the
-    # file. The remaining 109 tests are hermetic — verified stable across three
-    # consecutive local runs — so those are the ones that gate.
+    # Against a local database the same 34 tests pass in seconds. The flakiness
+    # was the network, not the assertions, so excluding the suite would have
+    # been treating a symptom.
     #
-    # Making battle.test.ts runnable in CI (a postgres service container and a
-    # Redis service container, or mocking both) is worth doing separately.
+    # The image is pgvector/pgvector rather than plain postgres because the
+    # Spine B migration does CREATE EXTENSION vector, which stock postgres does
+    # not ship.
     defaults:
       run:
         working-directory: Backend
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          # NOT the default `postgres`: production Supabase's database is also
+          # named that, so the test-database guard refuses it on purpose.
+          POSTGRES_DB: eduscale_test
+        ports:
+          - 5432:5432
+        # Without the health check the job races the container and the first
+        # migration fails on connection refused.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     env:
-      # Stub URLs so `prisma generate` can read the datasource. The tests that
-      # run here mock their data access; no database is contacted.
-      DATABASE_URL: postgresql://user:pass@localhost:5432/db?schema=public
-      DIRECT_URL: postgresql://user:pass@localhost:5432/db?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/eduscale_test
+      DIRECT_URL: postgresql://postgres:postgres@localhost:5432/eduscale_test
       # supabaseClient.ts calls createClient() at MODULE level, so importing
       # anything that transitively reaches it throws "supabaseUrl is required"
       # without these — even though the tests then mock every call.
@@ -164,8 +180,12 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
-      - name: Unit tests (hermetic suites)
-        run: npm run test:ci
+      # Real schema, so battle.test.ts can create and delete real rows.
+      - name: Apply migrations to the service container
+        run: npx prisma migrate deploy
+
+      - name: Unit tests
+        run: npm test
 
   backend-build:
     name: Backend — build
