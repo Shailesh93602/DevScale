@@ -28,6 +28,7 @@ import { AuthRoutes } from './authRoutes.js';
 import { StatsRoutes } from './statsRoutes.js';
 import { SubscriptionRoutes } from './subscriptionRoutes.js';
 import { CodeReviewRoutes } from './codeReviewRoutes.js';
+import { RatingRoutes } from './ratingRoutes.js';
 
 export class AppRoutes {
   private readonly router: Router;
@@ -77,6 +78,7 @@ export class AppRoutes {
     this.router.use('/stats', new StatsRoutes().getRouter());
     this.router.use('/billing', new SubscriptionRoutes().getRouter());
     this.router.use('/code-reviews', new CodeReviewRoutes().getRouter());
+    this.router.use('/ratings', new RatingRoutes().getRouter());
   }
 
   public getRouter(): Router {
