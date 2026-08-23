@@ -1532,6 +1532,24 @@ model CodeReview {
   @@index([author_id, source])
 }
 
+/// Semantic embeddings for platform content (Spine B). `embedding` is a pgvector
+/// column — Unsupported by the Prisma client, so writes + similarity queries use
+/// raw SQL (see contentEmbeddingRepository). Keep vector(768) in sync with
+/// EMBEDDING_DIMENSIONS. One row per (content_type, content_id).
+model ContentEmbedding {
+  id           String                       @id @default(uuid())
+  content_type String
+  content_id   String
+  content_hash String
+  embedding    Unsupported("vector(768)")
+  model        String
+  created_at   DateTime                     @default(now())
+  updated_at   DateTime                     @updatedAt
+
+  @@unique([content_type, content_id])
+  @@index([content_type])
+}
+
 model ProjectCollaboration {
   id           String    @id @default(uuid())
   project_id   String

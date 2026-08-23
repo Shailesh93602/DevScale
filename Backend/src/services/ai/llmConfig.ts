@@ -43,7 +43,8 @@ export const generationConfig = {
 
 let client: GoogleGenerativeAI | null = null;
 
-function getClient(): GoogleGenerativeAI {
+/** Shared lazy Gemini client — reused by the LLM layer AND the embeddings layer. */
+export function getGenAIClient(): GoogleGenerativeAI {
   if (!env.GEMINI_API_KEY) {
     throw new Error('GEMINI_API_KEY is not set — AI features are disabled.');
   }
@@ -62,7 +63,7 @@ export async function rawGenerate(
   modelName: string,
   prompt: string
 ): Promise<string> {
-  const model = getClient().getGenerativeModel({
+  const model = getGenAIClient().getGenerativeModel({
     model: modelName,
     generationConfig,
   });
