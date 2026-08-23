@@ -193,7 +193,10 @@ type ResponseType =
   | 'RATING_FETCHED'
   | 'RATING_LEADERBOARD_FETCHED'
   | 'RECOMMENDATIONS_FETCHED'
-  | 'CONTENT_REINDEXED';
+  | 'CONTENT_REINDEXED'
+  | 'MATCHMAKING_JOINED'
+  | 'MATCHMAKING_LEFT'
+  | 'MATCHMAKING_STATUS_FETCHED';
 
 interface ResponseConfig {
   status: number;
@@ -1137,6 +1140,21 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Content reindexed successfully',
+  },
+  MATCHMAKING_JOINED: {
+    status: 200,
+    success: true,
+    message: 'Joined matchmaking queue',
+  },
+  MATCHMAKING_LEFT: {
+    status: 200,
+    success: true,
+    message: 'Left matchmaking queue',
+  },
+  MATCHMAKING_STATUS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Matchmaking status retrieved successfully',
   },
   BATTLE_QUESTIONS_ADDED: {
     status: 201,
