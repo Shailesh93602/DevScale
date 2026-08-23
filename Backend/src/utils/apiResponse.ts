@@ -196,7 +196,9 @@ type ResponseType =
   | 'CONTENT_REINDEXED'
   | 'MATCHMAKING_JOINED'
   | 'MATCHMAKING_LEFT'
-  | 'MATCHMAKING_STATUS_FETCHED';
+  | 'MATCHMAKING_STATUS_FETCHED'
+  | 'TUTOR_ANSWERED'
+  | 'TUTOR_HINT_PROVIDED';
 
 interface ResponseConfig {
   status: number;
@@ -1155,6 +1157,16 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Matchmaking status retrieved successfully',
+  },
+  TUTOR_ANSWERED: {
+    status: 200,
+    success: true,
+    message: 'Tutor answer generated successfully',
+  },
+  TUTOR_HINT_PROVIDED: {
+    status: 200,
+    success: true,
+    message: 'Tutor hint generated successfully',
   },
   BATTLE_QUESTIONS_ADDED: {
     status: 201,

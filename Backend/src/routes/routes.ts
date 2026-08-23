@@ -31,6 +31,7 @@ import { CodeReviewRoutes } from './codeReviewRoutes.js';
 import { RatingRoutes } from './ratingRoutes.js';
 import { RecommendationRoutes } from './recommendationRoutes.js';
 import { MatchmakingRoutes } from './matchmakingRoutes.js';
+import { TutorRoutes } from './tutorRoutes.js';
 
 export class AppRoutes {
   private readonly router: Router;
@@ -83,6 +84,7 @@ export class AppRoutes {
     this.router.use('/ratings', new RatingRoutes().getRouter());
     this.router.use('/recommendations', new RecommendationRoutes().getRouter());
     this.router.use('/matchmaking', new MatchmakingRoutes().getRouter());
+    this.router.use('/tutor', new TutorRoutes().getRouter());
   }
 
   public getRouter(): Router {
