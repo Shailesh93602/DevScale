@@ -1520,6 +1520,14 @@ model CodeReview {
   author        User     @relation("CodeAuthor", fields: [author_id], references: [id])
   reviewer      User?    @relation("CodeReviewer", fields: [reviewer_id], references: [id])
 
+  // The GUARANTEE that one submission gets one AI review, not the findFirst in
+  // the repository — that is only a fast path. Without this, two concurrent
+  // requests both miss the read, both call the LLM (a real paid call), and both
+  // insert.
+  //
+  // Postgres treats each NULL as distinct, so human peer reviews
+  // (submission_id = null) are unaffected: an author can still have many.
+  @@unique([submission_id, source])
   @@index([submission_id])
   @@index([author_id, source])
 }
