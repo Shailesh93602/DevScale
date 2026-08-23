@@ -35,6 +35,16 @@ import {
   calculatePoints,
 } from '../repositories/battleRepository';
 import prisma from '../lib/prisma';
+import {
+  assertConnectedToTestDatabase,
+  assertTestDatabaseUrl,
+} from './helpers/assertTestDatabase.js';
+
+// This suite CREATES and DELETES users, topics and battles. Backend/.env points
+// DATABASE_URL at production Supabase, so without this guard `npm test` writes
+// to production. It cleaned up after itself and nothing was harmed — but that
+// was the teardown being careful, not anything stopping the connection.
+assertTestDatabaseUrl(process.env.DATABASE_URL);
 
 // Remote Supabase DB can be slow — allow 30 s per test/hook
 jest.setTimeout(30_000);
@@ -51,6 +61,9 @@ const suffix = Date.now();
 
 beforeAll(async () => {
   await prisma.$connect();
+  // The URL was validated above; this asks the open connection where it really
+  // landed, because a string check cannot know that.
+  await assertConnectedToTestDatabase(prisma);
 
   const [user1, user2, topic] = await Promise.all([
     prisma.user.create({
