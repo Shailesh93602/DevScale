@@ -187,7 +187,9 @@ type ResponseType =
   | 'BATTLE_GLOBAL_STATS_FETCHED'
   | 'QUESTION_POOL_FETCHED'
   | 'QUESTION_POOL_EMPTY'
-  | 'BATTLE_MY_RESULTS_FETCHED';
+  | 'BATTLE_MY_RESULTS_FETCHED'
+  | 'CODE_REVIEW_CREATED'
+  | 'CODE_REVIEW_FETCHED';
 
 interface ResponseConfig {
   status: number;
@@ -1101,6 +1103,16 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Your battle results retrieved successfully',
+  },
+  CODE_REVIEW_CREATED: {
+    status: 201,
+    success: true,
+    message: 'AI code review generated successfully',
+  },
+  CODE_REVIEW_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'AI code review retrieved successfully',
   },
   BATTLE_QUESTIONS_ADDED: {
     status: 201,

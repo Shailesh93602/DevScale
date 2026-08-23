@@ -1499,16 +1499,29 @@ model HardwareKit {
 }
 
 model CodeReview {
-  id          String           @id @default(uuid())
-  code        String
-  language    String
-  author_id   String
-  reviewer_id String
-  feedback    String
-  status      String @default("pending")
-  created_at  DateTime         @default(now())
-  author      User             @relation("CodeAuthor", fields: [author_id], references: [id])
-  reviewer    User             @relation("CodeReviewer", fields: [reviewer_id], references: [id])
+  id            String   @id @default(uuid())
+  code          String
+  language      String
+  author_id     String
+  // Nullable: AI reviews have no human reviewer (source = "ai").
+  reviewer_id   String?
+  feedback      String
+  status        String   @default("pending")
+  // "human" | "ai" — distinguishes AI Code Review rows from peer reviews.
+  source        String   @default("human")
+  // AI-review fields (null for human reviews). `feedback` holds the full
+  // structured review JSON; these scalars are denormalized for querying.
+  score         Int?
+  summary       String?
+  model         String?
+  submission_id String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  author        User     @relation("CodeAuthor", fields: [author_id], references: [id])
+  reviewer      User?    @relation("CodeReviewer", fields: [reviewer_id], references: [id])
+
+  @@index([submission_id])
+  @@index([author_id, source])
 }
 
 model ProjectCollaboration {

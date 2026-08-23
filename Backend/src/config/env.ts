@@ -52,6 +52,11 @@ const envSchema = z.object({
   SMTP_SECURE: z.string().optional(),
   COMPILER_CLIENT_SECRET: z.string().optional(),
   COMPILER_CLIENT_ID: z.string().optional(),
+
+  // ── AI / LLM (Gemini) — optional; AI Code Review is disabled when unset ─────
+  GEMINI_API_KEY: z.string().optional().or(z.literal('')),
+  // CSV override for the model fallback chain (best → most-quota → lightest).
+  GEMINI_MODELS: z.string().optional().or(z.literal('')),
   ACCESS_TOKEN_SECRET: z.string().optional(),
   RESET_TOKEN_SECRET: z.string().optional(),
   JWT_SECRET: z.string().optional(),
@@ -110,6 +115,8 @@ function validateEnv() {
       );
     if (!env.STRIPE_SECRET_KEY)
       productionWarnings.push('STRIPE_SECRET_KEY (billing disabled)');
+    if (!env.GEMINI_API_KEY)
+      productionWarnings.push('GEMINI_API_KEY (AI code review disabled)');
 
     if (productionWarnings.length > 0) {
       process.stderr.write(
