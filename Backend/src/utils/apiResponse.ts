@@ -191,7 +191,9 @@ type ResponseType =
   | 'CODE_REVIEW_CREATED'
   | 'CODE_REVIEW_FETCHED'
   | 'RATING_FETCHED'
-  | 'RATING_LEADERBOARD_FETCHED';
+  | 'RATING_LEADERBOARD_FETCHED'
+  | 'RECOMMENDATIONS_FETCHED'
+  | 'CONTENT_REINDEXED';
 
 interface ResponseConfig {
   status: number;
@@ -1125,6 +1127,16 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'Rating leaderboard retrieved successfully',
+  },
+  RECOMMENDATIONS_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Recommendations retrieved successfully',
+  },
+  CONTENT_REINDEXED: {
+    status: 200,
+    success: true,
+    message: 'Content reindexed successfully',
   },
   BATTLE_QUESTIONS_ADDED: {
     status: 201,
