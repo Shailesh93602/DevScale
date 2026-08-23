@@ -37,6 +37,10 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useChallengeSubmit } from '@/hooks/useChallengeSubmit';
+import { useCodeReview, type CodeReviewResult } from '@/hooks/useCodeReview';
+import { AICodeReviewPanel } from '@/app/coding-challenges/components/AICodeReviewPanel';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 function ChallengeSkeleton() {
   return (
@@ -137,6 +141,40 @@ export default function CodingChallenge({ id }: { id: string }) {
 
   const [runCode] = useAxiosPost<ITestResult[]>('/run-code');
   const [getChallenge] = useAxiosGet<IChallenge>(`/challenges/${id}`);
+
+  const { submitChallenge, isSubmitting } = useChallengeSubmit();
+  const { requestReview, isReviewing } = useCodeReview();
+  const [review, setReview] = useState<CodeReviewResult | null>(null);
+
+  const handleSubmit = async () => {
+    setReview(null);
+    try {
+      const submission = await submitChallenge(id, userCode[language], language);
+      const accepted = submission.status === 'accepted';
+      toast[accepted ? 'success' : 'error'](
+        accepted ? 'Accepted' : 'Submitted — some tests failed',
+        { position: 'bottom-right' },
+      );
+      // Surface the AI review next to the submission.
+      setActiveTab('solutions');
+      try {
+        const result = await requestReview(submission.id);
+        setReview(result);
+      } catch (reviewError) {
+        // AI review is best-effort (e.g. not configured yet → 503). The
+        // submission still succeeded; don't block on the review.
+        logger.error('AI review failed:', reviewError);
+        toast.info('AI review is unavailable right now.', {
+          position: 'bottom-right',
+        });
+      }
+    } catch (error) {
+      logger.error('Error submitting challenge:', error);
+      toast.error('Submission failed. Please try again.', {
+        position: 'bottom-right',
+      });
+    }
+  };
 
   const handleRunCode = async () => {
     setIsRunning(true);
@@ -366,10 +404,13 @@ export default function CodingChallenge({ id }: { id: string }) {
           <Button
             variant="default"
             className="hover:bg-primary/90 h-9 gap-2 bg-primary px-6 font-semibold text-white"
-            disabled={isRunning}
+            onClick={handleSubmit}
+            disabled={isRunning || isSubmitting || isReviewing}
           >
-            <CheckCircle2 className="h-4 w-4" />
-            Submit
+            <CheckCircle2
+              className={cn('h-4 w-4', isSubmitting && 'animate-pulse')}
+            />
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </Button>
         </div>
       </div>
@@ -567,10 +608,21 @@ export default function CodingChallenge({ id }: { id: string }) {
                 value="solutions"
                 className="m-0 flex-grow overflow-hidden p-0"
               >
-                <div className="flex h-32 flex-col items-center justify-center text-muted-foreground">
-                  <Code2 className="mb-2 h-8 w-8 opacity-20" />
-                  <p>Your previous submissions will appear here.</p>
-                </div>
+                <ScrollArea className="h-full">
+                  {isReviewing ? (
+                    <div className="flex h-32 flex-col items-center justify-center gap-2 text-muted-foreground">
+                      <LoadingSpinner />
+                      <p>Generating AI review…</p>
+                    </div>
+                  ) : review ? (
+                    <AICodeReviewPanel review={review.review} />
+                  ) : (
+                    <div className="flex h-32 flex-col items-center justify-center text-muted-foreground">
+                      <Code2 className="mb-2 h-8 w-8 opacity-20" />
+                      <p>Submit your solution to get an AI code review.</p>
+                    </div>
+                  )}
+                </ScrollArea>
               </TabsContent>
             </Tabs>
           </div>
