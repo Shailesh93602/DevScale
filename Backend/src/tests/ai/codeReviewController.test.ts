@@ -30,11 +30,17 @@ jest.mock('../../lib/prisma', () => ({
 
 const mockFind = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 const mockCreate = jest.fn<(...args: unknown[]) => Promise<unknown>>();
+const mockClaim = jest.fn<(...args: unknown[]) => Promise<unknown>>();
+const mockComplete = jest.fn<(...args: unknown[]) => Promise<unknown>>();
+const mockRelease = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 jest.mock('../../repositories/codeReviewRepository', () => ({
   __esModule: true,
   CodeReviewRepository: jest.fn().mockImplementation(() => ({
     findAiReviewBySubmission: (...a: unknown[]) => mockFind(...a),
     createAiReview: (...a: unknown[]) => mockCreate(...a),
+    claimForGeneration: (...a: unknown[]) => mockClaim(...a),
+    completeClaim: (...a: unknown[]) => mockComplete(...a),
+    releaseClaim: (...a: unknown[]) => mockRelease(...a),
   })),
 }));
 
@@ -98,6 +104,9 @@ async function invoke(user: { id: string } | undefined) {
   await new Promise((r) => setImmediate(r));
   await new Promise((r) => setImmediate(r));
   await new Promise((r) => setImmediate(r));
+  // Returned so a test can assert the ERROR path: catchAsync does not reject,
+  // it forwards to next().
+  return next as unknown as jest.Mock;
 }
 
 beforeEach(() => {
@@ -105,6 +114,9 @@ beforeEach(() => {
   mockFindUnique.mockReset();
   mockFind.mockReset();
   mockCreate.mockReset();
+  mockClaim.mockReset();
+  mockComplete.mockReset();
+  mockRelease.mockReset();
   mockReview.mockReset();
 });
 
@@ -139,11 +151,13 @@ describe('CodeReviewController.reviewChallengeSubmission', () => {
 
   it('is idempotent — returns the existing review without re-calling the LLM', async () => {
     mockFindUnique.mockResolvedValue(ownedSubmission);
-    mockFind.mockResolvedValue({ id: 'cr1', feedback: JSON.stringify(review) });
+    mockClaim.mockResolvedValue({
+      kind: 'already-complete',
+      review: { id: 'cr1', feedback: JSON.stringify(review) },
+    });
     await invoke({ id: 'u1' });
 
     expect(mockReview).not.toHaveBeenCalled();
-    expect(mockCreate).not.toHaveBeenCalled();
     expect(mockSendResponse).toHaveBeenCalledWith(
       expect.anything(),
       'CODE_REVIEW_FETCHED',
@@ -153,23 +167,52 @@ describe('CodeReviewController.reviewChallengeSubmission', () => {
 
   it('generates and persists a new review on the happy path', async () => {
     mockFindUnique.mockResolvedValue(ownedSubmission);
-    mockFind.mockResolvedValue(null);
+    mockClaim.mockResolvedValue({ kind: 'claimed', id: 'cr2' });
     mockReview.mockResolvedValue(review);
-    mockCreate.mockResolvedValue({ id: 'cr2' });
+    mockComplete.mockResolvedValue({ id: 'cr2' });
     await invoke({ id: 'u1' });
 
     expect(mockReview).toHaveBeenCalledTimes(1);
-    expect(mockCreate).toHaveBeenCalledWith(
-      expect.objectContaining({
-        authorId: 'u1',
-        submissionId: 's1',
-        review,
-      })
-    );
+    expect(mockComplete).toHaveBeenCalledWith('cr2', review);
     expect(mockSendResponse).toHaveBeenCalledWith(
       expect.anything(),
       'CODE_REVIEW_CREATED',
       { data: { id: 'cr2', review } }
     );
+  });
+
+  // THE POINT OF THE REORDERING. Previously the loser of a race called the LLM
+  // and threw the result away — a real paid Gemini call per double-click.
+  it('does NOT call the LLM when another request holds the claim', async () => {
+    mockFindUnique.mockResolvedValue(ownedSubmission);
+    mockClaim.mockResolvedValue({ kind: 'in-progress' });
+    await invoke({ id: 'u1' });
+
+    expect(mockReview).not.toHaveBeenCalled();
+    expect(mockComplete).not.toHaveBeenCalled();
+    expect(mockSendResponse).toHaveBeenCalledWith(
+      expect.anything(),
+      'CODE_REVIEW_IN_PROGRESS'
+    );
+  });
+
+  // Without the release, a failed generation leaves a `pending` row and the
+  // submission is unreviewable until the claim goes stale — for an error the
+  // user could retry immediately.
+  it('releases the claim when generation fails, and rethrows', async () => {
+    mockFindUnique.mockResolvedValue(ownedSubmission);
+    mockClaim.mockResolvedValue({ kind: 'claimed', id: 'cr3' });
+    mockReview.mockRejectedValue(new Error('gemini exploded'));
+    mockRelease.mockResolvedValue(undefined);
+
+    const next = await invoke({ id: 'u1' });
+
+    // catchAsync forwards to next() rather than rejecting, so the error is
+    // asserted there.
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'gemini exploded' })
+    );
+    expect(mockRelease).toHaveBeenCalledWith('cr3');
+    expect(mockComplete).not.toHaveBeenCalled();
   });
 });

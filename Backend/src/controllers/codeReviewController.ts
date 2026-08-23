@@ -42,33 +42,55 @@ export default class CodeReviewController {
         return sendResponse(res, 'FORBIDDEN');
       }
 
-      // Idempotency — return the existing AI review if one was already generated.
-      const existing = await this.repo.findAiReviewBySubmission(submissionId);
-      if (existing) {
-        return sendResponse(res, 'CODE_REVIEW_FETCHED', {
-          data: this.serialize(existing.id, existing.feedback),
-        });
-      }
-
-      const review = await reviewCodeSubmission({
-        code: submission.code,
-        language: submission.language,
-        problemTitle: submission.challenge.title,
-        problemStatement: submission.challenge.description,
-        executionSummary: {
-          status: submission.status,
-          runtimeMs: submission.runtime_ms ?? undefined,
-          memoryKb: submission.memory_used_kb ?? undefined,
-        },
-      });
-
-      const saved = await this.repo.createAiReview({
+      // CLAIM FIRST, THEN GENERATE.
+      //
+      // The obvious ordering — check, generate, insert — makes the loser of a
+      // race pay for a full LLM call and then discard it. Gemini calls cost
+      // real money and this project has ~zero free quota, and the trigger is a
+      // double-click on a slow button.
+      //
+      // Claiming is an INSERT, so the unique index on (submission_id, source)
+      // arbitrates and there is no read-then-write window to lose.
+      const claim = await this.repo.claimForGeneration({
         authorId: userId,
         submissionId,
         code: submission.code,
         language: submission.language,
-        review,
       });
+
+      if (claim.kind === 'already-complete') {
+        return sendResponse(res, 'CODE_REVIEW_FETCHED', {
+          data: this.serialize(claim.review.id, claim.review.feedback),
+        });
+      }
+
+      if (claim.kind === 'in-progress') {
+        // Someone else is generating. Say so rather than starting a second
+        // generation or blocking this request until theirs finishes.
+        return sendResponse(res, 'CODE_REVIEW_IN_PROGRESS');
+      }
+
+      let review;
+      try {
+        review = await reviewCodeSubmission({
+          code: submission.code,
+          language: submission.language,
+          problemTitle: submission.challenge.title,
+          problemStatement: submission.challenge.description,
+          executionSummary: {
+            status: submission.status,
+            runtimeMs: submission.runtime_ms ?? undefined,
+            memoryKb: submission.memory_used_kb ?? undefined,
+          },
+        });
+      } catch (error) {
+        // Release, or this submission is unreviewable until the claim goes
+        // stale — a bad outcome for an error the user could retry immediately.
+        await this.repo.releaseClaim(claim.id);
+        throw error;
+      }
+
+      const saved = await this.repo.completeClaim(claim.id, review);
 
       return sendResponse(res, 'CODE_REVIEW_CREATED', {
         data: this.serialize(saved.id, review),

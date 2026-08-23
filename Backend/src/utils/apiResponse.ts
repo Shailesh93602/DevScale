@@ -190,6 +190,7 @@ type ResponseType =
   | 'BATTLE_MY_RESULTS_FETCHED'
   | 'CODE_REVIEW_CREATED'
   | 'CODE_REVIEW_FETCHED'
+  | 'CODE_REVIEW_IN_PROGRESS'
   | 'RATING_FETCHED'
   | 'RATING_LEADERBOARD_FETCHED'
   | 'RECOMMENDATIONS_FETCHED'
@@ -1122,6 +1123,13 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'AI code review retrieved successfully',
+  },
+  CODE_REVIEW_IN_PROGRESS: {
+    // 202: accepted, not finished. The client should retry shortly rather than
+    // treat this as an error.
+    status: 202,
+    success: true,
+    message: 'AI code review is being generated — retry in a moment',
   },
   RATING_FETCHED: {
     status: 200,
