@@ -189,7 +189,9 @@ type ResponseType =
   | 'QUESTION_POOL_EMPTY'
   | 'BATTLE_MY_RESULTS_FETCHED'
   | 'CODE_REVIEW_CREATED'
-  | 'CODE_REVIEW_FETCHED';
+  | 'CODE_REVIEW_FETCHED'
+  | 'RATING_FETCHED'
+  | 'RATING_LEADERBOARD_FETCHED';
 
 interface ResponseConfig {
   status: number;
@@ -1113,6 +1115,16 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 200,
     success: true,
     message: 'AI code review retrieved successfully',
+  },
+  RATING_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Rating retrieved successfully',
+  },
+  RATING_LEADERBOARD_FETCHED: {
+    status: 200,
+    success: true,
+    message: 'Rating leaderboard retrieved successfully',
   },
   BATTLE_QUESTIONS_ADDED: {
     status: 201,

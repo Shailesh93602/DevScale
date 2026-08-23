@@ -2,8 +2,10 @@ import socketService from './socket';
 import logger from '../utils/logger';
 import prisma from '../lib/prisma';
 import { BattleRepository } from '../repositories/battleRepository';
+import { BattleRatingService } from './rating/battleRatingService';
 
 const battleRepo = new BattleRepository();
+const battleRatingService = new BattleRatingService();
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -246,6 +248,14 @@ class BattleSocketService {
   async endBattle(battleId: string) {
     try {
       const { battle, leaderboard } = await battleRepo.completeBattle(battleId);
+
+      // Update competitive Elo ratings — best-effort, must never block completion.
+      try {
+        await battleRatingService.applyBattleResult(battleId);
+      } catch (ratingErr) {
+        logger.error(`rating update for battle ${battleId}:`, ratingErr);
+      }
+
       socketService.emitToRoom(battleId, 'battle:completed', {
         winner_id: battle.winner_id,
         leaderboard,
