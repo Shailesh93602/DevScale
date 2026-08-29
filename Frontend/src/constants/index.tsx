@@ -255,7 +255,11 @@ export const ctaLinks = {
     href: '/auth/register',
   },
   learnMore: {
-    name: 'Learn More',
+    // Not "Learn More". A link's text is its entire accessible name, and a
+    // page can hold several — "Learn More" tells a screen-reader user
+    // navigating by link list, and a crawler reading anchor text, nothing at
+    // all about the destination.
+    name: 'Learn more about EduScale',
     href: '/about',
   },
   battleZone: {

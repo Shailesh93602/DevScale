@@ -62,7 +62,19 @@ const FeatureCard = ({
         initial={{ translateX: 0 }}
         whileHover={{ translateX: 5 }}
       >
-        <span className="font-medium">Learn more</span>
+        {/*
+          The visible text stays "Learn more" — it is the design, and the card's
+          heading sits directly above it, so a sighted reader has the context.
+          The card's title is appended for everyone who does NOT: a screen-reader
+          user navigating by link list hears only the link text, and several
+          identical "Learn more" links tell them nothing about where any of them
+          go (WCAG 2.4.4, Link Purpose). Lighthouse flags the same thing as an
+          SEO defect, for the same underlying reason — a crawler has no more
+          context than the link text either.
+        */}
+        <span className="font-medium">
+          Learn more<span className="sr-only"> about {title}</span>
+        </span>
         <motion.div
           animate={{ translateX: [0, 5, 0] }}
           transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
