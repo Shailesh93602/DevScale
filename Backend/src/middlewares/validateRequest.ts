@@ -6,7 +6,18 @@ import logger from '../utils/logger';
 type RequestPart = 'body' | 'query' | 'params';
 
 export const validateRequest = (schema: Schema, type: RequestPart = 'body') => {
-  return (req: Request, _res: Response, next: NextFunction) => {
+  // NAMED, not an anonymous arrow.
+  //
+  // Express records each handler's `fn.name` in the router stack, and that is
+  // the only thing a contract test — or a stack trace — has to identify
+  // middleware by. While this returned an anonymous arrow, "does this route
+  // validate its body?" was unanswerable except by reading the source, so a
+  // route silently losing its validation was undetectable by any test.
+  return function validateRequest(
+    req: Request,
+    _res: Response,
+    next: NextFunction
+  ) {
     const { error, value } = schema.validate(req[type], {
       abortEarly: false,
       stripUnknown: true,

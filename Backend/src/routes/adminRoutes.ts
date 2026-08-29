@@ -4,6 +4,15 @@ import {
   authorizeRoles,
 } from '../middlewares/authMiddleware.js';
 
+import { validateRequest } from '../middlewares/validateRequest.js';
+import {
+  configUpdateSchema,
+  customReportSchema,
+  moderationSchema,
+  resourceAllocationSchema,
+  userRoleUpdateSchema,
+} from '../validations/adminValidations.js';
+
 import { BaseRouter } from './BaseRouter.js';
 
 export class AdminRoutes extends BaseRouter {
@@ -31,6 +40,7 @@ export class AdminRoutes extends BaseRouter {
 
     this.router.patch(
       '/users/:userId/role',
+      validateRequest(userRoleUpdateSchema),
       this.adminController.updateUserRole
     );
     this.router.delete('/users/:userId', this.adminController.deleteUser);
@@ -43,11 +53,16 @@ export class AdminRoutes extends BaseRouter {
 
     this.router.post(
       '/moderation/:contentId',
+      validateRequest(moderationSchema),
       this.adminController.moderateContentItem
     );
 
     // System Configuration Routes
-    this.router.patch('/config', this.adminController.setConfig);
+    this.router.patch(
+      '/config',
+      validateRequest(configUpdateSchema),
+      this.adminController.setConfig
+    );
 
     this.router.get(
       '/config/:category',
@@ -57,12 +72,14 @@ export class AdminRoutes extends BaseRouter {
     // Resource Management Routes
     this.router.post(
       '/resources/allocate',
+      validateRequest(resourceAllocationSchema),
       this.adminController.allocateResources
     );
 
     // Analytics and Reporting Routes
     this.router.post(
       '/reports/custom',
+      validateRequest(customReportSchema),
       this.adminController.generateCustomReport
     );
 

@@ -95,7 +95,17 @@ describe('ChallengeIngestService.reindexAll', () => {
 
     const result = await svc.reindexAll();
 
-    expect(result).toEqual({ total: 3, created: 1, updated: 1, skipped: 1 });
+    // `failed` is new: reindexAll now counts a row whose embedding threw
+    // instead of aborting the run. Asserted explicitly as 0 rather than
+    // loosened to toMatchObject — this case has no failures, and a shape
+    // assertion that stops noticing new fields is how a regression hides.
+    expect(result).toEqual({
+      total: 3,
+      created: 1,
+      updated: 1,
+      skipped: 1,
+      failed: 0,
+    });
     expect(mockIngest).toHaveBeenCalledTimes(3);
   });
 });
