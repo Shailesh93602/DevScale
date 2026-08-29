@@ -263,7 +263,20 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
                           }
                           className="bg-primary/10 hover:bg-primary/20 inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-primary transition-colors"
                         >
+                          {/*
+                            The tab's name is appended for screen readers and
+                            crawlers. This link's destination changes with the
+                            active tab, so "Learn more" alone is not merely
+                            vague — it names three different pages depending on
+                            state, and a link list would show three identical
+                            entries. (WCAG 2.4.4; Lighthouse reports the same
+                            thing as `link-text` under SEO.)
+                          */}
                           Learn more
+                          <span className="sr-only">
+                            {' '}
+                            about {tabs[activeTab].name}
+                          </span>
                           <svg
                             className="ml-2 h-4 w-4"
                             viewBox="0 0 20 20"

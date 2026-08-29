@@ -46,3 +46,8 @@ next-env.d.ts
 # Playwright saved auth sessions (contain tokens)
 Frontend/tests/.auth/
 tests/.auth/
+
+# Lighthouse CI run artifacts — regenerated on every run, and the JSON reports
+# are hundreds of KB each. The CI job uploads them as a build artifact on
+# failure, which is where they belong.
+.lighthouseci/
