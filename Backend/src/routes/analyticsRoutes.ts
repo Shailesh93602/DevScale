@@ -20,9 +20,13 @@ export class AnalyticsRoutes {
     this.router.use(authMiddleware);
 
     // User analytics routes
+    // 🔴 Also commented out. `/user/me` below is the route a normal user
+    // wants; this one takes an arbitrary id, so leaving it merely authenticated
+    // let any signed-in user read anyone else's analytics — an IDOR, the same
+    // shape as the one found in /rbac/check-permission.
     this.router.get(
       '/user/:userId',
-      // authorizeRoles('admin', 'instructor'),
+      authorizeRoles('ADMIN', 'MODERATOR'),
       this.analyticsController.getUserAnalytics
     );
 

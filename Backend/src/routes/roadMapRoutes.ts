@@ -104,7 +104,13 @@ export class RoadMapRoutes extends BaseRouter {
     this.router.post(
       '/',
       authMiddleware,
-      // authorizeRoles('admin', 'instructor'),
+      // Was commented out. authMiddleware runs at the router level, so these
+      // were authenticated but not authorised — any signed-in student could
+      // create, edit or reorder a career roadmap. ADMIN/MODERATOR because
+      // INSTRUCTOR has never existed; the seeded roles are ADMIN, MODERATOR
+      // and STUDENT, so 'instructor' gated nothing and implied a role model
+      // the app does not have.
+      authorizeRoles('ADMIN', 'MODERATOR'),
       validateRequest(createRoadmapValidation),
       this.bindRoute(this.roadMapController.createRoadmap)
     );
@@ -119,7 +125,7 @@ export class RoadMapRoutes extends BaseRouter {
     this.router.put(
       '/:id',
       authMiddleware,
-      // authorizeRoles('admin', 'instructor'),
+      authorizeRoles('ADMIN', 'MODERATOR'),
       validateRequest(createRoadmapValidation),
       this.bindRoute(this.roadMapController.updateRoadMap)
     );
@@ -134,7 +140,7 @@ export class RoadMapRoutes extends BaseRouter {
     this.router.patch(
       '/:id/subjects-order',
       authMiddleware,
-      // authorizeRoles('admin', 'instructor'),
+      authorizeRoles('ADMIN', 'MODERATOR'),
       validateRequest(updateSubjectsOrderValidation),
       this.bindRoute(this.roadMapController.updateSubjectsOrder)
     );

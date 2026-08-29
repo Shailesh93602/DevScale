@@ -2,6 +2,8 @@ import { describe, it, expect } from '@jest/globals';
 import type { Router } from 'express';
 
 import { AdminRoutes } from '../../routes/adminRoutes';
+import { ChallengeRoutes } from '../../routes/challengeRoutes';
+import { RoadMapRoutes } from '../../routes/roadMapRoutes';
 import { RBACRoutes } from '../../routes/rbacRoutes';
 
 /**
@@ -94,6 +96,57 @@ const SUITES: Array<{ label: string; build: () => Router }> = [
   { label: 'rbacRoutes', build: () => new RBACRoutes().getRouter() },
 ];
 
+/**
+ * Content routers, checked for their MUTATIONS only.
+ *
+ * These are not admin routers — their GETs are public content and must stay
+ * open. But creating or editing a challenge or a roadmap is privileged, and
+ * every one of those guards was found **commented out**:
+ *
+ *     this.router.post('/',
+ *       // authorizeRoles('admin', 'instructor'),
+ *       ...
+ *
+ * `authMiddleware` runs at the router level, so they were authenticated but not
+ * authorised. Any signed-in student could create a challenge, or PATCH one —
+ * and a challenge body includes its test cases, so that is editing the expected
+ * outputs of a problem other people are graded against.
+ *
+ * The original guards named `'instructor'`, a role that has never existed
+ * (seeded roles are ADMIN, MODERATOR, STUDENT), so restoring them verbatim
+ * would have implied a role model the app does not have.
+ *
+ * Splitting reads from writes is the point: a blanket "every route is gated"
+ * rule is wrong here and would have to be exempted away, which is how a rule
+ * stops being enforced.
+ */
+const CONTENT_SUITES: Array<{ label: string; build: () => Router }> = [
+  { label: 'challengeRoutes', build: () => new ChallengeRoutes().getRouter() },
+  { label: 'roadMapRoutes', build: () => new RoadMapRoutes().getRouter() },
+];
+
+/**
+ * Acting on your OWN account is not privileged — it is the point of the app.
+ *
+ * Submitting a solution, liking, bookmarking, enrolling: all of these write,
+ * and all of them write something that belongs to the caller. Requiring a role
+ * for them would break the product.
+ *
+ * The list is explicit rather than pattern-matched so that adding one is a
+ * decision somebody writes down. "It looked self-service" is how a genuinely
+ * privileged mutation slips through.
+ */
+const SELF_SERVICE = new Set([
+  'POST /:challengeId/submit',
+  'POST /:id/like',
+  'POST /:id/bookmark',
+  'POST /enroll',
+  'POST /:id/comments',
+  'POST /:roadmapId/comments/:commentId/like',
+  'POST /:id/enroll',
+  'POST /:id/progress',
+]);
+
 describe.each(SUITES)('$label', ({ build }) => {
   const router = build();
   const routerMiddleware = routerLevelMiddleware(router);
@@ -144,5 +197,48 @@ describe.each(SUITES)('$label', ({ build }) => {
       .filter((r) => !UNGATED_BY_DESIGN.has(r));
 
     expect(ungatedReads).toEqual([]);
+  });
+});
+
+describe.each(CONTENT_SUITES)('$label — mutations', ({ build }) => {
+  const router = build();
+  const routerMiddleware = routerLevelMiddleware(router);
+  const declared = routes(router);
+
+  it('declares mutating routes at all', () => {
+    // Load-bearing: if introspection stops finding POST/PATCH/DELETE, the
+    // assertion below passes by iterating nothing.
+    const mutations = declared.filter((r) => r.method !== 'GET');
+    expect(mutations.length).toBeGreaterThan(0);
+  });
+
+  it('role-gates every mutation that is not self-service', () => {
+    const ungated = declared
+      .filter((r) => r.method !== 'GET')
+      .filter(
+        (r) =>
+          !isGuarded(r.handlers, routerMiddleware, 'authorizeRolesMiddleware')
+      )
+      .map((r) => `${r.method} ${r.path}`)
+      .filter((r) => !SELF_SERVICE.has(r));
+
+    expect(ungated).toEqual([]);
+  });
+
+  it('authenticates every mutation, even the self-service ones', () => {
+    // MUTATIONS only, deliberately. Unlike the admin routers, these have
+    // genuinely public reads — `GET /` lists roadmaps for signed-out visitors
+    // on purpose ("Public routes — no auth required for listing"), and the
+    // controller reads `req.user?.id` optionally to handle that.
+    //
+    // My first version asserted authentication on EVERY route here and flagged
+    // that public listing. The rule was wrong, not the code. Writing something
+    // still requires knowing who is writing it.
+    const unauthenticated = declared
+      .filter((r) => r.method !== 'GET')
+      .filter((r) => !isGuarded(r.handlers, routerMiddleware, 'authMiddleware'))
+      .map((r) => `${r.method} ${r.path}`);
+
+    expect(unauthenticated).toEqual([]);
   });
 });
