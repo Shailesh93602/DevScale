@@ -1159,6 +1159,13 @@ model AdminAuditLog {
   @@index([admin_id])
   @@index([action])
   @@index([entity])
+  /// Retention prunes on `created_at < cutoff`, and the panel lists newest
+  /// first. Without this both are full scans on a table that only ever grows.
+  @@index([created_at])
+  /// "What did this admin do recently" — the actual question asked of a trail.
+  /// The single-column admin_id index can find the rows but still has to sort
+  /// them; this one returns them already ordered.
+  @@index([admin_id, created_at])
 }
 
 model SecurityAuditLog {
@@ -1176,6 +1183,10 @@ model SecurityAuditLog {
   @@index([type])
   @@index([severity])
   @@index([user_id])
+  /// getSecurityLogs filters a date RANGE and orders by it. Security events are
+  /// kept a year, so this is the largest of the trails and the one where a scan
+  /// hurts most.
+  @@index([created_at])
 }
 
 model ChangeHistory {
@@ -1192,6 +1203,10 @@ model ChangeHistory {
   @@index([entity])
   @@index([entity_id])
   @@index([user_id])
+  /// getChangeHistory always filters entity + entity_id together and orders by
+  /// time. Three separate single-column indexes can be combined, but the result
+  /// still has to be sorted; this composite answers the whole query.
+  @@index([entity, entity_id, created_at])
 }
 
 model AccessLog {
