@@ -13,9 +13,14 @@ export default class LeaderboardController {
   public getLeaderboardEntries = catchAsync(
     async (req: Request, res: Response) => {
       const { user_id, subject_id, limit } = req.query;
+      // Capped. This route does not use paginationMiddleware, so it had no
+      // ceiling of its own: `?limit=99999999` asked for every leaderboard row
+      // in the table.
       const parsedLimit = Number(limit);
       const take =
-        Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : 50;
+        Number.isFinite(parsedLimit) && parsedLimit > 0
+          ? Math.min(parsedLimit, 100)
+          : 50;
       const where: Record<string, string> = {};
 
       if (typeof user_id === 'string' && user_id && user_id !== 'undefined') {
