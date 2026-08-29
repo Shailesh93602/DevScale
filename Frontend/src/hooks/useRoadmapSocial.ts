@@ -17,7 +17,7 @@ export const useRoadmapSocial = () => {
       }
     } catch (error) {
       console.error('Failed to update like status:', error);
-      toast.error('Failed to update like status');
+      toast.error('Unable to save your like. Please try again.');
       throw error;
     }
   };
@@ -32,7 +32,7 @@ export const useRoadmapSocial = () => {
       }
     } catch (error) {
       console.error('Failed to update bookmark status:', error);
-      toast.error('Failed to update bookmark status');
+      toast.error('Unable to save your bookmark. Please try again.');
       throw error;
     }
   };

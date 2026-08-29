@@ -55,11 +55,11 @@ export default function Article({
         setNewNote('');
         globalThis.location.href = '/article-listing';
       } else {
-        toast.error('Failed to save moderation note.');
+        toast.error('Unable to save your note. Please try again.');
       }
     } catch (error) {
       console.error('Error saving moderation note:', error);
-      toast.error('Error saving moderation note.');
+      toast.error('Unable to save your note. Please try again.');
     }
   };
 
@@ -71,11 +71,11 @@ export default function Article({
         setArticle(response?.data as IArticle);
         setModerationNotes((response?.data as IArticle)?.moderationNotes);
       } else {
-        toast.error(response?.message ?? 'Failed to fetch article.');
+        toast.error(response?.message ?? 'Unable to load this article. Please refresh the page.');
       }
     } catch (error) {
       console.error('Error fetching article:', error);
-      toast.error('Error fetching article.');
+      toast.error('Unable to load this article. Please refresh the page.');
     }
   };
 

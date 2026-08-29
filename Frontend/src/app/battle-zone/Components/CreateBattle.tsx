@@ -39,7 +39,7 @@ export default function CreateBattle({
 
   const handleCreate = async () => {
     if (!title || !description || !selectedTopic || !date || !time) {
-      toast.error('Please fill in all required fields');
+      toast.error('Please fill in all the required fields.');
       return;
     }
 

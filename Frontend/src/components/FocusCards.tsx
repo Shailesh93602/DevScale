@@ -44,10 +44,10 @@ export const FocusCards: React.FC<FocusCardsProps> = ({ roadmaps }) => {
       if (response.success) {
         toast.success('Enrolled in roadmap successfully');
       } else {
-        toast.error('Error enrolling in roadmap');
+        toast.error('Unable to enrol you in this roadmap. Please try again.');
       }
     } catch (error: unknown) {
-      toast.error('Error enrolling in roadmap');
+      toast.error('Unable to enrol you in this roadmap. Please try again.');
       console.error((error as { message: string }).message);
     }
   };

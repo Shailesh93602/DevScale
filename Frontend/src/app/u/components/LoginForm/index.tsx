@@ -58,7 +58,7 @@ export default function LoginForm({
           </label>
         </div>
         <a
-          href="/u/forgotPassword"
+          href="/auth/forgot-password"
           className="text-sm text-primary hover:underline"
         >
           Forgot Password?

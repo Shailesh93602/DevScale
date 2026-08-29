@@ -96,8 +96,8 @@ export default function ProfilePage() {
       if (response?.data) {
         dispatch(setUser({ user: response?.data }));
       } else {
-        console.log('Error updating user details');
-        toast.error('Error updating user details');
+        console.log('Unable to save your profile changes. Please try again.');
+        toast.error('Unable to save your profile changes. Please try again.');
         return;
       }
       await getCurrentUser();

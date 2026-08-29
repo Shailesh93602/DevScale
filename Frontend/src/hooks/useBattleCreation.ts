@@ -51,7 +51,7 @@ export const useBattleCreation = () => {
         description:
           error instanceof Error
             ? error.message
-            : 'Failed to create battle. Please try again.',
+            : 'Unable to create the battle. Please try again.',
         variant: 'destructive',
       });
       throw error;

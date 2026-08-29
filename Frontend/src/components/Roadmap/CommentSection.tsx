@@ -80,7 +80,7 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
       }
     } catch (error) {
       console.error('Error posting comment:', error);
-      toast.error('Failed to add comment');
+      toast.error('Unable to post your comment. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

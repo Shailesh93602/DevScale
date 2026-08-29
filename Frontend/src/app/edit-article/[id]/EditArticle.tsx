@@ -38,10 +38,10 @@ export default function EditArticle({ id }: { id: string }) {
         toast.success('Article updated successfully!');
         window.location.href = `/articles/${id}`;
       } else {
-        toast.error('Failed to update article.');
+        toast.error('Unable to save your changes. Please try again.');
       }
     } catch (error) {
-      toast.error('Failed to update article.');
+      toast.error('Unable to save your changes. Please try again.');
       console.error(error);
     } finally {
       dispatch(hideLoader('updating article'));
@@ -56,10 +56,10 @@ export default function EditArticle({ id }: { id: string }) {
       if (response?.data?.success) {
         setContent(response.data.article?.content);
       } else {
-        toast.error(response?.data?.message ?? 'Failed to fetch article.');
+        toast.error(response?.data?.message ?? 'Unable to load this article. Please refresh the page.');
       }
     } catch (error) {
-      toast.error('Failed to fetch article.');
+      toast.error('Unable to load this article. Please refresh the page.');
       console.error(error);
     } finally {
       dispatch(hideLoader('fetching article'));

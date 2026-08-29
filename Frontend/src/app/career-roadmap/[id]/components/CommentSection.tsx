@@ -35,7 +35,7 @@ export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
         }
       } catch (error) {
         console.error('Error fetching comments:', error);
-        toast.error('Failed to load comments');
+        toast.error('Unable to load the comments. Please refresh the page.');
       } finally {
         setIsLoading(false);
       }
@@ -57,7 +57,7 @@ export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
       }
     } catch (error) {
       console.error('Error posting comment:', error);
-      toast.error('Failed to post comment');
+      toast.error('Unable to post your comment. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

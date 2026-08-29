@@ -13,6 +13,8 @@ import { useAxiosGet } from '@/hooks/useAxios';
 import { logger } from '@/lib/logger';
 
 const Page = () => {
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [interviewQuestions, setInterviewQuestions] = useState<
     {
       category: string;
@@ -52,8 +54,11 @@ const Page = () => {
       const response = await getInterviewQuestions();
       dispatch(hideLoader('fetching interview questions'));
       setInterviewQuestions(response.data ?? []);
+      setIsLoading(false);
     } catch (error) {
       logger.error('Error fetching interview questions:', error);
+      setLoadFailed(true);
+      setIsLoading(false);
       dispatch(hideLoader('fetching interview questions'));
     }
   };
@@ -62,12 +67,34 @@ const Page = () => {
     fetchInterviewQuestions();
   }, []);
 
+  // Distinguishes "nothing came back" from "we have not asked yet". Without it
+  // the page rendered its heading over blank space the moment the request
+  // failed, which reads as a broken site rather than a temporary problem — and
+  // that is exactly what it did in production, because the backend read its
+  // data from a file the deployment did not include.
+  const isEmpty = !isLoading && interviewQuestions.length === 0;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-secondary to-accent py-12">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <h1 className="mb-12 text-center text-5xl font-extrabold tracking-tight text-primary">
           Interview Questions
         </h1>
+        {isEmpty && (
+          <div className="mx-auto max-w-xl rounded-xl border border-border bg-card p-10 text-center">
+            <h2 className="mb-3 text-2xl font-semibold text-card-foreground">
+              {loadFailed
+                ? 'Unable to load the questions'
+                : 'No questions yet'}
+            </h2>
+            <p className="text-muted-foreground">
+              {loadFailed
+                ? 'Something went wrong on our side. Please refresh the page — if it keeps happening, it is not you.'
+                : 'Interview questions are being written and will appear here soon.'}
+            </p>
+          </div>
+        )}
+
         {interviewQuestions.map((category) => (
           <div key={category.category} className="mb-12">
             <h2 className="mb-6 text-3xl font-bold text-primary">

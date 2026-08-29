@@ -114,10 +114,10 @@ export default function Resources({ id }: { id: string }) {
           toast.success("Awesome! You're now enrolled ✨");
         }
       } else {
-        toast.error('Failed to enroll. Please try again.');
+        toast.error('Unable to enrol you in this roadmap. Please try again.');
       }
     } catch {
-      toast.error('Failed to enroll. Please try again.');
+      toast.error('Unable to enrol you in this roadmap. Please try again.');
     } finally {
       setIsEnrolling(false);
     }
@@ -136,11 +136,11 @@ export default function Resources({ id }: { id: string }) {
         setSelectedTopic(topics[0] || undefined);
       } else {
         toast.error(
-          response?.message ?? 'Failed to fetch resource. Please try again!',
+          response?.message ?? 'Unable to load this resource. Please refresh the page.',
         );
       }
     } catch (error) {
-      toast.error('Failed to fetch resource. Please try again!');
+      toast.error('Unable to load this resource. Please refresh the page.');
       console.error(error);
     }
   };
@@ -155,12 +155,12 @@ export default function Resources({ id }: { id: string }) {
         if (response.success) {
           toast.info('No article found for this topic');
         } else {
-          toast.error('Failed to fetch article content');
+          toast.error('Unable to load this article. Please refresh the page.');
         }
       }
     } catch (error) {
       setCurrentArticle(null);
-      toast.error('Failed to fetch article content');
+      toast.error('Unable to load this article. Please refresh the page.');
       console.error(error);
     }
   };
@@ -203,10 +203,10 @@ export default function Resources({ id }: { id: string }) {
             : undefined,
         );
       } else {
-        toast.error('Failed to update progress');
+        toast.error('Unable to save your progress. Please try again.');
       }
     } catch {
-      toast.error('Error updating progress');
+      toast.error('Unable to save your progress. Please try again.');
     }
   };
 
@@ -234,7 +234,7 @@ export default function Resources({ id }: { id: string }) {
             setQuiz(null);
           }
         } catch (error) {
-          toast.error('Failed to fetch quiz. Please try again!');
+          toast.error('Unable to load the quiz. Please refresh the page.');
           setQuiz(null);
           console.error(error);
         }
@@ -391,7 +391,7 @@ export default function Resources({ id }: { id: string }) {
   }
 
   if (!resource) {
-    toast.error('Requested resource not found.');
+    toast.error('That resource does not exist. It may have been removed. Please choose another.');
     return;
   }
 

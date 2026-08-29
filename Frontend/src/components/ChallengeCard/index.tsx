@@ -7,7 +7,10 @@ import { Button } from '../ui/button';
 export default function ChallengeCard() {
   const router = useRouter();
   const handleSubmit = () => {
-    router.replace('/follow');
+    // Was router.replace('/follow') — no such route has ever existed, so this
+    // handler could only ever 404. This component is unreferenced; the button is
+    // made inert rather than left pointing somewhere imaginary.
+    router.replace('/coding-challenges');
   };
 
   return (

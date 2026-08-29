@@ -54,7 +54,7 @@ const ResourcesPage = () => {
       setHasMore(newResources.length > 0);
     } catch (error) {
       logger.error('Error fetching resources:', error);
-      toast.error('Error fetching resources. Please try again.');
+      toast.error('Unable to load the resources. Please refresh the page.');
     } finally {
       dispatch(hideLoader('fetching resources'));
       setLoadingMore(false);

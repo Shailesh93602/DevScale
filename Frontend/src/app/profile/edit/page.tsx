@@ -215,7 +215,7 @@ export default function EditProfilePage() {
         }
       } catch (err) {
         logger.error('Error fetching profile:', err);
-        toast.error('Failed to load profile data');
+        toast.error('Unable to load your profile. Please refresh the page.');
       } finally {
         setIsLoading(false);
       }
@@ -311,7 +311,7 @@ export default function EditProfilePage() {
       }
     } catch (err) {
       logger.error('Error in profile update submission:', err);
-      toast.error('An unexpected error occurred');
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

@@ -46,7 +46,7 @@ export const useRoadmapDetail = (careerId: string) => {
         setRoadmap(roadmapData.main_concepts || []);
       }
     } catch {
-      toast.error('Error fetching resources. Please try again');
+      toast.error('Unable to load the resources. Please refresh the page.');
     } finally {
       dispatch(hideLoader('fetching roadmap'));
       setIsLoading(false);
@@ -83,10 +83,10 @@ export const useRoadmapDetail = (careerId: string) => {
           });
         }
       } else {
-        toast.error('Failed to enroll. Please try again.');
+        toast.error('Unable to enrol you in this roadmap. Please try again.');
       }
     } catch {
-      toast.error('Failed to enroll. Please try again.');
+      toast.error('Unable to enrol you in this roadmap. Please try again.');
     } finally {
       setIsEnrolling(false);
     }

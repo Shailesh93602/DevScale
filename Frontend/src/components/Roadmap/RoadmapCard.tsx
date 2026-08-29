@@ -149,7 +149,7 @@ export const RoadmapCard = ({
       onLike?.(roadmap.id);
     } catch (err) {
       console.error('Failed to update like status:', err);
-      toast.error('Failed to update like status');
+      toast.error('Unable to save your like. Please try again.');
       setIsLiked(isLiked);
     } finally {
       setIsLoading(false);
@@ -183,7 +183,7 @@ export const RoadmapCard = ({
       onBookmark?.(roadmap.id);
     } catch (err) {
       console.error('Failed to update bookmark status:', err);
-      toast.error('Failed to update bookmark status');
+      toast.error('Unable to save your bookmark. Please try again.');
       setIsBookmarked(isBookmarked);
     } finally {
       setIsLoading(false);
