@@ -9,6 +9,7 @@ import {
 import { sendResponse } from '../utils/apiResponse';
 import { catchAsync } from '../utils';
 import UserRepository from '../repositories/userRepository';
+import { createAppError } from '../utils/errorHandler.js';
 
 export default class RBACController {
   private readonly rbacRepository: RBACRepository;
@@ -73,11 +74,40 @@ export default class RBACController {
     sendResponse(res, 'ROLE_ASSIGNED', { data: user });
   });
 
+  /**
+   * GET /rbac/check-permission?userId&resource&action
+   *
+   * Deliberately available to any authenticated user — unlike every other
+   * route on this router, which is ADMIN-only — because the UI uses it to
+   * decide what to render for the CURRENT user.
+   *
+   * 🔴 It did not enforce "current". `userId` comes from the query string, so
+   * any signed-in user could ask about anyone else's permissions and map the
+   * authorisation model account by account. The route's own comment said
+   * "their own permissions"; the handler never checked.
+   *
+   * Admins keep the ability to ask about other users — that is a legitimate
+   * part of administering roles, and the rest of this router is already gated
+   * to them.
+   */
   public checkPermission = catchAsync(async (req: Request, res: Response) => {
     const { userId, resource, action } = req.query;
     if (!userId || !resource || !action) {
-      throw new Error('Missing required parameters');
+      // 400, not a bare Error. A thrown Error becomes a 500 whose message is
+      // replaced with "Internal server error" in production, so the caller
+      // learns nothing about a mistake that is entirely theirs to fix.
+      throw createAppError(
+        'userId, resource and action are all required.',
+        400
+      );
     }
+
+    const callerId = req.user?.id;
+    const callerIsAdmin = req.user?.role?.name?.toUpperCase() === 'ADMIN';
+    if (!callerIsAdmin && userId !== callerId) {
+      throw createAppError('You can only check your own permissions.', 403);
+    }
+
     const hasPermission = await this.rbacRepository.checkPermission(
       userId as string,
       resource as string,

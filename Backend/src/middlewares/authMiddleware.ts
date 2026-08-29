@@ -211,7 +211,19 @@ export const optionalAuthMiddleware = async (
 };
 
 export const authorizeRoles = (...allowedRoles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  // NAMED, not anonymous. Two reasons, both practical:
+  //
+  //  1. An anonymous middleware shows up as "<anonymous>" in stack traces and
+  //     in Express's router stack, which is unhelpful exactly when someone is
+  //     working out why a request was rejected.
+  //  2. It makes the guard identifiable by inspection, which is what lets
+  //     tests/security/adminRouteContract assert that every admin route is
+  //     actually gated — rather than trusting that someone remembered.
+  return function authorizeRolesMiddleware(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     if (!req.user) {
       return next(createAppError('Unauthorized - Login required', 401));
     }

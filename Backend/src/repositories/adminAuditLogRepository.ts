@@ -9,6 +9,15 @@ import {
   SecurityLogParams,
 } from '../types/index.js';
 
+/**
+ * Hard ceiling on how many log rows any single read may return.
+ *
+ * A caller can ask for fewer. It cannot ask for more — an audit table is the
+ * one place where "just fetch them all" is guaranteed to get slower forever,
+ * and the caller who does it is usually mid-incident.
+ */
+const MAX_LOG_PAGE = 500;
+
 export default class AdminAuditLogRepository extends BaseRepository<
   AdminAuditLog,
   typeof prisma.adminAuditLog
@@ -77,14 +86,25 @@ export default class AdminAuditLogRepository extends BaseRepository<
     }
   }
 
+  /**
+   * Security events in a date range, newest first.
+   *
+   * BOUNDED. This was an unbounded `findMany` on a table that only ever grows
+   * and is now kept for a year — so the query would eventually load the entire
+   * trail into memory, and the first person to notice would be whoever ran it
+   * during an incident. A cap is not a limitation here: nobody reads ten
+   * thousand audit rows, they page through the recent ones.
+   */
   async getSecurityLogs(
     startDate?: Date,
     endDate?: Date,
     type?: string,
-    severity?: string
+    severity?: string,
+    limit = MAX_LOG_PAGE
   ): Promise<SecurityAuditLog[]> {
     try {
       return await this.prismaClient.securityAuditLog.findMany({
+        take: Math.min(limit, MAX_LOG_PAGE),
         where: {
           created_at: {
             gte: startDate,
@@ -103,12 +123,15 @@ export default class AdminAuditLogRepository extends BaseRepository<
     }
   }
 
+  /** Bounded for the same reason as getSecurityLogs. */
   async getChangeHistory(
     entity: string,
-    entityId: string
+    entityId: string,
+    limit = MAX_LOG_PAGE
   ): Promise<ChangeHistoryParams[]> {
     try {
       const history = await this.prismaClient.changeHistory.findMany({
+        take: Math.min(limit, MAX_LOG_PAGE),
         where: {
           entity,
           entity_id: entityId,
