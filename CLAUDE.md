@@ -12,7 +12,10 @@ Tracking all changes made toward 10M+ user scalability and production readiness.
 - **Cache/Queue:** Redis via ioredis, Bull for background jobs
 - **WebSocket:** Socket.io with `@socket.io/redis-adapter` (multi-server safe as of 2026-03-26)
 - **Auth:** Supabase JWT — verified locally via `SUPABASE_JWT_SIGNING_KEY`; blocklist in Redis
-- **CI/CD:** GitHub Actions → AWS ECR → ECS
+- **CI/CD:** GitHub Actions (lint/typecheck/tests/build); both halves DEPLOY TO VERCEL
+  (`eduscale.vercel.app` + `api-eduscale.vercel.app`). *(This line used to say "AWS ECR → ECS" —
+  aspirational, never true: no Dockerfile or docker step exists anywhere in this repo, and the
+  backend's health endpoint answers from Vercel. Corrected 2026-08-29.)*
 
 ## Required Env Vars
 
