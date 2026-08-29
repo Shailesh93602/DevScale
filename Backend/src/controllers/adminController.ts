@@ -173,7 +173,17 @@ export default class AdminController {
         action: 'GENERATE_REPORT',
         entity: 'REPORT',
         entity_id: String((req.body as { type?: string })?.type ?? 'custom'),
-        details: req.body as Record<string, unknown>,
+        // The metric list and output format, NOT the whole body.
+        //
+        // auditTrail.ts states the rule and this call site was breaking it:
+        // `filters` is a caller-supplied object that can name columns and
+        // values, so dumping the body copied whatever an admin filtered BY —
+        // an email, a name — into a table retained for a year. What a reader
+        // of the trail needs is which report was pulled, and when.
+        details: {
+          metrics: (req.body as { metrics?: string[] })?.metrics,
+          format: (req.body as { format?: string })?.format ?? 'json',
+        },
         ip_address: req.ip,
         user_agent: req.headers['user-agent'],
       },
