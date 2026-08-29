@@ -37,9 +37,18 @@ const SRC = join(process.cwd(), 'src');
  * in the same breath as the fetch it describes.
  */
 const DEVELOPER_LANGUAGE: Array<{ pattern: RegExp; why: string }> = [
-  { pattern: /\bfailed to fetch\b/i, why: '"fetch" is what the code did, not what the user did' },
-  { pattern: /\berror fetching\b/i, why: '"fetching" is implementation vocabulary' },
-  { pattern: /\bfailed to (update|get|set) .*\bstatus\b/i, why: '"status" names an internal field' },
+  {
+    pattern: /\bfailed to fetch\b/i,
+    why: '"fetch" is what the code did, not what the user did',
+  },
+  {
+    pattern: /\berror fetching\b/i,
+    why: '"fetching" is implementation vocabulary',
+  },
+  {
+    pattern: /\bfailed to (update|get|set) .*\bstatus\b/i,
+    why: '"status" names an internal field',
+  },
   {
     // NOT "API key". That is the user-facing name of the thing Google hands
     // them in AI Studio — the label on the button they clicked to get it — so
@@ -52,8 +61,14 @@ const DEVELOPER_LANGUAGE: Array<{ pattern: RegExp; why: string }> = [
     why: 'users do not know or care that there is an API',
   },
   { pattern: /\bendpoint\b/i, why: 'implementation detail' },
-  { pattern: /\b(null|undefined|NaN)\b/, why: 'a value from the code has leaked into the message' },
-  { pattern: /\b[45]\d{2}\b/, why: 'an HTTP status code means nothing to a user' },
+  {
+    pattern: /\b(null|undefined|NaN)\b/,
+    why: 'a value from the code has leaked into the message',
+  },
+  {
+    pattern: /\b[45]\d{2}\b/,
+    why: 'an HTTP status code means nothing to a user',
+  },
   { pattern: /\bexception\b/i, why: 'implementation vocabulary' },
   { pattern: /\bpayload\b/i, why: 'implementation vocabulary' },
 ];
@@ -71,6 +86,47 @@ function sourceFiles(dir: string): string[] {
 
 const TOAST = /toast\.(error|warn|warning)\(\s*['"`]([^'"`]{3,200})['"`]/g;
 
+/**
+ * A fallback string INSIDE a toast call: `toast.error(x.message || 'Fallback')`.
+ *
+ * TOAST above requires the literal to sit immediately after the opening paren,
+ * so it cannot see this shape at all — and this shape is the common one,
+ * because a server message is usually preferred with a default behind it. The
+ * default is what a user actually reads whenever the server sends nothing.
+ *
+ * KNOWN LIMIT, stated rather than papered over: a fallback that takes a
+ * variable hop first —
+ *
+ *     const errorMsg = response.message || 'Failed to execute code';
+ *     toast.error(errorMsg);
+ *
+ * — is still invisible here. I tried matching every `||`/`??` string fallback
+ * in the file to catch it, and the result was unusable: it flagged URLs, route
+ * paths, "anonymous", "Unranked", success toasts, and `throw new Error(...)`
+ * messages that are *correctly* technical because only a developer reads them.
+ * A check with that many false positives gets deleted, and takes the true
+ * positives with it. Narrow and honest beats broad and ignored.
+ */
+const TOAST_FALLBACK =
+  /toast\.(?:error|warn|warning)\([^)]*?(?:\|\||\?\?)\s*['"`]([^'"`]{3,200})['"`]/g;
+
+/** Every user-facing message in a file: literals in a toast, plus fallbacks. */
+function userMessages(src: string): string[] {
+  const found: string[] = [];
+  for (const [pattern, group] of [
+    [TOAST, 2],
+    [TOAST_FALLBACK, 1],
+  ] as const) {
+    pattern.lastIndex = 0;
+    let hit: RegExpExecArray | null;
+    while ((hit = pattern.exec(src)) !== null) {
+      const text = hit[group];
+      if (text) found.push(text);
+    }
+  }
+  return found;
+}
+
 test.describe('user-facing messages', () => {
   test('no toast speaks in developer vocabulary', () => {
     const offences: string[] = [];
@@ -79,10 +135,7 @@ test.describe('user-facing messages', () => {
       const src = readFileSync(file, 'utf8');
       const rel = file.replace(process.cwd() + '/', '');
 
-      TOAST.lastIndex = 0;
-      let m: RegExpExecArray | null;
-      while ((m = TOAST.exec(src)) !== null) {
-        const message = m[2];
+      for (const message of userMessages(src)) {
         for (const { pattern, why } of DEVELOPER_LANGUAGE) {
           if (pattern.test(message)) {
             offences.push(`"${message}" — ${why}  (${rel})`);
@@ -95,7 +148,7 @@ test.describe('user-facing messages', () => {
     expect(
       offences,
       'These messages are shown to users but describe what the code was doing. ' +
-        'Say what the person was trying to do, then what they can do next.'
+        'Say what the person was trying to do, then what they can do next.',
     ).toEqual([]);
   });
 
@@ -117,10 +170,7 @@ test.describe('user-facing messages', () => {
     for (const file of sourceFiles(SRC)) {
       const src = readFileSync(file, 'utf8');
       const rel = file.replace(process.cwd() + '/', '');
-      TOAST.lastIndex = 0;
-      let m: RegExpExecArray | null;
-      while ((m = TOAST.exec(src)) !== null) {
-        const message = m[2];
+      for (const message of userMessages(src)) {
         if (message.includes('${')) continue; // interpolated — judged at runtime
         if (EXEMPT.test(message.trim())) continue;
         if (!RECOVERY.test(message)) stuck.push(`"${message}"  (${rel})`);
@@ -129,7 +179,7 @@ test.describe('user-facing messages', () => {
 
     expect(
       stuck,
-      'These tell the user something failed but not what to do about it.'
+      'These tell the user something failed but not what to do about it.',
     ).toEqual([]);
   });
 });

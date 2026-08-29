@@ -136,7 +136,8 @@ export default function Resources({ id }: { id: string }) {
         setSelectedTopic(topics[0] || undefined);
       } else {
         toast.error(
-          response?.message ?? 'Unable to load this resource. Please refresh the page.',
+          response?.message ??
+            'Unable to load this resource. Please refresh the page.',
         );
       }
     } catch (error) {
@@ -273,7 +274,12 @@ export default function Resources({ id }: { id: string }) {
           toast.info('You did not pass the quiz.');
         }
       } else {
-        toast.error(data?.message);
+        // A bare `data?.message` renders an EMPTY toast when the server does
+        // not send one — the user sees a coloured bar with no text and learns
+        // nothing at all, which is worse than a generic message.
+        toast.error(
+          data?.message ?? 'Could not submit your quiz. Please try again.',
+        );
       }
     } catch (error) {
       toast.error('Error submitting quiz. Please try again!');
@@ -391,7 +397,9 @@ export default function Resources({ id }: { id: string }) {
   }
 
   if (!resource) {
-    toast.error('That resource does not exist. It may have been removed. Please choose another.');
+    toast.error(
+      'That resource does not exist. It may have been removed. Please choose another.',
+    );
     return;
   }
 
