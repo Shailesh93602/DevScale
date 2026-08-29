@@ -74,7 +74,9 @@ describe('computeEloUpdates', () => {
   });
 
   it('does not change a solo player', () => {
-    const updates = computeEloUpdates([{ userId: 'solo', rating: 1300, rank: 1 }]);
+    const updates = computeEloUpdates([
+      { userId: 'solo', rating: 1300, rank: 1 },
+    ]);
     expect(updates).toEqual([
       { userId: 'solo', oldRating: 1300, newRating: 1300, delta: 0 },
     ]);

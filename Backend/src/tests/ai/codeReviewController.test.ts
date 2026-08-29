@@ -1,10 +1,4 @@
-import {
-  describe,
-  it,
-  expect,
-  jest,
-  beforeEach,
-} from '@jest/globals';
+import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 import type { Request, Response, NextFunction } from 'express';
 
 /**
@@ -23,7 +17,9 @@ const mockFindUnique = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 jest.mock('../../lib/prisma', () => ({
   __esModule: true,
   default: {
-    challengeSubmission: { findUnique: (...a: unknown[]) => mockFindUnique(...a) },
+    challengeSubmission: {
+      findUnique: (...a: unknown[]) => mockFindUnique(...a),
+    },
     $disconnect: jest.fn(), // jest-setup.ts calls this in its global afterAll
   },
 }));
@@ -56,7 +52,12 @@ jest.mock('../../services/cacheService', () => ({
 }));
 jest.mock('../../utils/logger', () => ({
   __esModule: true,
-  default: { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() },
+  default: {
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+  },
 }));
 
 import CodeReviewController from '../../controllers/codeReviewController';
@@ -140,7 +141,10 @@ describe('CodeReviewController.reviewChallengeSubmission', () => {
   });
 
   it('forbids reviewing another user’s submission', async () => {
-    mockFindUnique.mockResolvedValue({ ...ownedSubmission, user_id: 'someone-else' });
+    mockFindUnique.mockResolvedValue({
+      ...ownedSubmission,
+      user_id: 'someone-else',
+    });
     await invoke({ id: 'u1' });
     expect(mockSendResponse).toHaveBeenCalledWith(
       expect.anything(),

@@ -14,11 +14,7 @@
 
 import CircuitBreaker from 'opossum';
 import { z } from 'zod';
-import {
-  MODEL_CHAIN,
-  isAiConfigured,
-  rawGenerate,
-} from './llmConfig.js';
+import { MODEL_CHAIN, rawGenerate } from './llmConfig.js';
 import {
   coolDownRateLimited,
   coolDownUnavailable,
@@ -28,6 +24,7 @@ import {
   resetCooldowns,
 } from './llmFallback.js';
 import { getCache, setCache } from '../cacheService.js';
+import { requireApiKey } from './resolveApiKey.js';
 import { createAppError } from '../../utils/errorHandler.js';
 import logger from '../../utils/logger.js';
 
@@ -41,23 +38,30 @@ interface RawResult {
  * cooled down and skipped; a real error (bad request, auth) is thrown so it is
  * never masked behind fallback.
  */
-async function generateWithFallback(prompt: string): Promise<RawResult> {
+interface Attempt {
+  prompt: string;
+  apiKey: string;
+  fingerprint: string;
+}
+
+async function generateWithFallback(attempt: Attempt): Promise<RawResult> {
+  const { prompt, apiKey, fingerprint } = attempt;
   const now = Date.now();
-  const models = readyModels(MODEL_CHAIN, now);
+  const models = readyModels(MODEL_CHAIN, now, fingerprint);
   let lastErr: unknown;
 
   for (const modelName of models) {
     try {
-      const text = await rawGenerate(modelName, prompt);
+      const text = await rawGenerate(modelName, prompt, apiKey, fingerprint);
       return { text, model: modelName };
     } catch (err) {
       lastErr = err;
       if (isRateLimitError(err)) {
-        coolDownRateLimited(modelName, Date.now());
+        coolDownRateLimited(modelName, Date.now(), fingerprint);
         continue;
       }
       if (isModelUnavailable(err)) {
-        coolDownUnavailable(modelName, Date.now());
+        coolDownUnavailable(modelName, Date.now(), fingerprint);
         continue;
       }
       throw err; // real error — surface it
@@ -70,22 +74,55 @@ async function generateWithFallback(prompt: string): Promise<RawResult> {
 
 // Breaker guards provider HEALTH (timeouts / repeated failures). Fallback handles
 // per-model quota WITHIN a healthy provider. Mirrors codeExecutor.ts's judge0Breaker.
-const llmBreaker = new CircuitBreaker(generateWithFallback, {
-  timeout: 20_000,
-  errorThresholdPercentage: 50,
-  resetTimeout: 45_000,
-  volumeThreshold: 5,
-  name: 'gemini-llm',
-});
-llmBreaker.on('open', () =>
-  logger.warn('Gemini LLM circuit breaker OPEN — failing fast')
-);
-llmBreaker.on('halfOpen', () =>
-  logger.info('Gemini LLM circuit breaker HALF-OPEN — probing')
-);
-llmBreaker.on('close', () =>
-  logger.info('Gemini LLM circuit breaker CLOSED — recovered')
-);
+//
+// ONE BREAKER PER KEY, for the same reason cooldowns are scoped (see
+// llmFallback.ts). A shared breaker trips on error RATE: five failures at 50%
+// opens it and every subsequent caller fails fast. With bring-your-own keys the
+// failures that trip it are usually attributable to ONE key — a typo'd
+// credential returns 400 on every call — and a shared breaker would let that
+// one user's bad key disable the feature for everybody within seconds.
+//
+// The breaker's job is "is the provider healthy FOR THIS CALLER", and the
+// caller's identity is the key. Bounded and cleared wholesale for the same
+// reason the cooldown map is: losing a breaker's state costs at most a few
+// requests that fail slowly instead of fast.
+const MAX_BREAKERS = 500;
+const breakers = new Map<string, CircuitBreaker>();
+
+function breakerFor(fingerprint: string): CircuitBreaker {
+  const existing = breakers.get(fingerprint);
+  if (existing) return existing;
+
+  const breaker = new CircuitBreaker(generateWithFallback, {
+    timeout: 20_000,
+    errorThresholdPercentage: 50,
+    resetTimeout: 45_000,
+    volumeThreshold: 5,
+    name: `gemini-llm:${fingerprint}`,
+  });
+  breaker.on('open', () =>
+    logger.warn(
+      `Gemini LLM circuit breaker OPEN (${fingerprint}) — failing fast`
+    )
+  );
+  breaker.on('halfOpen', () =>
+    logger.info(
+      `Gemini LLM circuit breaker HALF-OPEN (${fingerprint}) — probing`
+    )
+  );
+  breaker.on('close', () =>
+    logger.info(
+      `Gemini LLM circuit breaker CLOSED (${fingerprint}) — recovered`
+    )
+  );
+
+  if (breakers.size >= MAX_BREAKERS) {
+    for (const [, b] of breakers) b.shutdown();
+    breakers.clear();
+  }
+  breakers.set(fingerprint, breaker);
+  return breaker;
+}
 
 /** Strip ```json fences a model sometimes adds despite responseMimeType. */
 function stripCodeFences(text: string): string {
@@ -115,6 +152,18 @@ function tryParse<T>(
 export interface GenerateStructuredOptions<T> {
   /** Stable cache key for identical inputs (provider is NOT called on a hit). */
   cacheKey: string;
+  /**
+   * Whose quota to spend. Omit for background jobs acting on nobody's behalf —
+   * those fall through to the server key, and fail cleanly if there isn't one.
+   *
+   * The cache is deliberately NOT partitioned by user: an identical prompt has
+   * an identical answer regardless of which key produced it, and no key
+   * material is in the cached value. Partitioning it would make every user pay
+   * for work already done, which is the opposite of the point. The key check
+   * still happens BEFORE the cache read, so a user without a key is told to add
+   * one rather than being quietly served someone else's cache hit.
+   */
+  userId?: string | null;
   prompt: string;
   schema: z.ZodType<T>;
   /** Cache TTL in seconds (default 24h). */
@@ -134,23 +183,24 @@ export async function generateStructured<T>(
     cacheKey,
     prompt,
     schema,
+    userId,
     cacheTtlSeconds = 86_400,
     cachePrefix = 'llm',
   } = options;
 
-  if (!isAiConfigured()) {
-    throw createAppError(
-      'AI features are not configured (GEMINI_API_KEY missing).',
-      503
-    );
-  }
+  // Resolve BEFORE the cache read. A user with no key must be told to add one,
+  // not handed a cache hit — otherwise the feature appears to work until the
+  // first cache miss, which is the worst possible moment to discover it.
+  // requireApiKey throws NoApiKeyError (400) with an actionable message.
+  const { apiKey, fingerprint } = await requireApiKey(userId);
+  const llmBreaker = breakerFor(fingerprint);
 
   const cached = await getCache<T>(`${cachePrefix}:${cacheKey}`);
   if (cached) return cached;
 
   let raw: RawResult;
   try {
-    raw = (await llmBreaker.fire(prompt)) as RawResult;
+    raw = (await llmBreaker.fire({ prompt, apiKey, fingerprint })) as RawResult;
   } catch (err) {
     if (llmBreaker.opened) {
       throw createAppError(
@@ -167,7 +217,11 @@ export async function generateStructured<T>(
     // One corrective retry — most "almost-JSON" failures recover here.
     const corrective = `${prompt}\n\nIMPORTANT: your previous reply was not valid JSON matching the required shape. Reply with ONE valid JSON object only — no markdown, no commentary.`;
     try {
-      raw = (await llmBreaker.fire(corrective)) as RawResult;
+      raw = (await llmBreaker.fire({
+        prompt: corrective,
+        apiKey,
+        fingerprint,
+      })) as RawResult;
     } catch (err) {
       if (llmBreaker.opened) {
         throw createAppError(
@@ -198,6 +252,7 @@ export async function generateStructured<T>(
 
 /** Test helper — reset breaker + cooldowns between cases. */
 export function _resetLlmState(): void {
+  for (const [, b] of breakers) b.shutdown();
+  breakers.clear();
   resetCooldowns();
-  llmBreaker.close();
 }

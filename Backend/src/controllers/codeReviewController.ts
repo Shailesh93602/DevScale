@@ -72,17 +72,21 @@ export default class CodeReviewController {
 
       let review;
       try {
-        review = await reviewCodeSubmission({
-          code: submission.code,
-          language: submission.language,
-          problemTitle: submission.challenge.title,
-          problemStatement: submission.challenge.description,
-          executionSummary: {
-            status: submission.status,
-            runtimeMs: submission.runtime_ms ?? undefined,
-            memoryKb: submission.memory_used_kb ?? undefined,
+        review = await reviewCodeSubmission(
+          {
+            code: submission.code,
+            language: submission.language,
+            problemTitle: submission.challenge.title,
+            problemStatement: submission.challenge.description,
+            executionSummary: {
+              status: submission.status,
+              runtimeMs: submission.runtime_ms ?? undefined,
+              memoryKb: submission.memory_used_kb ?? undefined,
+            },
           },
-        });
+          // Bill the review to the submitter's own key when they have set one.
+          userId
+        );
       } catch (error) {
         // Release, or this submission is unreviewable until the claim goes
         // stale — a bad outcome for an error the user could retry immediately.

@@ -14,12 +14,7 @@ import { generateStructured } from './llmService.js';
 export const AiCodeReviewSchema = z.object({
   summary: z.string().min(1),
   correctness: z.object({
-    verdict: z.enum([
-      'correct',
-      'incorrect',
-      'partially_correct',
-      'uncertain',
-    ]),
+    verdict: z.enum(['correct', 'incorrect', 'partially_correct', 'uncertain']),
     explanation: z.string(),
   }),
   complexity: z.object({
@@ -100,12 +95,14 @@ Rules: score is an integer 0–100 reflecting correctness, efficiency, and clari
 
 /** Produce a schema-validated AI review for one submission. */
 export async function reviewCodeSubmission(
-  input: CodeReviewInput
+  input: CodeReviewInput,
+  userId?: string | null
 ): Promise<AiCodeReview> {
   return generateStructured<AiCodeReview>({
     cacheKey: buildReviewCacheKey(input),
     cachePrefix: 'ai-review',
     prompt: buildPrompt(input),
     schema: AiCodeReviewSchema,
+    userId,
   });
 }

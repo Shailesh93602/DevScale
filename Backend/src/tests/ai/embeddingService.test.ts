@@ -1,13 +1,25 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
+// embedText resolves a key before embedding; whose key it is belongs to
+// resolveApiKey's own tests. Here it only has to say "there is one".
+let hasKey = true;
+jest.mock('../../services/ai/resolveApiKey', () => ({
+  __esModule: true,
+  requireApiKey: async () => {
+    if (!hasKey) {
+      throw Object.assign(new Error('AI key required'), { statusCode: 400 });
+    }
+    return { apiKey: 'test-key', fingerprint: 'test-fp', kind: 'user' };
+  },
+}));
+
 const mockRawEmbed = jest.fn<(text: string) => Promise<number[]>>();
-let configured = true;
 
 jest.mock('../../services/ai/embeddingProvider', () => ({
   __esModule: true,
   EMBEDDING_MODEL: 'text-embedding-004',
   EMBEDDING_DIMENSIONS: 768,
-  isEmbeddingConfigured: () => configured,
+  isEmbeddingConfigured: () => true,
   rawEmbed: (text: string) => mockRawEmbed(text),
 }));
 
@@ -16,11 +28,7 @@ jest.mock('../../services/cacheService', () => ({
   __esModule: true,
   redis: { status: 'end', quit: jest.fn() },
   getCache: async (key: string) => (store.has(key) ? store.get(key) : null),
-  setCache: async (
-    key: string,
-    value: unknown,
-    opts?: { prefix?: string }
-  ) => {
+  setCache: async (key: string, value: unknown, opts?: { prefix?: string }) => {
     store.set(opts?.prefix ? `${opts.prefix}:${key}` : key, value);
   },
 }));
@@ -30,7 +38,7 @@ import { embedText, hashText } from '../../services/ai/embeddingService';
 beforeEach(() => {
   store.clear();
   mockRawEmbed.mockReset();
-  configured = true;
+  hasKey = true;
 });
 
 describe('embedText', () => {
@@ -55,8 +63,8 @@ describe('embedText', () => {
     expect(mockRawEmbed).toHaveBeenCalledTimes(1);
   });
 
-  it('throws when AI is not configured (no provider call)', async () => {
-    configured = false;
+  it('throws before any provider call when there is no key', async () => {
+    hasKey = false;
     await expect(embedText('anything')).rejects.toThrow();
     expect(mockRawEmbed).not.toHaveBeenCalled();
   });

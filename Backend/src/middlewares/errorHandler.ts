@@ -57,12 +57,19 @@ export const errorHandler: ErrorRequestHandler = (
   const message =
     statusCode === 500 && !isDev ? 'Internal server error' : err.message;
 
+  // `details` reaches the client only for handled CLIENT errors. It is where a
+  // machine-readable code lives (e.g. AI_KEY_REQUIRED, which tells the UI to
+  // offer a link to Settings rather than just printing a sentence). Withheld on
+  // 5xx for the same reason the message is: an unhandled server error's details
+  // are internal state, and this is the one place that distinction gets made.
+  const details = (err as AppError).details;
   res.status(statusCode).json({
     status: statusCode,
     message,
     error: true,
     toast: statusCode < 500,
     requestId: req.requestId,
+    ...(isHandled && statusCode < 500 && details ? { details } : {}),
     ...(isDev && { stack: err.stack }),
   });
 };

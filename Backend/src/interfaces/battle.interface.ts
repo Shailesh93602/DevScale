@@ -1,4 +1,9 @@
-import { BattleStatus, BattleType, BattleParticipantStatus, Difficulty } from '../constants/enums';
+import {
+  BattleStatus,
+  BattleType,
+  BattleParticipantStatus,
+  Difficulty,
+} from '../constants/enums';
 
 export interface IBattle {
   id: string;

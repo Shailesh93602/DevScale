@@ -32,6 +32,7 @@ import { RatingRoutes } from './ratingRoutes.js';
 import { RecommendationRoutes } from './recommendationRoutes.js';
 import { MatchmakingRoutes } from './matchmakingRoutes.js';
 import { TutorRoutes } from './tutorRoutes.js';
+import { AiKeySettingsRoutes } from './aiKeySettingsRoutes.js';
 
 export class AppRoutes {
   private readonly router: Router;
@@ -85,6 +86,7 @@ export class AppRoutes {
     this.router.use('/recommendations', new RecommendationRoutes().getRouter());
     this.router.use('/matchmaking', new MatchmakingRoutes().getRouter());
     this.router.use('/tutor', new TutorRoutes().getRouter());
+    this.router.use('/settings', new AiKeySettingsRoutes().getRouter());
   }
 
   public getRouter(): Router {

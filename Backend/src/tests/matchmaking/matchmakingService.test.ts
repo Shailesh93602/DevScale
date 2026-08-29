@@ -31,13 +31,11 @@ function makeFakeRedis() {
       z.has(member) ? String(z.get(member)) : null
     ),
     zcard: jest.fn(async () => z.size),
-    zrangebyscore: jest.fn(
-      async (_k: string, min: number, max: number) => {
-        const out: string[] = [];
-        for (const [m, s] of z) if (s >= min && s <= max) out.push(m, String(s));
-        return out;
-      }
-    ),
+    zrangebyscore: jest.fn(async (_k: string, min: number, max: number) => {
+      const out: string[] = [];
+      for (const [m, s] of z) if (s >= min && s <= max) out.push(m, String(s));
+      return out;
+    }),
     hset: jest.fn(async (_k: string, field: string, value: string) => {
       meta.set(field, value);
       return 1;
@@ -63,16 +61,14 @@ function build(
 ) {
   const redis = makeFakeRedis();
   const release = jest.fn(async () => undefined);
-  const acquire =
-    overrides.acquire ??
-    jest.fn(async () => ({ release }));
+  const acquire = overrides.acquire ?? jest.fn(async () => ({ release }));
   const redlock = { acquire };
   const createBattle = jest.fn(async () => ({
     battleId: 'b1',
     slug: 'ranked-b1',
   }));
-  const getRating = jest.fn(async (userId: string) =>
-    overrides.ratings?.[userId] ?? 1200
+  const getRating = jest.fn(
+    async (userId: string) => overrides.ratings?.[userId] ?? 1200
   );
   const notify = jest.fn();
   const service = new MatchmakingService({
@@ -83,7 +79,16 @@ function build(
     notify,
     now: () => FIXED_NOW,
   } as unknown as Deps);
-  return { service, redis, redlock, acquire, release, createBattle, getRating, notify };
+  return {
+    service,
+    redis,
+    redlock,
+    acquire,
+    release,
+    createBattle,
+    getRating,
+    notify,
+  };
 }
 
 beforeEach(() => {

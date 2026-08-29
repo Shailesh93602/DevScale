@@ -6,10 +6,7 @@
 
 import prisma from '../../lib/prisma.js';
 import { createAppError } from '../../utils/errorHandler.js';
-import {
-  ContentIngestService,
-  IngestStatus,
-} from './contentIngestService.js';
+import { ContentIngestService, IngestStatus } from './contentIngestService.js';
 
 const CONTENT_TYPE = 'challenge';
 
@@ -42,7 +39,9 @@ export class ChallengeIngestService {
     return `${c.title}\n\n${c.description}\nDifficulty: ${c.difficulty}\nCategory: ${c.category}\nTags: ${tags}`;
   }
 
-  async ingestChallenge(challengeId: string): Promise<{ status: IngestStatus }> {
+  async ingestChallenge(
+    challengeId: string
+  ): Promise<{ status: IngestStatus }> {
     const challenge = await prisma.challenge.findUnique({
       where: { id: challengeId },
       select: {

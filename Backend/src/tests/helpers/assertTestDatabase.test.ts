@@ -22,7 +22,9 @@ describe('assertTestDatabaseUrl', () => {
   // The CI container is named eduscale_test precisely so this can stay refused.
   it('refuses the name `postgres`, even on localhost', () => {
     expect(() =>
-      assertTestDatabaseUrl('postgresql://postgres:postgres@localhost:5432/postgres')
+      assertTestDatabaseUrl(
+        'postgresql://postgres:postgres@localhost:5432/postgres'
+      )
     ).toThrow(/not an obvious throwaway/);
   });
 

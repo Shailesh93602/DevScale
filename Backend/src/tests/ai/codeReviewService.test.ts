@@ -37,7 +37,9 @@ const validReview: AiCodeReview = {
   correctness: { verdict: 'correct', explanation: 'Passes all tests.' },
   complexity: { time: 'O(n)', space: 'O(n)' },
   edge_cases_missed: [],
-  improvements: [{ title: 'Naming', detail: 'Use descriptive variable names.' }],
+  improvements: [
+    { title: 'Naming', detail: 'Use descriptive variable names.' },
+  ],
   score: 88,
 };
 
@@ -52,11 +54,15 @@ describe('buildReviewCacheKey', () => {
 
   it('changes when the code changes', () => {
     const changed = { ...baseInput, code: 'different code' };
-    expect(buildReviewCacheKey(changed)).not.toBe(buildReviewCacheKey(baseInput));
+    expect(buildReviewCacheKey(changed)).not.toBe(
+      buildReviewCacheKey(baseInput)
+    );
   });
 
   it('is namespaced under code-review:', () => {
-    expect(buildReviewCacheKey(baseInput)).toMatch(/^code-review:[a-f0-9]{64}$/);
+    expect(buildReviewCacheKey(baseInput)).toMatch(
+      /^code-review:[a-f0-9]{64}$/
+    );
   });
 });
 

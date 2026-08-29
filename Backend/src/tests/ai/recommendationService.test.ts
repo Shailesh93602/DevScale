@@ -5,7 +5,9 @@ const mockChalFindMany = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 jest.mock('../../lib/prisma', () => ({
   __esModule: true,
   default: {
-    challengeSubmission: { findMany: (...a: unknown[]) => mockSubFindMany(...a) },
+    challengeSubmission: {
+      findMany: (...a: unknown[]) => mockSubFindMany(...a),
+    },
     challenge: { findMany: (...a: unknown[]) => mockChalFindMany(...a) },
     $disconnect: jest.fn(),
   },
@@ -68,8 +70,20 @@ describe('RecommendationService.recommendChallenges', () => {
     );
     // Ordered by similarity (c9 first), with distance attached.
     expect(result).toEqual([
-      { id: 'c9', title: 'Nine', difficulty: 'easy', category: 'arrays', distance: 0.1 },
-      { id: 'c8', title: 'Eight', difficulty: 'medium', category: 'dp', distance: 0.25 },
+      {
+        id: 'c9',
+        title: 'Nine',
+        difficulty: 'easy',
+        category: 'arrays',
+        distance: 0.1,
+      },
+      {
+        id: 'c8',
+        title: 'Eight',
+        difficulty: 'medium',
+        category: 'dp',
+        distance: 0.25,
+      },
     ]);
   });
 

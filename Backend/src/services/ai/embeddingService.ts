@@ -5,9 +5,9 @@
  */
 
 import { createHash } from 'node:crypto';
-import { rawEmbed, isEmbeddingConfigured } from './embeddingProvider.js';
+import { rawEmbed } from './embeddingProvider.js';
 import { getCache, setCache } from '../cacheService.js';
-import { createAppError } from '../../utils/errorHandler.js';
+import { requireApiKey } from './resolveApiKey.js';
 
 const CACHE_PREFIX = 'embedding';
 const CACHE_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
@@ -17,19 +17,26 @@ export function hashText(text: string): string {
   return createHash('sha256').update(text).digest('hex');
 }
 
-export async function embedText(text: string): Promise<number[]> {
-  if (!isEmbeddingConfigured()) {
-    throw createAppError(
-      'AI features are not configured (GEMINI_API_KEY missing).',
-      503
-    );
-  }
+/**
+ * Embed text, billed to `userId`'s key when they have one.
+ *
+ * The cache is shared across users on purpose — an embedding of identical text
+ * is identical bytes, so re-embedding it under a different key would spend
+ * someone's quota to recompute a value we already have. The key is still
+ * resolved first, so a user without one is told to add it rather than being
+ * served from a cache they never contributed to.
+ */
+export async function embedText(
+  text: string,
+  userId?: string | null
+): Promise<number[]> {
+  const { apiKey } = await requireApiKey(userId);
 
   const key = hashText(text);
   const cached = await getCache<number[]>(`${CACHE_PREFIX}:${key}`);
   if (cached) return cached;
 
-  const vector = await rawEmbed(text);
+  const vector = await rawEmbed(text, apiKey);
   await setCache(key, vector, { ttl: CACHE_TTL_SECONDS, prefix: CACHE_PREFIX });
   return vector;
 }

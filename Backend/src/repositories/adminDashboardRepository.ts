@@ -464,7 +464,8 @@ export default class AdminDashboardRepository extends BaseRepository<
       try {
         const probeKey = 'health:cache-probe';
         await setCache(probeKey, 'ok', { ttl: 30 });
-        cacheStatus = (await getCache<string>(probeKey)) === 'ok' ? 'healthy' : 'error';
+        cacheStatus =
+          (await getCache<string>(probeKey)) === 'ok' ? 'healthy' : 'error';
       } catch {
         cacheStatus = 'error';
       }

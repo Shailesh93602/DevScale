@@ -13,7 +13,7 @@ model Article {
   title       String              @db.VarChar(255)
   content     String
   author_id   String
-  status      String @default("DRAFT")
+  status      String              @default("DRAFT")
   topic_id    String
   resource_id String?
   created_at  DateTime            @default(now())
@@ -45,34 +45,34 @@ model SubmissionLog {
 }
 
 model Battle {
-  id                    String              @id @default(uuid())
-  slug                  String?             @unique
-  title                 String              @db.VarChar(255)
-  description           String?
-  type                  String
-  status                String @default("WAITING")
-  topic_id              String?
-  user_id               String
-  winner_id             String?
-  difficulty            String
-  max_participants      Int                 @default(6)
-  current_participants  Int                 @default(0)
-  start_time            DateTime?
-  ended_at              DateTime?
-  points_per_question   Int                 @default(100)
-  time_per_question     Int                 @default(30)
-  total_questions       Int                 @default(10)
-  question_source_type  String?
-  question_source_id    String?
-  created_at            DateTime            @default(now())
-  updated_at            DateTime            @updatedAt
-  topic                 Topic?              @relation(fields: [topic_id], references: [id], onDelete: SetNull)
-  creator               User                @relation("BattleCreator", fields: [user_id], references: [id], onDelete: Cascade)
-  winner                User?               @relation("BattleWinner", fields: [winner_id], references: [id], onDelete: SetNull)
-  leaderboard           BattleLeaderboard[]
-  participants          BattleParticipant[]
-  questions             BattleQuestion[]
-  answers               BattleAnswer[]
+  id                   String              @id @default(uuid())
+  slug                 String?             @unique
+  title                String              @db.VarChar(255)
+  description          String?
+  type                 String
+  status               String              @default("WAITING")
+  topic_id             String?
+  user_id              String
+  winner_id            String?
+  difficulty           String
+  max_participants     Int                 @default(6)
+  current_participants Int                 @default(0)
+  start_time           DateTime?
+  ended_at             DateTime?
+  points_per_question  Int                 @default(100)
+  time_per_question    Int                 @default(30)
+  total_questions      Int                 @default(10)
+  question_source_type String?
+  question_source_id   String?
+  created_at           DateTime            @default(now())
+  updated_at           DateTime            @updatedAt
+  topic                Topic?              @relation(fields: [topic_id], references: [id], onDelete: SetNull)
+  creator              User                @relation("BattleCreator", fields: [user_id], references: [id], onDelete: Cascade)
+  winner               User?               @relation("BattleWinner", fields: [winner_id], references: [id], onDelete: SetNull)
+  leaderboard          BattleLeaderboard[]
+  participants         BattleParticipant[]
+  questions            BattleQuestion[]
+  answers              BattleAnswer[]
 
   @@index([topic_id])
   @@index([user_id])
@@ -84,20 +84,20 @@ model Battle {
 }
 
 model BattleParticipant {
-  id                   String                  @id @default(uuid())
-  battle_id            String
-  user_id              String
-  status               String @default("JOINED")
-  score                Int                     @default(0)
-  rank                 Int?
-  correct_count        Int                     @default(0)
-  wrong_count          Int                     @default(0)
-  avg_time_per_answer_ms Int                   @default(0)
-  joined_at            DateTime                @default(now())
-  completed_at         DateTime?
-  last_seen_at         DateTime?
-  battle               Battle                  @relation(fields: [battle_id], references: [id], onDelete: Cascade)
-  user                 User                    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id                     String    @id @default(uuid())
+  battle_id              String
+  user_id                String
+  status                 String    @default("JOINED")
+  score                  Int       @default(0)
+  rank                   Int?
+  correct_count          Int       @default(0)
+  wrong_count            Int       @default(0)
+  avg_time_per_answer_ms Int       @default(0)
+  joined_at              DateTime  @default(now())
+  completed_at           DateTime?
+  last_seen_at           DateTime?
+  battle                 Battle    @relation(fields: [battle_id], references: [id], onDelete: Cascade)
+  user                   User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([battle_id, user_id])
   @@index([battle_id])
@@ -188,7 +188,7 @@ model Challenge {
   created_at         DateTime              @default(now())
   updated_at         DateTime              @updatedAt
   topic_id           String?
-  status             String @default("ACTIVE")
+  status             String                @default("ACTIVE")
   topic              Topic?                @relation(fields: [topic_id], references: [id])
   submissions        ChallengeSubmission[]
   test_cases         TestCase[]
@@ -226,17 +226,17 @@ model Course {
 }
 
 model Enrollment {
-  id              String           @id @default(uuid())
+  id              String    @id @default(uuid())
   user_id         String
   course_id       String
-  status          String @default("ENROLLED")
-  progress        Float            @default(0)
-  enrollment_date DateTime         @default(now())
+  status          String    @default("ENROLLED")
+  progress        Float     @default(0)
+  enrollment_date DateTime  @default(now())
   completion_date DateTime?
-  created_at      DateTime         @default(now())
-  updated_at      DateTime         @updatedAt
-  course          Course           @relation(fields: [course_id], references: [id], onDelete: Cascade)
-  user            User             @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  course          Course    @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, course_id], name: "user_id_course_id")
   @@index([user_id])
@@ -260,16 +260,16 @@ model Forum {
 }
 
 model InterviewQuestion {
-  id          String      @id @default(uuid())
+  id          String    @id @default(uuid())
   question    String
   answer      String?
   difficulty  String?
   topic       String?
   tags        Json?
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @updatedAt
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
   resource_id String?
-  resource    Resource?   @relation(fields: [resource_id], references: [id])
+  resource    Resource? @relation(fields: [resource_id], references: [id])
 }
 
 model Job {
@@ -339,16 +339,16 @@ model Question {
 }
 
 model QuizSubmission {
-  id         String                 @id @default(uuid())
+  id         String   @id @default(uuid())
   user_id    String
   quiz_id    String
   score      Int
   time_spent Int
   is_passed  Boolean
   results    Json
-  created_at DateTime               @default(now())
-  quiz       Quiz                   @relation(fields: [quiz_id], references: [id])
-  user       User                   @relation(fields: [user_id], references: [id])
+  created_at DateTime @default(now())
+  quiz       Quiz     @relation(fields: [quiz_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
   @@index([quiz_id])
@@ -560,11 +560,12 @@ model User {
   activityLogs                    ActivityLog[]
   admin_audit_logs                AdminAuditLog[]
   api_keys                        ApiKey[]
+  ai_provider_keys                UserAiKey[]
   approval_history                ApprovalHistory[]
   articles                        Article[]
   audit_logs                      AuditLog[]
-  battles_created                 Battle[]            @relation("BattleCreator")
-  battles_won                     Battle[]            @relation("BattleWinner")
+  battles_created                 Battle[]                       @relation("BattleCreator")
+  battles_won                     Battle[]                       @relation("BattleWinner")
   battle_answers                  BattleAnswer[]
   battle_leaderboard_entries      BattleLeaderboard[]
   battle_participations           BattleParticipant[]
@@ -715,8 +716,8 @@ model Project {
   tech_stack     String[]
   image_url      String?
   contributors   String[]
-  project_status String @default("ongoing")
-  visibility     String @default("public")
+  project_status String                 @default("ongoing")
+  visibility     String                 @default("public")
   user_id        String
   created_at     DateTime               @default(now())
   updated_at     DateTime               @updatedAt
@@ -732,8 +733,8 @@ model TeamProject {
   demo_url       String?
   tech_stack     String[]
   image_url      String?
-  project_status String @default("ongoing")
-  visibility     String @default("public")
+  project_status String              @default("ongoing")
+  visibility     String              @default("public")
   created_at     DateTime            @default(now())
   updated_at     DateTime            @default(now())
   members        TeamProjectMember[]
@@ -743,7 +744,7 @@ model TeamProjectMember {
   id              String      @id @default(uuid())
   user_id         String
   team_project_id String
-  role            String @default("member")
+  role            String      @default("member")
   created_at      DateTime    @default(now())
   updated_at      DateTime    @default(now())
   team_project    TeamProject @relation(fields: [team_project_id], references: [id])
@@ -792,7 +793,7 @@ model ForumComment {
 }
 
 model ChallengeSubmission {
-  id             String           @id @default(uuid())
+  id             String    @id @default(uuid())
   challenge_id   String
   user_id        String
   code           String
@@ -802,10 +803,10 @@ model ChallengeSubmission {
   memory_used_kb Int?
   score          Int
   feedback       String?
-  created_at     DateTime         @default(now())
-  updated_at     DateTime         @updatedAt
-  challenge      Challenge        @relation(fields: [challenge_id], references: [id])
-  user           User             @relation(fields: [user_id], references: [id])
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+  challenge      Challenge @relation(fields: [challenge_id], references: [id])
+  user           User      @relation(fields: [user_id], references: [id])
 }
 
 model ChallengeDraft {
@@ -839,23 +840,23 @@ model Certificate {
 }
 
 model Notification {
-  id         String           @id @default(uuid())
+  id         String   @id @default(uuid())
   user_id    String
   title      String
   message    String
   type       String
-  is_read    Boolean          @default(false)
+  is_read    Boolean  @default(false)
   link       String?
-  created_at DateTime         @default(now())
-  updated_at DateTime         @updatedAt
-  user       User             @relation(fields: [user_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [user_id], references: [id])
 }
 
 model Mentorship {
   id          String              @id @default(uuid())
   mentor_id   String
   mentee_id   String
-  status      String @default("pending")
+  status      String              @default("pending")
   topics      String[]
   description String?
   created_at  DateTime            @default(now())
@@ -897,7 +898,7 @@ model StudyGroupMember {
   id             String     @id @default(uuid())
   user_id        String
   study_group_id String
-  role           String @default("member")
+  role           String     @default("member")
   created_at     DateTime   @default(now())
   updated_at     DateTime   @default(now())
   study_group    StudyGroup @relation(fields: [study_group_id], references: [id])
@@ -1226,8 +1227,8 @@ model SupportTicket {
   id          String           @id @default(uuid())
   title       String
   description String
-  status      String @default("open")
-  priority    String @default("medium")
+  status      String           @default("open")
+  priority    String           @default("medium")
   category    String
   user_id     String
   assigned_to String?
@@ -1258,21 +1259,21 @@ model TicketResponse {
 }
 
 model BugReport {
-  id                 String       @id @default(uuid())
+  id                 String   @id @default(uuid())
   title              String
   description        String
-  status             String @default("pending")
-  severity           String @default("medium")
+  status             String   @default("pending")
+  severity           String   @default("medium")
   environment        String?
   steps_to_reproduce String?
   expected_behavior  String?
   actual_behavior    String?
   user_id            String
   assigned_to        String?
-  created_at         DateTime     @default(now())
-  updated_at         DateTime     @updatedAt
-  assignee           User?        @relation("BugAssignee", fields: [assigned_to], references: [id])
-  user               User         @relation(fields: [user_id], references: [id])
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  assignee           User?    @relation("BugAssignee", fields: [assigned_to], references: [id])
+  user               User     @relation(fields: [user_id], references: [id])
 
   @@index([user_id])
   @@index([assigned_to])
@@ -1283,8 +1284,8 @@ model FeatureRequest {
   id          String               @id @default(uuid())
   title       String
   description String
-  status      String @default("pending")
-  priority    String @default("medium")
+  status      String               @default("pending")
+  priority    String               @default("medium")
   category    String
   upvotes     Int                  @default(0)
   user_id     String
@@ -1337,12 +1338,43 @@ model ApiKey {
   @@index([expires_at])
 }
 
+/// A user's OWN credential for a third-party AI provider, encrypted at rest.
+///
+/// Deliberately NOT columns on `User` and deliberately not the `ApiKey` model
+/// above — that one is a platform-issued key for calling *us*, the opposite
+/// direction, and reusing it would put a credential we mint and a credential a
+/// user lends us in the same table with the same name.
+///
+/// A separate table also means the ciphertext cannot arrive by accident: every
+/// `findUnique` on User returns it only if someone explicitly asks for the
+/// relation. On a 120-field User model that is a real safety property, not a
+/// stylistic one.
+model UserAiKey {
+  id         String    @id @default(uuid())
+  user_id    String
+  /// Lowercase provider id, e.g. "gemini". One key per user per provider.
+  provider   String
+  /// AES-256-GCM ciphertext, format `v1.<iv>.<tag>.<data>` — see utils/secretBox.ts.
+  /// NEVER selected by any read path except resolveApiKey.
+  key_enc    String
+  /// Masked last-4 for the settings UI, so showing which key is set never
+  /// requires decrypting it.
+  key_hint   String
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  last_used  DateTime?
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, provider])
+  @@index([user_id])
+}
+
 model Progress {
   id         String   @id @default(uuid())
   user_id    String
   roadmap_id String
   topic_id   String
-  status     String @default("PENDING")
+  status     String   @default("PENDING")
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   roadmap    Roadmap  @relation(fields: [roadmap_id], references: [id], onDelete: Cascade)
@@ -1462,14 +1494,14 @@ model Internship {
 }
 
 model InternshipApplication {
-  id            String            @id @default(uuid())
+  id            String     @id @default(uuid())
   user_id       String
   internship_id String
   resume_url    String
-  status        String @default("pending")
-  created_at    DateTime          @default(now())
-  internship    Internship        @relation(fields: [internship_id], references: [id])
-  user          User              @relation(fields: [user_id], references: [id])
+  status        String     @default("pending")
+  created_at    DateTime   @default(now())
+  internship    Internship @relation(fields: [internship_id], references: [id])
+  user          User       @relation(fields: [user_id], references: [id])
 }
 
 model TechEvent {
@@ -1555,14 +1587,14 @@ model CodeReview {
 /// raw SQL (see contentEmbeddingRepository). Keep vector(768) in sync with
 /// EMBEDDING_DIMENSIONS. One row per (content_type, content_id).
 model ContentEmbedding {
-  id           String                       @id @default(uuid())
+  id           String                     @id @default(uuid())
   content_type String
   content_id   String
   content_hash String
   embedding    Unsupported("vector(768)")
   model        String
-  created_at   DateTime                     @default(now())
-  updated_at   DateTime                     @updatedAt
+  created_at   DateTime                   @default(now())
+  updated_at   DateTime                   @updatedAt
 
   @@unique([content_type, content_id])
   @@index([content_type])
@@ -1776,13 +1808,13 @@ model CommunityChallengeSubmission {
 }
 
 model ActivityLog {
-  id          String     @id @default(uuid())
+  id          String   @id @default(uuid())
   user_id     String
   activity    String
   metadata    Json?
-  timestamp   DateTime   @default(now())
-  device_type String @default("WEB")
-  user        User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  timestamp   DateTime @default(now())
+  device_type String   @default("WEB")
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@index([timestamp])
@@ -1840,14 +1872,14 @@ model Option {
 }
 
 model PlacementTest {
-  id         String          @id @default(uuid())
+  id         String   @id @default(uuid())
   user_id    String
   subject_id String
-  status     String @default("PENDING")
+  status     String   @default("PENDING")
   results    Json?
-  created_at DateTime        @default(now())
-  updated_at DateTime        @updatedAt
-  subject    Subject         @relation(fields: [subject_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  subject    Subject  @relation(fields: [subject_id], references: [id])
 
   @@index([user_id])
   @@index([subject_id])
@@ -1900,7 +1932,7 @@ model Content {
   id          String              @id @default(uuid())
   title       String
   body        String
-  status      String @default("PENDING_REVIEW")
+  status      String              @default("PENDING_REVIEW")
   author_id   String
   created_at  DateTime            @default(now())
   updated_at  DateTime            @updatedAt
@@ -1950,13 +1982,13 @@ model UserStreak {
 }
 
 model UserDailyActivity {
-  id            String       @id @default(uuid())
+  id            String     @id @default(uuid())
   user_id       String
   activity_type String
   minutes_spent Int
-  created_at    DateTime     @default(now())
-  user_streak   UserStreak   @relation(fields: [user_id], references: [user_id], map: "user_daily_activities_user_streak_fkey")
-  user          User         @relation(fields: [user_id], references: [id], map: "user_daily_activities_user_id_fkey")
+  created_at    DateTime   @default(now())
+  user_streak   UserStreak @relation(fields: [user_id], references: [user_id], map: "user_daily_activities_user_streak_fkey")
+  user          User       @relation(fields: [user_id], references: [id], map: "user_daily_activities_user_id_fkey")
 
   @@index([user_id])
   @@index([user_id, created_at])

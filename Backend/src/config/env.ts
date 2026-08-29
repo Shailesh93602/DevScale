@@ -55,6 +55,12 @@ const envSchema = z.object({
 
   // ── AI / LLM (Gemini) — optional; AI Code Review is disabled when unset ─────
   GEMINI_API_KEY: z.string().optional().or(z.literal('')),
+  // Base64 of 32 random bytes. Required only to STORE a user's own API key;
+  // the server boots and every non-AI feature works without it. Validated at
+  // point of use (utils/secretBox.ts) rather than here, because a length rule
+  // in zod would reject a valid key that happens to be base64url-encoded and
+  // give a worse message than the one secretBox writes.
+  SECRET_ENCRYPTION_KEY: z.string().optional().or(z.literal('')),
   // CSV override for the model fallback chain (best → most-quota → lightest).
   GEMINI_MODELS: z.string().optional().or(z.literal('')),
   ACCESS_TOKEN_SECRET: z.string().optional(),
@@ -115,8 +121,13 @@ function validateEnv() {
       );
     if (!env.STRIPE_SECRET_KEY)
       productionWarnings.push('STRIPE_SECRET_KEY (billing disabled)');
-    if (!env.GEMINI_API_KEY)
-      productionWarnings.push('GEMINI_API_KEY (AI code review disabled)');
+    // Not a warning: in production the EXPECTED configuration is no server key
+    // at all, with every user bringing their own. Warning about it would train
+    // everyone to ignore this block.
+    if (!env.SECRET_ENCRYPTION_KEY)
+      productionWarnings.push(
+        'SECRET_ENCRYPTION_KEY (users cannot save their own AI API keys)'
+      );
 
     if (productionWarnings.length > 0) {
       process.stderr.write(

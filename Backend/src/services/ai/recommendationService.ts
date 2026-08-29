@@ -25,7 +25,9 @@ const RECENT_SUBMISSION_WINDOW = 50;
 export class RecommendationService {
   private readonly repo: ContentEmbeddingRepository;
 
-  constructor(repo: ContentEmbeddingRepository = new ContentEmbeddingRepository()) {
+  constructor(
+    repo: ContentEmbeddingRepository = new ContentEmbeddingRepository()
+  ) {
     this.repo = repo;
   }
 
