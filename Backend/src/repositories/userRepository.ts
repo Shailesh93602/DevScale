@@ -451,11 +451,27 @@ export default class UserRepository extends BaseRepository<
   }
 
   // assign role to user
-  async assignRole(id: string, role_id: string) {
-    await this.update({
-      where: { id },
-      data: { role_id },
-    });
+  /**
+   * The SECOND way to change a user's role — and it used to be a different,
+   * weaker way.
+   *
+   * `POST /rbac/users/role` reaches this; `PATCH /admin/users/:id/role`
+   * reaches `updateUserRole` above. Both are ADMIN-only, both grant ADMIN, and
+   * only one of them was hardened.
+   *
+   * This one wrote `role_id` and stopped. It did not mirror the claim into
+   * Supabase app_metadata, which is what the edge middleware gates /admin on —
+   * so granting ADMIN here produced a user the DATABASE calls an admin who
+   * CANNOT OPEN /admin, and the API returned success. That is precisely the
+   * failure `updateUserRole` raises a 503 for; this path just did not know.
+   * It also skipped the 404, and returned nothing, so the route replied
+   * `data: undefined`.
+   *
+   * Delegating rather than copying is the point: a duplicated hardening is a
+   * hardening that drifts, and this drift is what the bug was.
+   */
+  async assignRole(id: string, role_id: string): Promise<User> {
+    return this.updateUserRole(id, role_id);
   }
 
   /**

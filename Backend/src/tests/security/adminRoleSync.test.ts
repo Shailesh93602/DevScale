@@ -137,3 +137,57 @@ describe('granting ADMIN', () => {
     await expect(repo.updateUserRole('u1', 'r-student')).resolves.toBeTruthy();
   });
 });
+
+/**
+ * THE SECOND DOOR.
+ *
+ * Everything above tests `updateUserRole`, reached by
+ * `PATCH /admin/users/:id/role`. There is another ADMIN-only route that grants
+ * exactly the same privilege — `POST /rbac/users/role` — and it went through
+ * `assignRole`, which wrote `role_id` and stopped.
+ *
+ * No Supabase claim sync. So granting ADMIN through that door produced the
+ * precise state the whole block above exists to prevent: a user the database
+ * calls an admin who cannot open /admin, with the API reporting success. It
+ * also skipped the 404 and returned nothing, so the route replied with
+ * `data: undefined`.
+ *
+ * The hardening was correct; it was just applied to one of the two callers.
+ * That is the general shape of this bug — a security property enforced at a
+ * call site rather than at the operation — so the fix is delegation, and these
+ * tests exist to fail if anyone re-implements it standalone again.
+ */
+describe('assigning a role through the RBAC route (the second door)', () => {
+  it('REFUSES an ADMIN grant whose claim did not sync, exactly like the other path', async () => {
+    adminUser();
+    syncSupabaseUserRole.mockResolvedValue({
+      synced: false,
+      reason: 'not-configured',
+    });
+
+    await expect(repo.assignRole('u1', 'r-admin')).rejects.toMatchObject({
+      statusCode: 503,
+      details: { code: 'ADMIN_CLAIM_NOT_SYNCED' },
+    });
+  });
+
+  it('syncs the Supabase claim at all — the omission that caused this', async () => {
+    adminUser();
+    syncSupabaseUserRole.mockResolvedValue({ synced: true });
+
+    await repo.assignRole('u1', 'r-admin');
+
+    // The single assertion that the old implementation could not pass: it
+    // never called this.
+    expect(syncSupabaseUserRole).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns the updated user rather than undefined', async () => {
+    adminUser();
+    syncSupabaseUserRole.mockResolvedValue({ synced: true });
+
+    await expect(repo.assignRole('u1', 'r-admin')).resolves.toMatchObject({
+      id: 'u1',
+    });
+  });
+});
