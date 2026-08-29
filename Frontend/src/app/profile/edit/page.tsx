@@ -307,7 +307,9 @@ export default function EditProfilePage() {
         toast.success('Profile updated successfully');
         router.push('/profile');
       } else {
-        toast.error(response?.message || 'Failed to update profile');
+        toast.error(
+          response?.message || 'Could not save your profile. Please try again.',
+        );
       }
     } catch (err) {
       logger.error('Error in profile update submission:', err);

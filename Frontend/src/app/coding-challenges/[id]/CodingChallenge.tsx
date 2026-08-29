@@ -217,7 +217,10 @@ export default function CodingChallenge({ id }: { id: string }) {
       });
 
       if (response.error || !response.success) {
-        const errorMsg = response.message || 'Failed to execute code';
+        // "Failed to execute code" names what the code was doing. The user was
+        // trying to run their solution, and needs to know whether to retry.
+        const errorMsg =
+          response.message || 'Could not run your code. Please try again.';
         setOutput(`Error: ${errorMsg}`);
         toast.error(errorMsg);
       } else {

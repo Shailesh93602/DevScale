@@ -95,7 +95,7 @@ export default function PricingPage() {
     } catch (error: unknown) {
       const msg = (error as { response?: { data?: { message?: string } } })
         ?.response?.data?.message;
-      toast.error(msg || 'Failed to start checkout');
+      toast.error(msg || 'Could not start checkout. Please try again.');
     } finally {
       setLoading(null);
     }
@@ -119,8 +119,8 @@ export default function PricingPage() {
             key={plan.id}
             className={`relative transform rounded-3xl border p-8 transition-all duration-300 hover:-translate-y-2 ${
               plan.highlighted
-                ? 'border-primary/50 bg-card shadow-[0_0_30px_hsl(var(--primary)/0.18)] ring-1 ring-primary/30'
-                : 'border-border bg-card hover:border-primary/30'
+                ? 'border-primary/50 ring-primary/30 bg-card shadow-[0_0_30px_hsl(var(--primary)/0.18)] ring-1'
+                : 'hover:border-primary/30 border-border bg-card'
             }`}
           >
             {plan.highlighted && (
@@ -131,7 +131,9 @@ export default function PricingPage() {
 
             <div className="mb-8">
               <h3 className="mb-2 text-2xl font-bold">{plan.name}</h3>
-              <p className="h-10 text-sm text-muted-foreground">{plan.description}</p>
+              <p className="h-10 text-sm text-muted-foreground">
+                {plan.description}
+              </p>
             </div>
 
             <div className="mb-8 flex items-baseline gap-1">
@@ -157,7 +159,7 @@ export default function PricingPage() {
               disabled={loading !== null}
               className={`flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-bold transition-all duration-300 ${
                 plan.highlighted
-                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90'
+                  ? 'shadow-primary/20 hover:bg-primary/90 bg-primary text-primary-foreground shadow-lg'
                   : 'bg-muted text-foreground hover:bg-muted/70'
               } disabled:opacity-50`}
             >
