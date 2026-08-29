@@ -133,7 +133,10 @@ export default class ArticleController {
     if (!userId) {
       throw createAppError('Authentication required', 401);
     }
-    const { topic_id, tags } = req.body as { topic_id: string; tags?: string[] };
+    const { topic_id, tags } = req.body as {
+      topic_id: string;
+      tags?: string[];
+    };
     const title = sanitizeText(req.body.title);
     const content = sanitizeRichText(req.body.content);
 

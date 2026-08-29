@@ -10,14 +10,26 @@ import { z } from 'zod';
 
 const mockRawGenerate =
   jest.fn<(model: string, prompt: string) => Promise<string>>();
-let aiConfigured = true;
+let hasKey = true;
 
 jest.mock('../../services/ai/llmConfig', () => ({
   __esModule: true,
   MODEL_CHAIN: ['model-a', 'model-b'],
-  isAiConfigured: () => aiConfigured,
+  isAiConfigured: () => true,
   rawGenerate: (model: string, prompt: string) =>
     mockRawGenerate(model, prompt),
+}));
+
+// Whose quota a call spends is resolveApiKey's job and is tested there. Here it
+// only has to answer "is there a key", which is what generateStructured gates on.
+jest.mock('../../services/ai/resolveApiKey', () => ({
+  __esModule: true,
+  requireApiKey: async () => {
+    if (!hasKey) {
+      throw Object.assign(new Error('AI key required'), { statusCode: 400 });
+    }
+    return { apiKey: 'test-key', fingerprint: 'test-fp', kind: 'user' };
+  },
 }));
 
 const store = new Map<string, unknown>();
@@ -25,28 +37,32 @@ jest.mock('../../services/cacheService', () => ({
   __esModule: true,
   redis: { status: 'end', quit: jest.fn() },
   getCache: async (key: string) => (store.has(key) ? store.get(key) : null),
-  setCache: async (
-    key: string,
-    value: unknown,
-    opts?: { prefix?: string }
-  ) => {
+  setCache: async (key: string, value: unknown, opts?: { prefix?: string }) => {
     store.set(opts?.prefix ? `${opts.prefix}:${key}` : key, value);
   },
 }));
 
 jest.mock('../../utils/logger', () => ({
   __esModule: true,
-  default: { info: jest.fn(), warn: jest.fn(), error: jest.fn(), debug: jest.fn() },
+  default: {
+    info: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn(),
+    debug: jest.fn(),
+  },
 }));
 
-import { generateStructured, _resetLlmState } from '../../services/ai/llmService';
+import {
+  generateStructured,
+  _resetLlmState,
+} from '../../services/ai/llmService';
 
 const Schema = z.object({ answer: z.string(), n: z.number() });
 
 beforeEach(() => {
   store.clear();
   mockRawGenerate.mockReset();
-  aiConfigured = true;
+  hasKey = true;
   _resetLlmState();
 });
 
@@ -76,7 +92,9 @@ describe('generateStructured (Spine A)', () => {
   });
 
   it('strips ```json code fences before parsing', async () => {
-    mockRawGenerate.mockResolvedValue('```json\n{"answer":"fenced","n":3}\n```');
+    mockRawGenerate.mockResolvedValue(
+      '```json\n{"answer":"fenced","n":3}\n```'
+    );
     const result = await generateStructured({
       cacheKey: 'k3',
       prompt: 'p',
@@ -121,12 +139,28 @@ describe('generateStructured (Spine A)', () => {
     expect(mockRawGenerate).toHaveBeenCalledWith('model-b', expect.any(String));
   });
 
-  it('throws 503 when AI is not configured (no provider call)', async () => {
-    aiConfigured = false;
+  it('throws before any provider call when there is no key', async () => {
+    // 400, not 503: the request is fine, the CALLER has not supplied something
+    // only they can supply. 503 would blame the service and invite a retry
+    // that cannot succeed.
+    hasKey = false;
     await expect(
       generateStructured({ cacheKey: 'k7', prompt: 'p', schema: Schema })
-    ).rejects.toThrow();
+    ).rejects.toMatchObject({ statusCode: 400 });
     expect(mockRawGenerate).not.toHaveBeenCalled();
+  });
+
+  it('checks for a key BEFORE reading the cache', async () => {
+    // Otherwise a user with no key is quietly served someone else's cache hit
+    // and the feature appears to work until the first miss — the worst
+    // possible moment to discover you needed a key.
+    mockRawGenerate.mockResolvedValue('{"answer":"warm","n":1}');
+    await generateStructured({ cacheKey: 'k9', prompt: 'p', schema: Schema });
+
+    hasKey = false;
+    await expect(
+      generateStructured({ cacheKey: 'k9', prompt: 'p', schema: Schema })
+    ).rejects.toMatchObject({ statusCode: 400 });
   });
 
   it('writes the result to cache so a second call is a hit', async () => {

@@ -13,7 +13,8 @@ jest.mock('../../lib/prisma', () => ({
   },
 }));
 
-const mockIngest = jest.fn<(...args: unknown[]) => Promise<{ status: string }>>();
+const mockIngest =
+  jest.fn<(...args: unknown[]) => Promise<{ status: string }>>();
 jest.mock('../../services/ai/contentIngestService', () => ({
   __esModule: true,
   ContentIngestService: jest.fn().mockImplementation(() => ({

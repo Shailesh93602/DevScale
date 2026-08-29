@@ -76,7 +76,11 @@ describe('TutorService.answerQuestion', () => {
       { content_id: 'c2', distance: 0.8 }, // filtered out (too far)
     ]);
     mockChalFindMany.mockResolvedValue([
-      { id: 'c1', title: 'Binary Search', description: 'Find an element in O(log n).' },
+      {
+        id: 'c1',
+        title: 'Binary Search',
+        description: 'Find an element in O(log n).',
+      },
       { id: 'c2', title: 'Far', description: 'irrelevant' },
     ]);
     const answer = {
@@ -90,7 +94,10 @@ describe('TutorService.answerQuestion', () => {
     const result = await svc.answerQuestion('how does binary search work');
     expect(result).toEqual(answer);
 
-    const opts = mockGenerate.mock.calls[0][0] as { prompt: string; cachePrefix: string };
+    const opts = mockGenerate.mock.calls[0][0] as {
+      prompt: string;
+      cachePrefix: string;
+    };
     expect(opts.cachePrefix).toBe('tutor');
     expect(opts.prompt).toContain('Binary Search'); // relevant context included
     expect(opts.prompt).toContain('how does binary search work');

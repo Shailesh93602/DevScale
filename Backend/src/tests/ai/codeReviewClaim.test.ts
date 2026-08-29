@@ -56,9 +56,13 @@ function repo() {
 
 describe('claimForGeneration', () => {
   beforeEach(() => {
-    [mockCreate, mockFindFirst, mockUpdateMany, mockDeleteMany, mockUpdate].forEach(
-      (m) => m.mockReset()
-    );
+    [
+      mockCreate,
+      mockFindFirst,
+      mockUpdateMany,
+      mockDeleteMany,
+      mockUpdate,
+    ].forEach((m) => m.mockReset());
   });
 
   it('claims by INSERT, so the unique index arbitrates', async () => {

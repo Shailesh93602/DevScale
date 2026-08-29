@@ -1,4 +1,10 @@
-import { ChallengeCategory, Difficulty, JobType, QuizType, Status } from '../constants/enums';
+import {
+  ChallengeCategory,
+  Difficulty,
+  JobType,
+  QuizType,
+  Status,
+} from '../constants/enums';
 
 export interface ResourceStats {
   total: number;

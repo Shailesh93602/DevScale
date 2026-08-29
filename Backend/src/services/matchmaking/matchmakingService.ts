@@ -13,7 +13,10 @@
  * a fake Redis + Redlock (no live infra).
  */
 
-import { redis as defaultRedis, redlock as defaultRedlock } from '../cacheService.js';
+import {
+  redis as defaultRedis,
+  redlock as defaultRedlock,
+} from '../cacheService.js';
 import { BattleRepository } from '../../repositories/battleRepository.js';
 import socketService from '../socket.js';
 import prisma from '../../lib/prisma.js';
@@ -71,7 +74,10 @@ export interface MatchmakingDeps {
   redis: QueueRedis;
   redlock: QueueRedlock;
   /** Create the battle two matched players will join; returns its id + slug. */
-  createBattle: (aId: string, bId: string) => Promise<{ battleId: string; slug: string }>;
+  createBattle: (
+    aId: string,
+    bId: string
+  ) => Promise<{ battleId: string; slug: string }>;
   /** Current Elo for a player (defaults to DEFAULT_RATING when unrated). */
   getRating: (userId: string) => Promise<number>;
   /** Notify a (typically waiting) player that they were matched. */
@@ -157,7 +163,10 @@ export class MatchmakingService {
       const candidateId = raw[i];
       const candidateRating = Number(raw[i + 1]);
       if (candidateId === selfId) continue;
-      if (!best || Math.abs(candidateRating - rating) < Math.abs(best.rating - rating)) {
+      if (
+        !best ||
+        Math.abs(candidateRating - rating) < Math.abs(best.rating - rating)
+      ) {
         best = { userId: candidateId, rating: candidateRating };
       }
     }

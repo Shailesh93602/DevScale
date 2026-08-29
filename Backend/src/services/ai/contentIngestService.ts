@@ -20,11 +20,16 @@ export interface IngestInput {
 export class ContentIngestService {
   private readonly repo: ContentEmbeddingRepository;
 
-  constructor(repo: ContentEmbeddingRepository = new ContentEmbeddingRepository()) {
+  constructor(
+    repo: ContentEmbeddingRepository = new ContentEmbeddingRepository()
+  ) {
     this.repo = repo;
   }
 
-  async ingest(input: IngestInput): Promise<{ status: IngestStatus }> {
+  async ingest(
+    input: IngestInput,
+    userId?: string | null
+  ): Promise<{ status: IngestStatus }> {
     const hash = hashText(input.text);
     const storedHash = await this.repo.getStoredHash(
       input.contentType,
@@ -36,7 +41,7 @@ export class ContentIngestService {
       return { status: 'skipped' };
     }
 
-    const embedding = await embedText(input.text);
+    const embedding = await embedText(input.text, userId);
     await this.repo.upsert({
       contentType: input.contentType,
       contentId: input.contentId,

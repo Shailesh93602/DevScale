@@ -40,7 +40,17 @@ const DEVELOPER_LANGUAGE: Array<{ pattern: RegExp; why: string }> = [
   { pattern: /\bfailed to fetch\b/i, why: '"fetch" is what the code did, not what the user did' },
   { pattern: /\berror fetching\b/i, why: '"fetching" is implementation vocabulary' },
   { pattern: /\bfailed to (update|get|set) .*\bstatus\b/i, why: '"status" names an internal field' },
-  { pattern: /\bAPI\b/, why: 'users do not know or care that there is an API' },
+  {
+    // NOT "API key". That is the user-facing name of the thing Google hands
+    // them in AI Studio — the label on the button they clicked to get it — so
+    // calling it anything else would be less clear, not more. The rule stands
+    // for every OTHER use of "API", where it is our implementation leaking.
+    //
+    // Narrowing a heuristic that produced a wrong verdict is the right repair;
+    // deleting it because it was inconvenient once is how these rules die.
+    pattern: /\bAPI\b(?!\s+key)/,
+    why: 'users do not know or care that there is an API',
+  },
   { pattern: /\bendpoint\b/i, why: 'implementation detail' },
   { pattern: /\b(null|undefined|NaN)\b/, why: 'a value from the code has leaked into the message' },
   { pattern: /\b[45]\d{2}\b/, why: 'an HTTP status code means nothing to a user' },
@@ -96,7 +106,11 @@ test.describe('user-facing messages', () => {
     //
     // Deliberately not exhaustive: a few messages are self-evidently terminal
     // ("Wrong Answer") and adding "please try again" to those would be worse.
-    const RECOVERY = /(try again|refresh|check your|sign in|log in|contact|choose|select|fill in)/i;
+    // Imperatives count as a next step. "Paste your key first" is not a dead
+    // end — it is the instruction itself, and demanding "please try again" on
+    // top of it would make the message worse.
+    const RECOVERY =
+      /(try again|refresh|check your|sign in|log in|contact|choose|select|fill in|paste|enter|add your)/i;
     const EXEMPT = /^(wrong answer|something went wrong\.)/i;
 
     const stuck: string[] = [];

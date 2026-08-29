@@ -1,5 +1,17 @@
 import { describe, it, expect, jest, beforeEach } from '@jest/globals';
 
+// embedText resolves a key before embedding; whose key it is, and what happens
+// when there isn't one, belong to resolveApiKey's own tests. Ingest only needs
+// the resolution to succeed.
+jest.mock('../../services/ai/resolveApiKey', () => ({
+  __esModule: true,
+  requireApiKey: async () => ({
+    apiKey: 'test-key',
+    fingerprint: 'test-fp',
+    kind: 'user',
+  }),
+}));
+
 const mockRawEmbed = jest.fn<(text: string) => Promise<number[]>>();
 jest.mock('../../services/ai/embeddingProvider', () => ({
   __esModule: true,
@@ -14,16 +26,13 @@ jest.mock('../../services/cacheService', () => ({
   __esModule: true,
   redis: { status: 'end', quit: jest.fn() },
   getCache: async (key: string) => (store.has(key) ? store.get(key) : null),
-  setCache: async (
-    key: string,
-    value: unknown,
-    opts?: { prefix?: string }
-  ) => {
+  setCache: async (key: string, value: unknown, opts?: { prefix?: string }) => {
     store.set(opts?.prefix ? `${opts.prefix}:${key}` : key, value);
   },
 }));
 
-const mockGetStoredHash = jest.fn<(...args: unknown[]) => Promise<string | null>>();
+const mockGetStoredHash =
+  jest.fn<(...args: unknown[]) => Promise<string | null>>();
 const mockUpsert = jest.fn<(...args: unknown[]) => Promise<void>>();
 jest.mock('../../repositories/contentEmbeddingRepository', () => ({
   __esModule: true,

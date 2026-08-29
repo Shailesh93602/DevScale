@@ -18,10 +18,7 @@ export class RecommendationRoutes extends BaseRouter {
 
   protected initializeRoutes(): void {
     // Personalized recommendations for the signed-in learner.
-    this.router.get(
-      '/challenges',
-      this.controller.getChallengeRecommendations
-    );
+    this.router.get('/challenges', this.controller.getChallengeRecommendations);
     // Admin-only: backfill challenge embeddings.
     this.router.post(
       '/admin/reindex-challenges',

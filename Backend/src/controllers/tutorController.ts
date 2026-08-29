@@ -15,7 +15,7 @@ export default class TutorController {
     if (!req.user?.id) return sendResponse(res, 'UNAUTHORIZED');
     const question = String(req.body?.question ?? '').trim();
     if (question.length < 3) return sendResponse(res, 'INVALID_PAYLOAD');
-    const data = await this.service.answerQuestion(question);
+    const data = await this.service.answerQuestion(question, req.user.id);
     return sendResponse(res, 'TUTOR_ANSWERED', { data });
   });
 
@@ -25,7 +25,7 @@ export default class TutorController {
     const challengeId = String(req.body?.challengeId ?? '').trim();
     if (!challengeId) return sendResponse(res, 'INVALID_PAYLOAD');
     const level = Number(req.body?.level) || 1;
-    const data = await this.service.getHint(challengeId, level);
+    const data = await this.service.getHint(challengeId, level, req.user.id);
     return sendResponse(res, 'TUTOR_HINT_PROVIDED', { data });
   });
 }

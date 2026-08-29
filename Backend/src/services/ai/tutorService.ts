@@ -30,9 +30,7 @@ export const TutorAnswerSchema = z.object({
   answer: z.string(),
   confidence: z.enum(['high', 'medium', 'low']),
   used_context: z.boolean(),
-  citations: z.array(
-    z.object({ title: z.string(), content_id: z.string() })
-  ),
+  citations: z.array(z.object({ title: z.string(), content_id: z.string() })),
 });
 export type TutorAnswer = z.infer<typeof TutorAnswerSchema>;
 
@@ -53,16 +51,19 @@ interface RetrievedItem {
 export class TutorService {
   private readonly repo: ContentEmbeddingRepository;
 
-  constructor(repo: ContentEmbeddingRepository = new ContentEmbeddingRepository()) {
+  constructor(
+    repo: ContentEmbeddingRepository = new ContentEmbeddingRepository()
+  ) {
     this.repo = repo;
   }
 
   /** Embed the query, find nearest challenges, and hydrate their text. */
   async retrieveContext(
     query: string,
-    limit = RETRIEVE_LIMIT
+    limit = RETRIEVE_LIMIT,
+    userId?: string | null
   ): Promise<RetrievedItem[]> {
-    const embedding = await embedText(query);
+    const embedding = await embedText(query, userId);
     const similar = await this.repo.findSimilar({
       contentType: CONTENT_TYPE,
       embedding,
@@ -93,8 +94,15 @@ export class TutorService {
   }
 
   /** Grounded answer with citations, or an honest "I don't know". */
-  async answerQuestion(question: string): Promise<TutorAnswer> {
-    const context = await this.retrieveContext(question);
+  async answerQuestion(
+    question: string,
+    userId?: string | null
+  ): Promise<TutorAnswer> {
+    const context = await this.retrieveContext(
+      question,
+      RETRIEVE_LIMIT,
+      userId
+    );
     const relevant = context.filter(
       (c) => c.distance <= RELEVANCE_DISTANCE_THRESHOLD
     );
@@ -136,11 +144,16 @@ Return ONLY JSON:
       cachePrefix: 'tutor',
       prompt,
       schema: TutorAnswerSchema,
+      userId,
     });
   }
 
   /** Progressive hint for a challenge — level-gated, never the full solution. */
-  async getHint(challengeId: string, level: number): Promise<TutorHint> {
+  async getHint(
+    challengeId: string,
+    level: number,
+    userId?: string | null
+  ): Promise<TutorHint> {
     const challenge = await prisma.challenge.findUnique({
       where: { id: challengeId },
       select: { id: true, title: true, description: true, difficulty: true },
@@ -166,6 +179,7 @@ Return ONLY JSON: { "hint": "...", "level": ${clamped}, "reveals_full_solution":
       cachePrefix: 'tutor',
       prompt,
       schema: TutorHintSchema,
+      userId,
     });
   }
 }
