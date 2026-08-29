@@ -113,6 +113,17 @@ interface BaseApiResponse<T = unknown> {
   message: string;
   error: boolean;
   data: T;
+  /**
+   * Machine-readable error information, present only on handled CLIENT errors
+   * (the backend withholds it on 5xx — see middlewares/errorHandler.ts).
+   *
+   * It exists so a caller can BRANCH rather than only display. AI_KEY_REQUIRED
+   * is the case that forced it: "you have not added your API key" and "the AI
+   * service is down" need different UI, and a message string cannot be
+   * switched on without matching prose, which breaks the moment anyone edits
+   * the copy.
+   */
+  details?: { code?: string; [key: string]: unknown };
   meta?: {
     pagination?: {
       total: number;
@@ -161,6 +172,9 @@ const handleError = <T>(error: unknown): BaseApiResponse<T> => {
     data: null as T,
     message: axiosError.response?.data?.message || 'An error occurred',
     meta: axiosError.response?.data?.meta,
+    // Preserved deliberately. Dropping it here is what made the API's
+    // machine-readable code invisible to every caller.
+    details: axiosError.response?.data?.details,
   };
 };
 

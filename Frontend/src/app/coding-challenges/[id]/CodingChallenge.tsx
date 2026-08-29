@@ -35,11 +35,13 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'react-toastify';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useChallengeSubmit } from '@/hooks/useChallengeSubmit';
 import { useCodeReview, type CodeReviewResult } from '@/hooks/useCodeReview';
 import { AICodeReviewPanel } from '@/app/coding-challenges/components/AICodeReviewPanel';
+import { AiKeyRequiredError } from '@/hooks/useCodeReview';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 function ChallengeSkeleton() {
@@ -149,7 +151,11 @@ export default function CodingChallenge({ id }: { id: string }) {
   const handleSubmit = async () => {
     setReview(null);
     try {
-      const submission = await submitChallenge(id, userCode[language], language);
+      const submission = await submitChallenge(
+        id,
+        userCode[language],
+        language,
+      );
       const accepted = submission.status === 'accepted';
       toast[accepted ? 'success' : 'error'](
         accepted ? 'Accepted' : 'Submitted — some tests failed',
@@ -161,12 +167,32 @@ export default function CodingChallenge({ id }: { id: string }) {
         const result = await requestReview(submission.id);
         setReview(result);
       } catch (reviewError) {
-        // AI review is best-effort (e.g. not configured yet → 503). The
-        // submission still succeeded; don't block on the review.
+        // AI review is best-effort — the submission already succeeded, so a
+        // review failure must never block it.
+        //
+        // But "unavailable" is the WRONG thing to say when the user simply has
+        // not added their API key. That is a one-click fix, and telling them
+        // the service is broken hides it. The message was previously discarded
+        // and replaced with a generic line, which defeated the whole point of
+        // writing an actionable one on the server.
         logger.error('AI review failed:', reviewError);
-        toast.info('AI review is unavailable right now.', {
-          position: 'bottom-right',
-        });
+        if (reviewError instanceof AiKeyRequiredError) {
+          // A visible link, not an onClick on the toast body — an invisible
+          // click target is not an offer, it is a secret.
+          toast.info(
+            <span>
+              {reviewError.message}{' '}
+              <Link href="/settings" className="font-medium underline">
+                Open settings
+              </Link>
+            </span>,
+            { position: 'bottom-right', autoClose: 10000 },
+          );
+        } else {
+          toast.info('AI review is unavailable right now.', {
+            position: 'bottom-right',
+          });
+        }
       }
     } catch (error) {
       logger.error('Error submitting challenge:', error);

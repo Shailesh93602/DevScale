@@ -2,6 +2,22 @@ import { useState } from 'react';
 import { useAxiosPost } from './useAxios';
 
 /**
+ * Thrown when the user has not added their own Gemini API key.
+ *
+ * A distinct type rather than a message string, because the caller has to
+ * BRANCH: "add your key" is a one-click fix and "the AI service is down" is
+ * not, and showing the second when the first is true tells the user the
+ * feature is broken when it is waiting on them. Matching on prose instead
+ * would break the moment anyone edits the copy.
+ */
+export class AiKeyRequiredError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AiKeyRequiredError';
+  }
+}
+
+/**
  * AI Code Review types — mirror the backend's structured review (keys arrive
  * camelCased via the backend's camelCaseResponse middleware).
  */
@@ -39,7 +55,12 @@ export const useCodeReview = () => {
       if (response.success && response.data) {
         return response.data;
       }
-      throw new Error(response.message || 'Failed to generate AI review');
+      if (response.details?.code === 'AI_KEY_REQUIRED') {
+        throw new AiKeyRequiredError(response.message);
+      }
+      throw new Error(
+        response.message || 'The AI review could not be created.',
+      );
     } finally {
       setIsReviewing(false);
     }
