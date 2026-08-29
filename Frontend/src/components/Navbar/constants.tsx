@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiUser, FiSettings, FiLogOut } from 'react-icons/fi';
+import { FiUser, FiLogOut } from 'react-icons/fi';
 import { Swords, Trophy, Users, Calendar, BarChart, Home } from 'lucide-react';
 
 export interface NavItem {
@@ -35,7 +35,10 @@ export const publicNavItems: NavItem[] = [
 
 export const profileItems: ProfileItem[] = [
   { path: '/profile', label: 'Profile', icon: <FiUser /> },
-  { path: '/settings', label: 'Settings', icon: <FiSettings /> },
+  // Settings intentionally absent: src/app/settings does not exist, so this
+  // entry sent every user who opened the profile menu to a 404. Restore it in
+  // the same commit that adds the page, not before — a menu item is a promise.
+
   { path: '/logout', label: 'Logout', icon: <FiLogOut /> },
 ];
 

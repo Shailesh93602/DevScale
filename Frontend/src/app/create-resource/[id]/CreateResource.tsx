@@ -29,10 +29,10 @@ export default function CreateResource({ id }: { id: string }) {
         setContent('');
         window.location.href = '/resources';
       } else {
-        toast.error('Failed to save resource.');
+        toast.error('Unable to save this resource. Please try again.');
       }
     } catch (error) {
-      toast.error('Failed to save resource.');
+      toast.error('Unable to save this resource. Please try again.');
       console.error(error);
     } finally {
       dispatch(hideLoader('saving resource'));

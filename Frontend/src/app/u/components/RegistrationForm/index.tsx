@@ -85,7 +85,7 @@ export default function RegisterForm({
           </label>
         </div>
         <a
-          href="/u/forgotPassword"
+          href="/auth/forgot-password"
           className="text-sm text-primary hover:underline"
         >
           Forgot Password?

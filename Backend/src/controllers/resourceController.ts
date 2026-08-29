@@ -1,15 +1,13 @@
-import fs from 'fs/promises';
 import { Request, Response } from 'express';
-import path from 'path';
 import prisma from '../lib/prisma';
 import { catchAsync } from '../utils';
 import Joi from 'joi';
 import { sendResponse } from '../utils/apiResponse';
 import { createAppError } from '../utils/errorHandler';
 import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
+import interviewQuestions from '../../resources/interviewquestions.json' with { type: 'json' };
 
 // Root directory of the project (for resource file paths)
-const projectRoot = process.cwd();
 
 export default class ResourceController {
   public getSubjects = catchAsync(async (_req: Request, res: Response) => {
@@ -124,16 +122,20 @@ export default class ResourceController {
     sendResponse(res, 'ARTICLE_UPDATED', { data: article });
   });
 
-  // Interview Questions from JSON file
+  // Interview Questions.
+  //
+  // IMPORTED, not read from disk at runtime. It used to be
+  // `fs.readFile(projectRoot/resources/interviewquestions.json)`, which works
+  // locally and silently returns nothing once deployed: Vercel's bundler traces
+  // imports to decide what ships, so a data file that nothing imports is simply
+  // absent from the serverless function. The read threw ENOENT, catchAsync
+  // swallowed it into a 500, the frontend fell back to `[]`, and the page
+  // rendered a heading over blank space with no indication anything was wrong.
+  //
+  // An import is traced, so the data is part of the bundle by construction —
+  // and a missing file becomes a BUILD failure rather than a runtime one.
   public getInterviewQuestions = catchAsync(
     async (_req: Request, res: Response) => {
-      const filePath = path.join(
-        projectRoot,
-        'resources',
-        'interviewquestions.json'
-      );
-      const data = await fs.readFile(filePath, 'utf8');
-      const interviewQuestions = JSON.parse(data);
       sendResponse(res, 'INTERVIEW_QUESTIONS_FETCHED', {
         data: interviewQuestions,
       });

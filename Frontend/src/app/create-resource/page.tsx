@@ -31,7 +31,7 @@ export default function ResourcesPage() {
         ),
       ] as string[]);
     } catch (error) {
-      toast.error('Something went wrong, Please try again!');
+      toast.error('Something went wrong. Please try again.');
       console.error(error);
     }
     dispatch(hideLoader('fetching resources'));

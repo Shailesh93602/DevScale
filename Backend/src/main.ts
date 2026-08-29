@@ -25,7 +25,7 @@ import {
 import { AppRoutes } from './routes/routes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { requestIdMiddleware } from './middlewares/requestIdMiddleware.js';
-import { setCsrfToken, verifyCsrfToken } from './middlewares/csrfMiddleware.js';
+import { setCsrfToken } from './middlewares/csrfMiddleware.js';
 import logger from './utils/logger.js';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma.js';
@@ -109,11 +109,40 @@ export class App {
 
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
-    // CSRF Double-Submit Token Pattern (stateless)
-    // - setCsrfToken ensures the XSRF-TOKEN cookie exists
-    // - verifyCsrfToken validates the X-XSRF-TOKEN header for POST/PUT/DELETE
+    // CSRF Double-Submit Token Pattern (stateless).
+    //
+    // 🔴 verifyCsrfToken is NO LONGER GLOBAL, and that is a bug fix, not a
+    // weakening. Applied to every request it rejected EVERY state-changing
+    // request from the deployed frontend with 403 CSRF_INVALID — likes,
+    // bookmarks, comments, enrolments, quiz submissions, all of it.
+    //
+    // WHY IT COULD NEVER HAVE WORKED HERE.
+    //
+    // Double-submit requires the browser to (a) hold the XSRF-TOKEN cookie and
+    // (b) let JavaScript read it back to echo in a header. The frontend runs on
+    // eduscale.vercel.app and the API on a different *.vercel.app deployment.
+    // `vercel.app` is on the Public Suffix List, so those are separate SITES,
+    // not sibling subdomains: the frontend's `document.cookie` cannot see a
+    // cookie set by the API's domain at all, and `sameSite: 'strict'` means the
+    // browser would not send it cross-site even if it could. `cookieToken` was
+    // therefore always undefined, and the check always failed.
+    //
+    // WHY REMOVING IT GLOBALLY IS SAFE.
+    //
+    // CSRF is an attack on AMBIENT credentials — a cookie the browser attaches
+    // automatically. This API does not have any: authMiddleware reads
+    // `Authorization: Bearer` and nothing else, and a cross-origin page cannot
+    // set that header on a request it forges. This is the standard OWASP
+    // position for token-authenticated APIs.
+    //
+    // WHERE IT IS STILL NEEDED: the refresh endpoint, which is the one place a
+    // cookie (`sb-refresh-token`) authenticates. It is applied there, at the
+    // route, rather than to everything.
+    //
+    // The deeper fix is to serve the API same-origin behind a Next.js rewrite,
+    // which would make both the refresh cookie and double-submit work as
+    // designed. Written up in docs/CSRF-AND-COOKIES.md.
     this.app.use(setCsrfToken);
-    this.app.use(verifyCsrfToken);
     this.app.use(
       cors({
         origin: function (origin, callback) {

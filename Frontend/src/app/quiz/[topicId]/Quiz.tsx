@@ -18,10 +18,10 @@ export default function Quiz({ topicId }: { topicId: string }) {
         toast.success('Quiz submitted successfully!');
         router.push('/profile');
       } else {
-        toast.error('Failed to submit quiz.');
+        toast.error('Unable to submit your quiz. Please try again.');
       }
     } catch (error) {
-      toast.error('Error submitting quiz.');
+      toast.error('Unable to submit your quiz. Please try again.');
       console.error(error);
     }
   };

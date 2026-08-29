@@ -45,7 +45,7 @@ export default function CreateBattlePage() {
         router.push('/battle-zone');
       }
     } catch {
-      toast.error('Failed to create battle. Please try again.');
+      toast.error('Unable to create the battle. Please try again.');
     }
   };
 

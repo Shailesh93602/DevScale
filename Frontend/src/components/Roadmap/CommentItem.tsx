@@ -108,7 +108,7 @@ export const CommentItem = ({
       }
     } catch (error) {
       console.error('Error posting reply:', error);
-      toast.error('Failed to post reply');
+      toast.error('Unable to post your reply. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -138,13 +138,13 @@ export const CommentItem = ({
       } else {
         // Revert optimistic update if API call fails
         onCommentUpdate(comment);
-        toast.error('Failed to update like status');
+        toast.error('Unable to save your like. Please try again.');
       }
     } catch (error) {
       // Revert optimistic update on error
       onCommentUpdate(comment);
       console.error('Error toggling like:', error);
-      toast.error('Failed to toggle like');
+      toast.error('Unable to save your like. Please try again.');
     } finally {
       setIsLiking(false);
     }

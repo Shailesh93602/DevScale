@@ -229,7 +229,7 @@ const RoadmapsPage = () => {
       setHasMore(Boolean(meta?.hasNextPage));
     } catch (error) {
       console.error('Error fetching roadmaps:', error);
-      toast.error('Failed to fetch roadmaps');
+      toast.error('Unable to load the roadmaps. Please refresh the page.');
     }
   }, [page, searchQuery, difficultyFilter, sortBy, type, getRoadmaps]);
 

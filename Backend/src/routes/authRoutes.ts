@@ -1,5 +1,6 @@
 import { BaseRouter } from './BaseRouter';
 import { authMiddleware } from '../middlewares/authMiddleware';
+import { verifyCsrfToken } from '../middlewares/csrfMiddleware.js';
 import {
   logout,
   refreshCache,
@@ -20,10 +21,16 @@ export class AuthRoutes extends BaseRouter {
     // POST /api/v1/auth/refresh — exchange httpOnly refresh cookie for new access token
     // checkAccountLockout: blocks IP after 10 failed attempts (30-min lock)
     // authLimiter: 5 req / 15 min per IP (rate limit on top of lockout)
+    // verifyCsrfToken is applied HERE rather than globally. This is the one
+    // route where a cookie authenticates (`sb-refresh-token`), so it is the one
+    // route with anything for CSRF to protect. Everywhere else authenticates
+    // with an `Authorization: Bearer` header, which a forged cross-origin
+    // request cannot set. See the note in main.ts.
     this.router.post(
       '/refresh',
       checkAccountLockout,
       authLimiter,
+      verifyCsrfToken,
       refreshToken
     );
 

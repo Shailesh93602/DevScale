@@ -121,7 +121,7 @@ export const useRoadmaps = (filters?: RoadmapFilters) => {
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse<unknown>>;
       toast.error(
-        axiosError.response?.data?.message || 'Failed to fetch roadmaps',
+        axiosError.response?.data?.message || 'Unable to load the roadmaps. Please refresh the page.',
       );
       throw error;
     }
@@ -144,7 +144,7 @@ export const useRoadmapById = (id: string) => {
       const response = await execute();
       return response;
     } catch (error) {
-      toast.error('Failed to fetch roadmap');
+      toast.error('Unable to load this roadmap. Please refresh the page.');
       throw error;
     }
   };
@@ -167,7 +167,7 @@ export const useRoadmapCategories = () => {
       const response = await execute();
       return response;
     } catch (error) {
-      toast.error('Failed to fetch categories');
+      toast.error('Unable to load the categories. Please refresh the page.');
       throw error;
     }
   };

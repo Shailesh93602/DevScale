@@ -514,7 +514,7 @@ export function CreateRoadmap({
       onClose();
     } catch (error) {
       console.error('Error creating roadmap:', error);
-      toast.error('Failed to create roadmap');
+      toast.error('Unable to create the roadmap. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

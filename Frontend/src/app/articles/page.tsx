@@ -28,11 +28,11 @@ const MyArticles = () => {
         if (response.data?.success) {
           setArticles(response.data.articles);
         } else {
-          toast.error('Failed to load articles.');
+          toast.error('Unable to load the articles. Please refresh the page.');
         }
       } catch (error) {
         console.error('Error fetching articles:', error);
-        toast.error('Error fetching articles.');
+        toast.error('Unable to load the articles. Please refresh the page.');
       } finally {
         setIsLoading(false);
       }

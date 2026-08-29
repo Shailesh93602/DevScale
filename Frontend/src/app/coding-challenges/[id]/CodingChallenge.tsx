@@ -170,7 +170,7 @@ export default function CodingChallenge({ id }: { id: string }) {
       }
     } catch (error) {
       logger.error('Error submitting challenge:', error);
-      toast.error('Submission failed. Please try again.', {
+      toast.error('Unable to submit your answer. Please try again.', {
         position: 'bottom-right',
       });
     }
