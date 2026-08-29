@@ -807,6 +807,17 @@ model ChallengeSubmission {
   updated_at     DateTime  @updatedAt
   challenge      Challenge @relation(fields: [challenge_id], references: [id])
   user           User      @relation(fields: [user_id], references: [id])
+
+  /// This table had NO index at all. PostgreSQL does not create one for a
+  /// foreign key, so every query below was a sequential scan on a table that
+  /// grows with every code submission a user makes.
+  ///
+  /// "A user's recent submissions, newest first" — the analytics feed and the
+  /// recommendation seed. Returns rows already ordered, so no sort after the
+  /// filter.
+  @@index([user_id, created_at])
+  /// The per-challenge leaderboard: accepted submissions for one challenge.
+  @@index([challenge_id, status])
 }
 
 model ChallengeDraft {

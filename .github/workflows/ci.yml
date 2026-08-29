@@ -296,3 +296,64 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  # ── Accessibility ──────────────────────────────────────────────────────────
+  #
+  # Frontend/tests/accessibility.spec.ts already scanned the public routes with
+  # axe-core, pinned to WCAG 2.1 AA. Nothing ran it — no Playwright job existed
+  # in any repo in this workspace. The standard was right and only ran when
+  # somebody remembered.
+  #
+  # PUBLIC ROUTES ONLY. The protected half needs a seeded database, a running
+  # backend and a logged-in session; a job that is red for environmental reasons
+  # teaches everyone to ignore it, and twenty-two public pages checked on every
+  # PR is worth more than a comprehensive job nobody trusts.
+  #
+  # These pages render without the backend — they are marketing and auth forms
+  # that only call the API on submit — which is exactly why this subset can run
+  # against placeholder env values. Verified locally: 22 passed with no backend.
+  frontend-a11y:
+    name: Frontend — WCAG 2.1 AA (public routes)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: placeholder
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:5000/api/v1
+      NEXT_PUBLIC_WS_URL: http://localhost:5000
+      # Not 3000 — see the note in playwright.config.ts. A dev box routinely has
+      # a different app on 3000, and reuseExistingServer would then run the
+      # whole suite against somebody else's site while reporting green.
+      PORT: 3220
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Chromium only. These axe rules cover markup, contrast, names and
+      # heading order — none differ by engine, so more browsers would multiply
+      # the runtime to re-confirm the same answer.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run the WCAG sweep
+        run: npx playwright test tests/accessibility.spec.ts --no-deps -g "Public"
+
+      - name: Upload the report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-report
+          path: |
+            Frontend/playwright-report/
+            Frontend/test-results/
+          retention-days: 7

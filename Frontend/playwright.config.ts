@@ -1,5 +1,25 @@
 import { defineConfig, devices } from '@playwright/test';
 
+/**
+ * NEVER hardcode the port here.
+ *
+ * `url` and `baseURL` were both pinned to http://localhost:3000 with
+ * `reuseExistingServer: !CI`. Port 3000 routinely serves a DIFFERENT Next.js
+ * app on a dev machine — and when it does, Playwright finds something
+ * listening, decides the server is already up, and runs the entire suite
+ * against somebody else's site while reporting green.
+ *
+ * That is not hypothetical in this workspace: a visual sweep once captured the
+ * wrong site end to end. KhataGO's config carries the same warning for the same
+ * reason.
+ *
+ * A distinctive default port makes a collision unlikely, and PLAYWRIGHT_BASE_URL
+ * lets CI or a deployed-environment run point somewhere explicit.
+ */
+const PORT = Number(process.env.PORT || 3220);
+const EXTERNAL_BASE_URL = process.env.PLAYWRIGHT_BASE_URL;
+const BASE_URL = EXTERNAL_BASE_URL || `http://localhost:${PORT}`;
+
 export default defineConfig({
   testDir: './tests',
   globalSetup: './tests/global-setup.ts',
@@ -13,7 +33,7 @@ export default defineConfig({
   timeout: 90000,
   reporter: [['html', { open: 'never' }]],
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: BASE_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -34,10 +54,15 @@ export default defineConfig({
       dependencies: ['setup'],
     },
   ],
-  webServer: {
-    command: 'npx next dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  // Skipped entirely when PLAYWRIGHT_BASE_URL points at an already-running or
+  // deployed target — starting a second server in that case is the other half
+  // of the same wrong-target bug.
+  webServer: EXTERNAL_BASE_URL
+    ? undefined
+    : {
+        command: `npx next dev -p ${PORT}`,
+        url: BASE_URL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120000,
+      },
 });
