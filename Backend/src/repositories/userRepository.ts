@@ -3,7 +3,10 @@ import BaseRepository from './baseRepository.js';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import prisma from '../lib/prisma.js';
-import { syncSupabaseUserRole } from '../services/supabaseAdmin.js';
+import {
+  syncSupabaseUserRole,
+  type RoleSyncResult,
+} from '../services/supabaseAdmin.js';
 
 export default class UserRepository extends BaseRepository<
   User,
@@ -98,23 +101,55 @@ export default class UserRepository extends BaseRepository<
 
       if (!user) throw createAppError('User not found', 404);
 
-      // Mirror the new role into Supabase app_metadata so the edge middleware
-      // (which gates /admin on app_metadata.role) stays in sync with the DB.
+      // Mirror the new role into Supabase app_metadata — the edge middleware
+      // gates /admin on that claim and cannot read this database.
       const withRole = await prisma.user.findUnique({
         where: { id: userId },
         select: { supabase_id: true, role: { select: { name: true } } },
       });
-      await syncSupabaseUserRole(
+      const roleName = withRole?.role?.name?.toUpperCase();
+      const sync = await syncSupabaseUserRole(
         withRole?.supabase_id,
         withRole?.role?.name
-      ).catch((err) =>
-        logger.error('Role sync to Supabase failed (DB role still updated)', {
-          err,
-        })
-      );
+      ).catch((err): RoleSyncResult => {
+        logger.error('Role sync to Supabase threw', { err });
+        return { synced: false, reason: 'failed' };
+      });
+
+      // A FAILED SYNC WHILE GRANTING ADMIN IS NOT A WARNING.
+      //
+      // The gate fails closed now (the old user_metadata fallback was a
+      // privilege escalation). So an unsynced ADMIN grant produces a user the
+      // database calls an admin who cannot open /admin — and the API just told
+      // whoever did it that it worked.
+      //
+      // Raised rather than logged, because the two sides genuinely disagree and
+      // only a person can decide what to do about it. Non-admin roles still
+      // degrade quietly: nothing gates on them, so a stale claim costs nothing.
+      if (roleName === 'ADMIN' && !sync.synced) {
+        throw createAppError(
+          'The role was saved, but the admin claim could not be synced to Supabase, ' +
+            'so this user cannot open the admin panel yet. ' +
+            (sync.reason === 'not-configured'
+              ? 'SUPABASE_SECRET_KEY is not set on the backend.'
+              : 'Retry, or run: tsx src/scripts/grant-admin.ts <user> ADMIN'),
+          503,
+          { code: 'ADMIN_CLAIM_NOT_SYNCED', reason: sync.reason }
+        );
+      }
 
       return user;
     } catch (error) {
+      // Re-throw errors that already carry a status and a considered message.
+      //
+      // Without this the catch-all below flattens the 404 above and the 503
+      // ADMIN_CLAIM_NOT_SYNCED into "Failed to update user role" (500) — which
+      // destroys the one thing those errors exist to say, and in production the
+      // error handler then replaces a 500's message with "Internal server
+      // error", so nothing survives at all.
+      if (typeof (error as { statusCode?: number }).statusCode === 'number') {
+        throw error;
+      }
       logger.error('Error updating user role:', error);
       throw createAppError('Failed to update user role', 500);
     }
