@@ -27,6 +27,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import { requestIdMiddleware } from './middlewares/requestIdMiddleware.js';
 import { setCsrfToken } from './middlewares/csrfMiddleware.js';
 import logger from './utils/logger.js';
+import { startAuditRetentionJob } from './services/auditRetentionJob.js';
 import { v2 as cloudinary } from 'cloudinary';
 import prisma from './lib/prisma.js';
 import socketService from './services/socket.js';
@@ -360,6 +361,15 @@ export class App {
 
       // Initialize WebSocket server
       socketService.initialize(server);
+
+      // Schedule the audit-log retention sweep.
+      //
+      // Registered from every worker on purpose: Bull dedupes repeatable jobs
+      // by key in Redis, so N workers produce ONE schedule and exactly one of
+      // them runs each occurrence. A setInterval here would instead fire once
+      // per worker — eight concurrent DELETE sweeps on an 8-core box under
+      // `instances: 'max'`.
+      startAuditRetentionJob(process.env.REDIS_URL ?? '');
 
       this.setupGracefulShutdown(server);
     } catch (error) {
