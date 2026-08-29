@@ -1,0 +1,56 @@
+import { describe, it, expect } from 'vitest';
+import {
+  isGuestOnlyRoute,
+  requiresAuthRoute,
+  requiresAdminRoute,
+  isPublicRoute,
+} from './public-routes';
+
+describe('route classification — the access-control matrix', () => {
+  it('admin routes require auth AND admin', () => {
+    expect(requiresAdminRoute('/admin')).toBe(true);
+    expect(requiresAdminRoute('/admin/users')).toBe(true);
+    expect(requiresAuthRoute('/admin')).toBe(true);
+    expect(isPublicRoute('/admin')).toBe(false);
+  });
+
+  it('prefix matching does not bleed across sibling routes', () => {
+    // '/articles' requires auth; '/article-listing' is public. A naive
+    // startsWith('/articles') vs startsWith('/article') both get this wrong.
+    expect(requiresAuthRoute('/articles')).toBe(true);
+    expect(requiresAuthRoute('/articles/42')).toBe(true);
+    expect(requiresAuthRoute('/article-listing')).toBe(false);
+    expect(isPublicRoute('/article-listing')).toBe(true);
+  });
+
+  it('"/" is public but nothing else inherits from it', () => {
+    expect(isPublicRoute('/')).toBe(true);
+    // '/dashboard' must not be public just because '/' is a prefix of it
+    expect(isPublicRoute('/dashboard')).toBe(false);
+    expect(requiresAuthRoute('/dashboard')).toBe(true);
+  });
+
+  it('guest-only covers the auth pages and wins over public', () => {
+    expect(isGuestOnlyRoute('/auth/login')).toBe(true);
+    expect(isGuestOnlyRoute('/auth')).toBe(true);
+    expect(isPublicRoute('/auth/login')).toBe(false);
+  });
+
+  it('null/undefined/empty paths are never granted anything', () => {
+    for (const fn of [
+      isGuestOnlyRoute,
+      requiresAuthRoute,
+      requiresAdminRoute,
+      isPublicRoute,
+    ]) {
+      expect(fn(undefined)).toBe(false);
+      expect(fn(null)).toBe(false);
+      expect(fn('')).toBe(false);
+    }
+  });
+
+  it('an unlisted route is neither public nor protected — callers must decide', () => {
+    expect(isPublicRoute('/totally-new-page')).toBe(false);
+    expect(requiresAuthRoute('/totally-new-page')).toBe(false);
+  });
+});

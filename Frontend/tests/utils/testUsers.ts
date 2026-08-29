@@ -15,13 +15,13 @@
  */
 
 const ACCOUNTS = {
-  student: { email: "testuser@yopmail.com", env: "E2E_STUDENT_PASSWORD" },
+  student: { email: 'testuser@yopmail.com', env: 'E2E_STUDENT_PASSWORD' },
   student2: {
-    email: "battleplayer2@yopmail.com",
-    env: "E2E_STUDENT2_PASSWORD",
+    email: 'battleplayer2@yopmail.com',
+    env: 'E2E_STUDENT2_PASSWORD',
   },
-  admin: { email: "admin@eduscale.io", env: "E2E_ADMIN_PASSWORD" },
-  moderator: { email: "moderator@eduscale.io", env: "E2E_MODERATOR_PASSWORD" },
+  admin: { email: 'admin@eduscale.io', env: 'E2E_ADMIN_PASSWORD' },
+  moderator: { email: 'moderator@eduscale.io', env: 'E2E_MODERATOR_PASSWORD' },
 } as const;
 
 export type UserKey = keyof typeof ACCOUNTS;
@@ -32,14 +32,17 @@ function requirePassword(envName: string): string {
     throw new Error(
       `${envName} is not set. E2E test-account passwords are read from the ` +
         `environment, never hardcoded — see Frontend/tests/utils/testUsers.ts. ` +
-        `Set the four E2E_*_PASSWORD variables (see .env.example) and re-run.`
+        `Set the four E2E_*_PASSWORD variables (see .env.example) and re-run.`,
     );
   }
   return value;
 }
 
 export function testUser(key: UserKey): { email: string; password: string } {
-  return { email: ACCOUNTS[key].email, password: requirePassword(ACCOUNTS[key].env) };
+  return {
+    email: ACCOUNTS[key].email,
+    password: requirePassword(ACCOUNTS[key].env),
+  };
 }
 
 /** Convenience for specs that only need the address. */
