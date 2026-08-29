@@ -26,28 +26,52 @@ export function isSupabaseAdminConfigured(): boolean {
   return getAdminClient() !== null;
 }
 
+/** Why a sync did not happen, when it did not. */
+export type RoleSyncResult =
+  | { synced: true }
+  | {
+      synced: false;
+      reason: 'not-configured' | 'missing-identity' | 'failed';
+      detail?: string;
+    };
+
 /**
  * Mirror a user's role into Supabase `app_metadata.role`.
  *
- * The edge middleware gates /admin on `app_metadata.role` (it can't read our
- * DB), so the authoritative DB role must be mirrored here whenever it changes —
- * otherwise the DB role and the gate drift and admins can't reach /admin.
+ * The edge middleware gates /admin on `app_metadata.role` — it cannot read our
+ * database — so the authoritative DB role must be mirrored here whenever it
+ * changes. If it is not, the DB and the gate disagree.
  *
- * No-op (with a warning) when the service key isn't set, so role updates still
- * succeed in environments without it.
+ * WHY THIS RETURNS A RESULT INSTEAD OF SWALLOWING FAILURE.
+ *
+ * It used to log a warning and return void, which was defensible while the gate
+ * had a fallback: a stale claim degraded to reading `user_metadata` and the
+ * admin still got in. That fallback was a privilege escalation and is gone, so
+ * the gate now fails CLOSED — and the consequence of a silent sync failure
+ * changed completely.
+ *
+ * Today, a failed sync means a user who was just granted ADMIN, and told so,
+ * **cannot reach /admin at all**. The database says one thing and the gate says
+ * another, with nothing anywhere reporting the disagreement.
+ *
+ * A half-applied privilege grant is worse than a refused one, so the caller is
+ * given what it needs to refuse. Removing a fallback quietly moves risk into
+ * whatever depended on it.
  */
 export async function syncSupabaseUserRole(
   supabaseId: string | null | undefined,
   roleName: string | null | undefined
-): Promise<void> {
+): Promise<RoleSyncResult> {
   const admin = getAdminClient();
   if (!admin) {
     logger.warn(
-      'SUPABASE_SECRET_KEY not set — skipping app_metadata role sync (admin gate may be stale)'
+      'SUPABASE_SECRET_KEY not set — skipping app_metadata role sync (the /admin gate will be stale)'
     );
-    return;
+    return { synced: false, reason: 'not-configured' };
   }
-  if (!supabaseId || !roleName) return;
+  if (!supabaseId || !roleName) {
+    return { synced: false, reason: 'missing-identity' };
+  }
 
   const { error } = await admin.auth.admin.updateUserById(supabaseId, {
     app_metadata: { role: roleName.toUpperCase() },
@@ -57,7 +81,9 @@ export async function syncSupabaseUserRole(
       error: error.message,
       supabaseId,
     });
-  } else {
-    logger.info('Synced Supabase app_metadata.role', { supabaseId, roleName });
+    return { synced: false, reason: 'failed', detail: error.message };
   }
+
+  logger.info('Synced Supabase app_metadata.role', { supabaseId, roleName });
+  return { synced: true };
 }
