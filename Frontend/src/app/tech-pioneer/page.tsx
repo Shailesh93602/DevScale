@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: 'Tech Pioneer',
   description:
     'Coding courses, project development, AI & ML tracks, and virtual internships — coming soon.',
+  // Placeholder page: real, honest, and deliberately not indexed until the
+  // features behind it exist. Kept crawlable so the tag can be read.
+  robots: { index: false, follow: true },
 };
 
 // The sub-routes (coding-courses, project-development, ai-ml-courses,

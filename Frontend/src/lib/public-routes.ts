@@ -45,6 +45,14 @@ export const AUTH_REQUIRED_ROUTE_PREFIXES = [
   '/coding-challenges',
   '/collaboration-opportunities',
   '/community',
+  // /create-battle and /settings were in NEITHER list — the same gap this file
+  // already documents for /moderate below, still open for two more routes.
+  // /settings renders the API-key panel's shell (including the "encrypted
+  // before it is stored" copy) to anonymous visitors; /create-battle renders a
+  // full battle-creation form that can only ever 401. The data behind both is
+  // safe — every endpoint they call is auth-gated — but a signed-out visitor
+  // should not be looking at either shell, and a crawler should not index it.
+  '/create-battle',
   '/create-resource',
   '/dashboard',
   '/details',
@@ -68,6 +76,7 @@ export const AUTH_REQUIRED_ROUTE_PREFIXES = [
   '/placement-preparation',
   '/profile',
   '/resources',
+  '/settings',
   '/streak',
   '/achievements',
   '/tech-interests-assessment',
