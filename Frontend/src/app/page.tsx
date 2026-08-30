@@ -1,7 +1,12 @@
 'use client';
 
 import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from 'framer-motion';
 import HeroSection from '@/components/Landing/HeroSection';
 import ModernStatsSection from '@/components/Landing/ModernStatsSection';
 import CommunitySection from '@/components/Landing/CommunitySection';
@@ -17,6 +22,11 @@ import { FloatingElements } from '@/components/ui/floating-elements';
 import { AnimatedBattleCard } from '@/components/ui/animated-battle-card';
 import { MagneticButton } from '@/components/ui/magnetic-button';
 
+/** Scrolled far enough that returning to the top is a real action. */
+const SHOW_AFTER_PX = 400;
+/** Keep clear of the footer, whose copyright line the button used to cover. */
+const FOOTER_CLEARANCE_PX = 220;
+
 export default function Home() {
   // Enhanced parallax effect for hero section
   const { scrollY } = useScroll();
@@ -24,9 +34,32 @@ export default function Home() {
   const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 300], [1, 0.95]);
 
-  // Ref for scroll to top button
+  const prefersReducedMotion = useReducedMotion();
+
+  /**
+   * Show the scroll-to-top control only when it has something to do, and hide
+   * it again near the very bottom so it cannot sit on top of the footer.
+   *
+   * Driven off framer-motion's existing scrollY motion value rather than a new
+   * scroll listener, so there is one subscription rather than two.
+   */
+  const [showScrollTop, setShowScrollTop] = React.useState(false);
+  React.useEffect(() => {
+    const evaluate = (y: number) => {
+      const doc = document.documentElement;
+      const nearBottom =
+        y + window.innerHeight >= doc.scrollHeight - FOOTER_CLEARANCE_PX;
+      setShowScrollTop(y > SHOW_AFTER_PX && !nearBottom);
+    };
+    evaluate(scrollY.get());
+    return scrollY.on('change', evaluate);
+  }, [scrollY]);
+
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({
+      top: 0,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    });
   };
 
   return (
@@ -283,21 +316,44 @@ export default function Home() {
       {/* Call to Action Section */}
       <CTASection />
 
-      {/* Scroll to top button */}
+      {/* Scroll to top.
+       *
+       * Three things were wrong and all three were visible:
+       *  - it appeared immediately and never hid, so at scrollY = 0 there was a
+       *    prominent button whose only action was to do nothing;
+       *  - it bounced forever (`repeat: Infinity`) regardless of
+       *    prefers-reduced-motion, on the landing page;
+       *  - `bottom-8 right-8` sat on top of the footer copyright, hiding the
+       *    word "reserved." at 1280px.
+       *
+       * Now it appears only once there is somewhere to scroll back to, holds
+       * still for anyone who asked for reduced motion, and is hidden while the
+       * footer is on screen so it cannot cover it.
+       */}
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="fixed bottom-8 right-8 z-50"
+        animate={{ opacity: showScrollTop ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className={`fixed bottom-8 right-8 z-50 ${
+          showScrollTop ? '' : 'pointer-events-none'
+        }`}
+        aria-hidden={!showScrollTop}
       >
         <motion.button
           onClick={scrollToTop}
-          animate={{ translateY: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
+          animate={
+            prefersReducedMotion ? undefined : { translateY: [0, 10, 0] }
+          }
+          transition={
+            prefersReducedMotion
+              ? undefined
+              : { repeat: Infinity, duration: 1.5 }
+          }
           className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary2"
           whileHover={{ scale: 1.1 }}
           aria-label="Scroll to top"
           role="button"
+          tabIndex={showScrollTop ? 0 : -1}
         >
           <svg
             width="28"
