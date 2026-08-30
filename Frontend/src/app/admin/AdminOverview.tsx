@@ -43,14 +43,14 @@ interface DashboardMetrics {
     dailyActiveUsers: number;
     weeklyActiveUsers: number;
     monthlyActiveUsers: number;
-    averageSessionDuration: number;
+    averageSessionDuration: number | null;
     peakUsageTimes: string[];
   };
   systemHealth: {
     databaseStatus: string;
     cacheStatus: string;
-    averageResponseTime: number;
-    errorRate: number;
+    averageResponseTime: number | null;
+    errorRate: number | null;
   };
 }
 
@@ -62,6 +62,10 @@ const ACCENTS = {
   sky: 'from-sky-500/15 to-sky-500/5 text-sky-600 dark:text-sky-400',
   amber: 'from-amber-500/15 to-amber-500/5 text-amber-600 dark:text-amber-400',
   rose: 'from-rose-500/15 to-rose-500/5 text-rose-600 dark:text-rose-400',
+  /// Neutral, for a metric that is not measured. Deliberately not emerald: an
+  /// unknown error rate is not a healthy one, and colouring it green is the
+  /// same lie as printing 0.00%.
+  slate: 'from-slate-500/15 to-slate-500/5 text-slate-600 dark:text-slate-400',
 } as const;
 
 function StatCard({
@@ -239,7 +243,14 @@ export default function AdminOverview() {
         <StatCard
           icon={Timer}
           label="Avg Session"
-          value={`${Math.round(activityMetrics.averageSessionDuration || 0)}m`}
+          // `|| 0` rendered "0m" for a metric derived from a table nothing
+          // writes — a fabricated measurement shown as fact. "—" says the
+          // honest thing: not measured.
+          value={
+            activityMetrics.averageSessionDuration === null
+              ? '—'
+              : `${Math.round(activityMetrics.averageSessionDuration)}m`
+          }
           accent="amber"
         />
       </div>
@@ -267,14 +278,29 @@ export default function AdminOverview() {
         <StatCard
           icon={Gauge}
           label="Avg Response"
-          value={`${Math.round(systemHealth.averageResponseTime || 0)}ms`}
+          value={
+            systemHealth.averageResponseTime === null
+              ? '—'
+              : `${Math.round(systemHealth.averageResponseTime)}ms`
+          }
           accent="sky"
         />
         <StatCard
           icon={AlertTriangle}
           label="Error Rate"
-          value={`${((systemHealth.errorRate || 0) * (systemHealth.errorRate <= 1 ? 100 : 1)).toFixed(2)}%`}
-          accent={systemHealth.errorRate > 0.05 ? 'rose' : 'emerald'}
+          value={
+            systemHealth.errorRate === null
+              ? '—'
+              : `${(systemHealth.errorRate * (systemHealth.errorRate <= 1 ? 100 : 1)).toFixed(2)}%`
+          }
+          // An unmeasured error rate is not a healthy one: neutral, not green.
+          accent={
+            systemHealth.errorRate === null
+              ? 'slate'
+              : systemHealth.errorRate > 0.05
+                ? 'rose'
+                : 'emerald'
+          }
         />
       </div>
     </div>

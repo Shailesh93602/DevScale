@@ -354,7 +354,7 @@ export default class AdminDashboardRepository extends BaseRepository<
     dailyActiveUsers: number;
     weeklyActiveUsers: number;
     monthlyActiveUsers: number;
-    averageSessionDuration: number;
+    averageSessionDuration: number | null;
     peakUsageTimes: string[];
   }> {
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -393,14 +393,24 @@ export default class AdminDashboardRepository extends BaseRepository<
       },
     });
 
+    // `|| 1` on the divisor turned an EMPTY result set into a clean 0, and the
+    // panel rendered that as "0m" — a measured fact. Nothing in this codebase
+    // writes to `auditLog` (grep: zero `auditLog.create` call sites), so the
+    // set is always empty and the figure was always a fabricated zero.
+    //
+    // null distinguishes "no data" from "measured, and it was zero". The panel
+    // renders it as "—". Restore a real number by writing SESSION rows, not by
+    // reinstating the divisor.
     const averageSessionDuration =
-      sessionDurations.reduce((acc, { details }) => {
-        const duration =
-          typeof details === 'object' && details
-            ? ((details as { duration?: number }).duration ?? 0)
-            : 0;
-        return acc + duration;
-      }, 0) / (sessionDurations.length || 1);
+      sessionDurations.length === 0
+        ? null
+        : sessionDurations.reduce((acc, { details }) => {
+            const duration =
+              typeof details === 'object' && details
+                ? ((details as { duration?: number }).duration ?? 0)
+                : 0;
+            return acc + duration;
+          }, 0) / sessionDurations.length;
 
     const peakUsageTimes = await this.getPeakUsageTimes();
 
@@ -451,8 +461,8 @@ export default class AdminDashboardRepository extends BaseRepository<
   private async getSystemHealth(): Promise<{
     databaseStatus: string;
     cacheStatus: string;
-    averageResponseTime: number;
-    errorRate: number;
+    averageResponseTime: number | null;
+    errorRate: number | null;
   }> {
     try {
       const databaseStatus = 'healthy';
@@ -483,14 +493,19 @@ export default class AdminDashboardRepository extends BaseRepository<
         },
       });
 
+      // Same fabricated zero as averageSessionDuration above, and this one is
+      // worse: it is read inside the health check, so "0ms average response"
+      // was being reported as a health signal on every probe.
       const averageResponseTime =
-        responseTimes.reduce((acc, { details }) => {
-          const duration =
-            typeof details === 'object' && details
-              ? ((details as { duration?: number }).duration ?? 0)
-              : 0;
-          return acc + duration;
-        }, 0) / (responseTimes.length || 1);
+        responseTimes.length === 0
+          ? null
+          : responseTimes.reduce((acc, { details }) => {
+              const duration =
+                typeof details === 'object' && details
+                  ? ((details as { duration?: number }).duration ?? 0)
+                  : 0;
+              return acc + duration;
+            }, 0) / responseTimes.length;
 
       // Calculate error rate
       const [totalRequests, errorRequests] = await Promise.all([
@@ -512,8 +527,11 @@ export default class AdminDashboardRepository extends BaseRepository<
         }),
       ]);
 
+      // Also derived from the never-written auditLog: with no requests
+      // recorded, "0% error rate" was a reassuring number that measured
+      // nothing. null so the panel can say so.
       const errorRate =
-        totalRequests > 0 ? (errorRequests / totalRequests) * 100 : 0;
+        totalRequests > 0 ? (errorRequests / totalRequests) * 100 : null;
 
       return {
         databaseStatus,
@@ -526,8 +544,10 @@ export default class AdminDashboardRepository extends BaseRepository<
       return {
         databaseStatus: 'error',
         cacheStatus: 'error',
-        averageResponseTime: 0,
-        errorRate: 100,
+        // Not measured, because the check itself failed — distinct from a
+        // measured zero, which is what this used to claim.
+        averageResponseTime: null,
+        errorRate: null,
       };
     }
   }

@@ -28,15 +28,15 @@ export interface ActivityMetrics {
   dailyActiveUsers: number;
   weeklyActiveUsers: number;
   monthlyActiveUsers: number;
-  averageSessionDuration: number;
+  averageSessionDuration: number | null;
   peakUsageTimes: string[];
 }
 
 export interface SystemHealth {
   databaseStatus: string;
   cacheStatus: string;
-  averageResponseTime: number;
-  errorRate: number;
+  averageResponseTime: number | null;
+  errorRate: number | null;
 }
 
 export interface ResourceAllocation {

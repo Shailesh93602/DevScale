@@ -43,10 +43,19 @@ export class AppRoutes {
   }
 
   private initializeRoutes(): void {
-    // Health check route
-    this.router.get('/debug-sentry', () => {
-      throw new Error('My first Sentry error!');
-    });
+    // Sentry smoke test — a route that exists only to throw, so the error
+    // pipeline can be confirmed end to end. Registered OUTSIDE production
+    // only: in production it is an unauthenticated endpoint that reliably
+    // 500s, which anyone can use to flood the error tracker (and the alerts
+    // built on it) with noise that looks exactly like a real incident.
+    //
+    // Labelled "Health check route" previously, which is close to the
+    // opposite of what it does.
+    if (process.env.NODE_ENV !== 'production') {
+      this.router.get('/debug-sentry', () => {
+        throw new Error('Sentry smoke test — this error is intentional');
+      });
+    }
     this.router.use('/health', new HealthCheckRoutes().getRouter());
 
     // Auth routes (logout, cache refresh)
