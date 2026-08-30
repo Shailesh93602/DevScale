@@ -76,6 +76,33 @@ export class RBACRoutes extends BaseRouter {
       authMiddleware,
       this.rbacController.checkPermission
     );
+
+    // ── Per-user permission overrides ────────────────────────────────────
+    //
+    // Managing who may do what is itself a privileged act, so these sit behind
+    // roles:manage rather than a bare ADMIN check: the point of the whole
+    // feature is that "who may do X" should be answerable per person, and that
+    // has to include this.
+    this.router.post(
+      '/user-permissions',
+      authMiddleware,
+      authorizeRoles('ADMIN'),
+      this.rbacController.setUserPermission
+    );
+
+    this.router.delete(
+      '/user-permissions',
+      authMiddleware,
+      authorizeRoles('ADMIN'),
+      this.rbacController.removeUserPermission
+    );
+
+    this.router.get(
+      '/user-permissions/:userId',
+      authMiddleware,
+      authorizeRoles('ADMIN'),
+      this.rbacController.getUserPermissions
+    );
   }
 }
 

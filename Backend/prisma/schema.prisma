@@ -1065,16 +1065,42 @@ model RolePermission {
   @@map("role_permissions")
 }
 
+/// A per-person exception to what their ROLE allows.
+///
+/// The table existed before this and was never read: `checkPermission` looked
+/// only at role permissions, so every row here was inert. It is now the
+/// override layer — the thing that lets one capable student be given a single
+/// extra power without inventing a role for them, and lets one moderator have
+/// a single power taken away without demoting them.
 model UserPermission {
   id            String     @id @default(uuid())
   user_id       String
   permission_id String
+
+  /// ALLOW grants a permission the role does not give. DENY removes one the
+  /// role does give. DENY beats ALLOW and beats the role — see
+  /// services/permissionService.ts for why revocation must be able to win.
+  effect        String     @default("ALLOW")
+
+  /// Optional expiry. Overrides are for exceptions, and an exception that
+  /// outlives its reason is how "temporary" access becomes permanent: the
+  /// industry failure mode is standing access nobody remembers granting.
+  /// NULL means indefinite, which is allowed but should be the rarer case.
+  expires_at    DateTime?
+
+  /// Who granted it and why — an override is a decision, and a decision with
+  /// no author cannot be reviewed later.
+  granted_by    String?
+  reason        String?
+
   created_at    DateTime   @default(now()) @map("created_at")
   updated_at    DateTime   @updatedAt @map("updated_at")
   permission    Permission @relation(fields: [permission_id], references: [id])
   user          User       @relation(fields: [user_id], references: [id])
 
   @@unique([user_id, permission_id])
+  /// Resolution loads every override for one user on each cache miss.
+  @@index([user_id, expires_at])
   @@map("user_permissions")
 }
 

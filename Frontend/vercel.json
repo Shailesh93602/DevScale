@@ -5,5 +5,11 @@
       "schedule": "0 9 * * *"
     }
   ],
-  "ignoreCommand": "bash -c 'test \"$VERCEL_GIT_COMMIT_REF\" != main'"
+  "ignoreCommand": "bash -c 'test \"$VERCEL_GIT_COMMIT_REF\" != main'",
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "main": true
+    }
+  }
 }
