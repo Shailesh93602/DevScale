@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 import { describe, it, expect } from '@jest/globals';
 import type { Router } from 'express';
 
@@ -238,6 +241,127 @@ describe.each(CONTENT_SUITES)('$label — mutations', ({ build }) => {
       .filter((r) => r.method !== 'GET')
       .filter((r) => !isGuarded(r.handlers, routerMiddleware, 'authMiddleware'))
       .map((r) => `${r.method} ${r.path}`);
+
+    expect(unauthenticated).toEqual([]);
+  });
+});
+
+/**
+ * EVERY router on disk — the gap the two lists above could not see.
+ *
+ * The suites above introspect the real Express router, deliberately, because a
+ * hand-maintained list of "routes that should be protected" drifts from the
+ * router that actually gets mounted. But the list of ROUTERS was itself
+ * hand-maintained: four imports at the top of this file. So the check was
+ * exhaustive *within* four routers and blind to the other twenty.
+ *
+ * That blindness was not theoretical. `mainConceptRoutes.ts` declared
+ * `POST/PUT/DELETE` under a `// Protected routes` comment with no middleware of
+ * any kind — `DELETE /main-concepts/:id` was unauthenticated curriculum
+ * deletion. `resourceRoutes` let any signed-in student run
+ * `deleteMany({ id: { in: ids } })` over subjects. `supportRoutes` had its
+ * permission checks commented out. None of them was imported here, so all of
+ * them passed.
+ *
+ * This suite enumerates the route files from the filesystem instead, so a
+ * router added next month is covered the day it lands rather than the day
+ * somebody remembers to add an import. It asserts the weakest defensible
+ * property — every MUTATION is at least authenticated — because these routers
+ * legitimately differ on whether a role is required.
+ */
+describe('every router on disk', () => {
+  const routesDir = path.join(__dirname, '..', '..', 'routes');
+  const files = fs
+    .readdirSync(routesDir)
+    .filter((f) => f.endsWith('Routes.ts'))
+    .sort();
+
+  it('finds the route files at all', () => {
+    // Load-bearing, same reason as above: an empty list passes every
+    // assertion below without checking anything.
+    expect(files.length).toBeGreaterThan(10);
+  });
+
+  /**
+   * Mutations that write only the caller's own data, so authentication is the
+   * whole guard. Explicit, because "it looked self-service" is how a privileged
+   * write slips through.
+   */
+  const PUBLIC_BY_DESIGN = new Set([
+    'authRoutes.ts POST /login',
+    'authRoutes.ts POST /register',
+    'authRoutes.ts POST /refresh',
+    'authRoutes.ts POST /forgot-password',
+    'authRoutes.ts POST /reset-password',
+    'authRoutes.ts POST /resend-verification',
+    'authRoutes.ts POST /verify-email',
+    'authRoutes.ts POST /set-refresh-cookie',
+    'authRoutes.ts POST /clear-refresh-cookie',
+    'contactRoutes.ts POST /',
+    'webhookRoutes.ts POST /',
+    // Verified by HMAC instead of a session: the handler calls
+    // `stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET)`
+    // and 400s on a bad signature. Requiring a session here would break the
+    // integration, since Stripe has none.
+    'subscriptionRoutes.ts POST /stripe/webhook',
+  ]);
+
+  /**
+   * Route modules come in two shapes: some `export default new X().getRouter()`,
+   * others export only the class. Resolving both matters — assuming one shape
+   * would silently skip every file using the other, which is the same
+   * blind-spot bug this suite exists to close, one level down.
+   */
+  function resolveRouter(mod: Record<string, unknown>): Router | null {
+    const isRouter = (v: unknown): v is Router =>
+      typeof v === 'function' &&
+      Array.isArray((v as unknown as { stack?: unknown }).stack);
+    const isRouterClass = (v: unknown): boolean =>
+      typeof v === 'function' &&
+      typeof (v as { prototype?: { getRouter?: unknown } }).prototype
+        ?.getRouter === 'function';
+
+    for (const value of [mod.default, ...Object.values(mod)]) {
+      if (isRouter(value)) return value;
+    }
+    for (const value of [mod.default, ...Object.values(mod)]) {
+      if (isRouterClass(value)) {
+        const Ctor = value as new () => { getRouter: () => Router };
+        return new Ctor().getRouter();
+      }
+    }
+    return null;
+  }
+
+  it.each(files)('%s authenticates every mutation', (file) => {
+    // Resolution failures are reported WITH their cause. An earlier version
+    // asserted `expect(router).not.toBeNull()`, which failed with an empty
+    // message and told the reader nothing about why — a test that cannot
+    // explain its own failure costs more than it saves.
+    let router: Router | null = null;
+    let failure = '';
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const mod = require(path.join(routesDir, file)) as Record<
+        string,
+        unknown
+      >;
+      router = resolveRouter(mod);
+      if (!router) {
+        failure = `${file}: no mountable router among exports [${Object.keys(mod).join(', ')}]`;
+      }
+    } catch (err) {
+      failure = `${file}: failed to load — ${err instanceof Error ? err.message : String(err)}`;
+    }
+    expect(failure).toBe('');
+    if (!router) return;
+
+    const routerMiddleware = routerLevelMiddleware(router);
+    const unauthenticated = routes(router)
+      .filter((r) => r.method !== 'GET')
+      .filter((r) => !isGuarded(r.handlers, routerMiddleware, 'authMiddleware'))
+      .map((r) => `${file} ${r.method} ${r.path}`)
+      .filter((r) => !PUBLIC_BY_DESIGN.has(r));
 
     expect(unauthenticated).toEqual([]);
   });

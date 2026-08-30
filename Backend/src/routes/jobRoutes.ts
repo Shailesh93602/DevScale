@@ -1,6 +1,6 @@
 import { BaseRouter } from './BaseRouter';
 import JobController from '../controllers/jobControllers';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 
 export class JobRoutes extends BaseRouter {
   private readonly jobController: JobController;
@@ -14,9 +14,24 @@ export class JobRoutes extends BaseRouter {
   protected initializeRoutes(): void {
     this.router.get('/', this.jobController.getJobs);
     this.router.get('/:id', this.jobController.getJob);
-    this.router.post('/create', this.jobController.createJob);
-    this.router.put('/update/:id', this.jobController.updateJob);
-    this.router.delete('/delete/:id', this.jobController.deleteJob);
+    // Job postings are platform content, not user content: the controller has
+    // no ownership check, so update/:id and delete/:id act on ANY job by id.
+    // Router-level authMiddleware made these authenticated but not authorised.
+    this.router.post(
+      '/create',
+      authorizeRoles('ADMIN'),
+      this.jobController.createJob
+    );
+    this.router.put(
+      '/update/:id',
+      authorizeRoles('ADMIN'),
+      this.jobController.updateJob
+    );
+    this.router.delete(
+      '/delete/:id',
+      authorizeRoles('ADMIN'),
+      this.jobController.deleteJob
+    );
   }
 }
 

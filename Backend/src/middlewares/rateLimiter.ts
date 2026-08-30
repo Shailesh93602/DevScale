@@ -14,7 +14,11 @@ try {
     if (err.code !== 'ECONNREFUSED') {
       logger.error('Redis connection error:', err);
     }
-    redisClient = null;
+    // Deliberately NOT `redisClient = null`. ioredis reconnects on its own, but
+    // nulling the handle was permanent for the life of the process: one
+    // transient error silently disabled every rate limiter and the account
+    // lockout — with no log line saying so — until a redeploy. Keeping the
+    // client lets limiting resume the moment Redis is back.
   });
 
   redisClient.on('connect', () => {
@@ -43,6 +47,12 @@ export const createRateLimiter = (
 
   return (req: Request, res: Response, next: NextFunction): void => {
     if (!redisClient) {
+      // Fail OPEN on purpose: a limiter outage must not take the API down.
+      // But it is logged, because "rate limiting is silently off" is a state
+      // nobody should have to discover from an incident.
+      logger.warn(
+        `Rate limiter bypassed (no Redis client): ${keyPrefix} ${req.method} ${req.path}`
+      );
       next();
       return;
     }
