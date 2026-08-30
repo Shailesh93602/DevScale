@@ -3,11 +3,7 @@ import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
-import {
-  AuditLogParams,
-  ChangeHistoryParams,
-  SecurityLogParams,
-} from '../types/index.js';
+import { AuditLogParams, SecurityLogParams } from '../types/index.js';
 
 /**
  * Hard ceiling on how many log rows any single read may return.
@@ -68,24 +64,6 @@ export default class AdminAuditLogRepository extends BaseRepository<
     }
   }
 
-  async logChangeHistory(params: ChangeHistoryParams) {
-    try {
-      return await this.prismaClient.changeHistory.create({
-        data: {
-          entity: params.entity,
-          entity_id: params.entity_id,
-          action: params.action,
-          changes: params.changes as unknown as Prisma.InputJsonValue,
-          user_id: params.user_id,
-          reason: params.reason,
-        },
-      });
-    } catch (error) {
-      logger.error('Failed to log change history:', error);
-      throw createAppError('Failed to log change history', 500);
-    }
-  }
-
   /**
    * Security events in a date range, newest first.
    *
@@ -123,32 +101,17 @@ export default class AdminAuditLogRepository extends BaseRepository<
     }
   }
 
-  /** Bounded for the same reason as getSecurityLogs. */
-  async getChangeHistory(
-    entity: string,
-    entityId: string,
-    limit = MAX_LOG_PAGE
-  ): Promise<ChangeHistoryParams[]> {
-    try {
-      const history = await this.prismaClient.changeHistory.findMany({
-        take: Math.min(limit, MAX_LOG_PAGE),
-        where: {
-          entity,
-          entity_id: entityId,
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
-      });
-
-      return history.map((record) => ({
-        ...record,
-        changes: record.changes as Record<string, unknown>,
-        reason: record.reason || undefined,
-      }));
-    } catch (error) {
-      logger.error('Failed to get change history:', error);
-      throw createAppError('Failed to get change history', 500);
-    }
-  }
+  // logChangeHistory / getChangeHistory lived here and are deliberately gone.
+  //
+  // They were a SECOND audit mechanism: a writer with no callers, a reader with
+  // no callers, and a `ChangeHistory` table that nothing wrote and the
+  // retention job did not prune. AdminAuditLog.details already carries
+  // before/after values (see the article-status rows, which record `from` and
+  // `to`), so this duplicated the mechanism that is actually used.
+  //
+  // Deleted rather than wired, because two audit trails where one is dead is
+  // worse than one: the next person to add an audited action has to guess which
+  // is real, and the dead one looks equally official. The empty table is left
+  // in place — dropping it is a destructive migration with no benefit — but the
+  // code that made it look like a feature is not.
 }

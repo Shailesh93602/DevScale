@@ -4,6 +4,8 @@ import { sendResponse } from '../utils/apiResponse';
 import { ForumRepository } from '../repositories/forumRepository';
 import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
 import { assertOwnership } from '../utils/assertOwnership';
+import { recordActionBestEffort } from '../services/auditTrail';
+import logger from '../utils/logger';
 export default class CommunityForumController {
   private readonly forumRepo: ForumRepository;
 
@@ -94,6 +96,26 @@ export default class CommunityForumController {
     await this.forumRepo.delete({
       where: { id: forumId },
     });
+
+    // ADMIN-gated with no ownership check, so this is an admin removing
+    // somebody ELSE's discussion — and the row it deletes is the only other
+    // evidence it existed. Record the author, or "who deleted my thread?" has
+    // no answer at all after the fact.
+    await recordActionBestEffort(
+      {
+        admin_id: req.user?.id ?? 'unknown',
+        action: 'DELETE_FORUM',
+        entity: 'FORUM',
+        entity_id: forumId,
+        details: {
+          title: (forum as { title?: string }).title,
+          authorId: (forum as { created_by?: string }).created_by,
+        },
+        ip_address: req.ip,
+        user_agent: req.headers['user-agent'],
+      },
+      logger
+    );
 
     return sendResponse(res, 'FORUM_DELETED');
   });

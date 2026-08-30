@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
 import { ChallengeRepository } from '../repositories/challengeRepository';
+import { recordActionBestEffort } from '../services/auditTrail';
+import logger from '../utils/logger';
 import prisma from '../lib/prisma';
 export default class ChallengeController {
   private readonly challengeRepo: ChallengeRepository;
@@ -74,6 +76,24 @@ export default class ChallengeController {
   public createNewChallenge = catchAsync(
     async (req: Request, res: Response) => {
       const challenge = await this.challengeRepo.create(req.body);
+
+      // A challenge body includes its TEST CASES — the expected outputs every
+      // other user is graded against. Creating or editing one silently changes
+      // whether other people's submissions pass, which is why this is
+      // ADMIN/MODERATOR-gated and why it needs a record of who did it.
+      await recordActionBestEffort(
+        {
+          admin_id: req.user?.id ?? 'unknown',
+          action: 'CREATE_CHALLENGE',
+          entity: 'CHALLENGE',
+          entity_id: (challenge as { id?: string })?.id ?? 'unknown',
+          details: { title: (req.body as { title?: string })?.title },
+          ip_address: req.ip,
+          user_agent: req.headers['user-agent'],
+        },
+        logger
+      );
+
       return sendResponse(res, 'CHALLENGE_CREATED', { data: challenge });
     }
   );
@@ -85,6 +105,25 @@ export default class ChallengeController {
         where: { id },
         data: req.body,
       });
+
+      // Field NAMES, not values: a challenge body carries test cases and
+      // expected outputs, and copying those into a long-lived audit table
+      // makes the answers readable to anyone with audit access.
+      await recordActionBestEffort(
+        {
+          admin_id: req.user?.id ?? 'unknown',
+          action: 'UPDATE_CHALLENGE',
+          entity: 'CHALLENGE',
+          entity_id: id,
+          details: {
+            fieldsChanged: Object.keys((req.body ?? {}) as object).sort(),
+          },
+          ip_address: req.ip,
+          user_agent: req.headers['user-agent'],
+        },
+        logger
+      );
+
       return sendResponse(res, 'CHALLENGE_UPDATED', { data: challenge });
     }
   );

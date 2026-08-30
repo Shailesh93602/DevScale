@@ -61,12 +61,25 @@ const res = () => {
   return r;
 };
 
+/**
+ * Wait for the handler to actually finish.
+ *
+ * `catchAsync` is `(req,res,next) => { fn(...).catch(next); }` — it does NOT
+ * return the promise, so awaiting the call resolves immediately while the
+ * handler is still running. Assertions made straight after it race the code
+ * they are testing: they pass or fail on microtask ordering, which is how a
+ * test ends up green for a handler that never ran. Flushing the queue makes
+ * the wait real.
+ */
+const flush = () => new Promise((resolve) => setImmediate(resolve));
+
 const run = async (handler: unknown, req: Record<string, unknown>) => {
-  await (handler as (a: unknown, b: unknown, c: unknown) => Promise<void>)(
+  (handler as (a: unknown, b: unknown, c: unknown) => Promise<void>)(
     req,
     res(),
     jest.fn()
   );
+  await flush();
 };
 
 beforeEach(() => {
