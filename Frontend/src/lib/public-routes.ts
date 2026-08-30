@@ -94,6 +94,11 @@ export const PUBLIC_ROUTE_PREFIXES = [
   '/contact',
   '/faq',
   '/interview-question',
+  // /pricing was in neither list. Nothing was exposed (it is marketing copy),
+  // but being unclassified meant isPublicRoute() returned false, so the sitemap
+  // filter dropped a page that anonymous visitors can load and that should
+  // rank — the inverse of the eight gated URLs the sitemap used to advertise.
+  '/pricing',
 ] as const;
 
 // ─── Route Check Functions ────────────────────────────────────────────────────
