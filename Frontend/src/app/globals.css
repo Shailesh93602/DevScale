@@ -18,7 +18,34 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* The document canvas must be opaque, in BOTH themes.
+   *
+   * `body { @apply bg-bgColor }` below resolves to
+   * `background-color: var(--bg-color)`, and at runtime that variable came back
+   * EMPTY — making the declaration invalid, so body computed to
+   * `rgba(0,0,0,0)`. With html and body both transparent the browser paints its
+   * default white canvas, which in dark mode shows through on overscroll and
+   * behind anything not covered by an opaque child.
+   *
+   * It also made every dark-mode contrast audit wrong in the same direction:
+   * axe correctly assumes white for an unknown canvas, so light footer links
+   * measured 2.38:1 against a page that is supposed to be near-black.
+   *
+   * Literal values rather than tokens on purpose — this is the one declaration
+   * that must not depend on a variable resolving, because when it fails it
+   * fails silently and takes the whole page background with it. Kept in sync
+   * with --bg-color above.
+   */
+  html {
+    background-color: #f5f5f7;
+  }
+
+  html.dark {
+    background-color: #0a0a0f;
+  }
+
   body {
+    background-color: inherit;
     @apply bg-bgColor text-dark;
     font-family:
       var(--font-outfit),
@@ -148,8 +175,40 @@
     --popover: 230 18% 11%;
     --popover-foreground: 220 15% 95%;
 
-    /* Brand (unchanged in dark) */
-    --primary-foreground: 220 20% 98%;
+    /* Brand — MUST be lightened in dark mode.
+     *
+     * This block used to read "Brand (unchanged in dark)" and override only
+     * --primary-foreground, so --primary stayed #8300b8 from :root. Against the
+     * dark background (230 18% 7%, ~#0f1015) that measures 2.40:1 — below the
+     * 3.0 minimum for large text and well below the 4.5 needed for body. It was
+     * the colour of the largest, most prominent text on the site: the 72px home
+     * H1, every section heading, every "Learn more" link, and the auth links.
+     *
+     * The same file carefully AA-tunes --success and --warning for LIGHT mode,
+     * so a light-mode contrast pass clearly happened and a dark-mode one never
+     * did. It survived because the axe suite never set a theme — see
+     * tests/accessibility.spec.ts, which now checks both.
+     *
+     * #c73dff keeps the brand hue (283°) and full saturation, lifting only
+     * lightness 36% -> 62%: 5.01:1 on the dark background, AA for body text
+     * with headroom rather than scraping the large-text minimum.
+     */
+    --primary: #c73dff;
+    --primary2: #c01aff;
+    --primary-light: rgba(199, 61, 255, 0.16);
+
+    /* DARK, not near-white — and this is a consequence of the line above.
+     *
+     * --primary is both a TEXT colour (headings, links) and a BUTTON
+     * BACKGROUND. Lightening it to clear 4.5:1 as text pushed it the other way
+     * as a background: near-white #f9fafb on #c73dff measures 3.62:1, so the
+     * "Get Started" / "Sign up" buttons failed the moment the headings passed.
+     * Caught by the dark audit that this change also enabled, which is the
+     * point of enabling it.
+     *
+     * Matching the page background gives 5.01:1 on the button. Both directions
+     * now pass, which a single foreground could not have done. */
+    --primary-foreground: 230 18% 7%;
 
     /* Secondary */
     --secondary: 230 16% 15%;

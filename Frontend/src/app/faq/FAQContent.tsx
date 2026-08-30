@@ -61,14 +61,24 @@ export default function FAQContent() {
             <div key={faq.id} className="border-b border-border last:border-0">
               <Button
                 variant="ghost"
-                className="flex h-auto w-full items-center justify-between rounded-md px-2 py-4 text-left text-lg font-semibold text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
+                /* whitespace-normal and a shrink-0 chevron.
+
+                   Button's cva base carries `whitespace-nowrap`, so a long
+                   question could not wrap: at 390px "What types of coding
+                   challenges are available?" ran off the screen, took the
+                   chevron with it, and gave the page 63px of horizontal
+                   scroll. components/ui/accordion.tsx already does this
+                   correctly — this page just hand-rolls its own accordion.
+                   The override works because Button merges classes with cn()
+                   (tailwind-merge) rather than concatenating them. */
+                className="flex h-auto w-full items-center justify-between gap-3 whitespace-normal rounded-md px-2 py-4 text-left text-lg font-semibold text-foreground hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary"
                 onClick={() => handleToggle(index)}
                 aria-expanded={activeIndex === index}
                 aria-controls={`faq-answer-${faq.id}`}
               >
                 {faq.question}
                 <FiChevronDown
-                  className={`h-5 w-5 transition-transform ${
+                  className={`h-5 w-5 shrink-0 transition-transform ${
                     activeIndex === index ? 'rotate-180' : ''
                   }`}
                 />
