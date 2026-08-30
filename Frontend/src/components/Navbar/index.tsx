@@ -44,6 +44,24 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const { setTheme, resolvedTheme } = useTheme();
   const navRef = useRef<HTMLElement>(null);
+
+  /**
+   * Lock the page while the mobile menu is open.
+   *
+   * Without this the document kept scrolling behind the overlay: a swipe moved
+   * the page under the menu, so closing it returned the reader somewhere they
+   * never chose to be. Restoring the PREVIOUS value rather than hard-coding
+   * `visible` means this cannot clobber another component that also locks
+   * scrolling (a modal opened from within the menu, say).
+   */
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [isOpen]);
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 

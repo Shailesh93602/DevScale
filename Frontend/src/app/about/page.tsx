@@ -84,7 +84,13 @@ export default function About() {
             className="mb-8 text-5xl font-bold leading-[1.1] tracking-tight text-foreground md:text-7xl"
           >
             Redefining <br className="hidden md:block" />
-            <span className="via-purple-500 to-primary/80 bg-gradient-to-r from-primary bg-clip-text text-transparent">
+            {/* The gradient stops BEFORE the text does.
+                `to-primary/80` ends at 80% opacity over a transparent fill, so
+                by the time the run reaches "Education." there is barely any
+                colour left — near-white on light, near-black on dark, and the
+                final period effectively invisible in both. Ending on a fully
+                opaque stop keeps the sweep and keeps the word readable. */}
+            <span className="via-purple-500 bg-gradient-to-r from-primary to-primary bg-clip-text text-transparent">
               Engineering Education.
             </span>
           </motion.h1>
@@ -113,11 +119,21 @@ export default function About() {
             className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-4"
           >
             {stats.map((stat, i) => (
-              <motion.div key={i} variants={fadeUp} className="text-center">
+              /* flex-col + mt-auto on the label.
+                 "Next · PG · Redis" wraps to two lines while its three
+                 neighbours stay on one, so its LABEL dropped a line below the
+                 others and the row read as misaligned. Pushing the label to the
+                 bottom of an equal-height cell keeps all four labels on the
+                 same baseline whatever the value does. */
+              <motion.div
+                key={i}
+                variants={fadeUp}
+                className="flex h-full flex-col text-center"
+              >
                 <div className="mb-2 text-4xl font-bold tracking-tighter text-foreground md:text-5xl">
                   {stat.value}
                 </div>
-                <div className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
+                <div className="mt-auto text-sm font-medium uppercase tracking-wider text-muted-foreground">
                   {stat.label}
                 </div>
               </motion.div>
