@@ -6,6 +6,7 @@ import { sendResponse } from '../utils/apiResponse';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
 import { ArticleRepository } from '../repositories/articleRepository';
+import { recordActionBestEffort } from '../services/auditTrail';
 import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
 
 export default class ArticleController {
@@ -80,6 +81,30 @@ export default class ArticleController {
           articleId,
           { status }
         );
+
+        // Publishing or rejecting somebody's article is a privileged decision
+        // about another person's work — the single action here most likely to
+        // be questioned later — and nothing recorded who made it.
+        //
+        // best-effort, not withAudit: updateArticle takes its own multi-step
+        // path (it snapshots a Version first) and does not accept a transaction
+        // client, so a transactional wrapper would be a lie about atomicity.
+        // The weaker guarantee is named at the call site on purpose.
+        await recordActionBestEffort(
+          {
+            admin_id: req.user?.id ?? 'unknown',
+            action: 'UPDATE_ARTICLE_STATUS',
+            entity: 'ARTICLE',
+            entity_id: articleId,
+            // The PREVIOUS value as well as the new one: "who changed what"
+            // is not answerable from the new value alone.
+            details: { from: article.status, to: status },
+            ip_address: req.ip,
+            user_agent: req.headers['user-agent'],
+          },
+          logger
+        );
+
         sendResponse(res, 'ARTICLE_UPDATED', { data: updatedArticle });
       } catch (error) {
         logger.error('Failed to update article status:', error);
@@ -116,6 +141,31 @@ export default class ArticleController {
           title,
           content,
         });
+
+        // An ADMIN/MODERATOR editing somebody else's published words. The
+        // article's own Version history records what the text became; only this
+        // records WHO changed it and from which account.
+        await recordActionBestEffort(
+          {
+            admin_id: req.user?.id ?? 'unknown',
+            action: 'EDIT_ARTICLE_CONTENT',
+            entity: 'ARTICLE',
+            entity_id: id,
+            // Which fields, never the content itself: an audit table is kept
+            // for a long time and read by more people than the request was.
+            details: {
+              fieldsChanged: [
+                title !== undefined ? 'title' : null,
+                content !== undefined ? 'content' : null,
+              ].filter(Boolean),
+              authorId: article.author_id,
+            },
+            ip_address: req.ip,
+            user_agent: req.headers['user-agent'],
+          },
+          logger
+        );
+
         sendResponse(res, 'ARTICLE_UPDATED', { data: updatedArticle });
       } catch (error) {
         logger.error('Failed to update article content:', error);
@@ -206,6 +256,19 @@ export default class ArticleController {
             ],
           },
         });
+
+        await recordActionBestEffort(
+          {
+            admin_id: moderator_id,
+            action: 'MODERATE_ARTICLE',
+            entity: 'ARTICLE',
+            entity_id: id,
+            details: { moderationAction: action },
+            ip_address: req.ip,
+            user_agent: req.headers['user-agent'],
+          },
+          logger
+        );
 
         sendResponse(res, 'ARTICLE_UPDATED', { data: updatedArticle });
       } catch (error) {
