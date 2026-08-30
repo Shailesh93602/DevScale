@@ -48,6 +48,7 @@ const DISALLOW = ['/api/', ...GATED];
  * page's metadata; listed here so one test can check they agree.
  */
 export const NOINDEX_PATHS = [
+  '/error',
   '/quiz',
   '/sentry-example-page',
   '/instant-battle',

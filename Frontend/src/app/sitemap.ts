@@ -41,6 +41,11 @@ const CANDIDATE_PATHS = [
   '/explore',
   '/faq',
   '/achievements',
+  // Both are anonymously reachable and were simply never listed. Found by
+  // curling every route against a production server rather than by reading the
+  // code — the filter below was correct, the candidate list was short.
+  '/interview-question',
+  '/pricing',
 ];
 
 /** Only routes an anonymous crawler can actually load. */
