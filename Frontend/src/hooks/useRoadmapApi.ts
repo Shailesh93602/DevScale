@@ -121,7 +121,8 @@ export const useRoadmaps = (filters?: RoadmapFilters) => {
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse<unknown>>;
       toast.error(
-        axiosError.response?.data?.message || 'Unable to load the roadmaps. Please refresh the page.',
+        axiosError.response?.data?.message ||
+          'Unable to load the roadmaps. Please refresh the page.',
       );
       throw error;
     }

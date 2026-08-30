@@ -37,14 +37,27 @@ export default function OG() {
           >
             ES
           </div>
-          <span style={{ fontSize: 32, fontWeight: 600, opacity: 0.9 }}>EduScale</span>
+          <span style={{ fontSize: 32, fontWeight: 600, opacity: 0.9 }}>
+            EduScale
+          </span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <h1 style={{ fontSize: 72, fontWeight: 800, margin: 0, lineHeight: 1.05, letterSpacing: '-0.02em' }}>
+          <h1
+            style={{
+              fontSize: 72,
+              fontWeight: 800,
+              margin: 0,
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+            }}
+          >
             All-in-One Engineering Learning Platform
           </h1>
-          <p style={{ fontSize: 30, margin: 0, opacity: 0.85, lineHeight: 1.3 }}>
-            Real-time coding battles, distributed locking, circuit breakers, Prometheus metrics. Built for engineering students.
+          <p
+            style={{ fontSize: 30, margin: 0, opacity: 0.85, lineHeight: 1.3 }}
+          >
+            Real-time coding battles, distributed locking, circuit breakers,
+            Prometheus metrics. Built for engineering students.
           </p>
         </div>
         <div style={{ fontSize: 22, opacity: 0.75 }}>

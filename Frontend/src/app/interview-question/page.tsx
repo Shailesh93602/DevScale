@@ -83,9 +83,7 @@ const Page = () => {
         {isEmpty && (
           <div className="mx-auto max-w-xl rounded-xl border border-border bg-card p-10 text-center">
             <h2 className="mb-3 text-2xl font-semibold text-card-foreground">
-              {loadFailed
-                ? 'Unable to load the questions'
-                : 'No questions yet'}
+              {loadFailed ? 'Unable to load the questions' : 'No questions yet'}
             </h2>
             <p className="text-muted-foreground">
               {loadFailed

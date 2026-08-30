@@ -12,7 +12,10 @@ const review: AiCodeReview = {
   complexity: { time: 'O(n log n)', space: 'O(n)' },
   edgeCasesMissed: ['empty input array'],
   improvements: [
-    { title: 'Use a hash map', detail: 'Reduces the inner loop to O(1) lookups.' },
+    {
+      title: 'Use a hash map',
+      detail: 'Reduces the inner loop to O(1) lookups.',
+    },
   ],
   score: 72,
 };
@@ -41,7 +44,9 @@ describe('AICodeReviewPanel', () => {
         review={{ ...review, improvements: [], edgeCasesMissed: [] }}
       />,
     );
-    expect(screen.queryByText('Suggested improvements')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Suggested improvements'),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText('Edge cases missed')).not.toBeInTheDocument();
   });
 

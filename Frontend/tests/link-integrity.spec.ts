@@ -33,7 +33,9 @@ const APP_DIR = join(process.cwd(), 'src', 'app');
 
 /** Route groups `(name)` and private folders `_name` are not URL segments. */
 function isSegmentFolder(name: string): boolean {
-  return !name.startsWith('_') && !name.startsWith('(') && !name.startsWith('.');
+  return (
+    !name.startsWith('_') && !name.startsWith('(') && !name.startsWith('.')
+  );
 }
 
 /**
@@ -72,7 +74,7 @@ function routeMatches(target: string, routes: string[]): boolean {
     }
     if (routeParts.length > targetParts.length) return false;
     return routeParts.every(
-      (part, i) => part === '*' || part === targetParts[i]
+      (part, i) => part === '*' || part === targetParts[i],
     );
   });
 }
@@ -131,7 +133,7 @@ test.describe('internal links resolve to real routes', () => {
     const routes = collectRoutes(APP_DIR);
     expect(
       routes.length,
-      'no routes discovered — the App Router layout must have changed'
+      'no routes discovered — the App Router layout must have changed',
     ).toBeGreaterThan(10);
 
     const broken: string[] = [];
@@ -163,7 +165,8 @@ test.describe('internal links resolve to real routes', () => {
 
           // Socket.IO's transport path. Not a page, and not something the App
           // Router serves.
-          if (target === '/socket.io' || target.startsWith('/socket.io/')) continue;
+          if (target === '/socket.io' || target.startsWith('/socket.io/'))
+            continue;
 
           const key = `${target} (${rel})`;
           if (seen.has(key)) continue;
@@ -178,7 +181,7 @@ test.describe('internal links resolve to real routes', () => {
       broken,
       `These links point at routes that do not exist. Either build the page or ` +
         `remove the link — a 404 reached from the app's own navigation is worse ` +
-        `than a missing feature, because it looks like something is broken.`
+        `than a missing feature, because it looks like something is broken.`,
     ).toEqual([]);
   });
 });

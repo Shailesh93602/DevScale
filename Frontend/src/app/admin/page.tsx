@@ -4,12 +4,7 @@ import { RoleGuard } from '@/components/guards/RouteGuards';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import {
-  LayoutDashboard,
-  Users,
-  ShieldCheck,
-  ScrollText,
-} from 'lucide-react';
+import { LayoutDashboard, Users, ShieldCheck, ScrollText } from 'lucide-react';
 import Link from 'next/link';
 import AdminOverview from './AdminOverview';
 import AdminUsers from './AdminUsers';
@@ -28,7 +23,7 @@ export default function AdminPage() {
         {/* Header */}
         <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <div className="border-primary/20 bg-primary/10 mb-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-primary">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />

@@ -66,7 +66,8 @@ const paginationMiddleware = (
     String(req.query.order).toLowerCase() === 'desc' ? 'DESC' : 'ASC';
 
   const rawOrderBy = req.query.orderBy;
-  const orderBy = typeof rawOrderBy === 'string' && rawOrderBy ? rawOrderBy : 'createdAt';
+  const orderBy =
+    typeof rawOrderBy === 'string' && rawOrderBy ? rawOrderBy : 'createdAt';
 
   req.pagination = { limit, offset, page, search, order, orderBy };
 

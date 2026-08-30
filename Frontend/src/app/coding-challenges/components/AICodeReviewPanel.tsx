@@ -16,10 +16,16 @@ function formatVerdict(verdict: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
-function verdictStyle(verdict: string): { color: string; Icon: typeof CheckCircle2 } {
+function verdictStyle(verdict: string): {
+  color: string;
+  Icon: typeof CheckCircle2;
+} {
   switch (verdict) {
     case 'correct':
-      return { color: 'text-green-600 dark:text-green-400', Icon: CheckCircle2 };
+      return {
+        color: 'text-green-600 dark:text-green-400',
+        Icon: CheckCircle2,
+      };
     case 'incorrect':
       return { color: 'text-red-600 dark:text-red-400', Icon: XCircle };
     default: // partially_correct | uncertain
@@ -37,8 +43,14 @@ function scoreColor(score: number): string {
 }
 
 export function AICodeReviewPanel({ review }: { review: AiCodeReview }) {
-  const { summary, correctness, complexity, edgeCasesMissed, improvements, score } =
-    review;
+  const {
+    summary,
+    correctness,
+    complexity,
+    edgeCasesMissed,
+    improvements,
+    score,
+  } = review;
   const { color, Icon } = verdictStyle(correctness.verdict);
 
   return (
@@ -65,7 +77,10 @@ export function AICodeReviewPanel({ review }: { review: AiCodeReview }) {
         <CardContent className="flex items-start gap-3 p-4">
           <Icon className={cn('mt-0.5 h-5 w-5 shrink-0', color)} />
           <div>
-            <p className={cn('font-semibold', color)} data-testid="review-verdict">
+            <p
+              className={cn('font-semibold', color)}
+              data-testid="review-verdict"
+            >
               {formatVerdict(correctness.verdict)}
             </p>
             <p className="text-sm text-muted-foreground">
