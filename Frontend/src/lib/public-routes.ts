@@ -55,6 +55,16 @@ export const AUTH_REQUIRED_ROUTE_PREFIXES = [
   '/events',
   '/logout',
   '/member-highlights',
+  // /moderate was in NEITHER list, so `updateSession` took its fast path and
+  // the page had no server-side gate at all — only a client <RoleGuard>. The
+  // data behind it was safe (every backend endpoint it calls is role-gated),
+  // but the shell rendered for anonymous visitors.
+  //
+  // AUTH_REQUIRED rather than ADMIN: the middleware's only role concept is
+  // ADMIN, and moderation is open to MODERATOR too — gating it as admin-only
+  // would lock out exactly the people it is for. The RoleGuard still narrows
+  // it to ADMIN/MODERATOR; this stops anonymous access at the edge.
+  '/moderate',
   '/placement-preparation',
   '/profile',
   '/resources',

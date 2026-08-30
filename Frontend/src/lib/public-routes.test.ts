@@ -49,6 +49,14 @@ describe('route classification — the access-control matrix', () => {
     }
   });
 
+  it('/moderate requires authentication, and is not public', () => {
+    // It was in neither list, so middleware skipped it entirely and the page
+    // shell rendered for anonymous visitors. Client-side RoleGuard is not a
+    // server-side gate.
+    expect(requiresAuthRoute('/moderate')).toBe(true);
+    expect(isPublicRoute('/moderate')).toBe(false);
+  });
+
   it('an unlisted route is neither public nor protected — callers must decide', () => {
     expect(isPublicRoute('/totally-new-page')).toBe(false);
     expect(requiresAuthRoute('/totally-new-page')).toBe(false);
