@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: 'Mastermind Forge',
   description:
     'Interview prep, resume building, aptitude training, mentorship, and more — coming soon.',
+  // Placeholder page: real, honest, and deliberately not indexed until the
+  // features behind it exist. Kept crawlable so the tag can be read.
+  robots: { index: false, follow: true },
 };
 
 // None of the sub-routes exist yet — this page previously linked to 9 dead

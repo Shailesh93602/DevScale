@@ -2,48 +2,14 @@
 import { useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 import { Button } from '@/components/ui/button';
+import { FAQS } from './faqs';
 
 export default function FAQContent() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const faqs = [
-    {
-      id: 'faq-1',
-      question: 'What is EduScale?',
-      answer:
-        'EduScale is an all-in-one platform for engineering students. It provides personalized roadmaps, coding challenges, community support, placement preparation, and interactive learning tools to help you succeed.',
-    },
-    {
-      id: 'faq-2',
-      question: 'How can I join the community?',
-      answer:
-        'You can join the community by signing up for a free account and participating in forums, events, and collaboration opportunities.',
-    },
-    {
-      id: 'faq-3',
-      question: 'What types of coding challenges are available?',
-      answer:
-        'We offer a variety of coding challenges ranging from beginner to advanced levels across different programming languages including JavaScript, Python, Java, and more.',
-    },
-    {
-      id: 'faq-4',
-      question: 'How can I track my progress?',
-      answer:
-        'You can track your progress through your dashboard where all your activities, completed challenges, streaks, and achievements are displayed.',
-    },
-    {
-      id: 'faq-5',
-      question: 'Is there any cost to join?',
-      answer:
-        'No, joining the community and accessing the core resources on EduScale is completely free.',
-    },
-    {
-      id: 'faq-6',
-      question: 'What is the Battle Zone?',
-      answer:
-        'The Battle Zone is a competitive coding arena where you can challenge other students in real-time coding battles, test your skills, and climb the leaderboard.',
-    },
-  ];
+  // Shared with the server page so the FAQPage schema and the rendered
+  // questions cannot describe different content. See faqs.ts.
+  const faqs = FAQS;
 
   const handleToggle = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
