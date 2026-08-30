@@ -13,6 +13,8 @@ import {
   userRoleUpdateSchema,
 } from '../validations/adminValidations.js';
 
+import { apiLimiter } from '../middlewares/rateLimiter.js';
+
 import { BaseRouter } from './BaseRouter.js';
 
 export class AdminRoutes extends BaseRouter {
@@ -27,6 +29,10 @@ export class AdminRoutes extends BaseRouter {
     // Apply role check to ALL routes in this router
     this.router.use(authMiddleware);
     this.router.use(authorizeRoles('ADMIN'));
+    // apiLimiter was defined and never applied anywhere. The admin surface is
+    // where it matters most: POST /reports/custom is a bulk user-data export
+    // and was completely unthrottled.
+    this.router.use(apiLimiter);
 
     // Dashboard Routes
     this.router.get(

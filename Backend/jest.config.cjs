@@ -9,6 +9,20 @@ module.exports = {
       'ts-jest',
       {
         tsconfig: 'tsconfig.jest.json',
+        diagnostics: {
+          // TS2823 = "Import attributes are only supported when '--module' is
+          // esnext/node18/nodenext/preserve". The app builds with
+          // module: ESNext, where `import json from './x.json' with { type:
+          // 'json' }` is correct; only this CommonJS test transform rejects it.
+          //
+          // The consequence was not cosmetic: resourceController.ts failed to
+          // LOAD under Jest, so it — and every route that imports it — was
+          // untestable, silently. Nothing failed, because nothing could run.
+          // The attribute is erased by the CommonJS emit anyway (resolveJsonModule
+          // turns it into a require), so ignoring the diagnostic changes no
+          // behaviour and no production output.
+          ignoreCodes: [2823],
+        },
       },
     ],
   },

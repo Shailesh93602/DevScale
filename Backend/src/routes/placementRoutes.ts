@@ -7,7 +7,7 @@ export class PlacementRoutes extends BaseRouter {
   constructor() {
     super();
     this.placementController = new PlacementController();
-    this.initializeRoutes();
+    // NOT initializeRoutes() here — BaseRouter.getRouter() calls it.
   }
 
   protected initializeRoutes(): void {

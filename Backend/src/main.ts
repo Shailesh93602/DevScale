@@ -169,7 +169,21 @@ export class App {
             const isAllowed = allowedOrigins.some((o) =>
               o.includes('*') ? wildcardToRegex(o).test(origin) : o === origin
             );
-            if (allowedOrigins.length === 0 || isAllowed) {
+            // FAIL CLOSED on an unset CORS_ORIGIN. This used to read
+            // `allowedOrigins.length === 0 || isAllowed`, so a missing or empty
+            // env var in production silently became allow-any-origin — with
+            // `credentials: true`, which is the combination that makes another
+            // site able to read authenticated responses. A misconfiguration
+            // must not widen access; it must break loudly and visibly.
+            if (allowedOrigins.length === 0) {
+              logger.error(
+                'CORS_ORIGIN is unset in production — refusing all cross-origin requests. Set it to the frontend origin(s).'
+              );
+              return callback(
+                new Error('CORS_ORIGIN is not configured on the server')
+              );
+            }
+            if (isAllowed) {
               return callback(null, true);
             }
             return callback(new Error(`Origin ${origin} not allowed by CORS`));

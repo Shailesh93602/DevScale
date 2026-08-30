@@ -1,7 +1,7 @@
 import { BaseRouter } from './BaseRouter';
 import ResourceController from '../controllers/resourceController';
 import paginationMiddleware from '../middlewares/paginationMiddleware';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import {
   createResourceValidation,
@@ -24,9 +24,17 @@ export class ResourceRoutes extends BaseRouter {
       this.resourceController.getResources
     );
     this.router.get('/:id', this.resourceController.getResource);
-    this.router.post('/create-subject', this.resourceController.createSubjects);
+    // Curriculum mutations, not user content. deleteSubjects runs
+    // `deleteMany({ id: { in: ids } })` on caller-supplied ids, so router-level
+    // authMiddleware alone let any signed-in student wipe the curriculum.
+    this.router.post(
+      '/create-subject',
+      authorizeRoles('ADMIN'),
+      this.resourceController.createSubjects
+    );
     this.router.post(
       '/delete-subjects',
+      authorizeRoles('ADMIN'),
       this.resourceController.deleteSubjects
     );
     this.router.get('/details/:id', this.resourceController.getResourceDetails);

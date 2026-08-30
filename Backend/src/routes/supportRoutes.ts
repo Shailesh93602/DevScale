@@ -1,5 +1,5 @@
 import SupportController from '../controllers/supportController';
-import { authMiddleware } from '../middlewares/authMiddleware';
+import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 // import { requirePermission } from '../middlewares/rbacMiddleware';
 import { BaseRouter } from './BaseRouter';
 
@@ -22,7 +22,12 @@ export class SupportRoutes extends BaseRouter {
     this.router.patch(
       '/tickets/:ticketId/status',
       authMiddleware,
-      // requirePermission('tickets', 'update'),
+      // Was `// requirePermission('tickets','update')` — commented out, and the
+      // repository updates by ticket_id with no ownership filter while setting
+      // assigned_to to the caller, so any user could hijack and close any
+      // ticket. requirePermission is dead code (no live call sites), so the
+      // guard is the role check the rest of the app actually uses.
+      authorizeRoles('ADMIN', 'MODERATOR'),
       this.supportController.updateTicketStatus
     );
 
@@ -56,7 +61,8 @@ export class SupportRoutes extends BaseRouter {
     this.router.post(
       '/help-articles',
       authMiddleware,
-      // requirePermission('help', 'create'),
+      // Same story: help-centre articles are published content.
+      authorizeRoles('ADMIN', 'MODERATOR'),
       this.supportController.createHelpArticle
     );
 
