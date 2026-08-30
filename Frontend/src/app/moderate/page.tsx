@@ -35,13 +35,14 @@ export default function ModeratePage() {
   const name = user?.first_name || 'Moderator';
 
   const [getQueue, state] = useAxiosGet<Article[]>(
-    '/articles/moderation/queue'
+    '/articles/moderation/queue',
   );
-  const [setStatus] = useAxiosPost<unknown, { articleId: string; status: string }>(
-    '/articles/status'
-  );
+  const [setStatus] = useAxiosPost<
+    unknown,
+    { articleId: string; status: string }
+  >('/articles/status');
   const [addNote] = useAxiosPost<unknown, { action: string; notes: string }>(
-    '/articles/{{id}}/moderation'
+    '/articles/{{id}}/moderation',
   );
   const { toast } = useToast();
 
@@ -60,7 +61,10 @@ export default function ModeratePage() {
     const res = await setStatus({ articleId: a.id, status: 'APPROVED' });
     setBusy(null);
     if (res?.success) {
-      toast({ title: 'Approved', description: a.title || 'Article published.' });
+      toast({
+        title: 'Approved',
+        description: a.title || 'Article published.',
+      });
       void getQueue();
     } else {
       toast({
@@ -101,7 +105,7 @@ export default function ModeratePage() {
         {/* Header */}
         <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+            <div className="border-primary/20 bg-primary/10 mb-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-primary">
               <ShieldCheck className="h-3.5 w-3.5" />
               Moderation
             </div>

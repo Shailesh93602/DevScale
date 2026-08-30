@@ -56,7 +56,10 @@ export default function EditArticle({ id }: { id: string }) {
       if (response?.data?.success) {
         setContent(response.data.article?.content);
       } else {
-        toast.error(response?.data?.message ?? 'Unable to load this article. Please refresh the page.');
+        toast.error(
+          response?.data?.message ??
+            'Unable to load this article. Please refresh the page.',
+        );
       }
     } catch (error) {
       toast.error('Unable to load this article. Please refresh the page.');

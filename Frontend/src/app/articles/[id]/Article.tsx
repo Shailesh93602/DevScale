@@ -71,7 +71,10 @@ export default function Article({
         setArticle(response?.data as IArticle);
         setModerationNotes((response?.data as IArticle)?.moderationNotes);
       } else {
-        toast.error(response?.message ?? 'Unable to load this article. Please refresh the page.');
+        toast.error(
+          response?.message ??
+            'Unable to load this article. Please refresh the page.',
+        );
       }
     } catch (error) {
       console.error('Error fetching article:', error);

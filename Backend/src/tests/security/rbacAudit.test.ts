@@ -22,8 +22,7 @@ import { describe, it, expect, jest, beforeEach } from '@jest/globals';
  * the omission mattered more than the guarantee.
  */
 
-const recordActionBestEffort =
-  jest.fn<(...args: unknown[]) => Promise<void>>();
+const recordActionBestEffort = jest.fn<(...args: unknown[]) => Promise<void>>();
 jest.mock('../../services/auditTrail', () => ({
   __esModule: true,
   recordActionBestEffort: (...args: unknown[]) =>
@@ -113,7 +112,7 @@ async function call(
       captured = e;
     }
   );
-  await new Promise(resolve => setImmediate(resolve));
+  await new Promise((resolve) => setImmediate(resolve));
   return captured;
 }
 
@@ -133,13 +132,48 @@ beforeEach(() => {
 
 describe('RBAC changes are recorded', () => {
   const cases: Array<[string, Handler, Record<string, unknown>, string]> = [
-    ['creating a role', controller.createRole as Handler, { body: { name: 'AUDITOR' } }, 'CREATE_ROLE'],
-    ['updating a role', controller.updateRole as Handler, { params: { roleId: 'role-1' }, body: { name: 'X' } }, 'UPDATE_ROLE'],
-    ['deleting a role', controller.deleteRole as Handler, { params: { roleId: 'role-1' } }, 'DELETE_ROLE'],
-    ['creating a permission', controller.createPermission as Handler, { body: { resource: 'battle', action: 'delete' } }, 'CREATE_PERMISSION'],
-    ['updating a permission', controller.updatePermission as Handler, { params: { permissionId: 'perm-1' }, body: {} }, 'UPDATE_PERMISSION'],
-    ['deleting a permission', controller.deletePermission as Handler, { params: { permissionId: 'perm-1' } }, 'DELETE_PERMISSION'],
-    ['assigning a role to a user', controller.assignRoleToUser as Handler, { body: { userId: 'user-3', roleId: 'role-1' } }, 'ASSIGN_ROLE_TO_USER'],
+    [
+      'creating a role',
+      controller.createRole as Handler,
+      { body: { name: 'AUDITOR' } },
+      'CREATE_ROLE',
+    ],
+    [
+      'updating a role',
+      controller.updateRole as Handler,
+      { params: { roleId: 'role-1' }, body: { name: 'X' } },
+      'UPDATE_ROLE',
+    ],
+    [
+      'deleting a role',
+      controller.deleteRole as Handler,
+      { params: { roleId: 'role-1' } },
+      'DELETE_ROLE',
+    ],
+    [
+      'creating a permission',
+      controller.createPermission as Handler,
+      { body: { resource: 'battle', action: 'delete' } },
+      'CREATE_PERMISSION',
+    ],
+    [
+      'updating a permission',
+      controller.updatePermission as Handler,
+      { params: { permissionId: 'perm-1' }, body: {} },
+      'UPDATE_PERMISSION',
+    ],
+    [
+      'deleting a permission',
+      controller.deletePermission as Handler,
+      { params: { permissionId: 'perm-1' } },
+      'DELETE_PERMISSION',
+    ],
+    [
+      'assigning a role to a user',
+      controller.assignRoleToUser as Handler,
+      { body: { userId: 'user-3', roleId: 'role-1' } },
+      'ASSIGN_ROLE_TO_USER',
+    ],
   ];
 
   it.each(cases)('%s', async (_label, handler, req, action) => {

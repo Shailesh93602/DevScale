@@ -94,7 +94,9 @@ describe('the allow-list itself', () => {
   it('contains only routes that still exist', () => {
     // An allow-list entry outliving its route is how an exemption quietly
     // becomes a wildcard for whatever later takes that path.
-    const all = new Set(SUITES.flatMap((s) => bodyRoutes(s.build())).map((r) => r.key));
+    const all = new Set(
+      SUITES.flatMap((s) => bodyRoutes(s.build())).map((r) => r.key)
+    );
     const stale = [...NO_BODY_BY_DESIGN].filter((k) => !all.has(k));
     expect(stale).toEqual([]);
   });

@@ -71,9 +71,7 @@ describe('reindexAll', () => {
     expect(findMany).toHaveBeenCalledTimes(2);
     // The bound is on the QUERY, which is the thing that decides how much is
     // resident — asserting only the total would pass for the unbounded version.
-    expect(
-      (findMany.mock.calls[0][0] as { take: number }).take
-    ).toBe(100);
+    expect((findMany.mock.calls[0][0] as { take: number }).take).toBe(100);
     expect(result.total).toBe(130);
   });
 

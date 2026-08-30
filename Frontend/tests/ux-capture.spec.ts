@@ -88,7 +88,8 @@ async function shoot(
     const failedRequests: string[] = [];
     page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
     page.on('console', (m) => {
-      if (m.type() === 'error') errors.push(`console: ${m.text().slice(0, 240)}`);
+      if (m.type() === 'error')
+        errors.push(`console: ${m.text().slice(0, 240)}`);
     });
     page.on('response', (r) => {
       const u = r.url();
@@ -96,8 +97,12 @@ async function shoot(
         failedRequests.push(`${r.status()} ${u.split('?')[0]}`);
     });
 
-    await page.goto(route, { waitUntil: 'load', timeout: 30000 }).catch(() => {});
-    await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {});
+    await page
+      .goto(route, { waitUntil: 'load', timeout: 30000 })
+      .catch(() => {});
+    await page
+      .waitForLoadState('networkidle', { timeout: 8000 })
+      .catch(() => {});
     // Scroll through the whole page so scroll-triggered (whileInView) animations
     // fire and lazy images load — otherwise a full-page screenshot shows blank
     // sections that a real user (who scrolls) would actually see rendered.
@@ -117,7 +122,8 @@ async function shoot(
       .catch(() => {});
     await page.waitForTimeout(1200);
 
-    const slug = route === '/' ? 'home' : route.replace(/^\//, '').replace(/\//g, '_');
+    const slug =
+      route === '/' ? 'home' : route.replace(/^\//, '').replace(/\//g, '_');
     const suffix = theme === 'dark' ? `__${vp.name}__dark` : `__${vp.name}`;
     const file = path.join(OUT, `${slug}${suffix}.png`);
     await page.screenshot({ path: file, fullPage: true }).catch(() => {});
@@ -143,17 +149,38 @@ test('capture all user-facing pages', async ({ browser }) => {
 
   // Dark-mode pass (desktop) on the key pages — dark themes are where
   // contrast/visibility bugs hide.
-  const DARK_PUBLIC = ['/', '/about', '/pricing', '/faq', '/contact', '/blogs', '/auth/login'];
-  const DARK_AUTHED = ['/dashboard', '/battle-zone', '/battle-zone/create', '/battle-zone/statistics', '/profile', '/battle-zone/leaderboard'];
-  for (const r of DARK_PUBLIC) await shoot(browser, r, false, 'dark', ['desktop']);
-  for (const r of DARK_AUTHED) await shoot(browser, r, true, 'dark', ['desktop']);
+  const DARK_PUBLIC = [
+    '/',
+    '/about',
+    '/pricing',
+    '/faq',
+    '/contact',
+    '/blogs',
+    '/auth/login',
+  ];
+  const DARK_AUTHED = [
+    '/dashboard',
+    '/battle-zone',
+    '/battle-zone/create',
+    '/battle-zone/statistics',
+    '/profile',
+    '/battle-zone/leaderboard',
+  ];
+  for (const r of DARK_PUBLIC)
+    await shoot(browser, r, false, 'dark', ['desktop']);
+  for (const r of DARK_AUTHED)
+    await shoot(browser, r, true, 'dark', ['desktop']);
   fs.writeFileSync(
     path.join(OUT, 'manifest.json'),
     JSON.stringify(manifest, null, 2),
   );
   // Print a compact summary so console/network problems are visible in the run log.
   for (const c of manifest) {
-    if (c.errors.length || c.failedRequests.length || !c.finalUrl.includes(c.route === '/' ? '' : c.route.split('/')[1])) {
+    if (
+      c.errors.length ||
+      c.failedRequests.length ||
+      !c.finalUrl.includes(c.route === '/' ? '' : c.route.split('/')[1])
+    ) {
       console.log(
         `[UX] ${c.route} (${c.viewport}) final=${c.finalUrl} errors=${c.errors.length} failed=${c.failedRequests.length}`,
       );

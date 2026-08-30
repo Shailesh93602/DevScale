@@ -82,7 +82,9 @@ export function ApiKeySettings() {
       toast.success('Your API key is saved.');
       void load();
     } else {
-      toast.error(res.message || 'Could not save your API key. Please try again.');
+      toast.error(
+        res.message || 'Could not save your API key. Please try again.',
+      );
     }
   };
 
@@ -190,7 +192,9 @@ export function ApiKeySettings() {
             <div className="flex flex-wrap items-center gap-3">
               <Button
                 onClick={() => void onSave()}
-                disabled={saving || !value.trim() || status?.storageAvailable === false}
+                disabled={
+                  saving || !value.trim() || status?.storageAvailable === false
+                }
               >
                 {saving ? 'Saving…' : 'Save key'}
               </Button>
