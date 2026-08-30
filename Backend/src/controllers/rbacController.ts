@@ -11,6 +11,16 @@ import { catchAsync } from '../utils';
 import UserRepository from '../repositories/userRepository';
 import { createAppError } from '../utils/errorHandler.js';
 import { recordActionBestEffort } from '../services/auditTrail';
+import prisma from '../lib/prisma.js';
+import {
+  invalidatePermissions,
+  getEffectivePermissions,
+  effectiveKeys,
+} from '../services/permissionService.js';
+import {
+  PERMISSION_CATALOGUE,
+  PermissionEffect,
+} from '../constants/permissions.js';
 import logger from '../utils/logger';
 
 export default class RBACController {
@@ -158,6 +168,188 @@ export default class RBACController {
    * every other audited action is something an admin did. These record how
    * someone became able to do it.
    */
+  /**
+   * Grant or revoke ONE permission for ONE person, on top of their role.
+   *
+   * This is the operator-facing half of the override model: roles carry the
+   * defaults, and this carries the exceptions — a capable student given a
+   * single extra power, or one capability taken away from a moderator without
+   * demoting them and without changing what the role means for everyone else.
+   *
+   * `expiresAt` is strongly encouraged and deliberately surfaced in the API
+   * rather than buried: an exception that outlives its reason is how temporary
+   * access silently becomes permanent, and the usual finding in an access
+   * review is standing access nobody remembers granting.
+   */
+  public setUserPermission = catchAsync(async (req: Request, res: Response) => {
+    const { userId, permissionKey, effect, expiresAt, reason } = req.body as {
+      userId?: string;
+      permissionKey?: string;
+      effect?: string;
+      expiresAt?: string;
+      reason?: string;
+    };
+
+    if (!userId || !permissionKey) {
+      throw createAppError('userId and permissionKey are both required.', 400);
+    }
+    const resolvedEffect = (effect ?? PermissionEffect.ALLOW).toUpperCase();
+    if (
+      resolvedEffect !== PermissionEffect.ALLOW &&
+      resolvedEffect !== PermissionEffect.DENY
+    ) {
+      throw createAppError("effect must be 'ALLOW' or 'DENY'.", 400);
+    }
+
+    const permission = await prisma.permission.findUnique({
+      where: { key: permissionKey },
+    });
+    if (!permission) {
+      // Naming the valid keys turns a guessing game into a fixable mistake.
+      throw createAppError(
+        `Unknown permission '${permissionKey}'. Known keys: ${PERMISSION_CATALOGUE.map((p) => p.key).join(', ')}`,
+        400
+      );
+    }
+
+    let expires: Date | null = null;
+    if (expiresAt) {
+      expires = new Date(expiresAt);
+      if (Number.isNaN(expires.getTime())) {
+        throw createAppError('expiresAt must be a valid ISO date.', 400);
+      }
+      if (expires.getTime() <= Date.now()) {
+        // An already-expired override is inert. Accepting it silently would
+        // look like a successful grant that never worked.
+        throw createAppError('expiresAt must be in the future.', 400);
+      }
+    }
+
+    const override = await prisma.userPermission.upsert({
+      where: {
+        user_id_permission_id: {
+          user_id: userId,
+          permission_id: permission.id,
+        },
+      },
+      create: {
+        user_id: userId,
+        permission_id: permission.id,
+        effect: resolvedEffect,
+        expires_at: expires,
+        granted_by: req.user.id,
+        reason: reason ?? null,
+      },
+      update: {
+        effect: resolvedEffect,
+        expires_at: expires,
+        granted_by: req.user.id,
+        reason: reason ?? null,
+      },
+    });
+
+    // The cached resolution is now wrong for this user. Invalidate BEFORE
+    // responding, so a client that immediately re-reads sees the new answer.
+    invalidatePermissions(userId);
+
+    await this.record(req, 'SET_USER_PERMISSION', 'USER', userId, {
+      permissionKey,
+      effect: resolvedEffect,
+      expiresAt: expires?.toISOString() ?? null,
+      reason: reason ?? null,
+    });
+
+    return sendResponse(res, 'PERMISSION_UPDATED', { data: override });
+  });
+
+  /** Remove an override, returning the person to whatever their role says. */
+  public removeUserPermission = catchAsync(
+    async (req: Request, res: Response) => {
+      const { userId, permissionKey } = req.body as {
+        userId?: string;
+        permissionKey?: string;
+      };
+      if (!userId || !permissionKey) {
+        throw createAppError(
+          'userId and permissionKey are both required.',
+          400
+        );
+      }
+      const permission = await prisma.permission.findUnique({
+        where: { key: permissionKey },
+      });
+      if (!permission) {
+        throw createAppError(`Unknown permission '${permissionKey}'.`, 400);
+      }
+
+      const { count } = await prisma.userPermission.deleteMany({
+        where: { user_id: userId, permission_id: permission.id },
+      });
+      invalidatePermissions(userId);
+
+      // Only record something that happened. A row for a no-op delete is a
+      // false entry in a table whose whole value is being trustworthy.
+      if (count > 0) {
+        await this.record(req, 'REMOVE_USER_PERMISSION', 'USER', userId, {
+          permissionKey,
+        });
+      }
+
+      return sendResponse(res, 'PERMISSION_UPDATED', {
+        data: { removed: count },
+      });
+    }
+  );
+
+  /**
+   * What can this person actually do, and why?
+   *
+   * Returns the resolved answer AND its provenance, because "why can they do
+   * that?" is the question an access review actually asks, and a flat list of
+   * effective permissions cannot answer it.
+   */
+  public getUserPermissions = catchAsync(
+    async (req: Request, res: Response) => {
+      const userId =
+        req.params.userId ?? (req.query.userId as string | undefined);
+      if (!userId) throw createAppError('userId is required.', 400);
+
+      const effective = await getEffectivePermissions(userId);
+      const overrides = await prisma.userPermission.findMany({
+        where: { user_id: userId },
+        select: {
+          effect: true,
+          expires_at: true,
+          granted_by: true,
+          reason: true,
+          permission: { select: { key: true } },
+        },
+      });
+
+      return sendResponse(res, 'PERMISSION_CHECKED', {
+        data: {
+          userId,
+          role: effective.roleName,
+          effective: effectiveKeys(
+            effective,
+            PERMISSION_CATALOGUE.map((p) => p.key)
+          ),
+          fromRole: [...effective.fromRole].sort(),
+          overrides: overrides.map((o) => ({
+            key: o.permission.key,
+            effect: o.effect,
+            expiresAt: o.expires_at,
+            grantedBy: o.granted_by,
+            reason: o.reason,
+            // Surfaced explicitly: an expired row still EXISTS, and an operator
+            // looking at the list needs to know why it is not taking effect.
+            active: !o.expires_at || o.expires_at.getTime() > Date.now(),
+          })),
+        },
+      });
+    }
+  );
+
   private record(
     req: Request,
     action: string,

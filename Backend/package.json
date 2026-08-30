@@ -31,7 +31,7 @@
     "seed:full": "npm run seed:all && npm run seed:user && npm run seed:roadmapMainConceptSubjectTopics",
     "seed:roles": "tsx ./prisma/seeders/role.seeder.ts",
     "seed:features": "tsx ./prisma/seeders/feature.seeder.ts",
-    "seed:permissions": "tsx ./prisma/seeders/permission.seeder.ts",
+    "seed:permissions": "tsx ./src/scripts/seed-permissions.ts",
     "seed:user": "tsx ./prisma/seeders/user.seeder.ts",
     "seed:roadmapMainConceptSubjectTopics": "tsx ./prisma/seeders/roadmapMainConceptSubjectTopics.seeder.ts",
     "seed:battles": "tsx ./src/scripts/seed-battles.ts",

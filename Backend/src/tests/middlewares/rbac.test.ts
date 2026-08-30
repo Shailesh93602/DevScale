@@ -35,12 +35,21 @@ jest.mock('../../utils/logger', () => ({
   },
 }));
 
-// ─── Mock RBACRepository ───────────────────────────────────────────────────────
-const mockCheckPermission = jest.fn();
-jest.mock('../../repositories/rbacRepository', () => ({
-  RBACRepository: jest.fn().mockImplementation(() => ({
-    checkPermission: mockCheckPermission,
-  })),
+// ─── Mock the permission service ───────────────────────────────────────────────
+//
+// requirePermission used to call RBACRepository.checkPermission, which read
+// ROLE permissions only and ignored the per-user override table entirely. It
+// now resolves through permissionService, which applies role defaults, ALLOW
+// and DENY overrides, and expiry — so that is what these tests mock.
+const mockCanDo = jest.fn();
+jest.mock('../../services/permissionService', () => ({
+  __esModule: true,
+  canDo: (...a: unknown[]) => mockCanDo(...a),
+  can: jest.fn(),
+  getEffectivePermissions: jest.fn(),
+  invalidatePermissions: jest.fn(),
+  decide: jest.fn(),
+  effectiveKeys: jest.fn(),
 }));
 
 import { authorizeRoles } from '../../middlewares/authMiddleware';
@@ -113,20 +122,16 @@ describe('RBAC Middleware', () => {
   // ── requirePermission ─────────────────────────────────────────────────────
   describe('requirePermission', () => {
     it('should allow access when user has the required permission', async () => {
-      mockCheckPermission.mockResolvedValue(true as never);
+      mockCanDo.mockResolvedValue(true as never);
       const middleware = requirePermission('articles', 'delete');
       const req = makeReq('ADMIN');
       await middleware(req, res, next as NextFunction);
-      expect(mockCheckPermission).toHaveBeenCalledWith(
-        'user-123',
-        'articles',
-        'delete'
-      );
+      expect(mockCanDo).toHaveBeenCalledWith('user-123', 'articles', 'delete');
       expect(next).toHaveBeenCalledWith();
     });
 
     it('should deny access (403) when user lacks the permission', async () => {
-      mockCheckPermission.mockResolvedValue(false as never);
+      mockCanDo.mockResolvedValue(false as never);
       const middleware = requirePermission('articles', 'delete');
       const req = makeReq('STUDENT');
       await middleware(req, res, next as NextFunction);

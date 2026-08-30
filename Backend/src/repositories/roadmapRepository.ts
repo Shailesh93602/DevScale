@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { Prisma } from '@prisma/client';
 import type { Roadmap } from '@prisma/client';
 import { createAppError } from '../middlewares/errorHandler.js';
@@ -71,87 +72,103 @@ export default class RoadmapRepository extends BaseRepository<
     }
   }
 
+  /**
+   * Insert a roadmap's whole concept → subject → topic tree.
+   *
+   * WHY THIS IS BATCHED AND NOT A LOOP.
+   *
+   * This used to walk the tree creating one row at a time — a `create` for the
+   * node, then a `create` for its join row, then recurse. Importing a roadmap
+   * with 5 concepts × 5 subjects × 10 topics issued over 500 sequential round
+   * trips, all inside ONE transaction. Two things follow from that, and the
+   * second is the one that bites:
+   *
+   *   - the time is dominated by latency, not work, and against a pooled
+   *     managed Postgres each hop is milliseconds;
+   *   - the transaction is open for the whole of it, holding locks and a
+   *     connection from a small pool. A slow import does not just take a long
+   *     time, it degrades everything else running at that moment.
+   *
+   * The ids are generated here rather than by the database precisely so the
+   * join rows can be built before anything is inserted — which is what makes
+   * `createMany` possible at all. `randomUUID()` is the same v4 shape the
+   * column default produces, so nothing downstream can tell the difference.
+   *
+   * Insert order is parents before children because the join tables carry
+   * foreign keys; within a level order does not matter.
+   */
   private async createConcepts(
     tx: Prisma.TransactionClient,
     roadmapId: string,
     concepts: ConceptData[]
   ) {
+    const conceptRows: Prisma.MainConceptCreateManyInput[] = [];
+    const subjectRows: Prisma.SubjectCreateManyInput[] = [];
+    const topicRows: Prisma.TopicCreateManyInput[] = [];
+    const roadmapConceptRows: Prisma.RoadmapMainConceptCreateManyInput[] = [];
+    const conceptSubjectRows: Prisma.MainConceptSubjectCreateManyInput[] = [];
+    const subjectTopicRows: Prisma.SubjectTopicCreateManyInput[] = [];
+
     for (const concept of concepts) {
-      const mainConcept = await tx.mainConcept.create({
-        data: {
-          name: concept.title,
-          description: concept.description,
-          order: concept.order,
-        },
+      const conceptId = randomUUID();
+      conceptRows.push({
+        id: conceptId,
+        name: concept.title,
+        description: concept.description,
+        order: concept.order,
+      });
+      roadmapConceptRows.push({
+        roadmap_id: roadmapId,
+        main_concept_id: conceptId,
+        order: concept.order,
       });
 
-      await tx.roadmapMainConcept.create({
-        data: {
-          roadmap_id: roadmapId,
-          main_concept_id: mainConcept.id,
-          order: concept.order,
-        },
-      });
-
-      if (concept.subjects) {
-        await this.createSubjects(tx, mainConcept.id, concept.subjects);
-      }
-    }
-  }
-
-  private async createSubjects(
-    tx: Prisma.TransactionClient,
-    mainConceptId: string,
-    subjects: SubjectData[]
-  ) {
-    for (const subjectData of subjects) {
-      const subject = await tx.subject.create({
-        data: {
+      for (const subjectData of concept.subjects ?? []) {
+        const subjectId = randomUUID();
+        subjectRows.push({
+          id: subjectId,
           title: subjectData.title,
           description: subjectData.description,
           order: subjectData.order,
-        },
-      });
-
-      await tx.mainConceptSubject.create({
-        data: {
-          main_concept_id: mainConceptId,
-          subject_id: subject.id,
+        });
+        conceptSubjectRows.push({
+          main_concept_id: conceptId,
+          subject_id: subjectId,
           order: subjectData.order,
-        },
-      });
+        });
 
-      if (subjectData.topics) {
-        await this.createTopics(tx, subject.id, subjectData.topics);
+        for (const topicData of subjectData.topics ?? []) {
+          const topicId = randomUUID();
+          topicRows.push({
+            id: topicId,
+            title: topicData.title,
+            description: topicData.description,
+            order: topicData.order,
+            content: topicData.content,
+            resources: topicData.resources,
+            prerequisites: topicData.prerequisites,
+          });
+          subjectTopicRows.push({
+            subject_id: subjectId,
+            topic_id: topicId,
+            order: topicData.order,
+          });
+        }
       }
     }
-  }
 
-  private async createTopics(
-    tx: Prisma.TransactionClient,
-    subjectId: string,
-    topics: TopicData[]
-  ) {
-    for (const topicData of topics) {
-      const topic = await tx.topic.create({
-        data: {
-          title: topicData.title,
-          description: topicData.description,
-          order: topicData.order,
-          content: topicData.content,
-          resources: topicData.resources,
-          prerequisites: topicData.prerequisites,
-        },
-      });
+    // Parents first — the join tables below reference all three.
+    if (conceptRows.length)
+      await tx.mainConcept.createMany({ data: conceptRows });
+    if (subjectRows.length) await tx.subject.createMany({ data: subjectRows });
+    if (topicRows.length) await tx.topic.createMany({ data: topicRows });
 
-      await tx.subjectTopic.create({
-        data: {
-          subject_id: subjectId,
-          topic_id: topic.id,
-          order: topicData.order,
-        },
-      });
-    }
+    if (roadmapConceptRows.length)
+      await tx.roadmapMainConcept.createMany({ data: roadmapConceptRows });
+    if (conceptSubjectRows.length)
+      await tx.mainConceptSubject.createMany({ data: conceptSubjectRows });
+    if (subjectTopicRows.length)
+      await tx.subjectTopic.createMany({ data: subjectTopicRows });
   }
 
   /** Resolves a slug or UUID to a canonical UUID. Throws 404 if not found. */
