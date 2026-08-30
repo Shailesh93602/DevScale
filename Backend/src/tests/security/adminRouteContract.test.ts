@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect, beforeAll } from '@jest/globals';
 import type { Router } from 'express';
 
 import { AdminRoutes } from '../../routes/adminRoutes';
@@ -270,6 +270,36 @@ describe.each(CONTENT_SUITES)('$label — mutations', ({ build }) => {
  * legitimately differ on whether a role is required.
  */
 describe('every router on disk', () => {
+  /**
+   * Placeholders for env vars that route modules validate AT IMPORT TIME.
+   *
+   * `src/config/env.ts` calls `process.exit(1)` when a required var is missing,
+   * and it is reached transitively by requiring a route file. Locally a `.env`
+   * hides that; on CI there is none, so this suite killed the whole Jest
+   * process — a test that found real security holes taking the run down with
+   * it, and only on the machine that matters.
+   *
+   * Set here rather than in the workflow on purpose: the values are irrelevant
+   * (nothing connects — the suite only inspects the route table), and putting
+   * them in CI config would make the test look like it needs a Redis. Only
+   * unset vars are filled, so a real environment always wins.
+   */
+  beforeAll(() => {
+    const placeholders: Record<string, string> = {
+      DATABASE_URL: 'postgresql://user:pass@localhost:5432/placeholder',
+      DIRECT_URL: 'postgresql://user:pass@localhost:5432/placeholder',
+      SUPABASE_URL: 'https://placeholder.supabase.co',
+      SUPABASE_ANON_KEY: 'placeholder',
+      SUPABASE_SERVICE_ROLE_KEY: 'placeholder',
+      REDIS_URL: 'redis://localhost:6379',
+      CORS_ORIGIN: 'http://localhost:3000',
+      JWT_SECRET: 'placeholder-jwt-secret-not-used-by-this-suite',
+    };
+    for (const [key, value] of Object.entries(placeholders)) {
+      if (!process.env[key]) process.env[key] = value;
+    }
+  });
+
   const routesDir = path.join(__dirname, '..', '..', 'routes');
   const files = fs
     .readdirSync(routesDir)
