@@ -8,7 +8,7 @@ EduScale is built on a loosely coupled, scalable architecture using the **Jamsta
 
 ### Core Components
 1. **Presentation Layer (Frontend):** 
-   - Built with **Next.js 15 (App Router)** and **React 19**.
+   - Built with **Next.js 16 (App Router)** and **React 19**.
    - Hosted on Vercel for Edge Caching and CDN delivery.
    - Communicates with the Backend via RESTful HTTP JSON APIs and WebSockets.
 2. **Business Logic Layer (Backend):**

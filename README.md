@@ -5,7 +5,7 @@
   <p>
     <a href="https://eduscale.vercel.app"><img src="https://img.shields.io/badge/live-eduscale.vercel.app-blue?style=flat-square" alt="Live" /></a>
     <a href="https://github.com/Shailesh93602/devscale"><img src="https://img.shields.io/badge/github-devscale-black?style=flat-square&logo=github" alt="GitHub" /></a>
-    <img src="https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js" alt="Next.js 15" />
+    <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" alt="Next.js 16" />
     <img src="https://img.shields.io/badge/Socket.io-Redis_Adapter-010101?style=flat-square&logo=socket.io" alt="Socket.io" />
     <img src="https://img.shields.io/badge/Redis-Redlock_%2B_Pub%2FSub-DC382D?style=flat-square&logo=redis" alt="Redis" />
     <img src="https://img.shields.io/badge/Prometheus-prom--client-E6522C?style=flat-square&logo=prometheus" alt="Prometheus" />
@@ -29,7 +29,7 @@ Browser ────────────────────────
           WebSocket (wss://)        HTTP (REST/Next.js SSR)
                │                              │
          ┌─────▼──────┐               ┌───────▼───────┐
-         │  Socket.io  │               │  Next.js 15   │
+         │  Socket.io  │               │  Next.js 16   │
          │  Server A   │               │  App Router   │
          └─────┬───────┘               └───────┬───────┘
                │                              │

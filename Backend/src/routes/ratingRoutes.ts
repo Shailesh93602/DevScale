@@ -9,12 +9,17 @@ export class RatingRoutes extends BaseRouter {
   constructor() {
     super();
     this.controller = new RatingController();
-    this.router.use(authMiddleware);
     this.router.use(camelCaseResponse);
   }
 
   protected initializeRoutes(): void {
-    this.router.get('/me', this.controller.getMyRating);
+    this.router.get('/me', authMiddleware, this.controller.getMyRating);
+    // Public on purpose. The landing page renders the top players from this
+    // endpoint instead of a placeholder podium, and a leaderboard that only
+    // the already-signed-in can see is not a leaderboard. It exposes username,
+    // display name and rating — the same fields every battle participant
+    // already sees about every opponent — and nothing else (creatorSelect in
+    // the controller has no email, no id beyond the public one).
     this.router.get('/leaderboard', this.controller.getRatingLeaderboard);
   }
 }

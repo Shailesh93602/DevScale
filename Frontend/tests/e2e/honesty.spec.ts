@@ -33,19 +33,27 @@ test.describe('honesty', () => {
       'invented students are attributed to real institutions',
     ).toBeUndefined();
 
-    // Any leaderboard-like block on the landing page must be labelled as a
-    // sample if it is not fed by real data.
+    // Any leaderboard-like block on the landing page must either be fed by
+    // real data (it declares its source) or be labelled as a sample. The
+    // landing board now reads GET /ratings/leaderboard, so the attribute is
+    // the expected branch; the label branch stays so a future mock-up cannot
+    // pass by accident.
     const leaderboard = page.locator('text=/leaderboard/i').first();
     if (await leaderboard.count()) {
-      const section = page
-        .locator('section, div')
-        .filter({ has: leaderboard })
-        .first();
-      const text = (await section.innerText().catch(() => '')).toLowerCase();
-      expect(
-        /preview|sample|example|demo|illustrat/.test(text),
-        'the landing leaderboard is not labelled as a preview/sample',
-      ).toBe(true);
+      const live = await page
+        .locator('[data-leaderboard-source="ratings-api"]')
+        .count();
+      if (live === 0) {
+        const section = page
+          .locator('section, div')
+          .filter({ has: leaderboard })
+          .first();
+        const text = (await section.innerText().catch(() => '')).toLowerCase();
+        expect(
+          /preview|sample|example|demo|illustrat/.test(text),
+          'the landing leaderboard is neither live data nor labelled as a sample',
+        ).toBe(true);
+      }
     }
   });
 

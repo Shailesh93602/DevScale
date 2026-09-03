@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FaTwitter, FaLinkedin, FaGithub, FaDiscord } from 'react-icons/fa';
+import { FaGithub, FaGlobe } from 'react-icons/fa';
 import { cn } from '@/lib/utils';
 import {
   quickLinks,
@@ -14,14 +14,10 @@ import {
 
 const getSocialIcon = (iconName: string) => {
   switch (iconName) {
-    case 'FaTwitter':
-      return <FaTwitter className="h-4 w-4" />;
-    case 'FaLinkedin':
-      return <FaLinkedin className="h-4 w-4" />;
     case 'FaGithub':
       return <FaGithub className="h-4 w-4" />;
-    case 'FaDiscord':
-      return <FaDiscord className="h-4 w-4" />;
+    case 'FaGlobe':
+      return <FaGlobe className="h-4 w-4" />;
     default:
       return null;
   }
