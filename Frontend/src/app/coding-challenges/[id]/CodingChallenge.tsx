@@ -675,9 +675,9 @@ export default function CodingChallenge({ id }: { id: string }) {
                     <Code2 className="h-4 w-4" />
                     Solution
                   </div>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <Settings className="h-4 w-4" />
-                  </Button>
+                  {/* An icon-only Settings button sat here with no onClick and
+                      no accessible name (ED-9). It opened nothing, so a label
+                      would only have named a control that does nothing. */}
                 </div>
                 <div className="flex-grow overflow-hidden pt-2">
                   <Editor

@@ -34,6 +34,7 @@ import socketService from './services/socket.js';
 import { redis } from './services/cacheService.js';
 import { RedisStore, RedisReply } from 'rate-limit-redis';
 import { register, collectDefaultMetrics } from 'prom-client';
+import { createMetricsHandler } from './middlewares/metricsEndpoint.js';
 import { PerformanceMonitor } from './services/monitoring/performanceMonitor.js';
 
 import { fileURLToPath } from 'node:url';
@@ -69,17 +70,20 @@ export class App {
     this.app.use(compression());
 
     // ── Prometheus metrics ────────────────────────────────────────────────
-    // Exposed before auth/rate-limit/CSRF so scrapers are never throttled or
-    // blocked. Optionally gate with METRICS_TOKEN (Bearer) in production.
-    this.app.get('/metrics', async (req, res) => {
-      const token = process.env.METRICS_TOKEN;
-      if (token && req.headers.authorization !== `Bearer ${token}`) {
-        res.status(401).end();
-        return;
-      }
-      res.set('Content-Type', register.contentType);
-      res.end(await register.metrics());
-    });
+    // Mounted before auth/rate-limit/CSRF so a configured scraper is never
+    // throttled. The gate itself lives in middlewares/metricsEndpoint.ts:
+    // METRICS_TOKEN set → Bearer only; unset in production → 404. It used to
+    // be optional, and production had it unset, so the route table and every
+    // latency histogram were publicly readable.
+    this.app.get(
+      '/metrics',
+      createMetricsHandler({
+        token: process.env.METRICS_TOKEN,
+        nodeEnv: process.env.NODE_ENV,
+        contentType: register.contentType,
+        render: () => register.metrics(),
+      })
+    );
 
     // Record every request's duration into the histogram. Route label uses the
     // matched route pattern (e.g. /:id) — not the raw path — to avoid

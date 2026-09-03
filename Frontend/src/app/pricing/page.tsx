@@ -4,6 +4,7 @@ import React from 'react';
 import { Check, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { BRANDING } from '@/constants';
 
 interface PricingPlan {
   id: string;
@@ -80,7 +81,7 @@ export default function PricingPage() {
     }
 
     if (plan.id === 'team') {
-      window.location.href = 'mailto:sales@eduscale.com';
+      window.location.href = `mailto:${BRANDING.contactEmail}`;
       return;
     }
 

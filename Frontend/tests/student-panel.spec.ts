@@ -267,7 +267,7 @@ test.describe('Student Panel Features - Professional Grade', () => {
 
     // The old form faked submission (success toast, discarded the question), so
     // it was replaced with an honest Coming Soon until wired to the forum
-    // backend — see EduScale/DEFERRED_FEATURES.md.
+    // backend — see EduScale/docs/DEFERRED_FEATURES.md.
     await expect(page.getByText('Doubts Corner').first()).toBeVisible();
 
     await checkAccessibility(page, 'Doubts Corner');
