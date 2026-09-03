@@ -15,7 +15,7 @@ Real-time coding battles look simple — two users, one problem, sync state. The
 
 ## Tech stack
 
-- **Frontend**: Next.js 15 (App Router), React 19, Tailwind CSS, Framer Motion, Redux Toolkit
+- **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS, Framer Motion, Redux Toolkit
 - **Backend**: Node.js + Express.js (TypeScript), Prisma ORM + PostgreSQL, Socket.io with @socket.io/redis-adapter, redlock, opossum, prom-client, Bull queues
 - **Infrastructure**: Redis Cluster (adapter + locks + cache), Supabase Auth, Vercel hosting
 

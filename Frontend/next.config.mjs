@@ -1,4 +1,5 @@
 import { withSentryConfig } from '@sentry/nextjs';
+import { legacyRedirects } from './src/lib/legacy-redirects.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,9 +13,15 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.php.net' },
       { protocol: 'https', hostname: 'www.java.com' },
       { protocol: 'https', hostname: 'flutter.dev' },
-      { protocol: 'https', hostname: 'i.pravatar.cc' },
       { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
+  },
+  // /login, /register, /signup, /sign-up → the real /auth/* pages. These are
+  // edge redirects (308) rather than page stubs calling permanentRedirect():
+  // the stubs shipped and the live site still answered /login with a 200 empty
+  // shell and /register with a 404. See src/lib/legacy-redirects.mjs.
+  async redirects() {
+    return legacyRedirects;
   },
   eslint: {
     ignoreDuringBuilds: true,

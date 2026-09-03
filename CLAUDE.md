@@ -7,7 +7,7 @@ Tracking all changes made toward 10M+ user scalability and production readiness.
 ## Architecture
 
 - **Backend:** Express.js + TypeScript, port 5000 (dev) — two entry points: `main.ts` (App class, primary) and `server.ts` + `app.logic.ts` (legacy routes)
-- **Frontend:** Next.js 15, deployed on Vercel
+- **Frontend:** Next.js 16 (App Router), deployed on Vercel
 - **DB:** PostgreSQL via Supabase + Prisma ORM (48+ models)
 - **Cache/Queue:** Redis via ioredis, Bull for background jobs
 - **WebSocket:** Socket.io with `@socket.io/redis-adapter` (multi-server safe as of 2026-03-26)
