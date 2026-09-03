@@ -332,12 +332,14 @@ const RoadmapsPage = () => {
             variant="ghost"
             size="icon"
             onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+            aria-expanded={isFilterExpanded}
+            aria-label={isFilterExpanded ? 'Hide filters' : 'Show filters'}
           >
             <Filter size={16} />
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="View options">
                 <Settings size={16} />
               </Button>
             </DropdownMenuTrigger>

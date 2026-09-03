@@ -5,8 +5,11 @@ import { motion } from 'framer-motion';
 import { Shield, Zap, Users, Target, Rocket, Code2 } from 'lucide-react';
 import { BRANDING } from '@/constants';
 
-// Honest product capabilities — EduScale is a new platform, so we lead with
-// what it does, not fabricated user counts (see QA: no fabricated social proof).
+// Honest product capabilities — EduScale is a new, solo-built platform, so
+// this leads with what it does, not user counts it does not have (see QA: no
+// fabricated social proof). The copy below is first person for the same
+// reason: there is no "we", and a page that says "we" and then "one engineer"
+// in the same scroll reads as either padding or a slip.
 const stats = [
   { label: 'Battle Zones', value: 'Real-Time' },
   { label: 'Career Roadmaps', value: 'Adaptive' },
@@ -19,19 +22,19 @@ const values = [
     icon: <Target className="h-6 w-6" />,
     title: 'Mission Driven',
     description:
-      'We exist to close the gap between theoretical graduation and practical industry readiness.',
+      'I built this to close the gap between what a degree teaches and what a first engineering job asks for.',
   },
   {
     icon: <Users className="h-6 w-6" />,
-    title: 'Community First',
+    title: 'Learn Against People',
     description:
-      'Learning is collaborative. Our community is built to lift each other up through peer programming.',
+      'Practice sticks when there is someone on the other side. Battles are head-to-head, and roadmaps carry comments from the people walking them.',
   },
   {
     icon: <Zap className="h-6 w-6" />,
     title: 'Battle Tested',
     description:
-      'We simulate real-world interviews and competitive challenges to ensure students are over-prepared.',
+      'Timed, scored, live. The Battle Zone is closer to an interview than a tutorial is, and that is the point.',
   },
   {
     icon: <Shield className="h-6 w-6" />,
@@ -101,9 +104,10 @@ export default function About() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
-            We&apos;re building the infrastructure for the next generation of
-            engineers. Combining competitive coding, structured roadmaps, and a
-            powerful community into one seamless platform.
+            A learning platform for engineering students, built and run by one
+            engineer. Competitive coding battles, structured roadmaps, and
+            coding challenges in one place — a real product, still early, with
+            its scale stated honestly.
           </motion.p>
         </div>
       </section>
@@ -157,18 +161,19 @@ export default function About() {
             </h2>
             <div className="space-y-6 text-lg leading-relaxed text-muted-foreground">
               <p>
-                {BRANDING.name} was born from a fundamental frustration:
-                universities teach theory, but companies hire for practical
-                skill. Millions of engineering students graduate every year
-                unprepared for the realities of modern software development.
+                {BRANDING.name} started from a frustration I had as a student
+                and then saw again as an engineer: universities teach theory,
+                and companies hire for practical skill. The distance between the
+                two is where most graduates lose time.
               </p>
               <p>
-                We set out to build a platform that doesn&apos;t just act as a
-                tutorial, but as a{' '}
-                <strong className="text-foreground">proving ground</strong>.
-                Through interactive roadmaps, real-time Battle Zones, and
-                continuous feedback loops, we ensure that learning is an active,
-                aggressive pursuit of mastery.
+                So I built something that works less like a tutorial and more
+                like a{' '}
+                <strong className="text-foreground">proving ground</strong>:
+                roadmaps you actually progress through, real-time battles
+                against another person, and challenges that grade your code. It
+                is one person&apos;s project, not a company, and it is still
+                growing.
               </p>
             </div>
           </motion.div>
@@ -188,11 +193,11 @@ export default function About() {
                 </div>
                 <div>
                   <h3 className="mb-3 text-xl font-semibold text-foreground">
-                    Built by Engineers, for Engineers.
+                    Built by an engineer, for engineers.
                   </h3>
                   <p className="text-muted-foreground">
-                    Every feature we build is tested against a single metric:
-                    Does this make our students more hirable?
+                    Every feature is tested against one question: does this make
+                    the person using it more hirable?
                   </p>
                 </div>
               </div>
@@ -206,10 +211,10 @@ export default function About() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-16 text-center">
             <h2 className="mb-6 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
-              Our Core Values
+              What I Optimise For
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-              The principles that guide our development and shape our community.
+              The principles behind every decision in the codebase.
             </p>
           </div>
 
@@ -253,9 +258,10 @@ export default function About() {
               One engineer, one mission.
             </h2>
             <p className="mb-8 text-lg text-muted-foreground">
-              {BRANDING.name} is built and maintained by Shailesh Chaudhari, a
-              dedicated individual pushing the boundaries of what specialized
-              SaaS platforms can achieve in the EdTech space.
+              I&apos;m Shailesh Chaudhari, a backend engineer. I design, build,
+              deploy and maintain {BRANDING.name} myself — the Next.js frontend,
+              the Express and Socket.io backend, the Postgres schema and the
+              Redis coordination underneath the battles. The source is public.
             </p>
             <a
               href="https://shaileshchaudhari.vercel.app"
@@ -263,7 +269,7 @@ export default function About() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 text-sm font-medium text-background transition-transform hover:scale-105"
             >
-              Visit Shailesh Chaudhari
+              Visit my portfolio
             </a>
           </div>
         </div>

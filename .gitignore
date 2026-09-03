@@ -43,5 +43,17 @@ yarn-debug.log*
 # Quality audit artifact — kept local
 quality.md
 
-# Local Claude Code settings
-.claude/settings.local.json
+# Local agent/editor state — never part of the public tree.
+# .claude/ and .cursor/ had a MEMORY.md, a session tracker and editor rules
+# committed; Backend/.idea/ was a whole IntelliJ project.
+.claude/
+.cursor/
+.opencode/
+
+# Runtime artefacts that were committed once and shipped publicly:
+# Backend/logs/*.log carried stack traces and a developer's home path,
+# Backend/uploads/ a raw upload blob, Backend/temp_content/ a generated
+# content dump. `*.log` above never covered files that were force-added.
+logs/
+uploads/
+temp_content/

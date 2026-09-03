@@ -340,7 +340,15 @@ function UserListItem({ user }: { user: User }) {
         </div>
       </div>
 
-      <Button variant="ghost" size="icon">
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label={
+          user.is_friend
+            ? `Message ${user.username}`
+            : `Add ${user.username} as a friend`
+        }
+      >
         {user.is_friend ? (
           <MessageSquare className="h-4 w-4" />
         ) : (
@@ -427,7 +435,7 @@ function PostCard({ post }: { post: Post }) {
               </div>
             </div>
           </div>
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" aria-label="More options">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>

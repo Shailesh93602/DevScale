@@ -174,7 +174,7 @@ export const quickLinks = [
     name: 'Roadmaps',
     href: '/career-roadmap',
   },
-  // 'Community' hidden until built — see DEFERRED_FEATURES.md
+  // 'Community' hidden until built — see docs/DEFERRED_FEATURES.md
   {
     name: 'Interview Prep',
     href: '/interview-question',
@@ -223,7 +223,7 @@ export const footerLinks = [
     name: 'Contact Us',
     href: '/contact',
   },
-  // 'Discussion Forums' hidden until built — see DEFERRED_FEATURES.md
+  // 'Discussion Forums' hidden until built — see docs/DEFERRED_FEATURES.md
 ];
 
 export { BRANDING } from './branding';
@@ -237,8 +237,9 @@ export const contactInfo = [
     text: BRANDING.contactEmail,
   },
   {
-    id: 'team',
-    text: `${BRANDING.name} Team`,
+    id: 'maker',
+    // There is no team. Saying so is more credible than implying one.
+    text: `Built and maintained by ${BRANDING.developer}`,
   },
 ];
 

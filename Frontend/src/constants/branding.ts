@@ -3,28 +3,25 @@ export const BRANDING = {
   description:
     'The all-in-one platform for engineering students to learn, grow, and succeed.',
   developer: 'Shailesh Chaudhari',
-  contactEmail: 'contact@eduscale.com',
+  // The maker's real address. This was `contact@eduscale.com`, a mailbox that
+  // does not exist on a domain this project does not own.
+  contactEmail: 'shailesh93602@gmail.com',
   website: 'https://shaileshchaudhari.vercel.app',
+  repository: 'https://github.com/Shailesh93602/DevScale',
+  // Only links that resolve to something that is actually his. The footer used
+  // to show Twitter, LinkedIn, GitHub and Discord handles named "eduscale" —
+  // none of which belong to this project, so every icon led a visitor to a
+  // stranger's page or a 404.
   socialLinks: [
     {
-      name: 'Twitter',
-      href: 'https://twitter.com/eduscale',
-      icon: 'FaTwitter',
-    },
-    {
-      name: 'LinkedIn',
-      href: 'https://www.linkedin.com/company/eduscale',
-      icon: 'FaLinkedin',
-    },
-    {
-      name: 'GitHub',
-      href: 'https://github.com/eduscale',
+      name: 'Source on GitHub',
+      href: 'https://github.com/Shailesh93602/DevScale',
       icon: 'FaGithub',
     },
     {
-      name: 'Discord',
-      href: 'https://discord.gg/eduscale',
-      icon: 'FaDiscord',
+      name: 'Portfolio of Shailesh Chaudhari',
+      href: 'https://shaileshchaudhari.vercel.app',
+      icon: 'FaGlobe',
     },
   ],
   // What the platform offers — honest, capability-based highlights shown on the
