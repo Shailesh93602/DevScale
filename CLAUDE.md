@@ -1,6 +1,10 @@
 # EduScale — Production Scaling Log
 
-Tracking all changes made toward 10M+ user scalability and production readiness.
+A scaling and production-readiness log for a solo-built platform: what was changed, when, and
+why. Every number in this file is one the code or its tests produce today — there are no
+targets in it. *(The opener used to name a user-count target that nothing in the repo measured;
+removed 2026-09-05. `Frontend/src/lib/no-scale-claims.test.ts` fails if a figure like that
+reappears here, in the README, FINDINGS, `docs/`, or `llms.txt`.)*
 
 ---
 
