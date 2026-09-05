@@ -1,5 +1,12 @@
 import { test, expect, Page } from '@playwright/test';
-import { login, apiAs, settle } from './helpers';
+import {
+  login,
+  apiAs,
+  settle,
+  fixtureChallenge,
+  fixtureTopicId,
+  FIXTURE_XSS_CHALLENGE,
+} from './helpers';
 
 /**
  * ED-1 — "ReactMarkdown renders challenge description / editorial / hints and
@@ -30,23 +37,14 @@ async function xssFired(page: Page) {
   );
 }
 
-async function fixtureChallenge(page: Page, title: string) {
-  const res = await apiAs(page, 'GET', '/challenges?page=1&limit=100');
-  const json = await res.json();
-  const list =
-    json?.data?.challenges ??
-    json?.data?.data ??
-    (Array.isArray(json?.data) ? json.data : []);
-  return list.find((c: { title: string }) => c.title === title);
-}
-
 test.describe('stored XSS — markdown path (ReactMarkdown)', () => {
   test('a challenge whose description/editorial/hints carry a script payload renders it inert', async ({
     page,
   }) => {
     await login(page, 'student');
-    const probe = await fixtureChallenge(page, 'QA E2E XSS Probe');
-    test.skip(!probe, 'run Backend/qa/seed-e2e.mjs first (XSS probe fixture)');
+    // A missing fixture fails here rather than skipping: a skipped XSS test
+    // is a green line that proves nothing.
+    const probe = await fixtureChallenge(page, FIXTURE_XSS_CHALLENGE);
 
     // Listing page renders challenge.description through <ReactMarkdown>.
     await page.goto('/coding-challenges');
@@ -78,9 +76,7 @@ test.describe('stored XSS — HTML path (dangerouslySetInnerHTML)', () => {
     page,
   }) => {
     await login(page, 'student');
-    const probe = await fixtureChallenge(page, 'QA E2E Two Sum');
-    const topicId = probe?.topicId ?? probe?.topic_id;
-    test.skip(!topicId, 'run Backend/qa/seed-e2e.mjs first (topic fixture)');
+    const topicId = await fixtureTopicId(page);
 
     // This write path skipped the sanitiser that POST /articles applies, which
     // made it a way to store raw HTML into a field the app renders with
@@ -106,9 +102,7 @@ test.describe('stored XSS — HTML path (dangerouslySetInnerHTML)', () => {
     page,
   }) => {
     await login(page, 'student');
-    const probe = await fixtureChallenge(page, 'QA E2E Two Sum');
-    const topicId = probe?.topicId ?? probe?.topic_id;
-    test.skip(!topicId, 'run Backend/qa/seed-e2e.mjs first (topic fixture)');
+    const topicId = await fixtureTopicId(page);
 
     const created = await apiAs(page, 'POST', '/articles', {
       title: 'E2E XSS probe article',

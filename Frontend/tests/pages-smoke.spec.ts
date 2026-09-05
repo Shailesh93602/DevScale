@@ -88,20 +88,19 @@ test.describe('Protected pages redirect when unauthenticated', () => {
         timeout: 30000,
       });
 
-      // Should redirect (302) or be at login page
       const finalUrl = new URL(page.url());
-      const status = response?.status() ?? 0;
+      expect(response?.status() ?? 0).toBeLessThan(500);
 
-      // Either redirected to login, or returned a redirect status
-      const redirectedToLogin = finalUrl.pathname.includes('/auth/login');
-      const isOkStatus = status < 500;
-
-      expect(isOkStatus).toBe(true);
-
-      // If not redirected, at least shouldn't error
-      if (!redirectedToLogin) {
-        expect(status).toBeLessThan(400);
-      }
+      // Every route in this list sits behind the session middleware, so a
+      // visitor must land on the login page with the route as callbackUrl.
+      // This used to be optional — the test passed whenever the route
+      // answered with anything under 500, redirect or not — which made it a
+      // test that could not fail on the one thing its title promises.
+      expect(
+        finalUrl.pathname,
+        `${route} was served to a visitor instead of redirecting to login`,
+      ).toBe('/auth/login');
+      expect(finalUrl.searchParams.get('callbackUrl')).toBe(route);
     });
   }
 });
@@ -124,12 +123,13 @@ test.describe('Landing page UI checks', () => {
   }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
 
-    // The first CTA should link to register
-    const ctaLink = page.locator('a:has-text("Get Started Free")').first();
-    if ((await ctaLink.count()) > 0) {
-      const href = await ctaLink.getAttribute('href');
-      expect(href).toContain('/auth/register');
-    }
+    // The hero CTA exists for a visitor and links to register. Asserted, not
+    // guarded: `if (count() > 0)` let a landing page with no CTA pass.
+    const ctaLink = page
+      .getByRole('link', { name: 'Get Started Free' })
+      .first();
+    await expect(ctaLink).toBeVisible();
+    await expect(ctaLink).toHaveAttribute('href', /\/auth\/register/);
   });
 });
 

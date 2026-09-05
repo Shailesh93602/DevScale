@@ -1,5 +1,5 @@
 import { test, expect, Browser, Page } from '@playwright/test';
-import { login, apiAs, settle, API_BASE } from './helpers';
+import { login, apiAs, settle, API_BASE, fixtureTopicId } from './helpers';
 
 /**
  * The product's headline claim is "real-time multiplayer coding battles". This
@@ -33,16 +33,10 @@ test.describe('two-player battle', () => {
     const p2 = await newSession(browser, 'student2');
 
     try {
-      // Source a battle from the fixture topic.
-      const challenges = await json(p1.page, 'GET', '/challenges?limit=100');
-      const list =
-        challenges.body?.data?.challenges ??
-        challenges.body?.data?.data ??
-        (Array.isArray(challenges.body?.data) ? challenges.body.data : []);
-      const topicId = list.find(
-        (c: { title: string }) => c.title === 'QA E2E Two Sum',
-      )?.topicId;
-      test.skip(!topicId, 'run Backend/qa/seed-e2e.mjs first');
+      // Source a battle from the fixture topic. A missing fixture fails the
+      // test — the headline realtime claim must never be reported green on a
+      // run where it was skipped.
+      const topicId = await fixtureTopicId(p1.page);
 
       const created = await json(p1.page, 'POST', '/battles', {
         title: `E2E Two Player ${Date.now()}`,

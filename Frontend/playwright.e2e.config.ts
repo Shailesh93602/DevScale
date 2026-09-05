@@ -51,11 +51,15 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         viewport: { width: 1440, height: 900 },
       },
+      // Phone-only assertions are excluded HERE, not skipped at runtime: a
+      // `test.skip(project !== 'mobile')` inside the spec reported a green,
+      // skipped desktop result for a test that never ran.
+      testIgnore: /responsive-phone\.spec\.ts/,
     },
     {
       name: 'mobile',
       use: { ...devices['Pixel 7'], viewport: { width: 390, height: 844 } },
-      testMatch: /(page-health|responsive-journeys)\.spec\.ts/,
+      testMatch: /(page-health|responsive-journeys|responsive-phone)\.spec\.ts/,
     },
   ],
   webServer: {

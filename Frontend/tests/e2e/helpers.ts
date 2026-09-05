@@ -206,6 +206,53 @@ export async function settle(page: Page) {
   await page.waitForTimeout(800);
 }
 
+/**
+ * The fixtures Backend/qa/seed-e2e.mjs creates, resolved through the same
+ * challenge list the journeys always read.
+ *
+ * A missing fixture FAILS the test. Every spec used to do
+ * `test.skip(!topicId, 'run seed-e2e first')`, and a skipped test is green in
+ * every summary line anyone reads — nothing distinguished "seeded and passing"
+ * from "never ran". The seed is part of the documented setup, so its absence
+ * is a broken environment, not a reason to report success.
+ */
+export const FIXTURE_CHALLENGE = 'QA E2E Two Sum';
+export const FIXTURE_XSS_CHALLENGE = 'QA E2E XSS Probe';
+export const SEED_HINT =
+  'fixture missing — run `npm run qa:seed` in Backend/ against the local e2e database (docs/QA_COVERAGE.md)';
+
+export interface FixtureChallenge {
+  id: string;
+  title: string;
+  topicId?: string;
+  topic_id?: string;
+}
+
+export async function fixtureChallenge(
+  page: Page,
+  title: string = FIXTURE_CHALLENGE,
+): Promise<FixtureChallenge> {
+  const res = await apiAs(page, 'GET', '/challenges?page=1&limit=100');
+  const json = await res.json();
+  const list: FixtureChallenge[] =
+    json?.data?.challenges ??
+    json?.data?.data ??
+    (Array.isArray(json?.data) ? json.data : []);
+  const found = list.find((c) => c.title === title);
+  expect(found, `"${title}" — ${SEED_HINT}`).toBeTruthy();
+  return found as FixtureChallenge;
+}
+
+export async function fixtureTopicId(page: Page): Promise<string> {
+  const challenge = await fixtureChallenge(page);
+  const topicId = challenge.topicId ?? challenge.topic_id;
+  expect(
+    topicId,
+    `"${FIXTURE_CHALLENGE}" has no topic — ${SEED_HINT}`,
+  ).toBeTruthy();
+  return topicId as string;
+}
+
 /** A second, independent browser session — used for the two-player battle. */
 export async function loginInContext(context: BrowserContext, who: UserKey) {
   const page = await context.newPage();

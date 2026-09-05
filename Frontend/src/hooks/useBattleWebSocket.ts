@@ -136,6 +136,18 @@ function releaseSocket(battleId: string) {
 export function useBattleSocket(battleId: string) {
   const { toast } = useToast();
   const socketRef = useRef<Socket | null>(null);
+  // Handlers registered through `on()` before the socket exists. The socket is
+  // created only after getAuthToken() resolves, but every consumer registers
+  // its listeners in a mount effect — synchronously, before that promise
+  // settles. `on()` used to do `socketRef.current?.on(...)`, which was a
+  // silent no-op at that moment, so the battle page never received
+  // battle:started / battle:question / battle:answer_result / battle:completed
+  // at all: the frames reached the browser socket and nobody was listening.
+  // (Only `connect` worked, because it is attached inside the .then below —
+  // which is why the "Live" indicator lit up while the page sat in the lobby.)
+  const pendingRef = useRef<
+    { event: string; handler: (data: unknown) => void }[]
+  >([]);
   const [isConnected, setIsConnected] = useState(false);
   const initialized = useRef(false);
 
@@ -146,6 +158,11 @@ export function useBattleSocket(battleId: string) {
     getAuthToken().then((token) => {
       const socket = getSocket(battleId, token);
       socketRef.current = socket;
+
+      for (const { event, handler } of pendingRef.current) {
+        socket.on(event, handler);
+      }
+      pendingRef.current = [];
 
       const onConnect = () => setIsConnected(true);
       const onDisconnect = () => setIsConnected(false);
@@ -176,10 +193,17 @@ export function useBattleSocket(battleId: string) {
       event: E,
       handler: (data: BattleEventMap[E]) => void,
     ): (() => void) => {
+      const name = event as string;
+      const h = handler as (data: unknown) => void;
       const s = socketRef.current;
-      s?.on(event as string, handler as (data: unknown) => void);
+      if (s) {
+        s.on(name, h);
+      } else {
+        pendingRef.current.push({ event: name, handler: h });
+      }
       return () => {
-        s?.off(event as string, handler as (data: unknown) => void);
+        socketRef.current?.off(name, h);
+        pendingRef.current = pendingRef.current.filter((p) => p.handler !== h);
       };
     },
     [],
