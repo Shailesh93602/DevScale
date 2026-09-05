@@ -373,6 +373,11 @@ jobs:
       # a different app on 3000, and reuseExistingServer would then run the
       # whole suite against somebody else's site while reporting green.
       PORT: 3220
+      # The default config's globalSetup runs `npm run seed:battles` in Backend/,
+      # which this job never installs — the seed failed on every run and
+      # global-setup swallowed it. It now aborts the run instead, so opt out
+      # explicitly: the public axe subset needs no battles.
+      PLAYWRIGHT_SKIP_SEED: '1'
     steps:
       - uses: actions/checkout@v4
 
