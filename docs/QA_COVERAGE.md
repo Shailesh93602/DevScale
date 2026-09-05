@@ -219,7 +219,7 @@ cd ../Frontend && npm run test:e2e:journeys   # Playwright journeys on :3220
 | Stored XSS | `qa/run.mjs` area `xss` + `Frontend/tests/e2e/xss.spec.ts` | Every write path that reaches `Article.content` / `Resource.content` is sanitised server-side, and the rendered page executes nothing. |
 | Code execution | `qa/run.mjs` area `exec` | `/run-code` requires auth, rejects unknown languages before they reach the metered executor, and answers inside the breaker's ceiling. |
 | Realtime | `qa/socket.mjs` (10 assertions) | Handshake auth (valid/none/bad), `battle:started` broadcast, score sync between two live clients, **reconnect mid-battle**, and **room isolation** — a non-participant is refused and receives nothing. |
-| Browser journeys | `Frontend/tests/e2e/` | Student (land → sign in → challenge → run code → result), moderator (submit → queue → approve → public), admin (every admin route 200 for admin / 403 for student, admin UI unreachable for a student), and a **two-browser-context battle** played to completion. |
+| Browser journeys | `Frontend/tests/e2e/` | Student (land → sign in → challenge → run code → result), moderator (submit → queue → approve → public), admin (every admin route 200 for admin / 403 for student, admin UI unreachable for a student), and a **two-browser-context battle** played to completion. ⚠️ **Corrected 2026-09-05:** the student journey's *run code → result* step had **never executed** — it sat behind `if (await runButton.count())` looking for a button named `/^run$/`, and the real label is "Run Code". From 2026-08-16 until this correction that row was true only up to "challenge". The step now runs against a `/run-code` stub at the network edge (the executor is an external service) and asserts the request body and the console verdicts; the real executor path is still proven only by `qa/run.mjs` area `exec` (auth, language validation, breaker ceiling — not a verdict). See [Silent-skip audit](#2026-09-05--silent-skip-audit-of-the-playwright-suites). |
 | Page health | `Frontend/tests/e2e/page-health.spec.ts` | Per public page × {1440, 390}: 0 console errors, 0 uncaught errors, 0 failed requests, every image loads, axe WCAG 2 A/AA, no horizontal overflow. |
 | Honesty | `Frontend/tests/e2e/honesty.spec.ts` | No invented people/institutions, no third-party stock avatars, no placeholder posts presented as published content, no unsourced metrics. |
 
@@ -374,5 +374,77 @@ cd ../Frontend && npx playwright test
 `seed:user` and `qa:seed` create accounts through Supabase Auth in the project `Backend/.env` names — they are
 not part of "local-only". The authenticated specs still log in against that Supabase project
 (`tests/auth.setup.ts`); what this section keeps local is every row the seed deletes and writes.
+
+**The spec's own API calls follow the app.** `battle-zone-real.spec.ts` reads `NEXT_PUBLIC_API_BASE_URL`
+(default `http://localhost:4000/api/v1`) for the requests it makes directly, so export the same value for the
+Playwright process that the frontend was built or started with — it used to hard-code `:4000`, and a run
+against any other backend failed every direct-API assertion for a reason unrelated to the product.
+
+**Against a production build** (what the 2026-09-05 audit ran): `NEXT_PUBLIC_API_BASE_URL=http://localhost:4010/api/v1
+NEXT_PUBLIC_WS_URL=http://localhost:4010 npx next build && npx next start -p 3220`, backend on 4010 against
+pg17/`eduscale_test`; every config reuses an existing server on 3220, so no dev server starts. Note the default
+config's `testDir` is `./tests`, which includes `tests/e2e/*` — run those with `playwright.e2e.config.ts`
+(`npm run test:e2e:journeys`) and pass `tests/*.spec.ts` paths to the default config, or the e2e specs run twice.
+
+## 2026-09-05 — Silent-skip audit of the Playwright suites
+
+**The bug class:** an e2e journey that passes while silently doing nothing. Concrete instance: the student journey
+above. Every spec under `Frontend/tests/` (default, public and e2e configs) was audited for the pattern — `if
+(await locator.count() > 0)` / `isVisible()` guards around the assertion that matters, `test.skip` with a runtime
+condition, `.catch(() => false | null)` and `try/catch` around a step — and each spec was run once against a
+production build with a local backend (student/player-2 sessions; the admin/moderator specs and the `tests/e2e`
+logins need the `E2E_*_PASSWORD` values, which were not available in that environment, so those rows are
+verified statically against the source and marked so).
+
+**Guard against recurrence:** `Frontend/src/test/playwright-silent-skip.test.ts` (vitest, runs in CI's
+`frontend-test` job) parses every `tests/**/*.spec.ts` with the TypeScript compiler and fails on three forms —
+V1 a step or `expect` guarded by element state (`isVisible`/`isHidden`/`isEnabled`/`isDisabled`/`isChecked`/
+`count`/`all`, directly or through a variable), V2 any runtime `test.skip`/`fixme`, V3 a `.catch(` or
+`try/catch` around an `expect`, a step or a `waitFor*`. The one exemption: branching on the state of a control
+already asserted with `await expect(x).toBeVisible()` (or `toBeAttached`/`toHaveCount`/`toBeEnabled`). The
+allow-list is empty. The detector is itself tested against known-bad and known-good snippets.
+
+| Spec | Step | Pattern | Did the step run before this audit? | Fix |
+|---|---|---|---|---|
+| `e2e/journeys` | run code → see a result | `if (await runButton.count())` around click + verdict poll; matcher `/^\s*run\s*$/i`, label "Run Code" | **No.** The matcher cannot match the label; the label has said "Run Code" since 2025-01 and the guard was written 2026-08-16. | `Run Code` asserted visible+enabled; `/run-code` stubbed at the network edge; the POST body (challengeId, language, code) and the console verdicts (Case 1/2 tabs, Accepted / Wrong Answer, expected/actual output) asserted |
+| `e2e/journeys` | open the fixture challenge | `count() > 0 ? fixtureCard : first card` | Fallback taken whenever the fixture is absent — a different challenge, silently | fixture card asserted visible |
+| `e2e/journeys` ×2 · `e2e/xss` ×3 · `e2e/battle-two-players` | fixture topic / XSS probe | `test.skip(!topicId, 'run seed-e2e first')` | Skipped (green) on any unseeded DB | `fixtureChallenge()` / `fixtureTopicId()` in `helpers.ts` fail with the seed hint |
+| `e2e/responsive-journeys` | open a challenge; panel layout; 360px tab strips | `test.skip(count === 0)`; `test.skip(count < 2)`; `test.skip(project !== 'mobile')` | Layout skips: only when unseeded. Phone test: reported **skipped-green on desktop every run** | hard expects; the 360px test moved to `responsive-phone.spec.ts`, mobile-only via `testMatch`/`testIgnore` in the config |
+| `e2e/honesty` | landing leaderboard is live or labelled | `if (await leaderboard.count()) { if (live === 0) expect(...) }` | Outer guard true, inner false → **zero assertions executed** (trace) | leaderboard text visible + `[data-leaderboard-source="ratings-api"]` count 1 |
+| `e2e/honesty` | blog empty state | `if (links.length === 0) expect(...)` | Not taken when posts exist (legitimate) | one hard either/or assertion |
+| `pages-smoke` | protected route redirects to login (16 routes) | `if (!redirectedToLogin) expect(status < 400)` | The redirect was **never asserted** — any sub-500 answer passed | `pathname === '/auth/login'` and `callbackUrl === route` asserted (all 16 return 307 on the prod build) |
+| `pages-smoke` | hero CTA links to register | `if ((await ctaLink.count()) > 0)` | Yes today (trace: `getAttribute → /auth/register`) | visible + href asserted |
+| `student-panel` | theme toggle flips the `dark` class | `if (await themeToggle.isVisible())`, name `/Switch to/i`; the button's `aria-label` is "Toggle theme" | **No.** Trace: `isVisible(role=button[name=/Switch to/i]) → false`, no click | "Toggle theme" asserted; class flip asserted both ways |
+| `create-roadmap` | validation messages after empty submit | `if (isVisible() === false) console.error(...)`, ends `expect(true)` | Nothing was ever asserted | hard expects on the zod messages; Cancel closes the modal. *Admin login — not executed locally* |
+| `roadmaps-interactions` | create / bookmark / like / comment / reply | 10× `if (await x.isVisible().catch(() => false))`, `.toast` selector (react-toastify only toasts on error) | Every step optional; the file logged "not found, skipping" | each control asserted (`aria-label` Bookmark/Like/Comment, "Write a comment...", "Post Comment", "Write a reply..."), API answer asserted 2xx, text asserted rendered. *Admin login — not executed locally* |
+| `roadmaps-comprehensive` | 100 "scenarios" | hover-only `isVisible()` guards, unauthenticated against a protected route, `expect(true)` | **100 tests passed doing nothing** | deleted |
+| `battle-zone-comprehensive` | detail page shows no raw enums | `isVisible().catch(false)` → `test.skip()`; matcher `/view details/`, button says "Details" | **No.** Skipped on every run (baseline: skipped) | `/details/` asserted, click, `waitForURL` |
+| `battle-zone-create-flow` | second combobox; Create; redirect | 3 optional branches; `expect(redirected \|\| onPreviewStep)` | Create ran today (trace); the redirect was never required | roadmap-level source, pool 200, POST 2xx + id, redirect + "Waiting for players" required |
+| `battle-zone-auth-review` | per-route load | `try { … expect(body).toBeVisible() } catch { routeIssues.push }`; no assertion at the end | Failures became report lines | report kept; `serverErrors` and `routeIssues` asserted empty |
+| `battle-zone-real` (79 → 74 tests) | Flows 4, 5, 6, 8, 10, 11, 12 | 113 detector sites: `isVisible().catch(false)` around lobby/ready/start/answer/leaderboard, `if (!battleId) { test.skip() }` ×20, swallowed `waitForResponse`, roadmap hard-coded to "Full Stack Web Development", API hard-coded to `:4000` | Baseline on the local seed: **24 skipped, 46 passed, 5 failed**; the lobby never opened, no answer was submitted, no battle completed, and Flow 12's "IN_PROGRESS" test `return`ed | every control asserted, every API answer asserted, previous-step ids asserted, first roadmap chosen dynamically (title returned for the summary check), API base from `NEXT_PUBLIC_API_BASE_URL`; Flows 6, 11 and 12 rewritten (Flow 12's disabled-Submit check folded into Flow 11); `getByText('teststudent')` strict-mode violation fixed with `.first()` |
+
+**What the hard assertions found (product bug, fixed in the same PR):** with the guards gone, both "creator
+starts the battle" tests failed the same way — `POST /battles/:id/start` answered 200 and the row flipped to
+`IN_PROGRESS`, but the creator's page stayed in the lobby. A WebSocket-frame probe against the production build
+showed `battle:started` and `battle:question` **arriving in both browsers within 10 ms**, and 25 s later both
+pages still rendering "Lobby — Get Ready". Root cause in `Frontend/src/hooks/useBattleWebSocket.ts`: `on()`
+attached handlers to `socketRef.current` synchronously, but the socket is created only after `getAuthToken()`
+resolves — every handler the battle page registers in its mount effect (`battle:started`, `battle:question`,
+`battle:answer_result`, `battle:completed`, timer) was attached to `null` and dropped. Only `connect` worked
+(attached inside the `.then`), which is why "Live" lit up while nothing else moved. **The battle page had no
+realtime at all**; the old spec's "socket event missed → reload" fallbacks and the API-polling assertions in
+`battle-two-players.spec.ts` were what kept that invisible. Fix: handlers registered before the socket exists are
+queued and attached when it is created (`useBattleWebSocket.test.ts` drives the mount-effect order and fails on
+the old code: 0 listeners attached).
+
+Also seen, not fixed: after seven completed battles in one run, `/battle-zone/statistics` showed a "7 battles"
+card next to a Win Rate card reading **"0 of 0 battles"** for the same player. The two cards disagree about the
+same history; Flow 11's statistics assertion uses the battles-played card and leaves the Win Rate card for a
+separate look.
+
+Not changed, noted: `journeys` "submitting the fixture quiz persists a real score" still only asserts
+`GET /topics/:id < 500` — its assertion executes, so it is outside this class, but the row above that proves quiz
+scoring is `qa/run.mjs` area `quiz`, not this test. `ux-capture` and `regression/bug-bash` are capture scripts with
+no assertions by design and are not flagged.
 
 *Last updated: 2026-09-05.*

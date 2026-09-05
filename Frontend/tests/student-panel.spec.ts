@@ -98,26 +98,26 @@ test.describe('Student Panel Features - Professional Grade', () => {
     // 1. Accessibility Scan (After content load)
     await checkAccessibility(page, 'Dashboard');
 
-    // 3. Visual: Dark Mode Toggle
-    // Toggle to Dark Mode
-    const themeToggle = page.getByRole('button', { name: /Switch to/i });
-    if (await themeToggle.isVisible()) {
-      await themeToggle.click({ force: true });
-      await page.waitForTimeout(1000); // Allow transition
-      // Verify dark mode class on html or body
-      const html = page.locator('html');
-      // Check for class containing 'dark'
-      await expect(html).toHaveClass(/dark/);
-
-      // Take screenshot of dark mode
-      // await expect(page).toHaveScreenshot('dashboard-dark.png'); // Uncomment when baseline is established
-
-      // Toggle back to Light Mode
-      await themeToggle.click();
-      await page.waitForTimeout(500);
-      // Check for class NOT containing 'dark' or containing 'light'
-      await expect(html).not.toHaveClass(/dark/);
-    }
+    // 3. Visual: theme toggle. The navbar button is labelled "Toggle theme";
+    // the old matcher looked for /Switch to/, which nothing renders, so this
+    // block sat behind a false isVisible() and had never run. The navbar
+    // renders the toggle twice (desktop + mobile menu); take the visible one.
+    const themeToggle = page
+      .getByRole('button', { name: 'Toggle theme' })
+      .locator('visible=true')
+      .first();
+    await expect(themeToggle).toBeVisible();
+    const html = page.locator('html');
+    const isDark = () => html.evaluate((el) => el.classList.contains('dark'));
+    const before = await isDark();
+    await themeToggle.click();
+    await expect
+      .poll(isDark, { message: 'theme class did not flip' })
+      .toBe(!before);
+    await themeToggle.click();
+    await expect
+      .poll(isDark, { message: 'theme class did not flip back' })
+      .toBe(before);
   });
 
   test('Dashboard: Weekly Activity Chart exists', async ({ page }) => {
