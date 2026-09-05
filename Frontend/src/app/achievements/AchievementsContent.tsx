@@ -64,7 +64,10 @@ export default function AchievementsContent() {
       </motion.div>
 
       {status === 'loading' && (
+        // role="status" so the aria-label is permitted (axe aria-prohibited-attr:
+        // a plain <div> may not carry aria-label) and the busy state is announced.
         <div
+          role="status"
           className="space-y-2"
           data-testid="achievements-loading"
           aria-busy="true"

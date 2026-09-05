@@ -398,7 +398,7 @@ const UserMenu = ({
           alt={user?.username || 'User avatar'}
           className="object-cover"
         />
-        <AvatarFallback className="bg-primary text-[11px] font-black uppercase text-white">
+        <AvatarFallback className="bg-primary text-[11px] font-black uppercase text-primary-foreground">
           {userInitials}
         </AvatarFallback>
       </Avatar>

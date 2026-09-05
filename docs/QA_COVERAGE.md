@@ -448,3 +448,87 @@ scoring is `qa/run.mjs` area `quiz`, not this test. `ux-capture` and `regression
 no assertions by design and are not flagged.
 
 *Last updated: 2026-09-05.*
+
+## 2026-09-05 — PR #39 leftovers: a11y flake root-caused, `dark:` drift, leaderboard assertion, statistics shape
+
+Four specs #39 listed as "pre-existing failures, not touched". Each reproduced against a production build
+(`next build` + `next start -p 3220`, backend `dist/main.js` on 4010, pg17 `eduscale_test` on 5434, saved
+student/player-2 sessions) before anything was changed.
+
+**1. `accessibility.spec.ts` — `color-contrast` on `/career-roadmap` and `/streak`, intermittent (3/4 and 2/4
+under six parallel workers), plus the route-classification guard.** The spec logs only the rule id, so a probe
+spec dumped axe's node data: every failing foreground was a *blend* — `#ebecec`, `#a8a9ab`, `#757b87` for
+`text-muted-foreground`, whose token is `#616875` at rest — and the pulsing SiteLoader label at 2.08:1. The
+old `settleAnimations` polled once for "no inline opacity below 1" and returned the moment that was true —
+which, on a page that fetches before it renders, is *before the data arrives*: skeleton on screen, nothing
+animating yet, then the fetched cards faded in underneath axe. Fix, in the spec and in the repo's own idiom
+(wait, never force — `SESSION_2026-08-29_KNOWLEDGE.md` §3): network idle → no `.animate-pulse`/`.animate-spin`
+→ no inline opacity strictly between 0 and 1 (an element parked at 0, a `whileInView` block below the fold,
+must not hold the wait open; with `< 1` it did, every time, for the full timeout) → 600 ms for the CSS
+`.fade-up`. Every wait is bounded; a give-up measures early and fails, it never passes. Real defects under the
+flake: `StreakStats.tsx` captions were `text-gray-500` — 4.83:1 on the light card, ~3.6:1 on the dark one —
+invisible because the protected audits ran light-only; and, once `/coding-challenges` was audited as the
+public dark page it now is, `PublicChallengeList.tsx` (#36) showed `text-emerald-700` difficulty badges at
+2.75:1 and challenge descriptions rendered through `prose` without `dark:prose-invert`, so their headings were
+`#111827` on the dark card — 1.01:1. All three are tokens now (prose colours are mapped to theme tokens in `tailwind.config.ts`'s typography
+block — the lint rule forbids `dark:prose-invert` in JSX). The Navbar avatar fallback and the `/resources` CTA put
+`text-white` on the dark primary (`#c73dff`, 3.79:1 — every signed-in page); both use `text-primary-foreground`
+now. `text-destructive` measured 2.38:1 on the dark card (BattleCard's CANCELLED badge) because the dark
+`--destructive` was a button-background shade; it now follows the theme's success/warning/info pattern in dark
+mode (bright surface 5.5:1 as text, dark foreground 5.6:1 on it) — a deliberate look change for destructive
+buttons in dark mode, flagged for review. `/achievements`' loading container carried `aria-label` on a plain
+`<div>` (`aria-prohibited-attr`, from #38); it is `role="status"` now. The dashboard's 12px "View all" card links were `text-primary` at `opacity-80` — 3.42:1 on the dark card once blended; the alpha is gone (hover underlines instead). Protected routes are audited in
+**both themes** (17 routes × 2). The classification guard was red because `/career-roadmap` and
+`/coding-challenges` became public in #36 and three ComingSoon placeholders (`/mastermind-forge`,
+`/tech-pioneer`, `/instant-battle`) are classified in neither list on purpose (anonymous, `noindex`, gate
+nothing — robots.ts). Lists corrected; the placeholders get their own guard asserting exactly what is true of
+them. The audit itself is now hard: `openForAudit` asserts `status < 400` and that the final URL *is* the
+route, so a redirect can no longer be reported as a clean page — `/admin` audited as a student was a
+RoleGuard redirect to `/dashboard` under another name; it is out of the student list until an admin session
+exists (`E2E_ADMIN_PASSWORD`). Result on the fixed tree: **69/69** — 66 audits (13 public + 3 placeholder routes × 2 themes, 17 protected × 2) with zero violations plus the 3 classification guards, in one run with the other three specs (96 passed, 0 skipped, 8.0 min, production build, 6 workers).
+
+> **Harness trap found on the way (cost one full run):** `pkill -f "next start -p 3220"` does not reach the
+> `next-server` child, so the old server survived a rebuild, kept serving its in-memory manifest against a
+> replaced `.next/` (one CSS chunk 500'd), and the new `next start` silently failed to bind — the health
+> curl answered 200 from the stale process. Twelve dark audits then measured an unstyled page (Chromium's
+> default `#9e9eff` links). Kill by port (`lsof -ti :3220 | xargs kill`), and after a restart check that
+> every CSS URL the HTML references answers 200 before trusting a run.
+
+**2. `regression-ui-contract.spec.ts` — `dark:` classes in four components.** The contract is from the initial
+commit (2026-03-15); the offenders arrived 2026-06-15 (`075d86e0`, AdminUsers/AdminAudit), 2026-06-22
+(`f7a43bc5`, AdminOverview) and 2026-08-30 (`0ac12795`, AICodeReviewPanel). The components drifted, and the
+repo already says which side is right: `28507ca5` (2026-06-15) moved AdminOverview's pills from palette
+shades to `success`/`destructive` tokens "(drops dark: variants too)". A fixed palette shade needs a dark
+swap because it cannot pass on both backgrounds; a token that flips with the theme can. Replaced with tokens
+chosen by computed WCAG ratio on the card and on the 15 % self-tint, both themes: `purple` 7.65/7.38,
+`success` 6.20/9.62, `blue` 6.55/7.33, `warning` 6.01/11.77, `red` 6.96/5.50, `muted-foreground` 5.61/6.06
+(light/dark, on card). Not chosen, with the numbers that ruled them out: `info` 3.64 light, `green` 3.33
+light, `yellow` 2.74 light, `destructive` 2.51 dark. Contract untouched.
+
+**3. `landing-page.spec.ts` — "Weekly Leaderboard".** The heading became "Rating Leaderboard" on 2026-09-03
+(`67c55a05`) when the block started reading `GET /ratings/leaderboard`; #36 is not the cause. The test now
+arms a listener for that request, asserts 200, and checks the render against the answer: N rated players →
+min(N, 3) podium `listitem`s (empty slots are `aria-hidden` and do not count), the top rating on screen,
+max(0, min(N, 5) − 3) rows in the 4th/5th list; zero → "No rated players yet" and no podium. Both branches
+assert; the heading alone would have repeated the mistake.
+
+**4. Statistics "0 of 0 battles" beside "N battles".** Two readers of one query. `GET /battles/statistics/me`
+returns the counters under `data.stats` (so since `f224e4c5`, 2026-03-28); `statistics/page.tsx` read
+`d.total_battles`, `d.wins`, `d.win_rate`, `d.accuracy`, `d.total_score`, `d.avg_time_ms` from the **top
+level**, each behind `?? 0` and a camelCase alternative nothing ever sent. Every key missed, so the entire Key
+Stats row was zero for every player — captured live: API `{ total_battles: 3, completed_battles: 2, wins: 0,
+total_score: 150, correct_answers: 1, total_answers: 9, accuracy: 11, avg_time_ms: 974 }`, page "Win Rate 0%
+· 0 of 0 battles / Accuracy 0% · 0 of 0 questions / Average Score 0 · 0 total points / Response Time 0s" —
+while Performance by Difficulty, read from the correct top-level array, said "2 battles". `BattleZoneLayout`
+made the same mistake and showed "--" for everyone. Fix: one reader, `statistics/normalize.ts`, typed to the
+backend's shape with no alternate spellings and no silent zeros; the Win Rate value is computed from the same
+`wins`/`completedBattles` its caption prints (`winRateSummary`), the page and the header both use it, "--"
+(not "0%") until a battle has completed. Also corrected on the way: per-group figures were labelled
+"Accuracy" but are win rates; a cancelled battle rendered "Ongoing"; "Rank 2/0" (the payload has no
+participant count). `normalize.test.ts` (7 tests) pins the derivations on the captured payload and asserts
+the by-difficulty counts sum to the Win Rate denominator; Flow 8 in `battle-zone-real.spec.ts` asserts the
+rendered card equals the live API (`"0 of 2 battles"`, `0%`), the difficulty cards partition exactly those
+battles, and the header quick stat shows the same percentage. Flow 11 now also requires the Win Rate caption
+to name a non-zero denominator after its completed battle, and its battles-played check is pinned to the difficulty card's test id — Top Topics derives from the same array now, so "<n> battles" legitimately appears twice and a bare `getByText` is a strict-mode violation.
+
+*Last updated: 2026-09-05.*
