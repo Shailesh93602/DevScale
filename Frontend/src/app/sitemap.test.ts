@@ -33,12 +33,12 @@ describe('sitemap advertises only crawlable pages', () => {
   });
 
   it('the routes that used to redirect are gone', () => {
-    // Named explicitly: these eight were the actual defect, and a regression
-    // should say so rather than just failing a generic filter.
+    // Named explicitly: these were the actual defect, and a regression should
+    // say so rather than just failing a generic filter. /career-roadmap and
+    // /coding-challenges were on this list until 2026-09-03, when both became
+    // genuinely public — see the assertion below that they are advertised.
     const previouslyWrong = [
       '/articles',
-      '/career-roadmap',
-      '/coding-challenges',
       '/community',
       '/discussions',
       '/discussion-forums',
@@ -53,6 +53,19 @@ describe('sitemap advertises only crawlable pages', () => {
     // The opposite failure — over-filtering to an empty-ish sitemap — would
     // also pass every check above.
     for (const p of ['/', '/about', '/blogs', '/contact', '/faq']) {
+      expect(SITEMAP_PATHS).toContain(p);
+    }
+  });
+
+  it('advertises the anonymous read-only surfaces', () => {
+    // These are the pages a recruiter is meant to land on without an account.
+    // If a route change quietly gates one again, the sitemap filter drops it
+    // and this names which.
+    for (const p of [
+      '/career-roadmap',
+      '/coding-challenges',
+      '/battles/demo',
+    ]) {
       expect(SITEMAP_PATHS).toContain(p);
     }
   });

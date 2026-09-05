@@ -46,6 +46,9 @@ const CANDIDATE_PATHS = [
   // code — the filter below was correct, the candidate list was short.
   '/interview-question',
   '/pricing',
+  // Anonymous read-only view (2026-09-03): the roadmap list and the challenge
+  // list are public now, and /battles/demo is a static recorded replay.
+  '/battles/demo',
 ];
 
 /** Only routes an anonymous crawler can actually load. */

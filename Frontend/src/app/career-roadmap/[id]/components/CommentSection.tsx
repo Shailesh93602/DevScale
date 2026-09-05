@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Comment } from '@/types';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { Button } from '@/components/ui/button';
@@ -9,9 +11,15 @@ import { CommentSkeleton } from '@/components/Roadmap/CommentSkeleton';
 
 interface CommentSectionProps {
   roadmapId: string;
+  /** Visitors can read the thread; only members get the composer. */
+  isAuthenticated?: boolean;
 }
 
-export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
+export const CommentSection = ({
+  roadmapId,
+  isAuthenticated = true,
+}: CommentSectionProps) => {
+  const pathname = usePathname();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,22 +81,37 @@ export const CommentSection = ({ roadmapId }: CommentSectionProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
-        <Textarea
-          placeholder="Write a comment..."
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          className="min-h-[100px]"
-        />
-        <div className="flex justify-end">
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting || !newComment.trim()}
-          >
-            Post Comment
+      {isAuthenticated ? (
+        <div className="space-y-4">
+          <Textarea
+            placeholder="Write a comment..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            className="min-h-[100px]"
+          />
+          <div className="flex justify-end">
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting || !newComment.trim()}
+            >
+              Post Comment
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-start gap-3 rounded-lg border border-dashed border-border p-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted-foreground">
+            You can read the discussion as a visitor. Sign in to join it.
+          </p>
+          <Button asChild variant="outline">
+            <Link
+              href={`/auth/login?callbackUrl=${encodeURIComponent(`${pathname || '/career-roadmap'}?comments=open`)}`}
+            >
+              Sign in to comment
+            </Link>
           </Button>
         </div>
-      </div>
+      )}
 
       <div className="space-y-6">
         {isLoading ? (

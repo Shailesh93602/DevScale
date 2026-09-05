@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -37,6 +39,8 @@ interface RoadmapHeaderActionsProps {
   handleShare: () => Promise<void>;
   handleEnroll: () => Promise<void>;
   isEnrolling: boolean;
+  /** Visitors see "Sign in to enrol" instead of a button that can only 401. */
+  isAuthenticated?: boolean;
 }
 
 export const RoadmapHeaderActions = ({
@@ -50,7 +54,10 @@ export const RoadmapHeaderActions = ({
   handleShare,
   handleEnroll,
   isEnrolling,
+  isAuthenticated = true,
 }: RoadmapHeaderActionsProps) => {
+  const pathname = usePathname();
+  const signInHref = `/auth/login?callbackUrl=${encodeURIComponent(pathname || '/career-roadmap')}`;
   return (
     <div className="flex flex-col justify-center space-y-6">
       <Card className="overflow-hidden border-none bg-card/60 p-8 shadow-xl backdrop-blur-sm">
@@ -128,7 +135,11 @@ export const RoadmapHeaderActions = ({
             <Share2 className="h-5 w-5 text-muted-foreground transition-colors hover:text-primary" />
           </Button>
 
-          {roadmapDetails?.isEnrolled ? (
+          {!isAuthenticated ? (
+            <Button asChild className="ml-2 font-semibold">
+              <Link href={signInHref}>Sign in to enrol</Link>
+            </Button>
+          ) : roadmapDetails?.isEnrolled ? (
             <div className="ml-2 inline-flex animate-fade-up items-center gap-2 rounded-xl border border-success/20 bg-success/10 px-6 py-2.5 text-sm font-bold text-success">
               <CheckCircle size={14} />
               Enrolled

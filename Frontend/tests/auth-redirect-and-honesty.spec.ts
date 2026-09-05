@@ -8,18 +8,36 @@ import {
 } from '../src/lib/public-routes';
 
 /**
- * ES-04 — /resources and /career-roadmap must be auth-required so the server
- * middleware redirects unauthenticated visitors to /auth/login?callbackUrl=...
- * (verified at runtime via curl: GET /resources → 307 →
- * /auth/login?callbackUrl=%2Fresources). Here we lock the routing logic that
- * drives that redirect — pure, no server needed.
+ * ES-04 — protected routes must be auth-required so the server middleware
+ * redirects unauthenticated visitors to /auth/login?callbackUrl=... (verified
+ * at runtime via curl: GET /resources → 307 → /auth/login?callbackUrl=...).
+ * Here we lock the routing logic that drives that redirect — pure, no server.
+ *
+ * /career-roadmap used to be on this list. It became public on 2026-09-03 by
+ * the owner's decision (anonymous read-only view); the individual challenge
+ * editor took its place as the representative gated route.
  */
 test.describe('ES-04: protected routes are auth-gated', () => {
-  for (const route of ['/resources', '/career-roadmap']) {
+  for (const route of [
+    '/resources',
+    '/create-battle',
+    '/coding-challenges/some-challenge-id',
+  ]) {
     test(`${route} requires auth (middleware will redirect)`, () => {
       expect(requiresAuthRoute(route)).toBe(true);
       expect(isPublicRoute(route)).toBe(false);
       expect(isGuestOnlyRoute(route)).toBe(false);
+    });
+  }
+
+  for (const route of [
+    '/career-roadmap',
+    '/coding-challenges',
+    '/battles/demo',
+  ]) {
+    test(`${route} is public (anonymous read-only view)`, () => {
+      expect(isPublicRoute(route)).toBe(true);
+      expect(requiresAuthRoute(route)).toBe(false);
     });
   }
 });

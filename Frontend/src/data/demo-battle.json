@@ -1,0 +1,179 @@
+{
+  "recordedDemo": true,
+  "label": "Recorded demo",
+  "note": "A scripted two-player battle committed as a fixture so a visitor can watch the battle UI without an account or a socket. The players are not real people and the scores are not from the database.",
+  "battle": {
+    "id": "demo-battle",
+    "title": "JavaScript fundamentals - recorded demo",
+    "type": "QUICK",
+    "difficulty": "MEDIUM",
+    "total_questions": 5,
+    "time_per_question": 30,
+    "points_per_question": 100
+  },
+  "players": [
+    { "user_id": "demo-player-a", "username": "Demo Player A" },
+    { "user_id": "demo-player-b", "username": "Demo Player B" }
+  ],
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does `typeof null` evaluate to in JavaScript?",
+      "options": ["\"null\"", "\"undefined\"", "\"object\"", "\"boolean\""],
+      "correct_answer": 2,
+      "explanation": "A long-standing quirk: null is represented with the same type tag as objects, so typeof reports \"object\".",
+      "points": 100,
+      "time_limit": 30
+    },
+    {
+      "id": "q2",
+      "question": "Which array method returns a NEW array without mutating the original?",
+      "options": ["push", "splice", "sort", "map"],
+      "correct_answer": 3,
+      "explanation": "map builds a new array from the callback's return values; push, splice and sort all mutate in place.",
+      "points": 100,
+      "time_limit": 30
+    },
+    {
+      "id": "q3",
+      "question": "What is logged? `console.log(0.1 + 0.2 === 0.3)`",
+      "options": ["true", "false", "NaN", "TypeError"],
+      "correct_answer": 1,
+      "explanation": "Binary floating point cannot represent 0.1 or 0.2 exactly; the sum is 0.30000000000000004.",
+      "points": 100,
+      "time_limit": 30
+    },
+    {
+      "id": "q4",
+      "question": "Which statement about `const` is correct?",
+      "options": [
+        "The value it holds can never change",
+        "The binding cannot be reassigned, but an object it points to can be mutated",
+        "It is hoisted and initialised to undefined",
+        "It is function-scoped"
+      ],
+      "correct_answer": 1,
+      "explanation": "const freezes the binding, not the value. Object.freeze is what makes an object immutable.",
+      "points": 100,
+      "time_limit": 30
+    },
+    {
+      "id": "q5",
+      "question": "What does `Promise.allSettled` resolve with when one promise rejects?",
+      "options": [
+        "It rejects with the first error",
+        "An array of {status, value|reason} for every promise",
+        "Only the fulfilled values",
+        "undefined"
+      ],
+      "correct_answer": 1,
+      "explanation": "Unlike Promise.all, allSettled never short-circuits; it reports each outcome.",
+      "points": 100,
+      "time_limit": 30
+    }
+  ],
+  "events": [
+    { "type": "battle:started" },
+    { "type": "question:shown", "question_index": 0 },
+    {
+      "type": "answer",
+      "user_id": "demo-player-a",
+      "question_index": 0,
+      "option": 2,
+      "is_correct": true,
+      "points_earned": 100,
+      "time_taken_ms": 7400
+    },
+    {
+      "type": "answer",
+      "user_id": "demo-player-b",
+      "question_index": 0,
+      "option": 1,
+      "is_correct": false,
+      "points_earned": 0,
+      "time_taken_ms": 11200
+    },
+    { "type": "question:revealed", "question_index": 0 },
+    { "type": "question:shown", "question_index": 1 },
+    {
+      "type": "answer",
+      "user_id": "demo-player-b",
+      "question_index": 1,
+      "option": 3,
+      "is_correct": true,
+      "points_earned": 100,
+      "time_taken_ms": 5100
+    },
+    {
+      "type": "answer",
+      "user_id": "demo-player-a",
+      "question_index": 1,
+      "option": 3,
+      "is_correct": true,
+      "points_earned": 100,
+      "time_taken_ms": 6800
+    },
+    { "type": "question:revealed", "question_index": 1 },
+    { "type": "question:shown", "question_index": 2 },
+    {
+      "type": "answer",
+      "user_id": "demo-player-a",
+      "question_index": 2,
+      "option": 0,
+      "is_correct": false,
+      "points_earned": 0,
+      "time_taken_ms": 9900
+    },
+    {
+      "type": "answer",
+      "user_id": "demo-player-b",
+      "question_index": 2,
+      "option": 1,
+      "is_correct": true,
+      "points_earned": 100,
+      "time_taken_ms": 12600
+    },
+    { "type": "question:revealed", "question_index": 2 },
+    { "type": "question:shown", "question_index": 3 },
+    {
+      "type": "answer",
+      "user_id": "demo-player-b",
+      "question_index": 3,
+      "option": 1,
+      "is_correct": true,
+      "points_earned": 100,
+      "time_taken_ms": 8300
+    },
+    {
+      "type": "answer",
+      "user_id": "demo-player-a",
+      "question_index": 3,
+      "option": 1,
+      "is_correct": true,
+      "points_earned": 100,
+      "time_taken_ms": 10400
+    },
+    { "type": "question:revealed", "question_index": 3 },
+    { "type": "question:shown", "question_index": 4 },
+    {
+      "type": "answer",
+      "user_id": "demo-player-a",
+      "question_index": 4,
+      "option": 1,
+      "is_correct": true,
+      "points_earned": 100,
+      "time_taken_ms": 6100
+    },
+    {
+      "type": "answer",
+      "user_id": "demo-player-b",
+      "question_index": 4,
+      "option": 0,
+      "is_correct": false,
+      "points_earned": 0,
+      "time_taken_ms": 14800
+    },
+    { "type": "question:revealed", "question_index": 4 },
+    { "type": "battle:completed", "winner_id": "demo-player-a" }
+  ]
+}
