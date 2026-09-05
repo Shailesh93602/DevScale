@@ -18,14 +18,15 @@ export default function NotFound() {
         <Button asChild>
           <Link href="/">Go home</Link>
         </Button>
-        {/* Public destinations only. This used to offer "Browse roadmaps" and
-            "Battle Zone", both auth-gated, so a lost visitor who clicked either
-            bounced from a 404 straight into a login wall. */}
+        {/* Public destinations only. This used to offer "Battle Zone", which
+            is auth-gated, so a lost visitor bounced from a 404 straight into a
+            login wall. Roadmaps are readable signed out now, and the recorded
+            battle is the anonymous stand-in for the Battle Zone. */}
         <Button asChild variant="outline">
-          <Link href="/about">About EduScale</Link>
+          <Link href="/career-roadmap">Browse roadmaps</Link>
         </Button>
         <Button asChild variant="ghost">
-          <Link href="/blogs">Read the blog</Link>
+          <Link href="/battles/demo">Watch a recorded battle</Link>
         </Button>
       </div>
     </div>

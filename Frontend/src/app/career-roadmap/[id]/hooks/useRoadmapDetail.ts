@@ -5,14 +5,32 @@ import { showLoader, hideLoader } from '@/lib/features/loader/loaderSlice';
 import { RoadmapDetails, IRoadmap } from '../RoadmapDetail';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
+import { useSignInGate } from '@/hooks/useSignInGate';
 
-export const useRoadmapDetail = (careerId: string) => {
+export type RoadmapDetailPayload = RoadmapDetails & {
+  main_concepts: IRoadmap[];
+};
+
+/**
+ * @param initialData  The roadmap as fetched on the server for the first
+ *   paint (the detail page is readable signed out, so the HTML should carry
+ *   the content). The hook still refetches on mount: a signed-in reader's
+ *   copy carries isLiked / isBookmarked / progress that the anonymous
+ *   server fetch cannot know.
+ */
+export const useRoadmapDetail = (
+  careerId: string,
+  initialData?: RoadmapDetailPayload | null,
+) => {
   const dispatch = useDispatch();
   const { handleLike, handleBookmark } = useRoadmapSocial();
-  const [isLoading, setIsLoading] = useState(true);
-  const [roadmap, setRoadmap] = useState<IRoadmap[]>([]);
+  const { requireSignIn, isAuthenticated } = useSignInGate();
+  const [isLoading, setIsLoading] = useState(!initialData);
+  const [roadmap, setRoadmap] = useState<IRoadmap[]>(
+    initialData?.main_concepts ?? [],
+  );
   const [roadmapDetails, setRoadmapDetails] = useState<RoadmapDetails | null>(
-    null,
+    initialData ?? null,
   );
   const [isEnrolling, setIsEnrolling] = useState(false);
 
@@ -35,8 +53,12 @@ export const useRoadmapDetail = (careerId: string) => {
   const [enrollInRoadmap] = useAxiosPost('/roadmaps/enroll');
 
   const fetchResources = useCallback(async () => {
-    setIsLoading(true);
-    dispatch(showLoader('fetching roadmap'));
+    // With server data already on screen, refresh quietly instead of
+    // replacing the content with a skeleton.
+    if (!initialData) {
+      setIsLoading(true);
+      dispatch(showLoader('fetching roadmap'));
+    }
     try {
       const detailsResponse = await getRoadmapDetails({}, { careerId });
       const roadmapData = detailsResponse.data;
@@ -46,12 +68,14 @@ export const useRoadmapDetail = (careerId: string) => {
         setRoadmap(roadmapData.main_concepts || []);
       }
     } catch {
-      toast.error('Unable to load the resources. Please refresh the page.');
+      if (!initialData) {
+        toast.error('Unable to load the resources. Please refresh the page.');
+      }
     } finally {
-      dispatch(hideLoader('fetching roadmap'));
+      if (!initialData) dispatch(hideLoader('fetching roadmap'));
       setIsLoading(false);
     }
-  }, [careerId, dispatch, getRoadmapDetails]);
+  }, [careerId, dispatch, getRoadmapDetails, initialData]);
 
   useEffect(() => {
     fetchResources();
@@ -69,6 +93,7 @@ export const useRoadmapDetail = (careerId: string) => {
   }, [roadmapDetails]);
 
   const handleEnroll = async () => {
+    if (!requireSignIn('enrol in a roadmap')) return;
     if (isEnrolling || !careerId) return;
     setIsEnrolling(true);
     try {
@@ -96,6 +121,7 @@ export const useRoadmapDetail = (careerId: string) => {
     action: (id: string) => Promise<void>,
     type: 'like' | 'bookmark',
   ) => {
+    if (!requireSignIn(`${type} this roadmap`)) return;
     if (socialActionLoading[type]) return;
 
     try {
@@ -145,6 +171,7 @@ export const useRoadmapDetail = (careerId: string) => {
   };
 
   return {
+    isAuthenticated,
     isLoading,
     roadmap,
     roadmapDetails,

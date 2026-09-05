@@ -14,22 +14,37 @@ export class ChallengeRoutes extends BaseRouter {
   constructor() {
     super();
     this.challengeController = new ChallengeController();
-    this.router.use(authMiddleware);
     this.router.use(camelCaseResponse);
   }
 
   protected initializeRoutes(): void {
-    // Static paths before /:id
+    // ── Anonymous reads ────────────────────────────────────────────────────
+    // The LISTING is public by the owner's decision (2026-09-03): a visitor
+    // may browse what challenges exist. Solving stays gated — GET /:id returns
+    // the full problem body and test-case shape, POST /:challengeId/submit
+    // writes an attempt — so those keep authMiddleware below. The controller
+    // for the list never reads req.user, so there is nothing to personalise.
+    //
+    // authMiddleware used to be applied at the router level. It is now on each
+    // route explicitly, so a new route added here is a deliberate choice
+    // between the two groups rather than an accident either way.
     this.router.get(
       '/categories',
       this.challengeController.getChallengeCategories
     );
     this.router.get('/', this.challengeController.getChallenges);
+
+    // ── Authenticated reads ────────────────────────────────────────────────
     this.router.get(
       '/leaderboard',
+      authMiddleware,
       this.challengeController.getChallengeLeaderboard
     );
-    this.router.get('/:id', this.challengeController.getChallenge);
+    this.router.get(
+      '/:id',
+      authMiddleware,
+      this.challengeController.getChallenge
+    );
 
     // Protected routes
     // 🔴 This guard was COMMENTED OUT. `authMiddleware` runs at the router
@@ -43,6 +58,7 @@ export class ChallengeRoutes extends BaseRouter {
     // 'admin' would have worked — that part was not the bug.)
     this.router.post(
       '/',
+      authMiddleware,
       authorizeRoles('ADMIN', 'MODERATOR'),
       validateRequest(createChallengeValidation),
       this.challengeController.createNewChallenge
@@ -53,6 +69,7 @@ export class ChallengeRoutes extends BaseRouter {
     // the expected outputs — of a challenge other people are graded against.
     this.router.patch(
       '/:id',
+      authMiddleware,
       authorizeRoles('ADMIN', 'MODERATOR'),
       validateRequest(createChallengeValidation),
       this.challengeController.updateExistingChallenge
@@ -60,6 +77,7 @@ export class ChallengeRoutes extends BaseRouter {
 
     this.router.post(
       '/:challengeId/submit',
+      authMiddleware,
       validateRequest(submitChallengeValidation),
       this.challengeController.submitChallengeAttempt
     );

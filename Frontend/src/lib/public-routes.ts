@@ -41,8 +41,9 @@ export const AUTH_REQUIRED_ROUTE_PREFIXES = [
   '/admin', // admin-only (further checked by requiresAdminRoute)
   '/articles',
   '/battle-zone',
-  '/career-roadmap',
-  '/coding-challenges',
+  // /career-roadmap and /coding-challenges moved to PUBLIC on 2026-09-03 (the
+  // owner's decision: a visitor may browse roadmaps and the challenge list).
+  // Solving a challenge is still gated — see AUTH_REQUIRED_ROUTE_PATTERNS.
   '/collaboration-opportunities',
   '/community',
   // /create-battle and /settings were in NEITHER list — the same gap this file
@@ -90,7 +91,15 @@ export const PUBLIC_ROUTE_PREFIXES = [
   '/',
   '/about',
   '/article-listing',
+  // /battles/demo — a recorded two-player battle replayed from a committed
+  // fixture. No socket, no account, no writes. The only route under /battles.
+  '/battles',
   '/blogs',
+  // Anonymous read-only view (2026-09-03): the roadmap list, each roadmap's
+  // detail page, and the challenge LIST. Every write on those pages shows a
+  // "Sign in to …" affordance instead of firing a request that can only 401.
+  '/career-roadmap',
+  '/coding-challenges',
   '/contact',
   '/faq',
   '/interview-question',
@@ -100,6 +109,19 @@ export const PUBLIC_ROUTE_PREFIXES = [
   // rank — the inverse of the eight gated URLs the sitemap used to advertise.
   '/pricing',
 ] as const;
+
+/**
+ * Auth-required routes that a PREFIX cannot express.
+ *
+ * `/coding-challenges` (the list) is public; `/coding-challenges/<id>` (the
+ * editor, which loads the full problem and submits attempts) is not. A prefix
+ * list can only say "this and everything under it", so the one exception is a
+ * pattern. Checked by requiresAuthRoute alongside the prefixes, so the
+ * middleware, the sitemap and robots.txt all see the same answer.
+ */
+export const AUTH_REQUIRED_ROUTE_PATTERNS: readonly RegExp[] = [
+  /^\/coding-challenges\/[^/]+(?:\/.*)?$/,
+];
 
 // ─── Route Check Functions ────────────────────────────────────────────────────
 
@@ -112,7 +134,8 @@ export function isGuestOnlyRoute(pathname?: string | null): boolean {
 /** Returns true if this route requires authentication (any role) */
 export function requiresAuthRoute(pathname?: string | null): boolean {
   if (!pathname) return false;
-  return matchesRoutePrefix(pathname, AUTH_REQUIRED_ROUTE_PREFIXES);
+  if (matchesRoutePrefix(pathname, AUTH_REQUIRED_ROUTE_PREFIXES)) return true;
+  return AUTH_REQUIRED_ROUTE_PATTERNS.some((re) => re.test(pathname));
 }
 
 /** Returns true if this route requires ADMIN role */

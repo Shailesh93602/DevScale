@@ -12,15 +12,18 @@ const publicRoutes = [
   '/contact',
   '/blogs',
   '/interview-question',
+  // Anonymous read-only view (2026-09-03)
+  '/career-roadmap',
+  '/coding-challenges',
+  '/battles/demo',
 ];
 
 // Protected routes - require authentication (middleware redirects to /auth/login)
 const protectedRoutes = [
   '/dashboard',
   '/profile',
-  '/career-roadmap',
-  '/coding-challenges',
   '/battle-zone',
+  '/create-battle',
   '/community',
   '/resources',
   '/streak',

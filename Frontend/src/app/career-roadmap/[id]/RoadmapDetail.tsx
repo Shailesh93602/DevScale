@@ -11,7 +11,10 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CommentSection } from './components/CommentSection';
-import { useRoadmapDetail } from './hooks/useRoadmapDetail';
+import {
+  useRoadmapDetail,
+  type RoadmapDetailPayload,
+} from './hooks/useRoadmapDetail';
 import { RoadmapHero } from './components/RoadmapHero';
 import { RoadmapHeaderActions } from './components/HeaderActions';
 
@@ -145,13 +148,19 @@ const RoadmapSkeleton = () => {
   );
 };
 
-export default function CareerPathPage() {
+export default function CareerPathPage({
+  initialData,
+}: {
+  /** Server-fetched roadmap for the first paint; see useRoadmapDetail. */
+  initialData?: RoadmapDetailPayload | null;
+}) {
   const params = useParams();
   const searchParams = useSearchParams();
   const careerId = (params?.id as string) || '';
   const showComments = searchParams.get('comments') === 'open';
 
   const {
+    isAuthenticated,
     isLoading,
     roadmap,
     roadmapDetails,
@@ -162,7 +171,7 @@ export default function CareerPathPage() {
     handleSocialAction,
     handleLike,
     handleBookmark,
-  } = useRoadmapDetail(careerId);
+  } = useRoadmapDetail(careerId, initialData);
 
   const [activeTab, setActiveTab] = useState(
     showComments ? 'comments' : 'content',
@@ -242,6 +251,7 @@ export default function CareerPathPage() {
                                   handleShare={handleShare}
                                   handleEnroll={handleEnroll}
                                   isEnrolling={isEnrolling}
+                                  isAuthenticated={isAuthenticated}
                                 />
                               </div>
                             </div>
@@ -276,7 +286,10 @@ export default function CareerPathPage() {
                   className="border-none focus-visible:outline-none"
                 >
                   <div className="space-y-6 px-6 pb-24 pt-8">
-                    <CommentSection roadmapId={careerId} />
+                    <CommentSection
+                      roadmapId={careerId}
+                      isAuthenticated={isAuthenticated}
+                    />
                   </div>
                 </TabsContent>
               </div>
