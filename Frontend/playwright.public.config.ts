@@ -8,10 +8,12 @@ import { defineConfig, devices } from '@playwright/test';
  *
  * playwright.config.ts has a globalSetup that runs `npm run seed:battles` in
  * Backend/ before every run. That script loads Backend/.env, whose
- * DATABASE_URL points at the shared Supabase instance — so "run the
- * anonymous e2e locally" would write battle rows to a database this suite
- * never reads. These specs need no seed, no backend and no login, so they get
- * a config with no globalSetup and no auth project.
+ * DATABASE_URL points at the shared Supabase instance. Since #37 the seeder
+ * REFUSES any database that is not a local throwaway and global-setup aborts
+ * the run on a refused seed — so "run the anonymous e2e locally" no longer
+ * writes anything, it simply fails to start unless DATABASE_URL is local (or
+ * PLAYWRIGHT_SKIP_SEED=1). These specs need no seed, no backend and no login,
+ * so they get a config with no globalSetup and no auth project.
  *
  * Same port discipline as the main config: 3220, overridable, and an
  * already-running server on that port is reused rather than duplicated.
