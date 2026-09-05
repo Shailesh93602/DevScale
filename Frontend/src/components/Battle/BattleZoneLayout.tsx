@@ -15,12 +15,11 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useAxiosGet } from '@/hooks/useAxios';
 import { useAuth } from '@/contexts/AuthContext';
-
-interface BattleStatsResponse {
-  win_rate?: number;
-  wins?: number;
-  total_battles?: number;
-}
+import {
+  normalizeBattleStatistics,
+  winRateSummary,
+  type RawBattleStatistics,
+} from '@/app/battle-zone/statistics/normalize';
 
 interface BattleGlobalStatsResponse {
   activeBattles: number;
@@ -44,7 +43,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
   const [getGlobalStats] = useAxiosGet<BattleGlobalStatsResponse>(
     '/battles/global-stats',
   );
-  const [getStatistics] = useAxiosGet<BattleStatsResponse>(
+  const [getStatistics] = useAxiosGet<RawBattleStatistics>(
     '/battles/statistics/me',
   );
 
@@ -66,20 +65,13 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
       }
 
       const statsResponse = await getStatistics();
-      if (statsResponse.success && statsResponse.data) {
-        const d = statsResponse.data;
-        // Use pre-calculated win_rate from backend, fall back to manual calc.
-        const winRate =
-          d.win_rate ??
-          (d.wins != null && d.total_battles != null
-            ? Math.round((d.wins / Math.max(d.total_battles, 1)) * 100)
-            : null);
-        // `??` doesn't catch NaN — guard for a finite number so a bad/NaN
-        // backend value renders "--" instead of "NaN%".
+      if (statsResponse.success && statsResponse.data?.stats) {
+        // Same derivation as the Win Rate card on /battle-zone/statistics
+        // (wins / completed battles, "--" until one has completed). This used
+        // to read `win_rate` from the top level of the payload, where it has
+        // never been, and showed "--" for every player.
         setUserWinRate(
-          typeof winRate === 'number' && Number.isFinite(winRate)
-            ? `${winRate}%`
-            : '--',
+          winRateSummary(normalizeBattleStatistics(statsResponse.data)).value,
         );
         return;
       }
@@ -92,7 +84,15 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
     }
   }, [getGlobalStats, getStatistics, isAuthenticated, status]);
 
-  const quickStats = useMemo(
+  const quickStats = useMemo<
+    {
+      title: string;
+      value: string;
+      icon: ReactNode;
+      color: string;
+      testId?: string;
+    }[]
+  >(
     () => [
       {
         title: 'Active Battles',
@@ -117,6 +117,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
         value: userWinRate,
         icon: <Target className="text-purple-500 h-5 w-5" />,
         color: 'text-purple-500',
+        testId: 'quick-stat-win-rate',
       },
     ],
     [globalStats, userWinRate],
@@ -188,7 +189,9 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                   </div>
                   <div>
                     <p className="text-sm font-medium">{stat.title}</p>
-                    <p className="text-lg font-bold">{stat.value}</p>
+                    <p className="text-lg font-bold" data-testid={stat.testId}>
+                      {stat.value}
+                    </p>
                   </div>
                 </div>
               ))}

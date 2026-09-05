@@ -44,13 +44,17 @@ export const StreakStats: React.FC<StreakStatsProps> = ({
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{totalActivities}</div>
-            <p className="text-xs text-gray-500">Total Activities This Week</p>
+            <p className="text-xs text-muted-foreground">
+              Total Activities This Week
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">{averageActivities}</div>
-            <p className="text-xs text-gray-500">Average Activities per Day</p>
+            <p className="text-xs text-muted-foreground">
+              Average Activities per Day
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -58,7 +62,9 @@ export const StreakStats: React.FC<StreakStatsProps> = ({
             <div className="text-2xl font-bold">
               {chartData.filter((d) => d.minutes > 0).length}
             </div>
-            <p className="text-xs text-gray-500">Active Days This Week</p>
+            <p className="text-xs text-muted-foreground">
+              Active Days This Week
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -87,7 +93,7 @@ export const StreakStats: React.FC<StreakStatsProps> = ({
           <Card>
             <CardContent className="pt-6">
               <h3 className="font-semibold">Streak Progress</h3>
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-muted-foreground">
                 You&apos;re on day {stats?.currentStreak} of your learning
                 streak.
                 {stats?.currentStreak > 0 &&
@@ -98,7 +104,7 @@ export const StreakStats: React.FC<StreakStatsProps> = ({
           <Card>
             <CardContent className="pt-6">
               <h3 className="font-semibold">Learning Time</h3>
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Total learning time:{' '}
                 {stats?.dailyActivities?.reduce(
                   (acc, curr) => acc + curr.minutesSpent,

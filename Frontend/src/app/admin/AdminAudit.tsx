@@ -27,13 +27,12 @@ interface AuditLog {
 }
 
 const actionTone = (action: string) => {
-  if (/DELETE|REMOVE/i.test(action))
-    return 'bg-rose-500/15 text-rose-600 dark:text-rose-400';
-  if (/CREATE|ADD/i.test(action))
-    return 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400';
-  if (/UPDATE|EDIT|ROLE/i.test(action))
-    return 'bg-amber-500/15 text-amber-600 dark:text-amber-400';
-  return 'bg-sky-500/15 text-sky-600 dark:text-sky-400';
+  // Theme tokens, not palette shades with a dark-mode variant — see the contract in
+  // tests/regression-ui-contract.spec.ts and the contrast note in AdminOverview.
+  if (/DELETE|REMOVE/i.test(action)) return 'bg-red/15 text-red';
+  if (/CREATE|ADD/i.test(action)) return 'bg-success/15 text-success';
+  if (/UPDATE|EDIT|ROLE/i.test(action)) return 'bg-warning/15 text-warning';
+  return 'bg-blue/15 text-blue';
 };
 
 export default function AdminAudit() {

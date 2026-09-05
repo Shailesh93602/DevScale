@@ -223,8 +223,15 @@
     --accent-foreground: 220 15% 95%;
 
     /* System */
-    --destructive: 0 62.8% 40%;
-    --destructive-foreground: 210 20% 98%;
+    /* Bright surface + dark foreground in dark mode, the same shape as
+       --success / --warning / --info above. The shadcn default (a dark red
+       meant to sit under white button text) measured 2.38:1 as TEXT on the
+       dark card — and `text-destructive` is how this app renders every error
+       message, so all of them failed AA in dark mode. This shade is 5.5:1 as
+       text on the card, ~4.9:1 on a bg-destructive/10 tint, and the dark
+       foreground is 5.4:1 on it for the destructive Button/Badge/Toast. */
+    --destructive: 0 72% 65%;
+    --destructive-foreground: 0 100% 10%;
     --border: 230 16% 18%;
     --input: 230 16% 15%;
     --ring: 270 70% 65%;
