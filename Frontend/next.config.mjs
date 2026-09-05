@@ -29,6 +29,18 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Build identity, baked into the bundle so /api/version (src/lib/app-version.ts)
+  // can answer even where Vercel's system env is not exposed to functions. The
+  // build step always has the git vars — vercel.json's ignoreCommand depends on
+  // one. `env` values must be strings, hence the `?? ''` (empty reads as
+  // "unknown" downstream). Build TIME lives only here: it is the one field that
+  // must be fixed at build and never computed per request.
+  env: {
+    APP_BUILD_GIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA ?? '',
+    APP_BUILD_GIT_REF: process.env.VERCEL_GIT_COMMIT_REF ?? '',
+    APP_BUILD_VERCEL_ENV: process.env.VERCEL_ENV ?? '',
+    APP_BUILD_TIME: new Date().toISOString(),
+  },
 };
 
 export default withSentryConfig(nextConfig, {
