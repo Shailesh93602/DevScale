@@ -90,7 +90,7 @@ const SectionHeader = ({
     <h2 className="text-base font-semibold text-foreground">{title}</h2>
     <Link
       href={linkHref}
-      className="group flex items-center gap-1 text-xs font-semibold text-primary no-underline opacity-80 transition-opacity hover:opacity-100"
+      className="group flex items-center gap-1 text-xs font-semibold text-primary no-underline hover:underline"
     >
       {linkLabel}
       <ArrowRight className="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-0.5" />

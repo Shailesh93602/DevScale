@@ -39,6 +39,31 @@ export default {
       typography: (theme: (path: string) => string) => ({
         DEFAULT: {
           css: {
+            // Prose colours come from the theme tokens, so `.prose` follows the
+            // active theme by itself. The plugin's defaults are fixed grays
+            // (#374151 body, #111827 headings): on the dark card a challenge
+            // description's <h1> measured 1.01:1 in the first dark-mode audit
+            // of /coding-challenges (2026-09-05). `dark:prose-invert` is the
+            // documented answer and this repo forbids every `dark:` class in
+            // JSX (eslint no-restricted-syntax) — mapping the variables once
+            // here is the token-based equivalent, and it covers /articles and
+            // /resources bodies too.
+            '--tw-prose-body': 'hsl(var(--foreground))',
+            '--tw-prose-headings': 'hsl(var(--foreground))',
+            '--tw-prose-lead': 'hsl(var(--muted-foreground))',
+            '--tw-prose-links': 'var(--primary)',
+            '--tw-prose-bold': 'hsl(var(--foreground))',
+            '--tw-prose-counters': 'hsl(var(--muted-foreground))',
+            '--tw-prose-bullets': 'hsl(var(--muted-foreground))',
+            '--tw-prose-hr': 'hsl(var(--border))',
+            '--tw-prose-quotes': 'hsl(var(--foreground))',
+            '--tw-prose-quote-borders': 'hsl(var(--border))',
+            '--tw-prose-captions': 'hsl(var(--muted-foreground))',
+            '--tw-prose-code': 'hsl(var(--foreground))',
+            '--tw-prose-pre-code': 'hsl(var(--foreground))',
+            '--tw-prose-pre-bg': 'hsl(var(--muted))',
+            '--tw-prose-th-borders': 'hsl(var(--border))',
+            '--tw-prose-td-borders': 'hsl(var(--border))',
             h1: {
               fontSize: theme('fontSize.4xl'),
               fontWeight: theme('fontWeight.bold'),

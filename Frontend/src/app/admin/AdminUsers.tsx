@@ -52,10 +52,11 @@ interface AdminUser {
 
 const roleBadge = (name?: string) => {
   const n = (name || 'STUDENT').toUpperCase();
-  if (n === 'ADMIN') return 'bg-rose-500/15 text-rose-600 dark:text-rose-400';
-  if (n === 'MODERATOR')
-    return 'bg-amber-500/15 text-amber-600 dark:text-amber-400';
-  return 'bg-sky-500/15 text-sky-600 dark:text-sky-400';
+  // Theme tokens, not palette shades with a dark-mode variant — see the contract in
+  // tests/regression-ui-contract.spec.ts and the contrast note in AdminOverview.
+  if (n === 'ADMIN') return 'bg-red/15 text-red';
+  if (n === 'MODERATOR') return 'bg-warning/15 text-warning';
+  return 'bg-blue/15 text-blue';
 };
 
 export default function AdminUsers() {
