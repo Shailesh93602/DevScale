@@ -1,52 +1,53 @@
 import { test, expect } from '@playwright/test';
 import { testUser } from './utils/testUsers';
 
+/**
+ * The create-roadmap modal validates on submit.
+ *
+ * Every check here is a hard assertion. The previous version console.error'd
+ * "USABILITY ISSUE" when a validation message was missing and ended with
+ * `expect(true).toBeTruthy()`, so it could not fail. The messages asserted
+ * are the zod schema's own — `Title must be at least 5 characters`, `Please
+ * select a category` (src/app/career-roadmap/create-roadmap.tsx).
+ */
 test.describe('Create Roadmap Modal Validation', () => {
-  test('Find UI/UX and Usability Issues', async ({ page }) => {
-    // 0. Login
+  test('an empty submit shows the title and category errors, and Cancel closes the modal', async ({
+    page,
+  }) => {
     await page.goto('/auth/login');
     const admin = testUser('admin');
     await page.fill('input[id="login-email"]', admin.email);
-    await page.fill('input[name="password"]', admin.password);
+    await page.fill('input[id="login-password"]', admin.password);
     await page.click('button[type="submit"]');
     await page.waitForURL('**/dashboard');
 
-    // 1. Navigate to main roadmap page (which contains the modal)
     await page.goto('/career-roadmap');
-
-    // 2. Open create roadmap modal
-    const createBtn = page.locator('button:has-text("Create Roadmap")').first();
+    const createBtn = page
+      .getByRole('button', { name: /Create Roadmap/i })
+      .first();
+    await expect(createBtn).toBeVisible({ timeout: 15000 });
     await createBtn.click();
 
-    // 3. Verify modal is visible
-    const modalTitle = page.getByText(/create new roadmap/i);
+    const modalTitle = page.getByText(/create new roadmap/i).first();
     await expect(modalTitle).toBeVisible();
 
-    // Trigger validation
-    const submitBtn = page.locator('button[type="submit"]');
-    await submitBtn.click();
-    await page.waitForTimeout(1000);
+    // Submit with nothing filled in.
+    await page.locator('button[type="submit"]').first().click();
 
-    const titleError = page.locator('text="Title must be at least"');
-    const categoryError = page
-      .locator('text="Please select a category"')
-      .first();
+    await expect(
+      page.getByText(/Title must be at least/),
+      'title validation error missing',
+    ).toBeVisible();
+    await expect(
+      page.getByText('Please select a category').first(),
+      'category validation error missing',
+    ).toBeVisible();
 
-    // Check missing validation errors (accessibility/visibility)
-    if ((await titleError.isVisible()) === false) {
-      console.error('USABILITY ISSUE: Title validation error missing');
-    }
-
-    if ((await categoryError.isVisible()) === false) {
-      console.error('USABILITY ISSUE: Category validation error missing');
-    }
-
-    // Modal close button
     const closeBtn = page
       .getByRole('button', { name: /cancel|close/i })
       .first();
-    await closeBtn.hover();
-
-    expect(true).toBeTruthy();
+    await expect(closeBtn).toBeVisible();
+    await closeBtn.click();
+    await expect(modalTitle).toBeHidden();
   });
 });

@@ -130,7 +130,6 @@ test.describe('Battle Zone authenticated review', () => {
         await page
           .waitForLoadState('networkidle', { timeout: 15000 })
           .catch(() => {});
-        await expect(page.locator('body')).toBeVisible();
         await waitForRouteReadyState(route, page);
         await page.waitForTimeout(1000);
       } catch (error) {
@@ -174,5 +173,10 @@ test.describe('Battle Zone authenticated review', () => {
     ].join('\n');
 
     writeFileSync(path.join(reviewDir, 'review-report.md'), report, 'utf-8');
+
+    // The report is the artefact; these are the outcomes. Until now the test
+    // wrote the file and passed whatever it had collected.
+    expect(serverErrors, '5xx responses while reviewing routes').toEqual([]);
+    expect(routeIssues, 'routes that failed to load or screenshot').toEqual([]);
   });
 });

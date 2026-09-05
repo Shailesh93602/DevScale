@@ -33,28 +33,19 @@ test.describe('honesty', () => {
       'invented students are attributed to real institutions',
     ).toBeUndefined();
 
-    // Any leaderboard-like block on the landing page must either be fed by
-    // real data (it declares its source) or be labelled as a sample. The
-    // landing board now reads GET /ratings/leaderboard, so the attribute is
-    // the expected branch; the label branch stays so a future mock-up cannot
-    // pass by accident.
-    const leaderboard = page.locator('text=/leaderboard/i').first();
-    if (await leaderboard.count()) {
-      const live = await page
-        .locator('[data-leaderboard-source="ratings-api"]')
-        .count();
-      if (live === 0) {
-        const section = page
-          .locator('section, div')
-          .filter({ has: leaderboard })
-          .first();
-        const text = (await section.innerText().catch(() => '')).toLowerCase();
-        expect(
-          /preview|sample|example|demo|illustrat/.test(text),
-          'the landing leaderboard is neither live data nor labelled as a sample',
-        ).toBe(true);
-      }
-    }
+    // The landing page carries a leaderboard block, and it must be fed by
+    // real data: the board reads GET /ratings/leaderboard and declares that
+    // source on its root element. Both facts are asserted outright. This
+    // used to sit inside `if (await leaderboard.count())` with a second
+    // `if (live === 0)` around the only assertion — so a landing page with no
+    // leaderboard passed, and one with a live board passed without asserting
+    // anything. If the board is ever replaced by a mock-up, this fails and
+    // whoever does it has to label the sample AND change this test on purpose.
+    await expect(page.getByText(/leaderboard/i).first()).toBeVisible();
+    await expect(
+      page.locator('[data-leaderboard-source="ratings-api"]'),
+      'the landing leaderboard no longer declares the ratings API as its source',
+    ).toHaveCount(1);
   });
 
   test('/blogs does not present placeholder posts as published content', async ({
@@ -79,10 +70,12 @@ test.describe('honesty', () => {
       ).toBe(false);
     }
 
-    // If there is nothing to show, say so — don't invent three posts.
-    if (links.length === 0) {
-      expect(body).toMatch(/no blog posts|coming soon|check back/i);
-    }
+    // Either there are real posts (each checked above) or the page says so
+    // honestly — never a third state where an empty index shows nothing.
+    expect(
+      links.length > 0 || /no blog posts|coming soon|check back/i.test(body),
+      'the blog index shows neither posts nor an honest empty state',
+    ).toBe(true);
 
     // The specific fabricated posts must not come back.
     for (const invented of [

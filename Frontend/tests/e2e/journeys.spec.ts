@@ -1,10 +1,26 @@
 import { test, expect, Page } from '@playwright/test';
-import { login, apiAs, settle, watchPage } from './helpers';
+import {
+  login,
+  apiAs,
+  settle,
+  watchPage,
+  fixtureTopicId,
+  FIXTURE_CHALLENGE,
+  SEED_HINT,
+} from './helpers';
 
 /**
  * Whole-journey tests: a person arrives, signs in, and does the thing the
  * product exists for. Each step asserts an OUTCOME (a URL, a persisted row, a
  * score on screen) rather than "the page rendered".
+ *
+ * Nothing here is conditional on what the page happens to contain. The run
+ * step below sat behind `if (await runButton.count())` looking for a button
+ * named /^run$/ — the real label is "Run Code", so for as long as that guard
+ * existed the step never executed and the journey passed without running any
+ * code. Every control this journey needs is now asserted to exist first, and
+ * a missing fixture fails the test instead of skipping it (see
+ * src/test/playwright-silent-skip.test.ts for the rule that keeps it so).
  */
 
 async function apiJson(
@@ -17,11 +33,57 @@ async function apiJson(
   return { status: res.status(), json: await res.json().catch(() => null) };
 }
 
+/** What the stubbed executor answers with — two cases, one of each verdict. */
+const RUN_RESULT = [
+  {
+    input: '[2,7,11,15], 9',
+    expectedOutput: '[0,1]',
+    actualOutput: '[0,1]',
+    status: 'Accepted',
+    executionTime: 0.01,
+    memoryUsed: 1024,
+  },
+  {
+    input: '[3,2,4], 6',
+    expectedOutput: '[1,2]',
+    actualOutput: '[0,2]',
+    status: 'Wrong Answer',
+    executionTime: 0.01,
+    memoryUsed: 1024,
+  },
+];
+
 test.describe('student journey', () => {
   test('land → sign in → pick a challenge → write code → run it → see a result', async ({
     page,
   }) => {
     const problems = watchPage(page);
+
+    // POST /run-code is fronted by an external, metered executor (Judge0)
+    // that is not part of this app and is not running locally. The journey
+    // under test is the app's half: the click sends the editor's code for
+    // this challenge over the network, and the verdicts render in the
+    // console. So the route is stubbed at the network edge — the same seam
+    // responsive-phone.spec.ts uses — and every request that reaches it is
+    // captured, which is what proves the run actually happened.
+    const runRequests: {
+      language: string;
+      code: string;
+      challengeId: string;
+    }[] = [];
+    await page.route('**/run-code', async (route) => {
+      runRequests.push(route.request().postDataJSON());
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          error: false,
+          message: 'ok',
+          data: RUN_RESULT,
+        }),
+      });
+    });
 
     await page.goto('/');
     await settle(page);
@@ -32,48 +94,64 @@ test.describe('student journey', () => {
 
     await page.goto('/coding-challenges');
     await settle(page);
-    // Cards expose the title as a heading and the navigation as a
-    // "Solve Challenge" link, so target the card, then its link.
-    const fixtureCard = page.locator('li').filter({
-      has: page.getByRole('heading', { name: 'QA E2E Two Sum' }),
-    });
-    const target =
-      (await fixtureCard.count()) > 0
-        ? fixtureCard.first().locator('a[href^="/coding-challenges/"]')
-        : page.locator('a[href^="/coding-challenges/"]').first();
-    await expect(target).toBeVisible();
-    await target.click();
+    // The seeded fixture, not whichever card happens to be first: a journey
+    // that silently falls back to another challenge is not testing the
+    // fixture, and a list with no fixture is a broken environment.
+    const fixtureCard = page
+      .locator('li')
+      .filter({ has: page.getByRole('heading', { name: FIXTURE_CHALLENGE }) })
+      .first();
+    await expect(
+      fixtureCard,
+      `"${FIXTURE_CHALLENGE}" card — ${SEED_HINT}`,
+    ).toBeVisible();
+    await fixtureCard.locator('a[href^="/coding-challenges/"]').click();
     await page.waitForURL(/\/coding-challenges\/[^/]+$/, { timeout: 90_000 });
     await settle(page);
+    const challengeId = new URL(page.url()).pathname.split('/').pop();
 
     // The editor surface must actually be there — a challenge page with no
     // editor is not a coding challenge.
-    await expect(
-      page
-        .locator('.monaco-editor, [data-testid="code-editor"], textarea')
-        .first(),
-    ).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator('.monaco-editor').first()).toBeVisible({
+      timeout: 30_000,
+    });
 
-    // Run the code and require a real answer back from the executor path.
-    const runButton = page
-      .getByRole('button', { name: /^\s*run\s*$/i })
-      .first();
-    if (await runButton.count()) {
-      await runButton.click();
-      // Either results render, or a clean error toast appears — never a silent
-      // no-op, and never an unhandled crash.
-      await expect
-        .poll(
-          async () =>
-            (await page
-              .locator(
-                'text=/Accepted|Wrong Answer|Error|Runtime|unavailable/i',
-              )
-              .count()) > 0,
-          { timeout: 60_000, message: 'Run produced no visible outcome' },
-        )
-        .toBe(true);
-    }
+    // Run it. The button is labelled "Run Code"; asserting it exists is the
+    // difference between this step running and this step being skipped.
+    const runButton = page.getByRole('button', { name: 'Run Code' });
+    await expect(runButton).toBeVisible();
+    await expect(runButton).toBeEnabled();
+    const runRequest = page.waitForRequest(
+      (req) => req.url().endsWith('/run-code') && req.method() === 'POST',
+    );
+    await runButton.click();
+    await runRequest;
+
+    // The request carried the editor's code, for this challenge, in the
+    // selected language.
+    expect(runRequests, 'exactly one run request').toHaveLength(1);
+    expect(runRequests[0].challengeId).toBe(challengeId);
+    expect(runRequests[0].language).toBe('javascript');
+    expect(runRequests[0].code.trim().length).toBeGreaterThan(0);
+
+    // And the console shows the verdicts: one tab per case, and the active
+    // case's status plus expected/actual output. The console is the only
+    // tabpanel on the page that shows an "Expected" block.
+    const case1 = page.getByRole('tab', { name: 'Case 1' });
+    const case2 = page.getByRole('tab', { name: 'Case 2' });
+    await expect(case1).toBeVisible({ timeout: 20_000 });
+    await expect(case2).toBeVisible();
+    const consolePanel = page
+      .getByRole('tabpanel')
+      .filter({ hasText: 'Expected' });
+    await expect(consolePanel).toContainText('Accepted');
+    await expect(consolePanel).toContainText('[0,1]');
+
+    await case2.click();
+    await expect(case2).toHaveAttribute('data-state', 'active');
+    await expect(consolePanel).toContainText('Wrong Answer');
+    await expect(consolePanel).toContainText('[1,2]');
+    await expect(consolePanel).toContainText('[0,2]');
 
     expect(problems.pageErrors, 'uncaught page errors').toEqual([]);
   });
@@ -85,15 +163,7 @@ test.describe('student journey', () => {
 
     // Find the quiz behind the fixture topic and answer it correctly, then
     // assert the API returns a computed score (not a stub 0).
-    const challenges = await apiJson(page, 'GET', '/challenges?limit=100');
-    const list =
-      challenges.json?.data?.challenges ??
-      challenges.json?.data?.data ??
-      (Array.isArray(challenges.json?.data) ? challenges.json.data : []);
-    const topicId = list.find(
-      (c: { title: string }) => c.title === 'QA E2E Two Sum',
-    )?.topicId;
-    test.skip(!topicId, 'run Backend/qa/seed-e2e.mjs first');
+    const topicId = await fixtureTopicId(page);
 
     const subject = await apiJson(page, 'GET', `/topics/${topicId}`);
     expect(subject.status).toBeLessThan(500);
@@ -105,15 +175,7 @@ test.describe('moderator journey', () => {
     page,
   }) => {
     await login(page, 'student');
-    const challenges = await apiJson(page, 'GET', '/challenges?limit=100');
-    const list =
-      challenges.json?.data?.challenges ??
-      challenges.json?.data?.data ??
-      (Array.isArray(challenges.json?.data) ? challenges.json.data : []);
-    const topicId = list.find(
-      (c: { title: string }) => c.title === 'QA E2E Two Sum',
-    )?.topicId;
-    test.skip(!topicId, 'run Backend/qa/seed-e2e.mjs first');
+    const topicId = await fixtureTopicId(page);
 
     const title = `E2E moderated article ${Date.now()}`;
     const created = await apiJson(page, 'POST', '/articles', {
