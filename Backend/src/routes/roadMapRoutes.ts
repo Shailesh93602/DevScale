@@ -1,6 +1,10 @@
 import { BaseRouter } from './BaseRouter';
 import RoadMapController from '../controllers/roadMapControllers';
-import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
+import {
+  authMiddleware,
+  authorizeRoles,
+  optionalAuthMiddleware,
+} from '../middlewares/authMiddleware';
 import { validateRequest, validateQuery } from '../middlewares/validateRequest';
 import {
   createRoadmapValidation,
@@ -48,9 +52,14 @@ export class RoadMapRoutes extends BaseRouter {
       this.bindRoute(this.roadMapController.getAllRoadmaps)
     );
 
+    // Roadmap detail is readable signed out (owner's decision, 2026-09-03).
+    // optionalAuthMiddleware rather than none: the controller passes
+    // req.user?.id through so a signed-in reader still gets isLiked /
+    // isBookmarked / progress, and the cache key below already had an 'anon'
+    // branch that was unreachable while authMiddleware sat in front of it.
     this.router.get(
       '/:id',
-      authMiddleware,
+      optionalAuthMiddleware,
       (req: Request, res: Response, next: NextFunction) => {
         const cacheMiddleware = cacheResponse({
           duration: 120,
@@ -80,10 +89,13 @@ export class RoadMapRoutes extends BaseRouter {
       this.bindRoute(this.roadMapController.bookmarkRoadmap)
     );
 
-    // Comment routes
+    // Comment routes. Reading is public alongside the roadmap itself; the
+    // controller only consults `req.user?.id` inside an `if (userId)` to mark
+    // the caller's own likes, so an anonymous request gets isLiked=false
+    // everywhere rather than a leak. Writing stays authenticated.
     this.router.get(
       '/:id/comments',
-      authMiddleware,
+      optionalAuthMiddleware,
       this.bindRoute(this.roadMapController.getRoadmapComments)
     );
 
