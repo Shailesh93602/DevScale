@@ -70,6 +70,12 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
           </CustomLink>
           <CustomLink
+            href="/battles/demo"
+            className="flex items-center rounded-full border border-border bg-background/80 px-6 py-4 text-lg font-medium text-foreground no-underline backdrop-blur-sm transition-all duration-300 hover:bg-accent"
+          >
+            Watch a recorded battle
+          </CustomLink>
+          <CustomLink
             href="#features"
             className="flex items-center rounded-full border border-border bg-background/80 px-6 py-4 text-lg font-medium text-foreground no-underline backdrop-blur-sm transition-all duration-300 hover:bg-accent"
           >

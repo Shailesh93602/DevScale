@@ -29,7 +29,11 @@ export const navItems: NavItem[] = [
 
 export const publicNavItems: NavItem[] = [
   { path: '/', label: 'Home' },
-  { path: '/about', label: 'About Us' },
+  // Readable signed out since 2026-09-03 — a visitor can see the product
+  // before being asked for an account.
+  { path: '/career-roadmap', label: 'Roadmaps' },
+  { path: '/coding-challenges', label: 'Challenges' },
+  { path: '/about', label: 'About' },
   { path: '/contact', label: 'Contact' },
 ];
 

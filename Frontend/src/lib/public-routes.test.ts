@@ -57,6 +57,41 @@ describe('route classification — the access-control matrix', () => {
     expect(isPublicRoute('/moderate')).toBe(false);
   });
 
+  it('the anonymous read-only surface is public (2026-09-03 decision)', () => {
+    for (const p of [
+      '/career-roadmap',
+      '/career-roadmap/roadmaps',
+      '/career-roadmap/some-roadmap-slug',
+      '/coding-challenges',
+      '/battles/demo',
+    ]) {
+      expect(isPublicRoute(p), p).toBe(true);
+      expect(requiresAuthRoute(p), p).toBe(false);
+    }
+  });
+
+  it('the challenge editor is gated even though the list above it is public', () => {
+    // A prefix list cannot say "this but not its children", so this is the
+    // one pattern-based rule. Both spellings a visitor might reach.
+    for (const p of [
+      '/coding-challenges/abc123',
+      '/coding-challenges/abc123/',
+      '/coding-challenges/abc123/anything',
+    ]) {
+      expect(requiresAuthRoute(p), p).toBe(true);
+      expect(isPublicRoute(p), p).toBe(false);
+    }
+    // ...and the pattern does not over-reach onto the list or a sibling.
+    expect(requiresAuthRoute('/coding-challenges')).toBe(false);
+    expect(requiresAuthRoute('/coding-challenges-archive')).toBe(false);
+  });
+
+  it('writes under the public surfaces still require auth', () => {
+    for (const p of ['/create-battle', '/battle-zone', '/battle-zone/create']) {
+      expect(requiresAuthRoute(p), p).toBe(true);
+    }
+  });
+
   it('an unlisted route is neither public nor protected — callers must decide', () => {
     expect(isPublicRoute('/totally-new-page')).toBe(false);
     expect(requiresAuthRoute('/totally-new-page')).toBe(false);

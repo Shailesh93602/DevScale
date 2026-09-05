@@ -1,3 +1,7 @@
+'use client';
+
+// Rendered from a SERVER component now (career-roadmap/PublicRoadmaps.tsx), so
+// the directive is load-bearing: this file uses hooks and framer-motion.
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -19,6 +23,7 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { BaseRoadmap, RoadmapAuthor } from '@/hooks/useRoadmapApi';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
+import { useSignInGate } from '@/hooks/useSignInGate';
 
 export type RoadmapType = BaseRoadmap & {
   description: string;
@@ -132,11 +137,16 @@ export const RoadmapCard = ({
   );
   const [isLoading, setIsLoading] = useState(false);
   const { handleLike, handleBookmark } = useRoadmapSocial();
+  // Roadmap lists render for visitors now. A like or bookmark from a visitor
+  // used to fire a request that could only 401; it now goes to sign-in and
+  // comes straight back here.
+  const { requireSignIn } = useSignInGate();
 
   const handleLikeClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
+    if (!requireSignIn('like roadmaps')) return;
     if (isLoading) return;
     setIsLoading(true);
 
@@ -171,6 +181,7 @@ export const RoadmapCard = ({
     e.preventDefault();
     e.stopPropagation();
 
+    if (!requireSignIn('bookmark roadmaps')) return;
     if (isLoading) return;
     setIsLoading(true);
 
