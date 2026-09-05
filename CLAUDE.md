@@ -80,6 +80,15 @@ API_URL                          # Must be https:// in production
 
 ---
 
+### 2026-09-05 — Build identity on both halves
+
+| Item | Files | Status |
+|------|-------|--------|
+| `GET /api/v1/health` JSON now carries `version: { sha, shortSha, ref, env }` (+ `X-App-Commit` header) from Vercel's system env, `unknown` when unset; the postgres/redis/queue checks and `/ready` are unchanged. Exists so a checker can compare LIVE against `main` — a deploy that stops updating still answers 200 | `Backend/src/utils/appVersion.ts`, `Backend/src/routes/healthCheckRoutes.ts`, `Backend/src/tests/routes/healthCheckRoutes.test.ts` | ✅ Done |
+| Frontend `GET /api/version` — public, no DB, `force-dynamic`, `no-store` + `noindex`: `{ sha, shortSha, ref, deployedAt, env }`; git fields from runtime env else baked at build by `next.config.mjs` `env`, `deployedAt` = build time only | `Frontend/src/lib/app-version.ts`, `Frontend/src/app/api/version/route.ts` (+ `route.test.ts`), `Frontend/next.config.mjs` | ✅ Done |
+
+---
+
 ## Remaining P0 Blockers (as of end of Session 3)
 
 ### Phase 1 — Infrastructure

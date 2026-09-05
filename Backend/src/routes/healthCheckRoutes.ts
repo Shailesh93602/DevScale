@@ -4,6 +4,7 @@ import prisma from '../lib/prisma';
 import { redis } from '../services/cacheService';
 import Queue from 'bull';
 import { REDIS_URL } from '../config';
+import { APP_COMMIT_HEADER, resolveAppVersion } from '../utils/appVersion';
 
 export class HealthCheckRoutes extends BaseRouter {
   protected initializeRoutes(): void {
@@ -53,11 +54,17 @@ export class HealthCheckRoutes extends BaseRouter {
         httpStatus = 503;
       }
 
+      // Which build answered — so a checker can compare live against main
+      // instead of trusting a 200 from a deploy that stopped updating. Also
+      // sent as a header, for callers that do not want to parse the body.
+      const version = resolveAppVersion();
+      res.setHeader(APP_COMMIT_HEADER, version.sha);
       res.status(httpStatus).json({
         status: httpStatus === 200 ? 'ok' : 'degraded',
         environment: NODE_ENV,
         timestamp: new Date().toISOString(),
         checks,
+        version,
       });
     });
   }
