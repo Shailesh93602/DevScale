@@ -1645,6 +1645,9 @@ model ContentEmbedding {
   content_hash String
   embedding    Unsupported("vector(768)")
   model        String
+  /// The vector's dimension, stored with it: (content_hash, model, dimensions)
+  /// is the fingerprint the ingest skip compares. Default matches the column.
+  dimensions   Int                        @default(768)
   created_at   DateTime                   @default(now())
   updated_at   DateTime                   @updatedAt
 

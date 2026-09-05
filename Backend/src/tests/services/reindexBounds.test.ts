@@ -33,7 +33,7 @@ jest.mock('../../utils/logger', () => ({
   default: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
 }));
 
-const ingest = jest.fn<(input: unknown) => Promise<{ status: string }>>();
+const ingest = jest.fn<(...args: unknown[]) => Promise<{ status: string }>>();
 jest.mock('../../services/ai/contentIngestService', () => ({
   __esModule: true,
   ContentIngestService: class {
@@ -61,6 +61,25 @@ beforeEach(() => {
 });
 
 describe('reindexAll', () => {
+  it('passes force: false to every ingest by default, and force: true when asked', async () => {
+    // A short page ends the run, so ONE queued value per call — a second,
+    // unconsumed `mockResolvedValueOnce` would leak into the next test.
+    findMany.mockResolvedValueOnce(rows(3));
+    await service.reindexAll();
+    expect(ingest).toHaveBeenCalledTimes(3);
+    for (const call of ingest.mock.calls) {
+      expect(call[2]).toEqual({ force: false });
+    }
+
+    ingest.mockClear();
+    findMany.mockResolvedValueOnce(rows(3));
+    await service.reindexAll({ force: true });
+    expect(ingest).toHaveBeenCalledTimes(3);
+    for (const call of ingest.mock.calls) {
+      expect(call[2]).toEqual({ force: true });
+    }
+  });
+
   it('pages instead of loading every challenge at once', async () => {
     findMany
       .mockResolvedValueOnce(rows(100))

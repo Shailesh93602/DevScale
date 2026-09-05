@@ -41,6 +41,10 @@ The Battle Zone operates hybrid. REST endpoints manage matchmaking lobbies, wher
 `GET /api/v1/battles/active` - List lobbies requiring opponents.
 `GET /api/v1/battles/:battle_id/leaderboard` - Reconstruct post-battle results from PostgreSQL and Redis delta.
 
+### 2.5. AI Recommendations (pgvector)
+`GET /api/v1/recommendations/challenges?limit=5` - Challenges nearest (cosine) to what the learner has solved; `limit` capped at 20.
+`POST /api/v1/recommendations/admin/reindex-challenges` - ADMIN. Embed every active challenge; skips rows whose (content hash, embedding model, dimensions) fingerprint is current. `?force=true` or body `{ "force": true }` re-embeds all. Returns `{ total, created, updated, skipped, failed }`. Details: [AI-RECOMMENDATIONS.md](AI-RECOMMENDATIONS.md).
+
 ---
 
 ## 3. WebSocket Integration (`socket.io`)

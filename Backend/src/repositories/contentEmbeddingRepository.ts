@@ -17,7 +17,22 @@ export interface UpsertEmbeddingInput {
   contentId: string;
   contentHash: string;
   embedding: number[];
+  /** The embedding model that produced `embedding` — half of the row's space. */
   model: string;
+  /** Its dimension — the other half. Must match the column's vector(N). */
+  dimensions: number;
+}
+
+/**
+ * What decides whether a stored row is still current: the text it embeds AND
+ * the space it was embedded in. A row whose hash matches but whose model or
+ * dimension differs is stale — its vector is not comparable to a fresh one
+ * (see contentIngestService).
+ */
+export interface StoredFingerprint {
+  contentHash: string;
+  model: string;
+  dimensions: number;
 }
 
 export interface FindSimilarInput {
@@ -45,29 +60,43 @@ export class ContentEmbeddingRepository {
     const vector = toVectorLiteral(input.embedding);
     await prisma.$executeRaw`
       INSERT INTO "ContentEmbedding"
-        ("id", "content_type", "content_id", "content_hash", "embedding", "model", "created_at", "updated_at")
+        ("id", "content_type", "content_id", "content_hash", "embedding", "model", "dimensions", "created_at", "updated_at")
       VALUES
-        (${randomUUID()}, ${input.contentType}, ${input.contentId}, ${input.contentHash}, ${vector}::vector, ${input.model}, NOW(), NOW())
+        (${randomUUID()}, ${input.contentType}, ${input.contentId}, ${input.contentHash}, ${vector}::vector, ${input.model}, ${input.dimensions}, NOW(), NOW())
       ON CONFLICT ("content_type", "content_id")
       DO UPDATE SET
         "content_hash" = EXCLUDED."content_hash",
         "embedding"    = EXCLUDED."embedding",
         "model"        = EXCLUDED."model",
+        "dimensions"   = EXCLUDED."dimensions",
         "updated_at"   = NOW();
     `;
   }
 
-  /** The stored content hash for a pair, or null if not embedded yet. */
-  async getStoredHash(
+  /**
+   * The stored fingerprint for a pair — content hash plus the embedding space
+   * it was produced in — or null if not embedded yet. The ingest service
+   * compares all three; a hash-only check let a model change leave every
+   * unchanged text on the old model's vectors.
+   */
+  async getStoredFingerprint(
     contentType: string,
     contentId: string
-  ): Promise<string | null> {
-    const rows = await prisma.$queryRaw<{ content_hash: string }[]>`
-      SELECT "content_hash" FROM "ContentEmbedding"
+  ): Promise<StoredFingerprint | null> {
+    const rows = await prisma.$queryRaw<
+      { content_hash: string; model: string; dimensions: number }[]
+    >`
+      SELECT "content_hash", "model", "dimensions" FROM "ContentEmbedding"
       WHERE "content_type" = ${contentType} AND "content_id" = ${contentId}
       LIMIT 1;
     `;
-    return rows[0]?.content_hash ?? null;
+    const row = rows[0];
+    if (!row) return null;
+    return {
+      contentHash: row.content_hash,
+      model: row.model,
+      dimensions: Number(row.dimensions),
+    };
   }
 
   /** Nearest neighbours by cosine distance (ascending = most similar first). */

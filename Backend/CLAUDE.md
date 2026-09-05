@@ -112,6 +112,15 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-09-05 — Embedding fingerprint
+
+### [P1] Ingest skip compares (hash, model, dimensions), not the hash alone
+- **Files:** `src/services/ai/contentIngestService.ts`, `src/repositories/contentEmbeddingRepository.ts` (`getStoredHash` → `getStoredFingerprint`; upsert writes `dimensions`), `src/services/ai/challengeIngestService.ts` (`reindexAll({ force })`), `src/controllers/recommendationController.ts` (`?force=true` / body `{ force: true }`, `parseForce`), `prisma/migrations/20260905120000_content_embedding_dimensions/migration.sql` (additive: `"dimensions" INTEGER NOT NULL DEFAULT 768`).
+- **Change:** An embedding is a function of the text AND the model. The hash-only skip meant a change of `GEMINI_EMBEDDING_MODEL` left every unchanged row on the old model's vector while new rows got the new one — mixed spaces in one table, reported as success. Now a model or dimension change makes every row stale on the next ordinary reindex; `force` re-embeds regardless. Verified against local pg17 `eduscale_test` (:5434), never Supabase. Reference: `../docs/AI-RECOMMENDATIONS.md`.
+- **Tests:** `src/tests/ai/contentIngestService.test.ts`, `src/tests/ai/contentEmbeddingRepository.test.ts`, `src/tests/services/reindexBounds.test.ts`, `src/tests/controllers/recommendationController.test.ts` (new).
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:

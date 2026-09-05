@@ -91,6 +91,12 @@ API_URL                          # Must be https:// in production
 | `GET /api/v1/health` JSON now carries `version: { sha, shortSha, ref, env }` (+ `X-App-Commit` header) from Vercel's system env, `unknown` when unset; the postgres/redis/queue checks and `/ready` are unchanged. Exists so a checker can compare LIVE against `main` — a deploy that stops updating still answers 200 | `Backend/src/utils/appVersion.ts`, `Backend/src/routes/healthCheckRoutes.ts`, `Backend/src/tests/routes/healthCheckRoutes.test.ts` | ✅ Done |
 | Frontend `GET /api/version` — public, no DB, `force-dynamic`, `no-store` + `noindex`: `{ sha, shortSha, ref, deployedAt, env }`; git fields from runtime env else baked at build by `next.config.mjs` `env`, `deployedAt` = build time only | `Frontend/src/lib/app-version.ts`, `Frontend/src/app/api/version/route.ts` (+ `route.test.ts`), `Frontend/next.config.mjs` | ✅ Done |
 
+### 2026-09-05 — Embedding fingerprint: a model change now invalidates every vector
+
+| Item | Files | Status |
+|------|-------|--------|
+| The ingest skip compared the content hash only, so changing `GEMINI_EMBEDDING_MODEL` and reindexing re-embedded nothing — unchanged texts kept the old model's vectors next to new content's, one pgvector table holding two incomparable spaces, and `reindexAll` reported `skipped` for all of it. The skip now compares (content hash, model, dimensions); `dimensions` is a new additive column (`INTEGER NOT NULL DEFAULT 768`, verified on local pg17). `reindexAll({ force })` / `POST …/admin/reindex-challenges?force=true` bypasses the fingerprint. Docs: `docs/AI-RECOMMENDATIONS.md` | `Backend/src/services/ai/contentIngestService.ts`, `Backend/src/repositories/contentEmbeddingRepository.ts`, `Backend/src/services/ai/challengeIngestService.ts`, `Backend/src/controllers/recommendationController.ts`, `Backend/prisma/migrations/20260905120000_content_embedding_dimensions/`, tests under `Backend/src/tests/{ai,services,controllers}/` | ✅ Done |
+
 ---
 
 ## Remaining P0 Blockers (as of end of Session 3)
