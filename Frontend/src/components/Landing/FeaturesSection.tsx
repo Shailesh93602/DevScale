@@ -73,8 +73,8 @@ const FeaturesSection: React.FC = () => (
               <FaMedal className="text-4xl text-primary" />
             </span>
           }
-          title="Achievements & Badges"
-          description="Earn badges and certificates for your progress."
+          title="Achievements"
+          description="Earn achievements for your progress and see them all in one place."
           delay={0.5}
           href="/achievements"
         />

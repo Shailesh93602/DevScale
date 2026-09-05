@@ -1,6 +1,5 @@
 import { useAxiosGet } from './useAxios';
 import { ActivityItemProps } from '@/components/dashboard/ActivityItem';
-import { AchievementItemProps } from '@/components/dashboard/AchievementItem';
 
 export interface DashboardStats {
   enrolledRoadmaps: number;
@@ -115,7 +114,9 @@ export const useDashboard = () => {
   const [getActivities] = useAxiosGet<ActivityItemProps[]>(
     '/dashboard/activities',
   );
-  const [getAchievements] = useAxiosGet<AchievementItemProps[]>(
+  // Rows straight from the Achievement table (type/earned_at), which the
+  // /achievements page maps onto AchievementItem's icon/unlockedAt props.
+  const [getAchievements] = useAxiosGet<AchievementRecord[]>(
     '/dashboard/achievements',
   );
   const [getDashboardSummary] =

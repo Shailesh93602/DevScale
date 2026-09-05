@@ -173,7 +173,7 @@ Proven by `Backend/qa/run.mjs` against staging (real Supabase login + real backe
 | Flow | Status | Notes |
 |---|---|---|
 | `/community`, `/discussion-forums`, `/discussions`, `/collaboration-opportunities`, `/member-highlights`, `/events` | ⚪ | "Coming Soon" placeholders. Forums backend CRUD exists but no UI. |
-| `/achievements` standalone | ⚪ | real data lives on dashboard/profile |
+| `/achievements` standalone | ✅ | **Wired 2026-09-05 (ED-8).** Reads `GET /dashboard/achievements`; list / honest empty state / error+retry / skeleton, each asserted in `src/app/achievements/AchievementsContent.test.tsx` (4 tests). Populated state proven against the local DB: one inserted row rendered with title, description and "1 achievement" at 390px. Auth-required, so robots.txt already disallows it — no noindex (Disallow + noindex cancel, see robots.ts). |
 | Chat, Courses, Jobs, Billing, Support, Placement, RBAC UI | ⚪ | backend endpoints exist, no frontend |
 
 ---
@@ -261,7 +261,14 @@ cd ../Frontend && npm run test:e2e:journeys   # Playwright journeys on :3220
     *(fixed: anonymous placeholders, real empty state, unknown blog id → 404 not a permanent
     "Loading...")*
 15. **ED-7 coding-challenge layout** was a fixed horizontal split at every width. *(fixed: stacks
-    below the `md` breakpoint)*
+    below the `md` breakpoint)* **Second half fixed 2026-09-05:** both tab strips still CLIPPED on a
+    phone — the four problem tabs are 434px, eight console case-tabs ~480px, and their wrappers were
+    `overflow: visible` inside an `overflow: hidden` panel, so "Submissions" and "Case 6+" were
+    unreachable by touch at 360/390px. Measured against a production build in Chromium (last tab
+    right edge 426/490px in a 360px viewport). Now the wrappers scroll sideways; the page itself
+    never gains a horizontal scrollbar (`scrollWidth == innerWidth` before and after running code).
+    Pinned by the 360px test in `tests/e2e/responsive-journeys.spec.ts` (mobile project), which
+    fails against the pre-fix component with "Description strip has no scroll container".
 
 ### Verdicts on pre-QA findings
 

@@ -460,36 +460,44 @@ export default function CodingChallenge({ id }: { id: string }) {
               onValueChange={setActiveTab}
               className="flex h-full flex-col"
             >
-              <TabsList className="h-10 w-full justify-start rounded-none border-b border-border bg-card p-0 px-2">
-                <TabsTrigger
-                  value="description"
-                  className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Description
-                </TabsTrigger>
-                <TabsTrigger
-                  value="editorial"
-                  className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
-                >
-                  <Code2 className="mr-2 h-4 w-4" />
-                  Editorial
-                </TabsTrigger>
-                <TabsTrigger
-                  value="hints"
-                  className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
-                >
-                  <Settings className="mr-2 h-4 w-4" />
-                  Hints
-                </TabsTrigger>
-                <TabsTrigger
-                  value="solutions"
-                  className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
-                >
-                  <Code2 className="mr-2 h-4 w-4" />
-                  Submissions
-                </TabsTrigger>
-              </TabsList>
+              {/* The four triggers total ~430px; below that width the strip
+                  scrolls sideways (ED-7). It used to clip, which left the
+                  Submissions tab unreachable by touch on a 360-390px phone.
+                  The WRAPPER scrolls, not the list: overflow-x on a fixed-
+                  height list forces a vertical clip too, and the scrollbar
+                  then eats into the 40px and cuts the labels off. */}
+              <div className="shrink-0 overflow-x-auto border-b border-border [scrollbar-width:thin]">
+                <TabsList className="h-10 w-max min-w-full justify-start rounded-none bg-card p-0 px-2">
+                  <TabsTrigger
+                    value="description"
+                    className="h-full shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Description
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="editorial"
+                    className="h-full shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+                  >
+                    <Code2 className="mr-2 h-4 w-4" />
+                    Editorial
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="hints"
+                    className="h-full shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    Hints
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="solutions"
+                    className="h-full shrink-0 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
+                  >
+                    <Code2 className="mr-2 h-4 w-4" />
+                    Submissions
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
               <TabsContent
                 value="description"
@@ -750,14 +758,18 @@ export default function CodingChallenge({ id }: { id: string }) {
                         onValueChange={setActiveTestTab}
                         className="flex h-full flex-col"
                       >
-                        <div className="flex items-center gap-2 border-b border-border bg-accent/5 px-4 py-1.5">
-                          <TabsList className="h-7 gap-1 bg-transparent">
+                        {/* One trigger per test case; eight of them are ~480px,
+                            so on a phone the strip scrolls sideways instead of
+                            clipping the later cases (ED-7). The page itself
+                            never gains a horizontal scrollbar. */}
+                        <div className="flex items-center gap-2 overflow-x-auto border-b border-border bg-accent/5 px-4 py-1.5 [scrollbar-width:thin]">
+                          <TabsList className="h-7 shrink-0 gap-1 bg-transparent">
                             {testResults.map((res, i) => (
                               <TabsTrigger
                                 key={`tab-${i}-${res.status}`}
                                 value={String(i)}
                                 className={cn(
-                                  'h-6 rounded-md px-3 text-[11px] data-[state=active]:bg-background data-[state=active]:shadow-sm',
+                                  'h-6 shrink-0 rounded-md px-3 text-[11px] data-[state=active]:bg-background data-[state=active]:shadow-sm',
                                   res.status === 'Accepted'
                                     ? 'text-green-500 data-[state=active]:text-green-600'
                                     : 'text-red-500 data-[state=active]:text-red-600',
