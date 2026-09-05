@@ -1,16 +1,19 @@
 import { test, expect } from '@playwright/test';
-import { login, settle } from './helpers';
+import { login, settle, SEED_HINT } from './helpers';
 
 /**
  * ED-7 — "the coding-challenge page is unusable on mobile".
  *
  * The page splits problem statement and editor with a ResizablePanelGroup fixed
  * to direction="horizontal". At 390px that leaves roughly 150px for the problem
- * text and 230px for the editor, so neither is usable. These tests measure the
+ * text and 230px for the editor, so neither is usable. This test measures the
  * rendered widths instead of eyeballing a screenshot.
  *
  * Runs under both projects: on desktop the panels must stay side by side, on
- * mobile they must stack.
+ * mobile they must stack. The 360px tab-strip assertions live in
+ * responsive-phone.spec.ts, which the config runs under the mobile project
+ * only — a runtime `test.skip(project !== 'mobile')` reported a green desktop
+ * result for a test that had not run.
  */
 
 const MIN_READABLE_PANEL_PX = 280;
@@ -22,23 +25,27 @@ test('coding-challenge layout is usable at this viewport', async ({
   await page.goto('/coding-challenges');
   await settle(page);
 
+  // A catalogue with no challenge is a broken environment, not a pass.
   const firstLink = page.locator('a[href^="/coding-challenges/"]').first();
-  test.skip((await firstLink.count()) === 0, 'no challenges seeded');
+  await expect(firstLink, `no challenge to open — ${SEED_HINT}`).toBeVisible();
   await firstLink.click();
   await page.waitForURL(/\/coding-challenges\/[^/]+$/, { timeout: 30_000 });
   await settle(page);
 
+  // The split layout IS the thing under test; if it is not on the page the
+  // widths below are meaningless and the test must say so.
   const panels = page.locator('[data-panel]');
-  const count = await panels.count();
-  test.skip(count < 2, 'resizable panel layout not present on this page');
+  await expect(
+    panels,
+    'resizable panel layout not present on the challenge page',
+  ).toHaveCount(2);
 
   const boxes: { width: number; x: number; y: number }[] = [];
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < 2; i++) {
     const box = await panels.nth(i).boundingBox();
-    if (box && box.width > 0)
-      boxes.push({ width: box.width, x: box.x, y: box.y });
+    expect(box, `panel ${i} has no box`).not.toBeNull();
+    boxes.push({ width: box!.width, x: box!.x, y: box!.y });
   }
-  expect(boxes.length).toBeGreaterThanOrEqual(2);
 
   const isMobile = testInfo.project.name === 'mobile';
   if (isMobile) {
@@ -68,131 +75,4 @@ test('coding-challenge layout is usable at this viewport', async ({
     clientWidth: document.documentElement.clientWidth,
   }));
   expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth + 2);
-});
-
-/**
- * ED-7, second half — the two tab strips on the challenge page.
- *
- * Stacking the panels fixed the split, but both tab strips still CLIPPED on a
- * phone: the four problem tabs are ~430px wide, and one trigger per test case
- * makes the console strip ~480px at eight cases. Their wrappers were
- * overflow:visible inside an overflow:hidden panel, so the later tabs were
- * simply cut off and unreachable by touch. This test pins the 360px behaviour
- * (the narrowest common phone): no page-level horizontal scroll, the editor on
- * screen, and every tab in both strips reachable by scrolling the strip.
- *
- * The run-code response is stubbed at the network edge so the console renders
- * a known number of cases — the layout under test needs eight tabs, and the
- * real executor is an external service whose case count varies per challenge.
- */
-test('challenge page at 360px: no horizontal page scroll, editor reachable, tab strips scroll', async ({
-  page,
-}, testInfo) => {
-  test.skip(
-    testInfo.project.name !== 'mobile',
-    'phone-only assertions; the desktop layout is covered by the test above',
-  );
-  await page.setViewportSize({ width: 360, height: 780 });
-
-  await page.route('**/run-code', (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        success: true,
-        error: false,
-        message: 'ok',
-        data: Array.from({ length: 8 }, (_, i) => ({
-          input: `[${i}]`,
-          expectedOutput: String(i),
-          actualOutput: String(i),
-          status: i === 3 ? 'Wrong Answer' : 'Accepted',
-          executionTime: 1,
-          memoryUsed: 1,
-        })),
-      }),
-    }),
-  );
-
-  await login(page, 'student');
-  await page.goto('/coding-challenges');
-  await settle(page);
-  const firstLink = page.locator('a[href^="/coding-challenges/"]').first();
-  test.skip((await firstLink.count()) === 0, 'no challenges seeded');
-  await firstLink.click();
-  await page.waitForURL(/\/coding-challenges\/[^/]+$/, { timeout: 30_000 });
-  await settle(page);
-
-  const noPageOverflow = async (when: string) => {
-    const o = await page.evaluate(() => ({
-      scrollWidth: document.documentElement.scrollWidth,
-      innerWidth: window.innerWidth,
-    }));
-    expect(
-      o.scrollWidth,
-      `page scrolls horizontally ${when} (${o.scrollWidth} > ${o.innerWidth})`,
-    ).toBeLessThanOrEqual(o.innerWidth);
-  };
-
-  await noPageOverflow('on load');
-
-  // The editor is on screen and no wider than the viewport.
-  const editor = page.locator('.monaco-editor').first();
-  await expect(editor).toBeVisible({ timeout: 30_000 });
-  const editorBox = await editor.boundingBox();
-  expect(editorBox, 'editor has no box').not.toBeNull();
-  expect(editorBox!.x).toBeGreaterThanOrEqual(0);
-  expect(editorBox!.x + editorBox!.width).toBeLessThanOrEqual(360);
-
-  // Every tab in a strip must be reachable: the strip (or its wrapper) scrolls,
-  // and after scrolling the last tab into view its right edge is on screen.
-  const assertStripScrolls = async (tabText: string, expectedTabs: number) => {
-    const strip = page
-      .getByRole('tablist')
-      .filter({ hasText: tabText })
-      .first();
-    await expect(strip).toBeVisible();
-    const tabs = strip.getByRole('tab');
-    expect(await tabs.count()).toBe(expectedTabs);
-
-    const scroller = await strip.evaluate((el) => {
-      // Either the list itself or its immediate wrapper is the scroll container.
-      const candidates = [el, el.parentElement as HTMLElement];
-      const found = candidates.find((c) => {
-        const ox = getComputedStyle(c).overflowX;
-        return ox === 'auto' || ox === 'scroll';
-      });
-      return found
-        ? {
-            overflowX: getComputedStyle(found).overflowX,
-            scrollWidth: found.scrollWidth,
-            clientWidth: found.clientWidth,
-          }
-        : null;
-    });
-    expect(scroller, `${tabText} strip has no scroll container`).not.toBeNull();
-
-    const last = tabs.last();
-    await last.scrollIntoViewIfNeeded();
-    const box = await last.boundingBox();
-    expect(box, `${tabText} last tab has no box`).not.toBeNull();
-    expect(
-      Math.round(box!.x + box!.width),
-      `${tabText} last tab is still off screen after scrolling the strip`,
-    ).toBeLessThanOrEqual(360);
-    await last.click();
-    await expect(last).toHaveAttribute('data-state', 'active');
-  };
-
-  await assertStripScrolls('Description', 4);
-  // Back to the problem statement so the next steps see the normal layout.
-  await page.getByRole('tab', { name: 'Description' }).click();
-
-  // Run → eight console tabs.
-  await page.getByRole('button', { name: /run code/i }).click();
-  await expect(page.getByRole('tab', { name: 'Case 1' })).toBeVisible({
-    timeout: 20_000,
-  });
-  await assertStripScrolls('Case 1', 8);
-  await noPageOverflow('after running code');
 });

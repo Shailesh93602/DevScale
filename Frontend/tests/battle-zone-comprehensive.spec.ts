@@ -276,25 +276,28 @@ test.describe('Battle Zone — create flow button labels', () => {
 
 test.describe('Battle Zone — detail page labels', () => {
   test('detail page shows no raw enum status values', async ({ page }) => {
-    // Navigate to list first, grab the first battle link if any
+    test.setTimeout(120_000);
+    // This test never signed in, so /battle-zone redirected it to the login
+    // page — where there are no battle cards — and the isVisible() guard
+    // below was false on every run. The seeded session is what every other
+    // battle-zone test uses.
+    await loginAsStudent(page);
+    // Navigate to list first, then open the first battle's detail page
     await gotoWithRetry(page, BATTLE_ZONE);
     await page
       .waitForLoadState('networkidle', { timeout: 15000 })
       .catch(() => {});
     await page.waitForTimeout(2000);
 
-    // Find a "View Details" or battle card link
-    const detailLink = page
-      .getByRole('button', { name: /view details/i })
-      .first();
-    const hasDetails = await detailLink.isVisible().catch(() => false);
-
-    if (!hasDetails) {
-      test.skip(); // No battles in DB — skip
-      return;
-    }
-
+    // Battle cards expose a "Details" button. The old matcher looked for
+    // /view details/, which no card renders, so this test skipped itself on
+    // every run. The seed guarantees battles, so the button must be there.
+    const detailLink = page.getByRole('button', { name: /details/i }).first();
+    await expect(detailLink).toBeVisible({ timeout: 15000 });
     await detailLink.click();
+    await page.waitForURL(/\/battle-zone\/(?!create)[a-z0-9-]+/, {
+      timeout: 15000,
+    });
     await page
       .waitForLoadState('networkidle', { timeout: 15000 })
       .catch(() => {});
