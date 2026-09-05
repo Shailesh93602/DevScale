@@ -203,6 +203,11 @@ npm run qa                       # Backend: 176 HTTP+DB assertions, 10 realtime
 cd ../Frontend && npm run test:e2e:journeys   # Playwright journeys on :3220
 ```
 
+> **2026-09-05:** the `eduscale_e2e`-on-5432 half of this recipe predates the pgvector migration
+> (`20260622010000_add_content_embedding`), which needs Postgres 17 — the brew `postgresql@16` service on
+> 5432 cannot `CREATE EXTENSION vector`. Use the pg17-on-5434 recipe in
+> [Running the default Playwright suite safely](#2026-09-05--running-the-default-playwright-suite-safely).
+
 ### New coverage
 
 | Area | Where | What it proves |
@@ -328,4 +333,39 @@ Future roles to consider: **INSTRUCTOR/AUTHOR** (create roadmaps/challenges — 
 by area (auth → dashboard → roadmaps → battles) → (3) build the moderator panel → (4) decide which ⚪ deferred
 pages to build vs cut.
 
-*Last updated: 2026-06-15.*
+## 2026-09-05 — Running the default Playwright suite safely
+
+`npx playwright test` (the default `playwright.config.ts`) has a `globalSetup` that runs `npm run seed:battles`
+in `Backend/`. That seed **deletes every battle row, then writes five**, and it resolves its database from
+`Backend/.env` — the shared Supabase project — unless `DATABASE_URL` is exported. The seeder refuses anything
+that is not a local throwaway (host `localhost`/`127.0.0.1` **and** a database named `*_test`/`*_e2e`, confirmed
+by asking the open connection `current_database()` — the same guard `battle.test.ts` uses, no override), and
+`global-setup.ts` now **aborts the run** on a refused or failed seed instead of printing a warning and
+continuing. The frontend talks to the backend at `NEXT_PUBLIC_API_BASE_URL` (`localhost:4000` in
+`Frontend/.env`), so the seed and the backend must read the **same** local database or the seeded battles are
+invisible to the specs. Runs that need no battles (the public/anonymous specs) set `PLAYWRIGHT_SKIP_SEED=1`,
+which is logged; CI's WCAG job does exactly that.
+
+```bash
+# 1. Postgres 17 on a spare port (pgvector is built for 17/18 only; the brew 16 service stays on 5432)
+/opt/homebrew/opt/postgresql@17/bin/pg_ctl -D /opt/homebrew/var/postgresql@17 -o "-p 5434" -l /tmp/pg17.log start
+/opt/homebrew/opt/postgresql@17/bin/createdb -p 5434 eduscale_test   # once; the name must end in _test or _e2e
+export DATABASE_URL="postgresql://$(whoami)@localhost:5434/eduscale_test"
+export DIRECT_URL="$DATABASE_URL"
+
+# 2. Schema + rows the seed needs (it wants at least one User row; seed:roles/features/permissions are DB-only)
+cd Backend && npx prisma migrate deploy && npm run seed:all
+npm run seed:battles            # refuses, exit 1, unless DATABASE_URL is a local throwaway
+
+# 3. Backend on 4000 against the SAME database, then the suite — the exported DATABASE_URL reaches the seed
+PORT=4000 npm run dev
+cd ../Frontend && npx playwright test
+
+# No battles needed?  PLAYWRIGHT_SKIP_SEED=1 npx playwright test tests/accessibility.spec.ts -g "Public"
+```
+
+`seed:user` and `qa:seed` create accounts through Supabase Auth in the project `Backend/.env` names — they are
+not part of "local-only". The authenticated specs still log in against that Supabase project
+(`tests/auth.setup.ts`); what this section keeps local is every row the seed deletes and writes.
+
+*Last updated: 2026-09-05.*
