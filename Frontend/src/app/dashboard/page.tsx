@@ -17,6 +17,7 @@ import {
 } from '@/hooks/useDashboard';
 import { useAuth } from '@/contexts/AuthContext';
 import { logger } from '@/lib/logger';
+import { roadmapAuthorName } from '@/lib/roadmap-author';
 
 // ─── sessionStorage SWR helpers ───────────────────────────────────────────────
 const CACHE_KEY = 'dashboard:summary:v1';
@@ -53,9 +54,7 @@ const mapToRoadmapType = (
   title: roadmap.title,
   author: {
     id: roadmap.user?.id || 'anonymous',
-    name: roadmap.user?.first_name
-      ? `${roadmap.user.first_name}${roadmap.user.last_name ? ` ${roadmap.user.last_name}` : ''}`
-      : roadmap.user?.username || 'Anonymous',
+    name: roadmapAuthorName(roadmap.user, 'Anonymous'),
     profileImage: roadmap.user?.avatar_url,
   },
   thumbnail: roadmap.thumbnail,

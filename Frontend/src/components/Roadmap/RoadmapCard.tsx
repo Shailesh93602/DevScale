@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { BaseRoadmap, RoadmapAuthor } from '@/hooks/useRoadmapApi';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
 import { useSignInGate } from '@/hooks/useSignInGate';
+import { roadmapAuthorInitial, roadmapAuthorName } from '@/lib/roadmap-author';
 
 export type RoadmapType = BaseRoadmap & {
   description: string;
@@ -365,29 +366,16 @@ export const RoadmapCard = ({
                 {roadmap?.user?.avatar_url ? (
                   <AvatarImage
                     src={roadmap?.user?.avatar_url}
-                    alt={
-                      (roadmap?.user?.first_name && roadmap?.user?.last_name
-                        ? `${roadmap.user.first_name} ${roadmap.user.last_name}`
-                        : roadmap?.user?.first_name ||
-                          roadmap?.user?.username) || ''
-                    }
+                    alt={roadmapAuthorName(roadmap.user)}
                   />
                 ) : (
                   <AvatarFallback className="bg-primary/10 text-primary">
-                    {(
-                      roadmap?.user?.first_name ||
-                      roadmap?.user?.username ||
-                      'U'
-                    )
-                      ?.charAt(0)
-                      ?.toUpperCase()}
+                    {roadmapAuthorInitial(roadmap.user)}
                   </AvatarFallback>
                 )}
               </Avatar>
               <span className="line-clamp-1 text-xs text-muted-foreground">
-                {roadmap?.user?.first_name && roadmap?.user?.last_name
-                  ? `${roadmap.user.first_name} ${roadmap.user.last_name}`
-                  : roadmap?.user?.first_name || roadmap?.user?.username}
+                {roadmapAuthorName(roadmap.user)}
               </span>
             </div>
 

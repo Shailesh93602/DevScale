@@ -31,6 +31,7 @@ import RoadmapCard, {
   RoadmapCardSkeleton,
 } from '@/components/Roadmap/RoadmapCard';
 import Image from 'next/image';
+import { roadmapAuthorName } from '@/lib/roadmap-author';
 
 // Use the shared type
 type IRoadmap = RoadmapType;
@@ -141,10 +142,7 @@ const RoadmapGrid = ({ roadmaps, viewMode }: RoadmapGridProps) => {
               <div className="mt-2 flex items-center gap-2">
                 {roadmap.user && (
                   <span className="text-sm text-muted-foreground">
-                    By{' '}
-                    {roadmap?.user?.first_name && roadmap?.user?.last_name
-                      ? `${roadmap.user.first_name} ${roadmap.user.last_name}`
-                      : roadmap?.user?.first_name || roadmap?.user?.username}
+                    By {roadmapAuthorName(roadmap.user)}
                   </span>
                 )}
                 {roadmap.difficulty && (
