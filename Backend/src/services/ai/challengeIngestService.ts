@@ -20,6 +20,17 @@ interface ChallengeTextFields {
   tags: string[];
 }
 
+export interface ReindexOptions {
+  /**
+   * Re-embed every row regardless of its stored fingerprint. The fingerprint
+   * (content hash + model + dimensions) already invalidates rows on a model
+   * change; `force` is for what it cannot see — a provider that changed its
+   * output under the same model name — and for repairing a table you no
+   * longer trust. It costs one embedding call per active challenge.
+   */
+  force?: boolean;
+}
+
 export interface ReindexResult {
   total: number;
   created: number;
@@ -94,11 +105,14 @@ export class ChallengeIngestService {
    *
    * 🔴 WHY THAT IS SURVIVABLE RATHER THAN FATAL, AND WHY THE FIX IS SMALL.
    *
-   * `ingest` hashes the text and returns `skipped` when the stored hash still
+   * `ingest` fingerprints the text (content hash + embedding model +
+   * dimensions) and returns `skipped` when the stored fingerprint still
    * matches, so re-running is close to free for anything already indexed. The
    * operation is idempotent, which means it is also RESUMABLE: if this times
    * out, calling it again picks up where it stopped rather than redoing the
-   * work.
+   * work. And because the model is part of the fingerprint, this same call is
+   * how a change of `GEMINI_EMBEDDING_MODEL` is rolled out: every row is
+   * stale on the first run after the change and gets re-embedded.
    *
    * That property is what makes bounded pages and bounded concurrency
    * sufficient. It removes the need for a job queue here, which would be the
@@ -109,7 +123,8 @@ export class ChallengeIngestService {
    * a failure is counted rather than thrown, so a single bad row cannot
    * discard the rest of the run.
    */
-  async reindexAll(): Promise<ReindexResult> {
+  async reindexAll(options: ReindexOptions = {}): Promise<ReindexResult> {
+    const ingestOptions = { force: options.force === true };
     const result: ReindexResult = {
       total: 0,
       created: 0,
@@ -145,11 +160,15 @@ export class ChallengeIngestService {
         await Promise.all(
           page.slice(i, i + CONCURRENCY).map(async (challenge) => {
             try {
-              const { status } = await this.ingest.ingest({
-                contentType: CONTENT_TYPE,
-                contentId: challenge.id,
-                text: this.buildText(challenge),
-              });
+              const { status } = await this.ingest.ingest(
+                {
+                  contentType: CONTENT_TYPE,
+                  contentId: challenge.id,
+                  text: this.buildText(challenge),
+                },
+                undefined,
+                ingestOptions
+              );
               result[status] += 1;
             } catch (error) {
               // Counted, not thrown. A backfill that discards an hour of

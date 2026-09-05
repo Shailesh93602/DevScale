@@ -29,11 +29,25 @@ export default class RecommendationController {
     }
   );
 
-  /** POST /recommendations/admin/reindex-challenges — backfill embeddings. */
-  public reindexChallenges = catchAsync(
-    async (_req: Request, res: Response) => {
-      const data = await this.challengeIngest.reindexAll();
-      return sendResponse(res, 'CONTENT_REINDEXED', { data });
-    }
-  );
+  /**
+   * POST /recommendations/admin/reindex-challenges — backfill embeddings.
+   *
+   * `?force=true` (or `{ "force": true }` in the body) re-embeds every row
+   * regardless of its stored fingerprint. Not needed after a model change —
+   * the fingerprint handles that — only when the provider's output changed
+   * under the same model name, or the table is not trusted.
+   */
+  public reindexChallenges = catchAsync(async (req: Request, res: Response) => {
+    const force = parseForce(req);
+    const data = await this.challengeIngest.reindexAll({ force });
+    return sendResponse(res, 'CONTENT_REINDEXED', { data });
+  });
+}
+
+/** Only the literal `true` (query string) or boolean `true` (body) forces. */
+export function parseForce(req: Request): boolean {
+  const query = req.query?.force;
+  if (query === 'true') return true;
+  const body = (req.body as { force?: unknown } | undefined)?.force;
+  return body === true;
 }
