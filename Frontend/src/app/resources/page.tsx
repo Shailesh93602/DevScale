@@ -153,7 +153,7 @@ const ResourcesPage = () => {
                     href={`/resources/${resource.id}`}
                     containerClassName="rounded-full"
                     as="button"
-                    className="flex items-center space-x-2 self-end bg-primary hover:bg-primary2"
+                    className="flex items-center space-x-2 self-end bg-primary text-primary-foreground hover:bg-primary2"
                   >
                     <AceternityLogo />
                     <span>View Resource</span>

@@ -54,18 +54,23 @@ interface DashboardMetrics {
   };
 }
 
+// Theme tokens only — no Tailwind dark-mode variants (tests/regression-ui-contract.spec.ts).
+// Each token is defined per theme in globals.css and was checked for WCAG AA
+// as text on the card and on its own 15% tint in both themes: purple 7.65/7.38,
+// success 6.20/9.62, blue 6.55/7.33, warning 6.01/11.77, red 6.96/5.50,
+// muted-foreground 5.61/6.06 (light/dark, on card). The palette shades these
+// replaced needed a dark-mode variant precisely because a fixed shade cannot pass
+// on both backgrounds; a token that flips with the theme can.
 const ACCENTS = {
-  violet:
-    'from-violet-500/15 to-violet-500/5 text-violet-600 dark:text-violet-400',
-  emerald:
-    'from-emerald-500/15 to-emerald-500/5 text-emerald-600 dark:text-emerald-400',
-  sky: 'from-sky-500/15 to-sky-500/5 text-sky-600 dark:text-sky-400',
-  amber: 'from-amber-500/15 to-amber-500/5 text-amber-600 dark:text-amber-400',
-  rose: 'from-rose-500/15 to-rose-500/5 text-rose-600 dark:text-rose-400',
+  violet: 'from-purple/15 to-purple/5 text-purple',
+  emerald: 'from-success/15 to-success/5 text-success',
+  sky: 'from-blue/15 to-blue/5 text-blue',
+  amber: 'from-warning/15 to-warning/5 text-warning',
+  rose: 'from-red/15 to-red/5 text-red',
   /// Neutral, for a metric that is not measured. Deliberately not emerald: an
   /// unknown error rate is not a healthy one, and colouring it green is the
   /// same lie as printing 0.00%.
-  slate: 'from-slate-500/15 to-slate-500/5 text-slate-600 dark:text-slate-400',
+  slate: 'from-muted-foreground/15 to-muted-foreground/5 text-muted-foreground',
 } as const;
 
 function StatCard({

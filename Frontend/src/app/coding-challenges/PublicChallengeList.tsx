@@ -27,14 +27,18 @@ interface PublicChallengeListProps {
   total: number;
 }
 
+// Theme tokens, not palette shades: `text-emerald-700` on the dark card
+// measured 2.75:1 in the first dark-mode audit of this page (2026-09-05).
+// Tokens flip with the theme; the same check gives success 6.2/9.6 and red
+// 7.0/5.5 (light/dark) on the card.
 function difficultyClass(difficulty: string): string {
   switch (difficulty.toUpperCase()) {
     case 'EASY':
-      return 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-700';
+      return 'border border-success/20 bg-success/10 text-success';
     case 'MEDIUM':
-      return 'border border-amber-500/20 bg-amber-500/10 text-warning';
+      return 'border border-warning/20 bg-warning/10 text-warning';
     default:
-      return 'bg-red-500/10 text-red-700 border-red-500/20 border';
+      return 'border border-red/20 bg-red/10 text-red';
   }
 }
 

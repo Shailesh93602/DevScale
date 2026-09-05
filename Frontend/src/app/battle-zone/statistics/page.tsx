@@ -48,121 +48,39 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-// Raw shape returned by the backend (snake_case)
-interface RawStatsResponse {
-  total_battles?: number;
-  totalBattles?: number;
-  wins?: number;
-  battlesWon?: number;
-  completed_battles?: number;
-  win_rate?: number;
-  winRate?: number;
-  total_score?: number;
-  totalPoints?: number;
-  averageScore?: number;
-  questions_answered?: number;
-  questionsAnswered?: number;
-  correct_answers?: number;
-  correctAnswers?: number;
-  accuracy?: number;
-  avg_time_ms?: number;
-  averageTime?: number;
-  top_topics?: RawTopic[];
-  topTopics?: RawTopic[];
-  recent_battles?: RawBattle[];
-  recentBattles?: RawBattle[];
-  performance_by_difficulty?: RawDifficulty[];
-  performanceByDifficulty?: RawDifficulty[];
-  performance_by_topic?: RawTopic[];
-  performanceByTopic?: RawTopic[];
-  performance_over_time?: RawWeek[];
-  performanceOverTime?: RawWeek[];
-}
-interface RawTopic {
-  topic?: string;
-  name?: string;
-  avg_score?: number;
-  score?: number;
-  battles?: number;
-  win_rate?: number;
-  accuracy?: number;
-}
-interface RawBattle {
-  id: string;
-  title?: string;
-  ended_at?: string;
-  date?: string;
-  result?: string;
-  score?: number;
-  rank?: number;
-  totalParticipants?: number;
-}
-interface RawDifficulty {
-  difficulty?: string;
-  win_rate?: number;
-  accuracy?: number;
-  battles?: number;
-}
-interface RawWeek {
-  week?: string;
-  date?: string;
-  avg_score?: number;
-  score?: number;
-  wins?: number;
-  battles?: number;
-  accuracy?: number;
-}
+import {
+  formatPercent,
+  normalizeBattleStatistics,
+  winRateSummary,
+  type BattleOutcome,
+  type BattleStatistics,
+  type RawBattleStatistics,
+} from './normalize';
 
-interface StatisticsData {
-  totalBattles: number;
-  battlesWon: number;
-  battlesLost: number;
-  winRate: number;
-  totalPoints: number;
-  averageScore: number;
-  questionsAnswered: number;
-  correctAnswers: number;
-  accuracy: number;
-  averageTime: number;
-  topTopics: {
-    topic: string;
-    score: number;
-    battles: number;
-  }[];
-  recentBattles: {
-    id: string;
-    title: string;
-    date: string;
-    result: 'win' | 'loss' | 'ongoing';
-    score: number;
-    rank: number;
-    totalParticipants: number;
-  }[];
-  performanceByDifficulty: {
-    difficulty: string;
-    accuracy: number;
-    battles: number;
-  }[];
-  performanceByTopic: {
-    topic: string;
-    accuracy: number;
-    battles: number;
-  }[];
-  performanceOverTime: {
-    date: string;
-    score: number;
-    accuracy: number;
-  }[];
-}
+const OUTCOME_BADGE: Record<
+  BattleOutcome,
+  { label: string; className: string }
+> = {
+  win: { label: 'Win', className: 'bg-success/15 text-success' },
+  loss: { label: 'Loss', className: 'bg-red/15 text-red' },
+  draw: { label: 'Draw', className: 'bg-muted text-muted-foreground' },
+  cancelled: {
+    label: 'Cancelled',
+    className: 'bg-muted text-muted-foreground',
+  },
+  ongoing: { label: 'Ongoing', className: 'bg-blue/15 text-blue' },
+};
 
 export default function StatisticsPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [statistics, setStatistics] = useState<StatisticsData | null>(null);
+  const [statistics, setStatistics] = useState<BattleStatistics | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [timeframe, setTimeframe] = useState('all-time');
 
-  const [getStatistics] = useAxiosGet<StatisticsData>('/battles/statistics/me');
+  const [getStatistics] = useAxiosGet<RawBattleStatistics>(
+    '/battles/statistics/me',
+  );
 
   useEffect(() => {
     const fetchStatistics = async () => {
@@ -170,124 +88,10 @@ export default function StatisticsPage() {
       setErrorMessage(null);
       try {
         const response = await getStatistics({ params: { timeframe } });
-        if (response.success && response.data) {
-          // Normalize snake_case API response → camelCase StatisticsData
-          const d = response.data as unknown as RawStatsResponse;
-          const normalized: StatisticsData = {
-            totalBattles: d.total_battles ?? d.totalBattles ?? 0,
-            battlesWon: d.wins ?? d.battlesWon ?? 0,
-            battlesLost: (d.completed_battles ?? 0) - (d.wins ?? 0),
-            winRate: d.win_rate ?? d.winRate ?? 0,
-            totalPoints: d.total_score ?? d.totalPoints ?? 0,
-            averageScore:
-              (d.completed_battles ?? 0) > 0
-                ? Math.round((d.total_score ?? 0) / (d.completed_battles ?? 1))
-                : (d.averageScore ?? 0),
-            questionsAnswered: d.questions_answered ?? d.questionsAnswered ?? 0,
-            correctAnswers: d.correct_answers ?? d.correctAnswers ?? 0,
-            accuracy: d.accuracy ?? 0,
-            averageTime:
-              d.avg_time_ms != null
-                ? Math.round(d.avg_time_ms / 1000)
-                : (d.averageTime ?? 0),
-            topTopics: (d.top_topics ?? d.topTopics ?? []).map(
-              (t: {
-                topic?: string;
-                name?: string;
-                avg_score?: number;
-                score?: number;
-                battles?: number;
-              }) => ({
-                topic: t.topic ?? t.name ?? '',
-                score: t.avg_score ?? t.score ?? 0,
-                battles: t.battles ?? 0,
-              }),
-            ),
-            recentBattles: (d.recent_battles ?? d.recentBattles ?? []).map(
-              (b: {
-                id: string;
-                title?: string;
-                ended_at?: string;
-                date?: string;
-                result?: string;
-                score?: number;
-                rank?: number;
-                totalParticipants?: number;
-              }) => ({
-                id: b.id,
-                title: b.title ?? 'Battle',
-                date: b.ended_at
-                  ? new Date(b.ended_at).toLocaleDateString()
-                  : (b.date ?? ''),
-                result: (b.result === 'won'
-                  ? 'win'
-                  : b.result === 'lost'
-                    ? 'loss'
-                    : 'ongoing') as 'win' | 'loss' | 'ongoing',
-                score: b.score ?? 0,
-                rank: b.rank ?? 0,
-                totalParticipants: b.totalParticipants ?? 0,
-              }),
-            ),
-            performanceByDifficulty: (
-              d.performance_by_difficulty ??
-              d.performanceByDifficulty ??
-              []
-            ).map(
-              (x: {
-                difficulty?: string;
-                win_rate?: number;
-                accuracy?: number;
-                battles?: number;
-              }) => ({
-                difficulty: x.difficulty
-                  ? x.difficulty.charAt(0).toUpperCase() +
-                    x.difficulty.slice(1).toLowerCase()
-                  : '',
-                accuracy: x.win_rate ?? x.accuracy ?? 0,
-                battles: x.battles ?? 0,
-              }),
-            ),
-            performanceByTopic: (
-              d.performance_by_topic ??
-              d.performanceByTopic ??
-              []
-            ).map(
-              (x: {
-                topic?: string;
-                win_rate?: number;
-                accuracy?: number;
-                battles?: number;
-              }) => ({
-                topic: x.topic ?? '',
-                accuracy: x.win_rate ?? x.accuracy ?? 0,
-                battles: x.battles ?? 0,
-              }),
-            ),
-            performanceOverTime: (
-              d.performance_over_time ??
-              d.performanceOverTime ??
-              []
-            ).map(
-              (x: {
-                week?: string;
-                date?: string;
-                avg_score?: number;
-                score?: number;
-                wins?: number;
-                battles?: number;
-                accuracy?: number;
-              }) => ({
-                date: x.week ?? x.date ?? '',
-                score: x.avg_score ?? x.score ?? 0,
-                accuracy:
-                  x.wins != null && (x.battles ?? 0) > 0
-                    ? Math.round((x.wins / (x.battles ?? 1)) * 100)
-                    : (x.accuracy ?? 0),
-              }),
-            ),
-          };
-          setStatistics(normalized);
+        if (response.success && response.data?.stats) {
+          // One payload, one reader — see ./normalize.ts for why the page no
+          // longer picks fields out of the response here.
+          setStatistics(normalizeBattleStatistics(response.data));
         } else {
           setStatistics(null);
           setErrorMessage(response.message || 'Unable to load statistics.');
@@ -339,6 +143,8 @@ export default function StatisticsPage() {
     );
   }
 
+  const winRate = winRateSummary(statistics);
+
   return (
     <BattleZoneLayout>
       <div className="space-y-8">
@@ -377,24 +183,23 @@ export default function StatisticsPage() {
         {/* Key Stats */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
+            testId="stat-card-win-rate"
             title="Win Rate"
-            value={
-              Number.isFinite(statistics.winRate)
-                ? `${statistics.winRate}%`
-                : '--'
-            }
-            description={`${statistics.battlesWon} of ${statistics.totalBattles} battles`}
+            value={winRate.value}
+            description={winRate.description}
             icon={<Trophy className="h-5 w-5 text-primary" />}
           />
 
           <StatCard
+            testId="stat-card-accuracy"
             title="Accuracy"
-            value={`${statistics.accuracy}%`}
+            value={formatPercent(statistics.accuracyPercent)}
             description={`${statistics.correctAnswers} of ${statistics.questionsAnswered} questions`}
             icon={<Target className="h-5 w-5 text-primary" />}
           />
 
           <StatCard
+            testId="stat-card-average-score"
             title="Average Score"
             value={statistics.averageScore.toString()}
             description={`${statistics.totalPoints} total points earned`}
@@ -402,8 +207,9 @@ export default function StatisticsPage() {
           />
 
           <StatCard
+            testId="stat-card-response-time"
             title="Response Time"
-            value={`${statistics.averageTime}s`}
+            value={`${statistics.averageTimeSeconds}s`}
             description="Average time per question"
             icon={<Clock className="h-5 w-5 text-primary" />}
           />
@@ -415,7 +221,7 @@ export default function StatisticsPage() {
             <CardHeader>
               <CardTitle>Performance Over Time</CardTitle>
               <CardDescription>
-                Your battle scores and accuracy trends
+                Your average score and win rate, week by week
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -437,11 +243,11 @@ export default function StatisticsPage() {
                       />
                       <Line
                         type="monotone"
-                        dataKey="accuracy"
+                        dataKey="winRatePercent"
                         stroke="hsl(var(--secondary-foreground))"
                         strokeWidth={2}
                         dot={false}
-                        name="Accuracy"
+                        name="Win rate %"
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -471,15 +277,20 @@ export default function StatisticsPage() {
                     No topic data yet — complete some battles first.
                   </p>
                 )}
-                {statistics.performanceByTopic.map((topic, index) => (
-                  <div key={index}>
+                {statistics.performanceByTopic.map((topic) => (
+                  <div key={topic.label}>
                     <div className="mb-1 flex items-center justify-between">
-                      <span className="text-sm font-medium">{topic.topic}</span>
+                      <span className="text-sm font-medium">{topic.label}</span>
                       <span className="text-sm text-muted-foreground">
-                        {topic.accuracy}%
+                        {formatPercent(topic.winRatePercent)} won ·{' '}
+                        {topic.battles} battles
                       </span>
                     </div>
-                    <Progress value={topic.accuracy} className="h-2" />
+                    <Progress
+                      value={topic.winRatePercent ?? 0}
+                      className="h-2"
+                      aria-label={`${topic.label} win rate`}
+                    />
                   </div>
                 ))}
               </div>
@@ -501,9 +312,9 @@ export default function StatisticsPage() {
                     No battles yet. Join your first battle to see history here!
                   </p>
                 )}
-                {statistics.recentBattles.map((battle, index) => (
+                {statistics.recentBattles.map((battle) => (
                   <div
-                    key={index}
+                    key={battle.id}
                     className="flex items-center justify-between rounded-lg border p-4"
                   >
                     <div>
@@ -515,24 +326,18 @@ export default function StatisticsPage() {
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <div className="font-medium">{battle.score} pts</div>
-                        <div className="text-sm text-muted-foreground">
-                          Rank {battle.rank}/{battle.totalParticipants}
-                        </div>
+                        {battle.rank !== null && (
+                          // The payload has no participant count, so this
+                          // used to render "Rank 2/0".
+                          <div className="text-sm text-muted-foreground">
+                            Rank {battle.rank}
+                          </div>
+                        )}
                       </div>
                       <Badge
-                        className={
-                          battle.result === 'win'
-                            ? 'bg-green-500/15 text-green-700'
-                            : battle.result === 'loss'
-                              ? 'bg-red-500/15 text-red-700'
-                              : 'bg-blue-500/15 text-blue-700'
-                        }
+                        className={OUTCOME_BADGE[battle.outcome].className}
                       >
-                        {battle.result === 'win'
-                          ? 'Win'
-                          : battle.result === 'loss'
-                            ? 'Loss'
-                            : 'Ongoing'}
+                        {OUTCOME_BADGE[battle.outcome].label}
                       </Badge>
                     </div>
                   </div>
@@ -557,9 +362,14 @@ export default function StatisticsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                {statistics.topTopics.length === 0 && (
+                  <p className="py-4 text-center text-sm text-muted-foreground">
+                    No topic data yet — complete some battles first.
+                  </p>
+                )}
                 {statistics.topTopics.map((topic, index) => (
                   <div
-                    key={index}
+                    key={topic.label}
                     className="flex items-center gap-4 rounded-lg border p-4"
                   >
                     <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full text-primary">
@@ -572,13 +382,13 @@ export default function StatisticsPage() {
                       )}
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium">{topic.topic}</div>
+                      <div className="font-medium">{topic.label}</div>
                       <div className="text-sm text-muted-foreground">
                         {topic.battles} battles
                       </div>
                     </div>
                     <div className="text-right font-bold">
-                      {topic.score} pts
+                      {topic.averageScore} pts avg
                     </div>
                   </div>
                 ))}
@@ -606,38 +416,49 @@ export default function StatisticsPage() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-6 sm:grid-cols-3">
-              {statistics.performanceByDifficulty.map((difficulty, index) => (
-                <div key={index} className="rounded-lg border p-6 text-center">
+              {statistics.performanceByDifficulty.length === 0 && (
+                <p className="py-4 text-center text-sm text-muted-foreground sm:col-span-3">
+                  No completed battles yet.
+                </p>
+              )}
+              {statistics.performanceByDifficulty.map((difficulty) => (
+                <div
+                  key={difficulty.label}
+                  className="rounded-lg border p-6 text-center"
+                >
                   <div
                     className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
-                      difficulty.difficulty === 'Easy'
-                        ? 'bg-green-500/15 text-green-700'
-                        : difficulty.difficulty === 'Medium'
-                          ? 'bg-yellow-500/15 text-yellow-700'
-                          : 'bg-red-500/15 text-red-700'
+                      difficulty.label === 'Easy'
+                        ? 'bg-success/15 text-success'
+                        : difficulty.label === 'Medium'
+                          ? 'bg-warning/15 text-warning'
+                          : 'bg-red/15 text-red'
                     }`}
                   >
-                    {difficulty.difficulty === 'Easy' ? (
+                    {difficulty.label === 'Easy' ? (
                       <Zap className="h-8 w-8" />
-                    ) : difficulty.difficulty === 'Medium' ? (
+                    ) : difficulty.label === 'Medium' ? (
                       <Swords className="h-8 w-8" />
                     ) : (
                       <Brain className="h-8 w-8" />
                     )}
                   </div>
-                  <h3 className="mb-1 text-xl font-bold">
-                    {difficulty.difficulty}
-                  </h3>
-                  <p className="mb-4 text-muted-foreground">
+                  <h3 className="mb-1 text-xl font-bold">{difficulty.label}</h3>
+                  <p
+                    className="mb-4 text-muted-foreground"
+                    data-testid="difficulty-battles"
+                  >
                     {difficulty.battles} battles
                   </p>
                   <div className="mb-2 flex items-center justify-center gap-2">
                     <Percent className="h-4 w-4 text-muted-foreground" />
                     <span className="text-2xl font-bold">
-                      {difficulty.accuracy}%
+                      {formatPercent(difficulty.winRatePercent)}
                     </span>
                   </div>
-                  <p className="text-sm text-muted-foreground">Accuracy rate</p>
+                  <p className="text-sm text-muted-foreground">
+                    Win rate ({difficulty.wins} won)
+                  </p>
                 </div>
               ))}
             </div>
@@ -654,15 +475,23 @@ interface StatCardProps {
   value: string;
   description: string;
   icon: React.ReactNode;
+  testId?: string;
   trend?: {
     value: number;
     direction: 'up' | 'down';
   };
 }
 
-function StatCard({ title, value, description, icon, trend }: StatCardProps) {
+function StatCard({
+  title,
+  value,
+  description,
+  icon,
+  testId,
+  trend,
+}: StatCardProps) {
   return (
-    <Card>
+    <Card data-testid={testId}>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
@@ -670,7 +499,9 @@ function StatCard({ title, value, description, icon, trend }: StatCardProps) {
         {icon}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-2xl font-bold" data-testid="stat-card-value">
+          {value}
+        </div>
         <p className="text-xs text-muted-foreground">{description}</p>
         {trend && (
           <div

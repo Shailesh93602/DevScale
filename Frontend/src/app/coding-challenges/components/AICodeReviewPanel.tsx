@@ -21,18 +21,16 @@ function verdictStyle(verdict: string): {
   Icon: typeof CheckCircle2;
 } {
   switch (verdict) {
+    // Theme tokens (flip per theme in globals.css) rather than palette shades
+    // with a dark-mode variant — tests/regression-ui-contract.spec.ts forbids the
+    // latter. `text-success`, not `text-green`: the light `--color-green` is
+    // 3.33:1 on white, below AA for body text; `--success` is 6.20:1.
     case 'correct':
-      return {
-        color: 'text-green-600 dark:text-green-400',
-        Icon: CheckCircle2,
-      };
+      return { color: 'text-success', Icon: CheckCircle2 };
     case 'incorrect':
-      return { color: 'text-red-600 dark:text-red-400', Icon: XCircle };
+      return { color: 'text-red', Icon: XCircle };
     default: // partially_correct | uncertain
-      return {
-        color: 'text-amber-600 dark:text-amber-400',
-        Icon: AlertTriangle,
-      };
+      return { color: 'text-warning', Icon: AlertTriangle };
   }
 }
 

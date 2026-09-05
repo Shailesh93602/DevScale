@@ -1348,6 +1348,58 @@ test.describe('Flow 8 — Statistics page', () => {
     expect(text).not.toContain('undefined');
   });
 
+  test('the Win Rate card, the per-difficulty battle counts and the header quick stat describe the same history', async ({
+    page,
+  }) => {
+    // The payload is one query; the page used to read its counters from the
+    // wrong level and showed "0 of 0 battles" beside a "2 battles" card for
+    // the same player. So the cards are checked against the live API answer
+    // AND against each other: the Win Rate caption's denominator is the
+    // completed-battle count, the Performance-by-Difficulty cards partition
+    // exactly those battles, and the Battle Zone header's quick stat is the
+    // same percentage. No card is optional; a player with no completed
+    // battles must show "--" and "0 of 0 battles", never a confident "0%".
+    await loginAsStudent(page);
+    const statsResponse = page.waitForResponse(
+      (r) =>
+        r.url().includes('/battles/statistics/me') &&
+        r.request().method() === 'GET' &&
+        r.status() === 200,
+      { timeout: 20000 },
+    );
+    await goto(page, `${BZ}/statistics`);
+    const body = (await (await statsResponse).json()) as {
+      data: {
+        stats: { wins: number; completed_battles: number; win_rate: number };
+        performance_by_difficulty: { battles: number }[];
+      };
+    };
+    const { wins, completed_battles, win_rate } = body.data.stats;
+    const expectedValue = completed_battles > 0 ? `${win_rate}%` : '--';
+
+    const card = page.getByTestId('stat-card-win-rate');
+    await expect(card).toBeVisible({ timeout: 15000 });
+    await expect(card.getByTestId('stat-card-value')).toHaveText(expectedValue);
+    await expect(card).toContainText(`${wins} of ${completed_battles} battles`);
+
+    // Every completed battle is in exactly one difficulty bucket.
+    const perDifficulty = await page
+      .getByTestId('difficulty-battles')
+      .allTextContents();
+    const partitioned = perDifficulty.reduce(
+      (n, text) => n + Number(/\d+/.exec(text)?.[0] ?? 0),
+      0,
+    );
+    expect(partitioned).toBe(completed_battles);
+    expect(
+      body.data.performance_by_difficulty.reduce((n, g) => n + g.battles, 0),
+    ).toBe(completed_battles);
+
+    await expect(page.getByTestId('quick-stat-win-rate')).toHaveText(
+      expectedValue,
+    );
+  });
+
   test('shows the 4 stat cards (Win Rate, Accuracy, Average Score, Response Time)', async ({
     page,
   }) => {
@@ -1975,12 +2027,20 @@ test.describe('Flow 11 — Complete battle gameplay (answer submission + scoring
 
     // The battles-played card reads "<n> battles"; a completed battle makes
     // <n> at least one. The old assertion matched the word "battles" anywhere
-    // on the page. (The Win Rate card next to it read "0 of 0 battles" for a
-    // player with seven completed battles in this run — that card is not used
-    // as evidence here, and is worth a look on its own.)
-    await expect(page.getByText(/^[1-9]\d* battles$/)).toBeVisible({
-      timeout: 15000,
-    });
+    // on the page. The Win Rate card next to it used to read "0 of 0 battles"
+    // for this same player — the page read the counters from the wrong level
+    // of the payload; fixed 2026-09-05, and Flow 8 now asserts that card
+    // against the API and against this one.
+    // Pinned to the Performance-by-Difficulty card: since the Top Topics list
+    // derives from the same data, "<n> battles" now legitimately appears in
+    // two cards and a bare getByText is a strict-mode violation.
+    await expect(page.getByTestId('difficulty-battles').first()).toHaveText(
+      /^[1-9]\d* battles$/,
+      { timeout: 15000 },
+    );
+    await expect(page.getByTestId('stat-card-win-rate')).toContainText(
+      /\d+ of [1-9]\d* battles/,
+    );
   });
 
   test.afterAll(async () => {
