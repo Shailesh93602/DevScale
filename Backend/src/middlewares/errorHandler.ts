@@ -1,5 +1,6 @@
 import { ErrorRequestHandler, Request, Response, NextFunction } from 'express';
 import logger from '../utils/logger';
+import { isDevelopment } from '../config/runtimeMode';
 
 // Proper AppError interface and implementation
 export class AppError extends Error {
@@ -53,7 +54,7 @@ export const errorHandler: ErrorRequestHandler = (
   }
 
   // Error response handling
-  const isDev = process.env.NODE_ENV === 'development';
+  const isDev = isDevelopment();
   const message =
     statusCode === 500 && !isDev ? 'Internal server error' : err.message;
 

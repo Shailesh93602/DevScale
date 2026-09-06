@@ -33,8 +33,13 @@ import type { Request, Response } from 'express';
 export interface MetricsEndpointOptions {
   /** The shared secret a scraper must present. Empty/undefined = not configured. */
   token: string | undefined;
-  /** `process.env.NODE_ENV` at construction time. */
-  nodeEnv: string | undefined;
+  /**
+   * The EFFECTIVE production flag — `config/runtimeMode`'s `isProduction()`,
+   * not a raw `process.env.NODE_ENV` read. This used to take `nodeEnv` and
+   * compare it to `'production'` itself, which meant a deployment whose
+   * `NODE_ENV` the platform never set served the whole registry publicly.
+   */
+  isProduction: boolean;
   /** Produces the registry text; injected so the handler is testable without prom-client. */
   render: () => Promise<string>;
   /** Value for the Content-Type header (prom-client's `register.contentType`). */
@@ -62,7 +67,7 @@ const NOT_FOUND_BODY = { message: 'Route not found' } as const;
 
 export function createMetricsHandler(options: MetricsEndpointOptions) {
   const token = options.token?.trim() || undefined;
-  const isProduction = options.nodeEnv === 'production';
+  const isProduction = options.isProduction;
 
   return async (req: Request, res: Response): Promise<void> => {
     if (!token) {

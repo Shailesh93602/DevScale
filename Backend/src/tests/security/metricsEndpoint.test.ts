@@ -5,6 +5,7 @@ import {
   bearerMatches,
   createMetricsHandler,
 } from '../../middlewares/metricsEndpoint';
+import { isProduction } from '../../config/runtimeMode';
 
 /**
  * `/metrics` must never be anonymously readable in production.
@@ -54,10 +55,18 @@ function makeReq(authorization?: string): Request {
 const REGISTRY = '# HELP up 1\nup 1\n';
 const CONTENT_TYPE = 'text/plain; version=0.0.4; charset=utf-8';
 
+/**
+ * The handler now takes the EFFECTIVE production flag (`config/runtimeMode`'s
+ * `isProduction()`), not a raw NODE_ENV string — a deployment whose NODE_ENV
+ * the platform never set was serving the whole registry publicly. These cases
+ * pass the same NODE_ENV strings they always did and derive the flag through
+ * the real resolver; `runtimeMode.test.ts` covers the case that broke
+ * production, where NODE_ENV is unset and only the platform says production.
+ */
 function handler(token: string | undefined, nodeEnv: string | undefined) {
   return createMetricsHandler({
     token,
-    nodeEnv,
+    isProduction: isProduction({ NODE_ENV: nodeEnv }),
     contentType: CONTENT_TYPE,
     render: async () => REGISTRY,
   });

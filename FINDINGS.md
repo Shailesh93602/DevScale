@@ -439,3 +439,87 @@ holding their locks. See `docs/SLOW-DEPENDENCIES.md`.
 > takes failure; it says nothing about whether any request is bounded. Ask instead, of every
 > protective mechanism: **what delivers the news, and what happens if nothing ever does?**
 
+
+---
+
+## 14. The same commit, hardened on one host and not on the other
+
+`api-eduscale.vercel.app` and `api.eduscale.exaveltech.com` are two Vercel projects serving this
+backend. On 2026-09-06 both were on commit `953fab9` — byte-identical builds of `main`. Asked the
+same questions, they answered differently:
+
+| Probe | `api-eduscale.vercel.app` | `api.eduscale.exaveltech.com` |
+| --- | --- | --- |
+| `GET /metrics` | `404 Route not found` | **`200`, the full Prometheus registry** |
+| `GET /api/v1/debug-sentry` | `404` | **`500` + a filesystem stack trace** |
+| `Set-Cookie: XSRF-TOKEN` | `…; Secure; SameSite=Strict` | **no `Secure`** |
+| `Content-Security-Policy` | present | **absent** |
+| `Cross-Origin-Embedder-Policy` | `require-corp` | **absent** |
+| rate limit | `RateLimit-Limit: 100` | **10,000 per window** |
+
+Nothing was broken. Both deployments were green, both said Ready, and the only visible difference
+was one word in a health response nobody reads: `"environment": "development"`.
+
+### One variable, thirteen decisions
+
+Every row of that table is the same line of code, written thirteen times:
+
+```ts
+process.env.NODE_ENV === 'production'
+```
+
+It decided the CSP and COEP, the `Secure` flag on the CSRF and refresh cookies, the general and
+per-battle rate-limit ceilings, the strict CORS branch, whether `/metrics` is gated, whether the
+always-throwing `/debug-sentry` smoke-test route is mounted, whether stack traces reach the client,
+the Swagger server label, and the log level and format.
+
+`NODE_ENV` is not a fact about where the process is running. It is a string a human types into a
+project's settings, once per project. Vercel does not set it — Vercel sets `VERCEL_ENV`. So the
+second project's production environment had a `NODE_ENV` that was not `production`, and thirteen
+independent security decisions all resolved the same wrong way at once.
+
+### Why nothing caught it
+
+- **CI could not.** The build is identical; the defect is in the environment the build lands in.
+- **The health check could not.** It reported `NODE_ENV` verbatim, and no checker treats the string
+  `"development"` as a failure — it is a perfectly ordinary value.
+- **A test could not,** in the shape tests were being written. Every one of the thirteen call sites
+  had correct behaviour under `NODE_ENV=production` and correct behaviour under `development`. The
+  code was right. The input was wrong, and no test asserts what happens when nobody sets the input.
+
+The one signal that existed was `"environment": "development"` in a 503 body, and the 503 was for an
+unrelated Redis outage on that host.
+
+### The fix: production is the union of the signals, not one of them
+
+`Backend/src/config/runtimeMode.ts` is now the only place allowed to read `process.env.NODE_ENV` for
+a mode decision, and it answers **production when either the runtime or the platform says so**:
+
+```ts
+const isProduction = nodeEnv === 'production' || platformEnv === 'production';
+```
+
+The asymmetry is the whole point. A variable nobody set must not be able to *widen* what the server
+allows; it may only make the logs noisier. `useSecureCookies` goes further and is true on **any**
+hosted deployment, previews included — every Vercel URL is HTTPS, so `Secure` always works there,
+and a preview that drops it is the same defect one environment over. `isDevelopment` — which gates
+stack traces in responses and an ungated `/metrics` — is now true only on a machine that is neither
+production nor hosted, so an internet-reachable preview no longer counts as a laptop.
+
+The mismatch is not swallowed. It is written to stderr at startup, logged as an error when the
+server binds, and reported in `/api/v1/health` as a `nodeEnvMismatch` object — visible to the same
+checker that already compares live against `main`.
+
+`src/tests/security/runtimeMode.test.ts` holds the truth table, replays the two live regressions
+against the real middleware (`/metrics` handler → 404, `setCsrfToken` → `secure: true`, both with
+`NODE_ENV` deleted and `VERCEL_ENV=production`), and **ratchets** the raw reads: it walks every
+non-test source file, skips comment lines, and fails on any `process.env.NODE_ENV` outside a
+three-entry allow-list that is itself checked for rot. Verified by planting one in `utils/logger.ts`
+— the test fails and names the file.
+
+> **The lesson:** a configuration flag with two states has a third — *unset* — and that is the one
+> the code never states an opinion about. `NODE_ENV === 'production'` is not a question about the
+> environment; it is a question about a string, and it answers "no" identically for "this is
+> development" and for "nobody told me." Wherever those two must not mean the same thing, ask what
+> the *absence* of the variable does, and make sure it is the safe direction. Then check whether the
+> platform already knows the answer — it did here, in `VERCEL_ENV`, the whole time.

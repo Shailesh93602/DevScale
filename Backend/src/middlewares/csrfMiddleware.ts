@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'node:crypto';
 import logger from '../utils/logger.js';
+import { useSecureCookies } from '../config/runtimeMode';
 
 /**
  * CSRF Double-Submit Token Pattern Middleware
@@ -28,7 +29,7 @@ export const setCsrfToken = (
     const token = crypto.randomBytes(32).toString('hex');
     res.cookie(CSRF_COOKIE_NAME, token, {
       httpOnly: false, // Client needs to read this to send it back in headers
-      secure: process.env.NODE_ENV === 'production',
+      secure: useSecureCookies(),
       sameSite: 'strict',
       path: '/',
     });

@@ -38,6 +38,11 @@ import { createMetricsHandler } from './middlewares/metricsEndpoint.js';
 import { PerformanceMonitor } from './services/monitoring/performanceMonitor.js';
 
 import { fileURLToPath } from 'node:url';
+import {
+  isProduction,
+  describeModeMismatch,
+  resolveRuntimeMode,
+} from './config/runtimeMode';
 
 type MaybeServer = ReturnType<Application['listen']>;
 
@@ -79,7 +84,7 @@ export class App {
       '/metrics',
       createMetricsHandler({
         token: process.env.METRICS_TOKEN,
-        nodeEnv: process.env.NODE_ENV,
+        isProduction: isProduction(),
         contentType: register.contentType,
         render: () => register.metrics(),
       })
@@ -154,7 +159,7 @@ export class App {
           // Allow requests with no origin (mobile apps, curl, etc.)
           if (!origin) return callback(null, true);
 
-          if (process.env.NODE_ENV === 'production') {
+          if (isProduction()) {
             // In production, only allow origins from CORS_ORIGIN env var.
             // Entries may contain a single `*` wildcard (e.g. `https://*.vercel.app`)
             // so preview deployments don't need to be listed individually.
@@ -231,7 +236,7 @@ export class App {
         maxAge: 600,
       })
     );
-    const isProd = process.env.NODE_ENV === 'production';
+    const isProd = isProduction();
     const cloudinaryHost = 'https://res.cloudinary.com';
     const supabaseHost = process.env.SUPABASE_URL || '';
     const apiOrigin = process.env.API_URL || 'http://localhost:5000';
@@ -285,7 +290,7 @@ export class App {
     // ENOTFOUND on the Upstash host 500d every request through the middleware.
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000,
-      max: process.env.NODE_ENV === 'production' ? 100 : 10000,
+      max: isProduction() ? 100 : 10000,
       standardHeaders: true,
       legacyHeaders: false,
       message: 'Too many requests from this IP, please try again later.',
@@ -374,7 +379,14 @@ export class App {
       logger.info('Connected to PostgreSQL database');
 
       const server = this.app.listen(PORT, () => {
-        logger.info(`Server running on port ${PORT}`);
+        const mode = resolveRuntimeMode();
+        logger.info(`Server running on port ${PORT}`, {
+          mode: mode.isProduction ? 'production' : 'non-production',
+          nodeEnv: mode.nodeEnv ?? null,
+          platformEnv: mode.platformEnv ?? null,
+        });
+        const mismatch = describeModeMismatch();
+        if (mismatch) logger.error(mismatch);
       });
 
       // Initialize WebSocket server

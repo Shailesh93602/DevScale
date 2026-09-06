@@ -6,6 +6,7 @@ import logger from '../utils/logger';
 import { verifySupabaseToken } from '../utils/verifySupabaseToken';
 import prisma from '../lib/prisma';
 import { CORS_ORIGIN, REDIS_URL } from '../config';
+import { isProduction } from '../config/runtimeMode';
 
 // Define socket event types
 export enum SocketEvents {
@@ -117,7 +118,7 @@ class SocketService {
         origin: function (origin, callback) {
           if (!origin) return callback(null, true);
 
-          if (process.env.NODE_ENV === 'production') {
+          if (isProduction()) {
             const allowedOrigins = (CORS_ORIGIN || '')
               .split(',')
               .map((o) => o.trim())

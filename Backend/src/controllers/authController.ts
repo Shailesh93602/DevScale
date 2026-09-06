@@ -11,6 +11,7 @@ import {
 } from '../middlewares/accountLockout';
 import { createAppError } from '../utils/errorHandler';
 import logger from '../utils/logger';
+import { useSecureCookies } from '../config/runtimeMode';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
@@ -108,7 +109,7 @@ export const refreshToken = async (
     // Rotate: replace old cookie with new refresh token
     res.cookie(REFRESH_COOKIE, newRefresh, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: useSecureCookies(),
       sameSite: 'strict',
       maxAge: REFRESH_COOKIE_MAX_AGE,
       path: '/api/v1/auth',
@@ -143,7 +144,7 @@ export const setRefreshCookie = async (
 
     res.cookie(REFRESH_COOKIE, refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: useSecureCookies(),
       sameSite: 'strict',
       maxAge: REFRESH_COOKIE_MAX_AGE,
       path: '/api/v1/auth',

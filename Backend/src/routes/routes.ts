@@ -33,6 +33,7 @@ import { RecommendationRoutes } from './recommendationRoutes.js';
 import { MatchmakingRoutes } from './matchmakingRoutes.js';
 import { TutorRoutes } from './tutorRoutes.js';
 import { AiKeySettingsRoutes } from './aiKeySettingsRoutes.js';
+import { isProduction } from '../config/runtimeMode';
 
 export class AppRoutes {
   private readonly router: Router;
@@ -51,7 +52,7 @@ export class AppRoutes {
     //
     // Labelled "Health check route" previously, which is close to the
     // opposite of what it does.
-    if (process.env.NODE_ENV !== 'production') {
+    if (!isProduction()) {
       this.router.get('/debug-sentry', () => {
         throw new Error('Sentry smoke test — this error is intentional');
       });

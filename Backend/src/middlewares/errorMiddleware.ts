@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { AxiosError } from 'axios';
 import logger from '../utils/logger';
 import { DatabaseError } from '../types/errors';
+import { isDevelopment } from '../config/runtimeMode';
 
 // Custom error interface
 interface AppError extends Error {
@@ -57,7 +58,7 @@ const createErrorResponse = (error: AppError, req: Request): ErrorResponse => {
   };
 
   // Include stack trace in development environment
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevelopment()) {
     response.stack = error.stack;
   }
 

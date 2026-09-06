@@ -176,6 +176,38 @@ All backend changes tracked chronologically with file references.
   unbounded callback; `transactionManager`'s `Promise.race` that rejects the caller without rolling
   back and then retries on top of transactions still holding locks. `../docs/SLOW-DEPENDENCIES.md`.
 
+## 2026-09-06 — Runtime mode
+
+### [P0] Production hardening no longer depends on `NODE_ENV` being set correctly
+- **Files:** `src/config/runtimeMode.ts` (new — the only place that may read `process.env.NODE_ENV`
+  for a mode decision), `src/tests/security/runtimeMode.test.ts` (new), `src/main.ts` (CORS branch,
+  helmet `isProd`, rate-limit max, `/metrics` arg, startup log), `src/config/env.ts` (production
+  warnings + the mismatch line), `src/config/swagger.ts`, `src/routes/routes.ts` (`/debug-sentry`),
+  `src/routes/healthCheckRoutes.ts` (reports the EFFECTIVE mode + `nodeEnvMismatch`),
+  `src/middlewares/{csrfMiddleware,battleRateLimiter,errorHandler,errorMiddleware,metricsEndpoint}.ts`,
+  `src/controllers/authController.ts`, `src/services/socket.ts`, `src/utils/logger.ts`,
+  `../FINDINGS.md` (#14).
+- **Why:** commit `953fab9` was live on two production hosts. `api.eduscale.exaveltech.com` has a
+  `NODE_ENV` that is not `production` — Vercel sets `VERCEL_ENV`, not `NODE_ENV` — so the identical
+  build served `/metrics` to anyone (200, the whole registry), answered `/api/v1/debug-sentry` with a
+  500 carrying a filesystem stack trace, set `XSRF-TOKEN` and the refresh cookie without `Secure`,
+  sent no CSP and no COEP, and ran the limiter at 10,000/window instead of 100. Verified live against
+  both hosts, probe by probe.
+- **🔴 The rule:** production is `NODE_ENV === 'production' || VERCEL_ENV === 'production'`. A
+  variable nobody set may make the logs noisier; it may never widen what the server allows.
+  `useSecureCookies` is true on **any** hosted deployment (every Vercel URL is HTTPS), and
+  `isDevelopment` — stack traces in responses, an ungated `/metrics` — is true only off-platform, so
+  an internet-reachable preview is no longer treated as a laptop.
+- **Not silent:** the mismatch goes to stderr at startup, to `logger.error` when the server binds,
+  and into `/api/v1/health` as `nodeEnvMismatch: { nodeEnv, platformEnv }`.
+- **Ratcheted:** the test walks every non-test source file, skips comment lines, and fails on any
+  `process.env.NODE_ENV` outside a three-entry allow-list (`prisma.ts`, `lib/prisma.ts` — globalThis
+  client caching; `utils/securityUtils.ts` — a genuine "am I under jest"). A second case fails if an
+  allow-list entry no longer contains a raw read. Verified by planting one in `utils/logger.ts`.
+- **🔴 Still needs the dashboard:** set `NODE_ENV=production` on the `edu-scale-backend` Vercel
+  project (the code is correct without it; the log level is not), and fix that project's `REDIS_URL`
+  — its `/api/v1/health` reports `redis: error`.
+
 ---
 
 ## Outstanding P0s (as of end of session 3)

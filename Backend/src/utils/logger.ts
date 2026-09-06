@@ -1,6 +1,9 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import winston from 'winston';
-import { NODE_ENV } from '../config';
+// Imported for its dotenv side effect: the logger is constructed at module
+// load, before validateEnv() runs, so .env must already be applied.
+import '../config';
+import { isProduction } from '../config/runtimeMode';
 
 // ─── Request Context (AsyncLocalStorage) ─────────────────────────────────────
 // Allows logger to pick up requestId from any call site within the same async
@@ -41,8 +44,8 @@ const devFormat = winston.format.combine(
 
 // ─── Logger Instance ──────────────────────────────────────────────────────────
 const logger = winston.createLogger({
-  level: NODE_ENV === 'production' ? 'info' : 'debug',
-  format: NODE_ENV === 'production' ? jsonFormat : devFormat,
+  level: isProduction() ? 'info' : 'debug',
+  format: isProduction() ? jsonFormat : devFormat,
   transports: [
     // Always write to stdout — in production containers, CloudWatch/Datadog
     // collects from stdout via log driver. No file transports needed.

@@ -1,5 +1,5 @@
 import { BaseRouter } from './BaseRouter';
-import { NODE_ENV } from '../config';
+import { resolveRuntimeMode } from '../config/runtimeMode';
 import prisma from '../lib/prisma';
 import { redis } from '../services/cacheService';
 import Queue from 'bull';
@@ -54,6 +54,11 @@ export class HealthCheckRoutes extends BaseRouter {
         httpStatus = 503;
       }
 
+      // The EFFECTIVE mode, not the raw NODE_ENV. Reporting the raw value is
+      // how a production host ran unhardened while this endpoint said
+      // "development" and no check treated that as a failure.
+      const mode = resolveRuntimeMode();
+
       // Which build answered — so a checker can compare live against main
       // instead of trusting a 200 from a deploy that stopped updating. Also
       // sent as a header, for callers that do not want to parse the body.
@@ -61,7 +66,20 @@ export class HealthCheckRoutes extends BaseRouter {
       res.setHeader(APP_COMMIT_HEADER, version.sha);
       res.status(httpStatus).json({
         status: httpStatus === 200 ? 'ok' : 'degraded',
-        environment: NODE_ENV,
+        environment: mode.isProduction
+          ? 'production'
+          : (mode.nodeEnv ?? 'development'),
+        // Present ONLY when the platform says production and NODE_ENV does
+        // not. The server is hardened either way; this makes the
+        // misconfiguration visible to a checker instead of silent.
+        ...(mode.nodeEnvMismatch
+          ? {
+              nodeEnvMismatch: {
+                nodeEnv: mode.nodeEnv ?? null,
+                platformEnv: mode.platformEnv ?? null,
+              },
+            }
+          : {}),
         timestamp: new Date().toISOString(),
         checks,
         version,

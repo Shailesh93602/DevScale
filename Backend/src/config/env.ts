@@ -8,6 +8,7 @@
 
 import 'dotenv/config';
 import { z } from 'zod';
+import { describeModeMismatch, isProduction } from './runtimeMode';
 
 const envSchema = z.object({
   // ── App ──────────────────────────────────────────────────────────────────
@@ -108,8 +109,19 @@ function validateEnv() {
 
   const env = result.data;
 
-  // Warn in production if optional-but-important vars are absent
-  if (env.NODE_ENV === 'production') {
+  // The platform says production and NODE_ENV does not. The server hardens
+  // itself anyway (see config/runtimeMode.ts), but a deployment running on a
+  // NODE_ENV nobody set is worth one loud line — it is the only warning the
+  // outage of 2026-09-06 would have produced.
+  const mismatch = describeModeMismatch();
+  if (mismatch) {
+    process.stderr.write(`\n[WARN] ${mismatch}\n\n`);
+  }
+
+  // Warn in production if optional-but-important vars are absent. Keyed on the
+  // EFFECTIVE mode: a production host whose NODE_ENV is unset needs these
+  // warnings more than one whose NODE_ENV is right, not less.
+  if (isProduction()) {
     const productionWarnings: string[] = [];
     if (!env.SENTRY_DSN)
       productionWarnings.push('SENTRY_DSN (error tracking disabled)');

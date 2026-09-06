@@ -3,6 +3,7 @@ import pkg from '../../package.json' assert { type: 'json' };
 const { version } = pkg;
 
 import { BACKEND_BRANDING } from './branding';
+import { isProduction } from './runtimeMode';
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -24,10 +25,9 @@ const options: swaggerJsdoc.Options = {
       {
         // API_URL must be set to https:// in production
         url: process.env.API_URL || 'http://localhost:5000',
-        description:
-          process.env.NODE_ENV === 'production'
-            ? 'Production server'
-            : 'Development server',
+        description: isProduction()
+          ? 'Production server'
+          : 'Development server',
       },
     ],
     components: {
