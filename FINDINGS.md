@@ -274,3 +274,62 @@ CommonJS emit anyway, so no behaviour and no production output changes.
 > **The lesson:** a file with no tests looks exactly like a file whose tests cannot load it. The
 > first is a gap you can see in a coverage report; the second reports zero and gets read as "nobody
 > got to it yet". Check that the untested thing is _testable_ before believing the number.
+
+---
+
+## 12. The audit that found nothing, and the two things it found anyway
+
+The sibling repo, KhataGO, lost seven days of production deploys to a migration that created six
+indexes with bare `CREATE INDEX`. Three already existed, put there by migrations that live in
+production's `_prisma_migrations` and not in that repository. `42P07`, transaction rolled back,
+Prisma recorded the migration failed, and every later build died at `prisma migrate deploy` with
+`P3009` before compiling anything.
+
+EduScale runs migrations on every production deploy too (`Backend/scripts/vercel-build.sh`), so it
+was checked for the same shape. **It is clean, and the checking is the finding.**
+
+Read-only, against production, 2026-09-06: `_prisma_migrations` holds exactly the fifteen migrations
+in this repo — no unaccounted rows, none with `finished_at IS NULL`, none rolled back — and all
+fifteen recorded checksums equal the sha256 of the files on disk. Replaying the chain onto an empty
+PostgreSQL 17 produced an object set **identical** to production's `public` schema: 356 indexes, 126
+tables, 1001 columns with the same types, defaults and nullability, 285 constraints, empty diff in
+both directions. There was nothing to fix.
+
+**The first thing that turned up anyway.** Two migrations —
+`20260615000000_drop_quizquestion_system_b` and `20260615010000_enums_to_text` — carry
+`applied_steps_count = 0` with `started_at = finished_at`. That is the signature of
+`migrate resolve --applied`: their SQL never ran through Prisma. Their effects *are* in production
+(the four System-B tables are gone, zero enum types remain), so nothing is wrong — and that is
+precisely the point. It is written proof that DDL reaches this database by routes the repository does
+not record, which is the exact precondition KhataGO had. Being clean today is a fact with a date on
+it, not a property of the code.
+
+**The second is what `migrate status` says while wedged.** Reproduced on this repo's own chain: an
+out-of-band index, then a bare `CREATE INDEX` over it, gave `42P07` → `P3018`, and `P3009` on the
+next deploy with a later migration stranded behind it. `prisma migrate status` then printed
+
+```
+Following migration have not yet been applied:
+20260906020000_queued_behind
+To apply migrations in production run prisma migrate deploy.
+```
+
+It never named the failed migration and never used the word "failed". The wedge reads as one ordinary
+pending migration — and `migrate deploy` will never apply it. The diagnostic that works is the row
+itself: `finished_at IS NULL AND rolled_back_at IS NULL`.
+
+**Fixed forward, since there was nothing to fix backward.**
+`Backend/src/tests/migrations/migrationIdempotency.test.ts` fails any migration that creates an index,
+table, extension or column without `IF NOT EXISTS`, or a type or constraint without a
+`DROP … IF EXISTS` / `DO $$ … EXCEPTION WHEN duplicate_object` guard. The eleven already-applied
+migrations are **ratcheted** by offender count rather than exempted — 501 in the baseline alone —
+so they may only get better, and a twelfth entry is a visible act in review. A second test pins every
+migration's sha256 to the checksum production recorded, because editing an applied file is the P3006
+half of the same outage and there is no fix for it in the repo. `docs/MIGRATIONS.md` carries the
+recovery procedure, rehearsed end to end on a scratch database.
+
+> **The lesson:** an audit that finds no defect has still measured something, and what it measured
+> has a shelf life. "Production and the repository agree" is true on a date; "the repository is a
+> complete description of production" never was — and two `resolve --applied` rows say so in this
+> database's own bookkeeping. The useful output of a clean audit is not the all-clear. It is the
+> guard that makes the all-clear survive the next migration.

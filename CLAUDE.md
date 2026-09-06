@@ -97,6 +97,12 @@ API_URL                          # Must be https:// in production
 |------|-------|--------|
 | The ingest skip compared the content hash only, so changing `GEMINI_EMBEDDING_MODEL` and reindexing re-embedded nothing — unchanged texts kept the old model's vectors next to new content's, one pgvector table holding two incomparable spaces, and `reindexAll` reported `skipped` for all of it. The skip now compares (content hash, model, dimensions); `dimensions` is a new additive column (`INTEGER NOT NULL DEFAULT 768`, verified on local pg17). `reindexAll({ force })` / `POST …/admin/reindex-challenges?force=true` bypasses the fingerprint. Docs: `docs/AI-RECOMMENDATIONS.md` | `Backend/src/services/ai/contentIngestService.ts`, `Backend/src/repositories/contentEmbeddingRepository.ts`, `Backend/src/services/ai/challengeIngestService.ts`, `Backend/src/controllers/recommendationController.ts`, `Backend/prisma/migrations/20260905120000_content_embedding_dimensions/`, tests under `Backend/src/tests/{ai,services,controllers}/` | ✅ Done |
 
+### 2026-09-06 — Migration idempotency: audited against production, guarded going forward
+
+| Item | Files | Status |
+|------|-------|--------|
+| `prisma migrate deploy` runs on every production deploy, so one migration that hits an object the database already has is recorded failed and **every later deploy** dies on `P3009` before compiling — the outage that cost the sibling repo seven days. Audited read-only against production: exactly the 15 repo migrations, none unfinished or rolled back, all 15 checksums matching the files, and a pg17 replay of the chain produced an object set identical to production's `public` schema (356 indexes / 126 tables / 1001 columns / 285 constraints, empty diff both directions). **EduScale is not at risk today.** Two migrations were nonetheless `resolve --applied` with zero steps, so DDL does reach this database out of band. New guard test: index/table/extension/column need `IF NOT EXISTS`; type/constraint need `DROP … IF EXISTS` or a `DO $$ … duplicate_object` block; `CONCURRENTLY` exempt. The 11 applied migrations are ratcheted by offender count, and every migration's sha256 is pinned to the checksum production recorded (`P3006` guard). No migration SQL was edited — production has applied all 15. Recovery procedure, rehearsed end to end on a scratch database: `docs/MIGRATIONS.md`; write-up: `FINDINGS.md` #12 | `Backend/src/tests/migrations/migrationIdempotency.test.ts`, `docs/MIGRATIONS.md`, `FINDINGS.md` | ✅ Done |
+
 ---
 
 ## Remaining P0 Blockers (as of end of Session 3)

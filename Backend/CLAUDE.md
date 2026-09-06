@@ -121,6 +121,28 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-09-06 — Migration idempotency guard
+
+### [P1] Migrations must tolerate an object that already exists; applied files are frozen
+- **Files:** `src/tests/migrations/migrationIdempotency.test.ts` (new), `../docs/MIGRATIONS.md` (new), `../FINDINGS.md` (#12).
+- **Why:** `scripts/vercel-build.sh` runs `prisma migrate deploy` on every production deploy, so a
+  migration that raises `42P07`/`42710` is recorded failed and **every later deploy** dies on `P3009`
+  before compiling. KhataGO lost seven days to exactly that. Audited read-only against production
+  2026-09-06: 15 migrations, none unfinished, none rolled back, all 15 checksums matching, and a
+  PostgreSQL 17 replay of the chain produced an object set identical to production's `public` schema
+  (356 indexes / 126 tables / 1001 columns / 285 constraints, empty diff both ways). **No hazard
+  today** — but two migrations (`20260615000000_*`, `20260615010000_*`) were `resolve --applied` with
+  zero steps, i.e. DDL reaches this database out of band.
+- **Change:** the test fails any migration creating an index/table/extension/column without
+  `IF NOT EXISTS`, or a type/constraint without a `DROP … IF EXISTS` or
+  `DO $$ … EXCEPTION WHEN duplicate_object` guard; `CONCURRENTLY` is exempt (25001 inside Prisma's
+  transaction). The 11 already-applied migrations are **ratcheted** by offender count, not exempted.
+  A second test pins each migration's sha256 to the checksum production recorded — editing an applied
+  file is the `P3006` half of the same outage.
+- **No migration SQL was edited:** production has applied all 15.
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:
