@@ -51,6 +51,27 @@ jobs:
       - name: Security audit — full tree (informational)
         run: npm audit --audit-level=high || true
 
+  # ─── Repository-wide ──────────────────────────────────────────────────────
+  secret-files:
+    name: No credential-bearing files
+    runs-on: ubuntu-latest
+    # No install step: the check is dependency-free Node and git, and it needs
+    # to be able to run on a bare checkout of any branch.
+    #
+    # It exists because this repository's own history is the cautionary tale.
+    # `.env` files were committed years ago; the history was rewritten and
+    # force-pushed, which removed them from every clone, from blame and from
+    # code search — and did not remove them from GitHub, because `refs/pull/*`
+    # is server-side and cannot be force-pushed. A fresh anonymous clone of the
+    # public mirror still reaches them. Twenty-three variables were exposed.
+    #
+    # Deleting a secret is expensive and, on a public repo, never complete.
+    # Not adding one is free.
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check
+        run: node scripts/check-no-secret-files.mjs
+
   backend-lint:
     name: Backend — lint
     runs-on: ubuntu-latest
