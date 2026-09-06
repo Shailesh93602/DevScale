@@ -6,6 +6,7 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { isAiConfigured } from './llmConfig.js';
+import { EMBEDDING_TIMEOUT_MS } from '../../utils/deadlines.js';
 
 export const EMBEDDING_MODEL =
   process.env.GEMINI_EMBEDDING_MODEL?.trim() || 'text-embedding-004';
@@ -30,9 +31,15 @@ export async function rawEmbed(
   text: string,
   apiKey: string
 ): Promise<number[]> {
-  const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
-    model: EMBEDDING_MODEL,
-  });
+  // This is the ONLY Gemini path with no circuit breaker in front of it, which
+  // makes this timeout the only bound that exists on it. Without it the call
+  // inherits `fetch`'s absence of a deadline, and it is reached both
+  // interactively (POST /tutor/ask blocks the whole request) and in bulk (the
+  // reindex job, five at a time, once per active challenge).
+  const model = new GoogleGenerativeAI(apiKey).getGenerativeModel(
+    { model: EMBEDDING_MODEL },
+    { timeout: EMBEDDING_TIMEOUT_MS }
+  );
   const result = await model.embedContent(text);
   return result.embedding.values;
 }

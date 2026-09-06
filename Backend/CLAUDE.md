@@ -143,6 +143,41 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-09-06 — Slow-dependency deadlines
+
+### [P0] Every outbound call is bounded; a call inside a breaker is bounded UNDER it
+- **Files:** `src/utils/deadlines.ts` (new — every budget, in one place), `src/services/cacheService.ts`
+  (`commandTimeout`), `src/utils/verifySupabaseToken.ts` (module-scope JWKS + bounded HTTP fallback),
+  `src/utils/codeExecutor.ts` (axios timeouts under the breaker), `src/services/ai/llmConfig.ts`
+  (SDK `requestOptions.timeout`), `src/services/ai/embeddingProvider.ts`, `src/utils/emailService.ts`
+  (SMTP connection/greeting/socket), `src/tests/services/slowDependency.test.ts` (new),
+  `../docs/SLOW-DEPENDENCIES.md` (new), `../FINDINGS.md` (#13).
+- **Why:** the breakers, the fail-open cache `catch` blocks and the rate limiter's swallow-wrapper are
+  all entered by a **rejection**. `opossum` frees the caller at its `timeout` but cannot cancel the
+  request (no `AbortSignal` reaches anything it wraps), and `maxRetriesPerRequest: null` without a
+  `commandTimeout` means a slow-but-connected Redis never settles at all. Measured against a server
+  that completes the Redis handshake and then goes silent: `STILL PENDING` before, `rejected in
+  2001ms: Command timed out` after. That one option makes four existing fail-open handlers reachable.
+- **🔴 The rule:** a call inside a circuit breaker gets a transport timeout **at or below** the
+  breaker's, so the transport aborts before the breaker abandons a request that is still running.
+  Asserted as inequalities in `slowDependency.test.ts`, so moving a breaker fails a test rather than
+  silently leaving a call unbounded.
+- **🔴 Do NOT add `commandTimeout` to the Socket.io pub/sub clients or Bull's connections.** Both use
+  long-lived blocking commands by design; they are constructed separately from the cache client, which
+  is exactly what makes bounding the cache client safe. Bull does **not** use `cacheService`'s
+  client — it builds its own from `REDIS_URL`, so the old "Required for Redlock and Bull" comment was
+  wrong about Bull. Only Redlock needs `maxRetriesPerRequest: null`.
+- **Dismissed with evidence:** the JWKS fetch looked unbounded but is not — `jose` defaults
+  `timeoutDuration` to 5000 ms (read from its source). The real defect there was that
+  `createRemoteJWKSet` was constructed *inside* the function, discarding a 10-minute key-set cache on
+  every call.
+- **Written up, not half-fixed** (each is a design change): the shared `judge0Breaker` behind an
+  unbounded per-user `Promise.all`; `getWithLock`'s unbounded recursion under a 5 s lock with an
+  unbounded callback; `transactionManager`'s `Promise.race` that rejects the caller without rolling
+  back and then retries on top of transactions still holding locks. `../docs/SLOW-DEPENDENCIES.md`.
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:

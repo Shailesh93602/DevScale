@@ -14,6 +14,7 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { env } from '../../config/env.js';
+import { LLM_CALL_TIMEOUT_MS } from '../../utils/deadlines.js';
 
 /**
  * Whether the SERVER has a fallback key configured.
@@ -99,10 +100,19 @@ export async function rawGenerate(
   apiKey: string,
   fingerprint: string
 ): Promise<string> {
-  const model = clientFor(apiKey, fingerprint).getGenerativeModel({
-    model: modelName,
-    generationConfig,
-  });
+  // The SECOND argument is the SDK's RequestOptions. Without a `timeout` there,
+  // `@google/generative-ai` attaches no AbortSignal to its fetch at all, and
+  // Node's fetch has no total deadline of its own — so this call was bounded
+  // only by llmService's breaker, which frees the caller without cancelling the
+  // request. LLM_CALL_TIMEOUT_MS is held under LLM_BREAKER_TIMEOUT_MS by
+  // deadlines.test.ts, so the socket aborts before the breaker gives up on it.
+  const model = clientFor(apiKey, fingerprint).getGenerativeModel(
+    {
+      model: modelName,
+      generationConfig,
+    },
+    { timeout: LLM_CALL_TIMEOUT_MS }
+  );
   const result = await model.generateContent(prompt);
   return result.response.text();
 }

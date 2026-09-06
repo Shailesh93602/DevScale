@@ -2,6 +2,11 @@ import nodemailer from 'nodemailer';
 import Queue from 'bull';
 import { MAIL_ADDRESS, MAIL_PASSWORD, REDIS_URL } from '../config/index.js';
 import logger from './logger.js';
+import {
+  SMTP_CONNECTION_TIMEOUT_MS,
+  SMTP_GREETING_TIMEOUT_MS,
+  SMTP_SOCKET_TIMEOUT_MS,
+} from './deadlines.js';
 import prisma from '../lib/prisma.js';
 
 interface EmailData {
@@ -18,12 +23,19 @@ interface EmailData {
 const emailQueue = new Queue('email-queue', REDIS_URL);
 const emailDLQ = new Queue('email-dlq', REDIS_URL);
 
+// Bounded because this runs inside a Bull processor and holds the worker's
+// concurrency slot while it waits: one slow mail server stalls the entire email
+// queue behind a single message, and `attempts: 3` makes it do so three times.
+// nodemailer sets none of these by default.
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: MAIL_ADDRESS,
     pass: MAIL_PASSWORD,
   },
+  connectionTimeout: SMTP_CONNECTION_TIMEOUT_MS,
+  greetingTimeout: SMTP_GREETING_TIMEOUT_MS,
+  socketTimeout: SMTP_SOCKET_TIMEOUT_MS,
 });
 
 export const sendEmail = async (data: EmailData): Promise<void> => {

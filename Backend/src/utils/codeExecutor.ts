@@ -3,6 +3,11 @@ import CircuitBreaker from 'opossum';
 import { COMPILER_CLIENT_SECRET } from '../config';
 import logger from './logger';
 import { createAppError } from './errorHandler';
+import {
+  JUDGE0_BREAKER_TIMEOUT_MS,
+  JUDGE0_POLL_TIMEOUT_MS,
+  JUDGE0_SUBMIT_TIMEOUT_MS,
+} from './deadlines';
 
 interface ExecuteCodeParams {
   code: string;
@@ -21,8 +26,15 @@ interface ExecutionResult {
 // ─── Circuit Breaker ──────────────────────────────────────────────────────────
 // Opens after 3 failures in a 10-second window; half-opens after 30 seconds.
 // Prevents cascading timeouts when Judge0 / RapidAPI is degraded.
+// 🔴 The breaker's timeout is NOT the request's timeout. opossum rejects the
+// caller's promise at its deadline but cannot cancel the work underneath — it
+// threads no AbortSignal into what it wraps. So without the axios timeouts
+// below, a slow Judge0 freed the caller at 15 s while the sockets kept running
+// to completion, and the breaker counted as "given up" requests that were still
+// consuming connections. Both transport timeouts are held UNDER this ceiling by
+// deadlines.test.ts, so the request aborts before the breaker abandons it.
 const judge0Breaker = new CircuitBreaker(_executeCodeRaw, {
-  timeout: 15000, // 15 s — Judge0 slow-path ceiling
+  timeout: JUDGE0_BREAKER_TIMEOUT_MS, // 15 s — Judge0 slow-path ceiling
   errorThresholdPercentage: 50, // open when ≥50% of calls in window fail
   resetTimeout: 30000, // try again after 30 s
   volumeThreshold: 3, // need at least 3 calls before opening
@@ -74,6 +86,7 @@ async function _executeCodeRaw(
           'X-RapidAPI-Host': 'judge029.p.rapidapi.com',
           'X-RapidAPI-Key': COMPILER_CLIENT_SECRET,
         },
+        timeout: JUDGE0_SUBMIT_TIMEOUT_MS,
       }
     );
 
@@ -128,6 +141,7 @@ const pollSubmissionResult = async (token: string, maxAttempts = 10) => {
           'X-RapidAPI-Host': 'judge029.p.rapidapi.com',
           'X-RapidAPI-Key': COMPILER_CLIENT_SECRET,
         },
+        timeout: JUDGE0_POLL_TIMEOUT_MS,
       }
     );
 

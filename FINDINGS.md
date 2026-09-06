@@ -333,3 +333,109 @@ recovery procedure, rehearsed end to end on a scratch database.
 > complete description of production" never was — and two `resolve --applied` rows say so in this
 > database's own bookkeeping. The useful output of a clean audit is not the all-clear. It is the
 > guard that makes the all-clear survive the next migration.
+
+---
+
+## 13. Three circuit breakers, and not one of them bounds a request
+
+This codebase takes dependency failure seriously, and the evidence is everywhere: a Judge0 circuit
+breaker, a **per-key** Gemini breaker (with a written argument for why a shared one would let one
+user's bad key disable the feature for everybody), a Cloudinary breaker, fail-open `catch` blocks on
+every cache read, retry with exponential backoff on the email queue, and a rate limiter wrapped with
+the comment *"Wrap so any RedisStore throw gets swallowed and the request continues."*
+
+Every one of those is entered by a **rejection**. Two separate mechanisms mean none of them fires
+when a dependency is slow.
+
+### A breaker's `timeout` is not the request's timeout
+
+`opossum` rejects the breaker's promise at its deadline. It cannot cancel the work underneath —
+no `AbortSignal` is threaded into any call any of the three breakers wrap. So a breaker bounds
+**caller latency** and not **socket consumption**: at 60 s of provider slowness the caller is freed
+at 15–20 s while the request runs to completion.
+
+That is not merely wasteful, because the fan-out in front of Judge0 is unbounded:
+
+```ts
+const executionPromises = testCasesToRun.map(async (tc) => { … await executeCode({…}) … });
+return await Promise.all(executionPromises);
+```
+
+`judge0Breaker` is a module-level singleton with `volumeThreshold: 3` and
+`errorThresholdPercentage: 50`. One user submitting one challenge with ten test cases against a slow
+Judge0 makes ten concurrent breaker calls, every one of which trips the 15 s timeout — instantly past
+the volume threshold at 100% failure. **The breaker opens for everybody** and returns 503 for the next
+30 seconds, while ten sockets that nothing is waiting for stay open. One user's one slow submission
+takes code execution down platform-wide.
+
+The irony is sharp: the *same repository* already reasoned this out correctly one directory away, in
+`llmService.ts`, and made the Gemini breaker per-key for exactly this reason. The reasoning simply
+was not carried across to Judge0.
+
+### A `catch` cannot catch a hang
+
+```ts
+export const redis = new Redis(REDIS_URL, {
+  maxRetriesPerRequest: null, // Required for Redlock and Bull
+  …
+});
+```
+
+`maxRetriesPerRequest: null` means *retry forever*, and no `commandTimeout` was set. Against a Redis
+that is **slow but connected**, a command therefore neither resolves nor rejects. Measured against a
+local server that completes the Redis handshake and then goes silent:
+
+```
+no commandTimeout (today)   : STILL PENDING after 4s
+commandTimeout: 2000 (fix)  : rejected in 2001ms: Command timed out
+```
+
+Four separate fail-open handlers are built on that client, and **all four are unreachable** in the
+case they exist for — `getCache`'s catch, `getAuthCache`'s catch, `isTokenBlocklisted`'s catch, and
+the rate limiter's swallow-wrapper. The worst is the last one, because it runs *before routing*:
+requests pile up inside the rate-limit middleware having never reached a handler. The comment
+promising graceful degradation is precisely calibrated to a Redis that is **down**, and offers
+nothing for one that is slow.
+
+The comment was also wrong about why the option was there. Bull does not use this client at all — it
+builds its own connections from `REDIS_URL` (`new Queue(name, REDIS_URL)`). Only Redlock needs
+`maxRetriesPerRequest: null`, which is what makes a command timeout safe to add here. The two genuine
+long-lived-command clients — Socket.io's pub/sub pair and Bull's own — are constructed elsewhere and
+are deliberately untouched.
+
+### The widest one: auth
+
+`verifySupabaseToken` sits in front of every authenticated route *and* the socket handshake. It built
+`createRemoteJWKSet` **inside** the function, discarding on every call the 10-minute key-set cache
+that `jose` implements — so each auth made its own network round trip for a document that changes
+about never. The JWKS fetch itself turned out to be bounded (`jose` defaults `timeoutDuration` to
+5000 ms — a candidate defect **dismissed on the library's source**), but the HTTP fallback beneath it
+was not: `supabase.auth.getUser(token)` has no timeout, `@supabase/supabase-js` sets none, and it is
+reached *precisely when* the JWKS path is slow. A request could spend 5 s timing out against the key
+set and then wait forever underneath it.
+
+**Fixed.** `Backend/src/utils/deadlines.ts` holds every budget, and the rule it encodes is an
+inequality rather than a set of numbers: **a call inside a breaker gets a transport timeout at or
+below the breaker's**, so the transport aborts before the breaker abandons a request that is still
+running. `deadlines.test.ts` asserts those relationships, so moving a breaker fails the test instead
+of silently leaving a call unbounded. The cache client gets a `commandTimeout` — one constructor
+option that makes all four existing fail-open handlers reachable. The JWKS is hoisted to module scope
+with its timeout stated explicitly rather than inherited, and the Supabase fallback is bounded. Judge0
+and Gemini get real transport timeouts; the embedding call, the only Gemini path with no breaker at
+all, gets the one bound it has ever had. SMTP gets connection/greeting/socket timeouts, because it
+holds a Bull worker's single concurrency slot while it waits.
+
+**Written up rather than half-fixed**, because each is a design change and not a timeout:
+the shared `judge0Breaker` behind an unbounded per-user `Promise.all` (it wants the per-key treatment
+`llmService` already has, plus a concurrency bound); `getWithLock`'s unbounded recursion, which spins
+every waiter at 100 ms against a dependency that is already slow, under a 5 s lock that expires while
+its holder still runs; and `transactionManager`, whose `Promise.race` rejects the caller without
+rolling anything back and then starts a second and third transaction on top of the first two still
+holding their locks. See `docs/SLOW-DEPENDENCIES.md`.
+
+> **The lesson:** a circuit breaker, a retry policy and a fail-open fallback are all *downstream of
+> something noticing*. They are machinery for reacting to news, and the only thing that manufactures
+> news out of silence is a timeout. Counting the breakers in a codebase measures how seriously it
+> takes failure; it says nothing about whether any request is bounded. Ask instead, of every
+> protective mechanism: **what delivers the news, and what happens if nothing ever does?**
+
