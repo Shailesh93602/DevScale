@@ -133,8 +133,8 @@ API_URL                          # Must be https:// in production
 - [ ] JWT refresh token rotation (short-lived access 15m + long-lived refresh 7d httpOnly)
 
 ### Phase 5 — CI/CD
-- [ ] Branch protection on `main` (require PR review + passing CI)
-- [ ] `npm audit --audit-level=high` in CI pipeline
+- [ ] Branch protection on `main` — 🔒 **blocked by plan tier, not by effort.** Checked via the API: EduScale is private and GitHub answers *"Upgrade to GitHub Pro or make this repository public to enable this feature"* (403). The public mirror DevScale is unprotected (404) but protecting a mirror buys nothing, since work lands on the private remote first. Options are GitHub Pro, or accept the risk and rely on CI being green before merge.
+- [x] `npm audit --audit-level=high` in CI pipeline — **done, and verified 2026-09-13**: two BLOCKING jobs (`Backend — security audit`, `Frontend — security audit`) run `npm audit --omit=dev --audit-level=high`, plus a non-blocking full-tree scan. It gates on what SHIPS on purpose; the full tree is dominated by build tooling and holding a release to it recreates the always-red job this repo already had to correct.
 - [ ] Staging environment
 
 ---
