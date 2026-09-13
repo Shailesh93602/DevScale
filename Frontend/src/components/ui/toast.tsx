@@ -77,7 +77,14 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      'group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600 absolute right-1 top-1 rounded-md p-1 text-foreground/80 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100',
+      // The four red-* utilities here were tuned for shadcn's DARK destructive
+      // surface (#7F1D1D). This theme's dark --destructive is a BRIGHT surface
+      // with dark foreground (see globals.css), so light reds land on light red:
+      // text-red-300 measured 1.72:1, hover:text-red-50 2.98:1 and the
+      // ring-red-400 focus indicator 1.18:1 — the close button on an error toast
+      // was effectively invisible. --destructive-foreground is the token that
+      // tracks the surface, and gives 5.64:1 in dark and 6.64:1 in light.
+      'absolute right-1 top-1 rounded-md p-1 text-foreground/80 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100 group-[.destructive]:text-destructive-foreground group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive-foreground group-[.destructive]:focus:ring-offset-destructive',
       className,
     )}
     toast-close=""

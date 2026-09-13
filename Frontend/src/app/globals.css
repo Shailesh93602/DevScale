@@ -229,7 +229,15 @@
        dark card — and `text-destructive` is how this app renders every error
        message, so all of them failed AA in dark mode. This shade is 5.5:1 as
        text on the card, ~4.9:1 on a bg-destructive/10 tint, and the dark
-       foreground is 5.4:1 on it for the destructive Button/Badge/Toast. */
+       foreground is 5.4:1 on it for the destructive Button/Badge/Toast.
+
+       RE-MEASURED 2026-09-06 and kept. The alternative — shadcn's dark
+       #7F1D1D under white text — is better on the 8 `bg-destructive` surfaces
+       (9.56:1) and unusable on the 76 `text-destructive` ones (1.79:1 on this
+       card), and one token has to serve both. Exact figures, and the trap this
+       creates for anything pasted from upstream, are in
+       src/lib/destructive-contrast.test.ts, which fails if a light foreground
+       is ever put back on a destructive surface. */
     --destructive: 0 72% 65%;
     --destructive-foreground: 0 100% 10%;
     --border: 230 16% 18%;

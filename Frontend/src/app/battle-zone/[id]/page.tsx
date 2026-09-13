@@ -855,7 +855,7 @@ export default function BattleDetailPage() {
                 className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all ${isCorrect ? 'border-green-500 bg-green-500/10 text-green-700' : ''} ${isWrong ? 'border-destructive bg-destructive/10 text-destructive' : ''} ${!isAnswered && isSelected ? 'bg-primary/10 border-primary' : ''} ${!isAnswered && !isSelected ? 'hover:border-primary/50 hover:bg-muted/50' : ''} ${isAnswered && !isCorrect && !isWrong ? 'opacity-60' : ''} `}
               >
                 <span
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm font-bold ${isSelected && !isAnswered ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/30'} ${isCorrect ? 'border-green-500 bg-green-500 text-white' : ''} ${isWrong ? 'border-destructive bg-destructive text-white' : ''} `}
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm font-bold ${isSelected && !isAnswered ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/30'} ${isCorrect ? 'border-green-500 bg-green-500 text-white' : ''} ${isWrong ? 'border-destructive bg-destructive text-destructive-foreground' : ''} `}
                 >
                   {OPTION_LETTERS[idx]}
                 </span>
