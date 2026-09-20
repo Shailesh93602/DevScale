@@ -523,3 +523,129 @@ three-entry allow-list that is itself checked for rot. Verified by planting one 
 > development" and for "nobody told me." Wherever those two must not mean the same thing, ask what
 > the *absence* of the variable does, and make sure it is the safe direction. Then check whether the
 > platform already knows the answer — it did here, in `VERCEL_ENV`, the whole time.
+
+---
+
+## 15. The lock was real, and it guarded the wrong side of the decision
+
+The portfolio says this out loud, so it is a claim and not a comment:
+
+> "redlock acquires a distributed lock (fail-fast, retryCount 0) around the battle start,
+> submit-answer and complete handlers, **so two instances can't both drive the same transition**."
+
+The lock exists. `withBattleLock` is real, it is keyed per battle, it translates a lost race into a
+409, and it releases in a `finally`. Every previous audit of this repo looked at authorization,
+dead endpoints and pricing copy. Nobody had read the state machine underneath, and the sentence
+above was false for the transition it names first.
+
+### `startBattle` took the lock around the write and left the decision outside it
+
+```ts
+const battle = await prisma.battle.findUnique({ … });   // read
+if (battle.status !== 'LOBBY') throw …                  // decide
+… four more guards …
+return this.withBattleLock(battleId, 10_000, async () =>
+  prisma.battle.update({ where: { id: battleId }, data: { status: 'IN_PROGRESS' } })
+);                                                      // act
+```
+
+Read, decide, *then* lock. Two callers both read `LOBBY`, both pass all five guards, then queue
+politely for the lock and both perform the transition. The lock made the double-start **orderly**.
+
+It was worse than a duplicate `battle:started`, because `update({ where: { id } })` carries no
+condition at all: a start request that read `LOBBY` and then stalled could land after the battle had
+finished and flip a `COMPLETED` battle back to `IN_PROGRESS`, stranding its final leaderboard.
+
+Fixed by moving every guard inside the lock and making the transition
+`updateMany({ where: { id, status: 'LOBBY' } })` — a compare-and-set that is correct **even if the
+lock lapses**, which is the property no lock can give you on its own.
+
+### `completeBattle` serialized double completion instead of preventing it
+
+It took the lock and then unconditionally wrote `COMPLETED`, a fresh `ended_at` and the whole final
+leaderboard, with no check that it had already run. `battleSocket.endBattle` calls it and then calls
+`battleRatingService.applyBattleResult`, which is built on `games_played: { increment: 1 }`,
+increments `wins`/`losses`, and recomputes Elo **from each player's current rating**. A second
+completion therefore did not repeat work harmlessly — it applied a second Elo delta on top of the
+first and inflated everyone's record, permanently.
+
+And the second completion is the ordinary case. Two paths reach `endBattle`: the answer-submitted
+handler and the question-expiry timer. Both await `checkAllParticipantsDone` — a database round trip
+— and the answer handler only clears the timer *after* that await resolves, so the timer fires
+inside the window. Separately, in a two-player battle where both players answer the last question at
+about the same moment, both submissions observe "everyone is done" and both call `endBattle`. On two
+instances they are not even in the same process, so no in-memory flag would have helped.
+
+Reproduced as a test before it was fixed: two concurrent `endBattle` calls produced **two** rating
+updates. They now produce one.
+
+### The lock could expire while its holder was still writing
+
+`submitAnswer` held a 15 000 ms lock around a Prisma interactive transaction whose own `timeout` was
+**also** 15 000 ms. Prisma counts `maxWait` separately from `timeout`, so the guarded callback was
+permitted to run for ~17 s against a 15 s lock — and `redlock.acquire()` never extends. The
+`automaticExtensionThreshold: 500` configured in `cacheService.ts` is read **only** by
+`redlock.using()`, and `grep -rn 'redlock.using' src` returns nothing. Redlock also subtracts drift,
+so the "15 000 ms" lock really expired at ~14 848 ms. The budgets now live in `deadlines.ts` with the
+inequality asserted, in the same shape as the breaker/transport rule from §13.
+
+### A dead dependency was reported as a busy rival
+
+Redlock raises `ExecutionError` both when the resource is held and when it cannot reach Redis at
+all, and `withBattleLock` answered **409 "Another action on this battle is already in progress — try
+again"** to both. This is not hypothetical: `/api/v1/health` on `api.eduscale.exaveltech.com`
+reports `redis: error` today, and the cause is that the Upstash instance in `REDIS_URL` no longer
+exists — `first-pup-86652.upstash.io` is **NXDOMAIN**, not a credential problem.
+
+So the live application answers every battle start and every answer submission with an error naming
+a rival that does not exist, inviting a retry that can never succeed. Measured against redlock
+5.0.0-beta.2 with a dead port: `retryCount: 0` fails in ~312 ms, `retryCount: 10` in ~1 842 ms —
+both 409. Nothing else in the battle path degrades: the Socket.io adapter still broadcasts locally,
+the cache reads fail open, and socket membership falls back to in-memory Maps. **The lock is the one
+Redis dependency with no fallback, and it sits on every write.**
+
+The two cases are distinguishable, and now are — measured, not assumed:
+
+```
+lost race  → votesAgainst: [ ResourceLockedError ]
+redis down → votesAgainst: [ Error: Connection is closed. ]
+```
+
+Contention is now "every vote against is a `ResourceLockedError`"; anything else is a 503 that says
+the dependency is unavailable. Unknown shapes are treated as *not* contention, because a 503 during
+an outage is honest and a 409 is a lie that costs the user a retry loop.
+
+### Two more, found by the same question
+
+**`KEYS` on the adapter's publish connection.** `handleDisconnect` answered "which battles is this
+user in?" with `KEYS eduscale:battle:users:*` plus one `SISMEMBER` per key, on **every** final
+socket disconnect — issued on `pubClient`, the connection `@socket.io/redis-adapter` publishes every
+cross-instance broadcast through. `KEYS` is O(N) over the whole keyspace and blocks the
+single-threaded server. The portfolio claim about pub and sub needing to be separate clients names
+exactly this hazard ("a long-running write on the pub connection stalls the subscriber") and the
+code walked into it from the other side. Replaced with a reverse index
+(`eduscale:user:battles:{userId}`) and one `SMEMBERS`.
+
+**A client subscribed to an event nobody sent.** `battleSocketService.sendStateToSocket` builds the
+`battle:state` reconnect payload — status, current question, deadline, leaderboard, participants —
+and had **zero callers anywhere in the backend**, while `Frontend/src/app/battle-zone/[id]/page.tsx`
+subscribes to `battle:state` and `useBattleWebSocket.ts` carries a typed contract for it. A comment
+in `socket.ts` asserted the broadcast was "triggered externally by the controller". Nothing
+triggered it. Refresh the page mid-battle and you rejoined the room and then saw nothing — no
+question, no countdown, no scores — until the next question was broadcast, which on the last
+question is never. Now wired to `battle:join`. Its per-process `currentQuestionIndex` residual is
+documented in place rather than papered over.
+
+**A lock released by someone who never held it.** `getWithLock`'s `finally` ran `redis.del(lockKey)`
+on every path, including the one where `SET … NX` failed because another caller held it — so every
+waiter deleted the winner's lock on its way out, and N concurrent callers produced N regenerations
+instead of one. Invisible to every test, because the function still returns the right value; only
+the number of expensive calls was wrong, and nothing counted them.
+
+> **The lesson:** a lock answers "am I alone?", never "is this still true?". Every defect above is
+> the same shape — the lock was held correctly and the *decision it was supposed to protect* was
+> made outside it, or repeated inside it, or trusted after it expired. Hold the read, the decision
+> and the write inside the same boundary, and then make the write itself conditional, so the
+> database enforces the invariant and the lock is only an optimisation. The audit question that
+> found all of it: **what exactly is inside this critical section, and what does the code decide
+> just before entering it?**

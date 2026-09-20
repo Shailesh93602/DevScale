@@ -88,6 +88,25 @@ export interface ChatMessage {
 const USER_SOCKETS_KEY = (userId: string) => `eduscale:sockets:${userId}`;
 const BATTLE_USERS_KEY = (battleId: string) =>
   `eduscale:battle:users:${battleId}`;
+/**
+ * Reverse index: which battles is this user in?
+ *
+ * 🔴 This exists to delete a `KEYS` call. `handleDisconnect` used to answer that
+ * question with `KEYS eduscale:battle:users:*` and then one `SISMEMBER` per key
+ * — on EVERY final socket disconnect.
+ *
+ * `KEYS` is O(N) over the entire keyspace and blocks the single-threaded Redis
+ * server while it runs. It was being issued on `pubClient`, which is the
+ * connection `@socket.io/redis-adapter` publishes every cross-instance room
+ * broadcast through. So the disconnect path could stall the delivery of
+ * `battle:question`, `battle:timer_tick` and `battle:completed` to every player
+ * on every other instance — which is precisely the hazard the pub/sub split is
+ * supposed to avoid, self-inflicted from the other side.
+ *
+ * With this set the same lookup is one `SMEMBERS` of a set that holds only the
+ * battles this user actually joined.
+ */
+const USER_BATTLES_KEY = (userId: string) => `eduscale:user:battles:${userId}`;
 const PRESENCE_KEY = (userId: string) => `eduscale:presence:${userId}`;
 const SOCKET_TTL = 24 * 60 * 60; // 1 day — auto-expire orphaned keys
 const PRESENCE_TTL = 35; // 35 s — client pings every 25 s; gone after 35 s silence
@@ -238,10 +257,33 @@ class SocketService {
 
       // Handle battle join (also used for reconnect)
       socket.on(SocketEvents.BATTLE_JOIN, (data: { battle_id: string }) => {
-        void this.joinBattleRoom(socket, userId, data.battle_id);
-        // battle:state is sent by the battleSocketService via emitToSocket
-        // after the HTTP join call; on reconnect the client re-emits battle:join
-        // and the state broadcast is triggered externally by the controller.
+        // 🔴 THE CLIENT WAS LISTENING TO AN EVENT NOBODY SENT.
+        //
+        // This used to carry a comment saying `battle:state` "is triggered
+        // externally by the controller". Nothing triggered it:
+        // `sendStateToSocket` had zero callers anywhere in the backend, while
+        // the battle page subscribes to `battle:state`
+        // (Frontend/src/app/battle-zone/[id]/page.tsx) and carries a typed
+        // contract for it.
+        //
+        // So a player who refreshed or lost their connection mid-battle
+        // rejoined the room and then received nothing at all — no current
+        // question, no deadline, no leaderboard — until the NEXT question was
+        // broadcast, which for the last question is never.
+        void this.joinBattleRoom(socket, userId, data.battle_id).then(
+          async (joined) => {
+            if (!joined) return;
+            // Imported lazily: battleSocket imports this module, so a static
+            // import here would be a cycle.
+            const { default: battleSocketService } = await import(
+              './battleSocket.js'
+            );
+            await battleSocketService.sendStateToSocket(
+              socket.id,
+              data.battle_id
+            );
+          }
+        );
       });
 
       // Handle battle leave
@@ -278,7 +320,7 @@ class SocketService {
     socket: Socket,
     userId: string,
     battleId: string
-  ) {
+  ): Promise<boolean> {
     const allowed = await this.canObserveBattle(userId, battleId);
     if (!allowed) {
       socket.emit(SocketEvents.ERROR, {
@@ -288,7 +330,7 @@ class SocketService {
       logger.warn(
         `User ${userId} refused battle room ${battleId} (not a participant)`
       );
-      return;
+      return false;
     }
 
     socket.join(`battle:${battleId}`);
@@ -303,6 +345,12 @@ class SocketService {
       ?.expire(BATTLE_USERS_KEY(battleId), SOCKET_TTL)
       .catch(() => {});
 
+    // Reverse index, so disconnect never has to scan the keyspace.
+    this.pubClient?.sadd(USER_BATTLES_KEY(userId), battleId).catch(() => {});
+    this.pubClient
+      ?.expire(USER_BATTLES_KEY(userId), SOCKET_TTL)
+      .catch(() => {});
+
     socket.to(`battle:${battleId}`).emit(SocketEvents.BATTLE_PARTICIPANT_JOIN, {
       battle_id: battleId,
       user_id: userId,
@@ -312,6 +360,7 @@ class SocketService {
     } as ParticipantUpdate);
 
     logger.info(`User ${userId} joined battle ${battleId}`);
+    return true;
   }
 
   /**
@@ -351,6 +400,7 @@ class SocketService {
     this.pubClient?.srem(BATTLE_USERS_KEY(battleId), userId).catch(() => {
       this.battleRooms.get(battleId)?.delete(userId);
     });
+    this.pubClient?.srem(USER_BATTLES_KEY(userId), battleId).catch(() => {});
 
     socket
       .to(`battle:${battleId}`)
@@ -411,23 +461,23 @@ class SocketService {
       if (!remaining || remaining === 0) {
         // Clear presence — user is fully offline
         this.pubClient?.del(PRESENCE_KEY(userId)).catch(() => {});
+        // One SMEMBERS of this user's own set — never `KEYS` over the keyspace.
         const battleIds =
-          (await this.pubClient?.keys(BATTLE_USERS_KEY('*'))) ?? [];
-        for (const key of battleIds) {
-          const isMember = await this.pubClient?.sismember(key, userId);
-          if (isMember) {
-            const battleId = key.replace('eduscale:battle:users:', '');
-            await this.pubClient?.srem(key, userId);
-            socket
-              .to(`battle:${battleId}`)
-              .emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
-                battle_id: battleId,
-                user_id: userId,
-                username: socket.data.user?.username || 'Anonymous',
-                avatar_url: socket.data.user?.avatar_url,
-                status: 'left',
-              } as ParticipantUpdate);
-          }
+          (await this.pubClient?.smembers(USER_BATTLES_KEY(userId))) ?? [];
+        for (const battleId of battleIds) {
+          await this.pubClient?.srem(BATTLE_USERS_KEY(battleId), userId);
+          socket
+            .to(`battle:${battleId}`)
+            .emit(SocketEvents.BATTLE_PARTICIPANT_LEAVE, {
+              battle_id: battleId,
+              user_id: userId,
+              username: socket.data.user?.username || 'Anonymous',
+              avatar_url: socket.data.user?.avatar_url,
+              status: 'left',
+            } as ParticipantUpdate);
+        }
+        if (battleIds.length > 0) {
+          await this.pubClient?.del(USER_BATTLES_KEY(userId));
         }
       }
     } catch {

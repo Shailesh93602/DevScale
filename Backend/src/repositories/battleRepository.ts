@@ -11,6 +11,13 @@ import {
   invalidatePattern,
 } from '../services/memoryCache.js';
 import { redlock } from '../services/cacheService.js';
+import {
+  BATTLE_COMPLETE_LOCK_TTL_MS,
+  BATTLE_START_LOCK_TTL_MS,
+  BATTLE_SUBMIT_LOCK_TTL_MS,
+  BATTLE_TX_MAX_WAIT_MS,
+  BATTLE_TX_TIMEOUT_MS,
+} from '../utils/deadlines.js';
 
 type UserParticipation = Prisma.BattleParticipantGetPayload<{
   include: {
@@ -145,6 +152,39 @@ async function buildLeaderboard(
   }));
 }
 
+/**
+ * True when a Redlock failure was caused by the resource genuinely being held,
+ * and false when it was caused by the lock store being unreachable.
+ *
+ * Redlock 5 reports both as `ExecutionError`. What differs is the reason each
+ * client voted against, which lives in `ExecutionStats.votesAgainst` — a Map of
+ * client → Error. A held resource produces `ResourceLockedError`; an
+ * unreachable Redis produces an ordinary connection `Error`.
+ *
+ * Unknown shapes are treated as NOT contention. That is the safer default: a
+ * 503 tells the truth about an outage, while a wrong 409 tells the user to
+ * retry something that cannot succeed.
+ */
+async function isPureContention(err: unknown): Promise<boolean> {
+  const attempts = (err as { attempts?: unknown }).attempts;
+  if (!Array.isArray(attempts) || attempts.length === 0) return false;
+
+  try {
+    const stats = await Promise.all(
+      attempts.map((a) => Promise.resolve(a).catch(() => null))
+    );
+    const reasons = stats.flatMap((s) => {
+      const against = (s as { votesAgainst?: Map<unknown, Error> } | null)
+        ?.votesAgainst;
+      return against instanceof Map ? [...against.values()] : [];
+    });
+    if (reasons.length === 0) return false;
+    return reasons.every((r) => r?.name === 'ResourceLockedError');
+  } catch {
+    return false;
+  }
+}
+
 // ─── Repository ────────────────────────────────────────────────────────────
 
 export class BattleRepository extends BaseRepository<
@@ -189,6 +229,20 @@ export class BattleRepository extends BaseRepository<
     // players tapping "start" on the same battle), not a server fault. Redlock
     // surfaces it as an ExecutionError, which used to escape as a raw 500 with
     // "unable to achieve a quorum" in the response body. Translate it to 409.
+    //
+    // 🔴 BUT NOT EVERY ExecutionError IS A LOST RACE. Redlock raises the same
+    // error class when it cannot reach Redis at all, and answering 409 to that
+    // tells the user a rival is mid-action — a cause that does not exist —
+    // and invites a retry that can never succeed. Production has been serving
+    // exactly this: `/api/v1/health` reports `redis: error`, so every start and
+    // every answer submission returned "Another action on this battle is
+    // already in progress" with nothing else on the battle at all.
+    //
+    // The two are distinguishable in the error itself. Measured against
+    // redlock 5.0.0-beta.2 with a live server and with a dead port:
+    //   lost race   → votesAgainst: [ ResourceLockedError ]
+    //   redis down  → votesAgainst: [ Error: Connection is closed. ]
+    // So: contention only when EVERY vote against is a ResourceLockedError.
     let lock;
     try {
       lock = await redlock.acquire([resource], ttlMs, {
@@ -197,9 +251,23 @@ export class BattleRepository extends BaseRepository<
     } catch (err) {
       const name = (err as Error)?.name;
       if (name === 'ExecutionError' || name === 'LockError') {
+        const contended = await isPureContention(err);
+        if (contended) {
+          throw createAppError(
+            'Another action on this battle is already in progress — try again.',
+            409
+          );
+        }
+        logger.error(
+          'Battle lock unavailable — the lock store is unreachable',
+          {
+            resource,
+            err,
+          }
+        );
         throw createAppError(
-          'Another action on this battle is already in progress — try again.',
-          409
+          'Battle actions are temporarily unavailable. Please try again shortly.',
+          503
         );
       }
       throw err;
@@ -548,42 +616,70 @@ export class BattleRepository extends BaseRepository<
 
   // ── Start ────────────────────────────────────────────────────────────────
 
+  /**
+   * 🔴 EVERY GUARD RUNS INSIDE THE LOCK, AND THE WRITE IS A COMPARE-AND-SET.
+   *
+   * This used to read the battle, evaluate all five guards — including
+   * `status !== 'LOBBY'` — and only then take the lock around a bare
+   * `prisma.battle.update`. That is a read-then-write with the lock around the
+   * write alone, and it does not prevent anything: two callers both read
+   * LOBBY, both pass every guard, then queue politely for the lock and both
+   * perform the transition. The lock made the double-start orderly.
+   *
+   * It was worse than a duplicate `battle:started`, because the update carried
+   * no condition at all. A start request that read LOBBY and then stalled could
+   * land after the battle had finished and flip a COMPLETED battle back to
+   * IN_PROGRESS, stranding its final leaderboard.
+   *
+   * Two changes, and the second is the one that actually holds: the guards moved
+   * inside the lock, and the transition is now `updateMany where status:
+   * 'LOBBY'` — a single atomic compare-and-set in Postgres. That is correct even
+   * if the lock lapses, which is the property a lock alone can never give you.
+   */
   async startBattle(battleIdOrSlug: string, userId: string) {
     const battleId = await this.resolveId(battleIdOrSlug);
-    const battle = await prisma.battle.findUnique({
-      where: { id: battleId },
-      include: {
-        participants: true,
-        _count: { select: { questions: true } },
-      },
-    });
-    if (!battle) throw createAppError('Battle not found', 404);
-    if (battle.user_id !== userId)
-      throw createAppError('Only the creator can start this battle', 403);
-    if (battle.status !== 'LOBBY')
-      throw createAppError('Battle must be in LOBBY state to start', 400);
-    if (battle.current_participants < 2)
-      throw createAppError('Need at least 2 participants to start', 400);
 
-    const readyCount = battle.participants.filter(
-      (p) => p.status === 'READY'
-    ).length;
-    if (readyCount < battle.current_participants) {
-      throw createAppError('Not all participants are ready', 400);
-    }
-
-    // Guard: cannot start without the required number of questions
-    if (battle._count.questions < battle.total_questions) {
-      throw createAppError(
-        `Battle needs ${battle.total_questions} questions but only has ${battle._count.questions}. Add questions before starting.`,
-        400
-      );
-    }
-
-    return this.withBattleLock(battleId, 10_000, async () => {
-      return prisma.battle.update({
+    return this.withBattleLock(battleId, BATTLE_START_LOCK_TTL_MS, async () => {
+      const battle = await prisma.battle.findUnique({
         where: { id: battleId },
+        include: {
+          participants: true,
+          _count: { select: { questions: true } },
+        },
+      });
+      if (!battle) throw createAppError('Battle not found', 404);
+      if (battle.user_id !== userId)
+        throw createAppError('Only the creator can start this battle', 403);
+      if (battle.status !== 'LOBBY')
+        throw createAppError('Battle must be in LOBBY state to start', 400);
+      if (battle.current_participants < 2)
+        throw createAppError('Need at least 2 participants to start', 400);
+
+      const readyCount = battle.participants.filter(
+        (p) => p.status === 'READY'
+      ).length;
+      if (readyCount < battle.current_participants) {
+        throw createAppError('Not all participants are ready', 400);
+      }
+
+      // Guard: cannot start without the required number of questions
+      if (battle._count.questions < battle.total_questions) {
+        throw createAppError(
+          `Battle needs ${battle.total_questions} questions but only has ${battle._count.questions}. Add questions before starting.`,
+          400
+        );
+      }
+
+      const claimed = await prisma.battle.updateMany({
+        where: { id: battleId, status: 'LOBBY' },
         data: { status: 'IN_PROGRESS' },
+      });
+      if (claimed.count === 0) {
+        throw createAppError('This battle has already been started.', 409);
+      }
+
+      return prisma.battle.findUniqueOrThrow({
+        where: { id: battleId },
         include: battleDetailInclude,
       });
     });
@@ -726,7 +822,9 @@ export class BattleRepository extends BaseRepository<
   ) {
     const txResult = await this.withBattleLock(
       battleId,
-      15_000,
+      // Strictly greater than maxWait + the transaction timeout below, because
+      // `redlock.acquire()` never extends a lock — see deadlines.ts.
+      BATTLE_SUBMIT_LOCK_TTL_MS,
       async () => {
         return prisma.$transaction(
           async (tx) => {
@@ -865,7 +963,7 @@ export class BattleRepository extends BaseRepository<
               leaderboard,
             };
           },
-          { timeout: 15_000 }
+          { maxWait: BATTLE_TX_MAX_WAIT_MS, timeout: BATTLE_TX_TIMEOUT_MS }
         );
       },
       // Serialize per-battle (rank recalculation touches every participant) but
@@ -919,66 +1017,132 @@ export class BattleRepository extends BaseRepository<
     return activePlayers.every((p) => p.status === 'COMPLETED');
   }
 
+  /**
+   * 🔴 SERIALIZING IS NOT DEDUPLICATING.
+   *
+   * This took the lock and then unconditionally wrote COMPLETED, a fresh
+   * `ended_at` and the entire final leaderboard, with no check that it had
+   * already run. The lock made two completions sequential; it did not make the
+   * second one a no-op.
+   *
+   * That mattered because of what the caller does next. `battleSocket.endBattle`
+   * calls this and then `battleRatingService.applyBattleResult`, which is built
+   * on `games_played: { increment: 1 }` and `wins/losses: { increment }` and
+   * recomputes Elo from each player's CURRENT rating. A second completion
+   * therefore does not repeat work harmlessly — it applies a second Elo delta on
+   * top of the first and inflates everyone's game counts.
+   *
+   * And the second completion is the normal case, not an exotic one. Two paths
+   * reach `endBattle`: the answer-submitted handler and the question-expiry
+   * timer. Both call `checkAllParticipantsDone` — a DB round trip — and only
+   * then clear the timer, so the timer can fire inside that window. In a
+   * two-player battle where both players answer the last question at about the
+   * same time, both submissions also see "everyone is done" and both call
+   * `endBattle`.
+   *
+   * The transition is now a compare-and-set, and the result reports whether
+   * this call was the one that performed it. `endBattle` uses that to apply
+   * ratings exactly once.
+   */
   async completeBattle(battleId: string) {
-    return this.withBattleLock(battleId, 15_000, async () => {
-      const participants = await prisma.battleParticipant.findMany({
-        where: { battle_id: battleId },
-        orderBy: [{ score: 'desc' }, { avg_time_per_answer_ms: 'asc' }],
-        include: { user: { select: creatorSelect } },
-      });
+    return this.withBattleLock(
+      battleId,
+      BATTLE_COMPLETE_LOCK_TTL_MS,
+      async () => {
+        const existing = await prisma.battle.findUnique({
+          where: { id: battleId },
+          include: battleDetailInclude,
+        });
+        if (!existing) throw createAppError('Battle not found', 404);
 
-      const winnerId = participants[0]?.user_id ?? null;
+        if (existing.status === 'COMPLETED') {
+          // Already finished. Hand back the frozen result without rewriting it,
+          // and tell the caller it must not apply ratings again.
+          return {
+            battle: existing,
+            leaderboard: await buildLeaderboard(battleId),
+            alreadyCompleted: true as const,
+          };
+        }
 
-      const battle = await prisma.battle.update({
-        where: { id: battleId },
-        data: {
-          status: 'COMPLETED',
-          ended_at: new Date(),
-          winner_id: winnerId,
-        },
-        include: battleDetailInclude,
-      });
+        const participants = await prisma.battleParticipant.findMany({
+          where: { battle_id: battleId },
+          orderBy: [{ score: 'desc' }, { avg_time_per_answer_ms: 'asc' }],
+          include: { user: { select: creatorSelect } },
+        });
 
-      // Upsert final leaderboard records
-      // N+1 Optimization: Get all answers in one go
-      const allAnswers = await prisma.battleAnswer.findMany({
-        where: { battle_id: battleId },
-        select: { user_id: true, time_taken_ms: true },
-      });
+        const winnerId = participants[0]?.user_id ?? null;
 
-      const timeByUser = allAnswers.reduce(
-        (acc, a) => {
-          acc[a.user_id] = (acc[a.user_id] || 0) + a.time_taken_ms;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
-
-      for (let i = 0; i < participants.length; i++) {
-        const p = participants[i];
-        await prisma.battleLeaderboard.upsert({
-          where: {
-            battle_id_user_id: { battle_id: battleId, user_id: p.user_id },
-          },
-          create: {
-            battle_id: battleId,
-            user_id: p.user_id,
-            score: p.score,
-            rank: i + 1,
-            correct_count: p.correct_count,
-            total_time_ms: timeByUser[p.user_id] || 0,
-          },
-          update: {
-            score: p.score,
-            rank: i + 1,
-            correct_count: p.correct_count,
-            total_time_ms: timeByUser[p.user_id] || 0,
+        // Compare-and-set: correct even if the lock lapsed mid-flight.
+        const claimed = await prisma.battle.updateMany({
+          where: { id: battleId, status: { not: 'COMPLETED' } },
+          data: {
+            status: 'COMPLETED',
+            ended_at: new Date(),
+            winner_id: winnerId,
           },
         });
-      }
+        if (claimed.count === 0) {
+          return {
+            battle: await prisma.battle.findUniqueOrThrow({
+              where: { id: battleId },
+              include: battleDetailInclude,
+            }),
+            leaderboard: await buildLeaderboard(battleId),
+            alreadyCompleted: true as const,
+          };
+        }
 
-      return { battle, leaderboard: await buildLeaderboard(battleId) };
-    });
+        const battle = await prisma.battle.findUniqueOrThrow({
+          where: { id: battleId },
+          include: battleDetailInclude,
+        });
+
+        // Upsert final leaderboard records
+        // N+1 Optimization: Get all answers in one go
+        const allAnswers = await prisma.battleAnswer.findMany({
+          where: { battle_id: battleId },
+          select: { user_id: true, time_taken_ms: true },
+        });
+
+        const timeByUser = allAnswers.reduce(
+          (acc, a) => {
+            acc[a.user_id] = (acc[a.user_id] || 0) + a.time_taken_ms;
+            return acc;
+          },
+          {} as Record<string, number>
+        );
+
+        for (let i = 0; i < participants.length; i++) {
+          const p = participants[i];
+          await prisma.battleLeaderboard.upsert({
+            where: {
+              battle_id_user_id: { battle_id: battleId, user_id: p.user_id },
+            },
+            create: {
+              battle_id: battleId,
+              user_id: p.user_id,
+              score: p.score,
+              rank: i + 1,
+              correct_count: p.correct_count,
+              total_time_ms: timeByUser[p.user_id] || 0,
+            },
+            update: {
+              score: p.score,
+              rank: i + 1,
+              correct_count: p.correct_count,
+              total_time_ms: timeByUser[p.user_id] || 0,
+            },
+          });
+        }
+
+        return {
+          battle,
+          leaderboard: await buildLeaderboard(battleId),
+          alreadyCompleted: false as const,
+        };
+      }
+    );
   }
 
   // ── Leaderboard ────────────────────────────────────────────────────────────

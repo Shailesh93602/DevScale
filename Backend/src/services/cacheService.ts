@@ -134,30 +134,62 @@ export async function getOrSetCache<T>(
   return fresh;
 }
 
+/**
+ * The subset of the Redis client `getWithLock` needs. Injectable so the
+ * concurrency behaviour can be unit-tested against a fake, the same way
+ * `matchmakingService` takes its Redis and Redlock — the module-level client
+ * connects at import time and cannot be swapped once loaded.
+ */
+export interface LockClient {
+  set(
+    key: string,
+    value: string,
+    ex: 'EX',
+    ttl: number,
+    nx: 'NX'
+  ): Promise<string | null>;
+  del(key: string): Promise<number>;
+}
+
 export async function getWithLock<T>(
   key: string,
   callback: () => Promise<T>,
-  options: CacheOptions = {}
+  options: CacheOptions = {},
+  client: LockClient = redis as unknown as LockClient,
+  read: <V>(k: string) => Promise<V | null> = getCache
 ): Promise<T> {
   const lockKey = `lock:${key}`;
   const lockTtl = 5; // 5 seconds lock timeout
 
+  // 🔴 Tracked so the `finally` only deletes a lock THIS call actually took.
+  //
+  // The `finally` used to run `redis.del(lockKey)` unconditionally, including
+  // on the path where `set … NX` returned null — i.e. where some other caller
+  // held the lock. That caller's lock was then deleted by a process that never
+  // owned it, so the "only one regeneration at a time" guarantee did not hold
+  // under exactly the contention it exists for: every waiter that woke up,
+  // recursed and returned also wiped the winner's lock on its way out.
+  let acquiredHere = false;
+
   try {
-    const cached = await getCache<T>(key);
+    const cached = await read<T>(key);
     if (cached) return cached;
 
-    const acquired = await redis.set(lockKey, '1', 'EX', lockTtl, 'NX');
+    const acquired = await client.set(lockKey, '1', 'EX', lockTtl, 'NX');
 
     if (!acquired) {
       await new Promise((resolve) => setTimeout(resolve, 100));
-      return getWithLock(key, callback, options);
+      return getWithLock(key, callback, options, client, read);
     }
+    acquiredHere = true;
 
     const fresh = await callback();
     await setCache(key, fresh, options);
     return fresh;
   } finally {
-    await redis.del(lockKey);
+    if (acquiredHere) {
+      await client.del(lockKey);
+    }
   }
 }
 
@@ -199,7 +231,14 @@ export async function getWithSWR<T>(
           await redis.del(lockKey);
         }
       }
-    })().catch(); // Don't await background revalidation
+      // `.catch()` with NO argument does not swallow anything — it returns a
+      // promise that rejects identically, so a throw from `redis.set` or
+      // `redis.del` here (both outside the inner try) became an
+      // unhandledRejection, which `main.ts` turns into `process.exit(1)`.
+      // A background cache refresh must never be able to kill the process.
+    })().catch((error: unknown) => {
+      logger.error('SWR background revalidation failed:', error);
+    });
 
     return stale;
   }

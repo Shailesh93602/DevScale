@@ -245,9 +245,40 @@ class BattleSocketService {
 
   // ── End battle ─────────────────────────────────────────────────────────
 
+  /**
+   * 🔴 THIS IS REACHED TWICE FOR ONE BATTLE, ROUTINELY.
+   *
+   * Two paths call it: `handleAnswerSubmitted` and the question-expiry timer in
+   * `broadcastQuestion`. Both ask `checkAllParticipantsDone` first — a DB round
+   * trip — and `handleAnswerSubmitted` only clears the timer AFTER that await
+   * resolves, so the timer can fire inside the window. Separately, in a
+   * two-player battle where both players answer the last question at about the
+   * same moment, both submissions observe "everyone is done" and both arrive
+   * here. On more than one instance the two callers are not even in the same
+   * process, so no in-memory flag would help.
+   *
+   * `applyBattleResult` is NOT idempotent — `games_played: { increment: 1 }`,
+   * `wins`/`losses` incremented, and Elo recomputed from the player's current
+   * rating — so a second call inflated game counts and applied a second delta
+   * on top of the first.
+   *
+   * `completeBattle` now performs the COMPLETED transition as a compare-and-set
+   * and reports whether THIS call won it. Ratings and the `battle:completed`
+   * broadcast are tied to that, so both happen exactly once per battle
+   * regardless of how many callers arrive.
+   */
   async endBattle(battleId: string) {
     try {
-      const { battle, leaderboard } = await battleRepo.completeBattle(battleId);
+      const { battle, leaderboard, alreadyCompleted } =
+        await battleRepo.completeBattle(battleId);
+
+      if (alreadyCompleted) {
+        logger.info(
+          `Battle ${battleId} was already COMPLETED — skipping duplicate rating update and broadcast`
+        );
+        this.cleanup(battleId);
+        return;
+      }
 
       // Update competitive Elo ratings — best-effort, must never block completion.
       try {
@@ -306,6 +337,25 @@ class BattleSocketService {
 
   // ── Reconnect ──────────────────────────────────────────────────────────
 
+  /**
+   * Replay the battle's current state to one socket, for a player who just
+   * joined or reconnected.
+   *
+   * Wired to `battle:join` in socket.ts. It previously had NO callers at all
+   * while the frontend subscribed to `battle:state`, so reconnecting players
+   * received nothing.
+   *
+   * ⚠️ KNOWN RESIDUAL, stated rather than papered over: `status`,
+   * `leaderboard` and `participants` come from the database and are correct on
+   * any instance, but `current_question_index` and `question_ends_at` come from
+   * `this.states` — a per-process Map. The question timer only exists in the
+   * process that started the battle, so a reconnect handled by a DIFFERENT
+   * instance gets `-1` / `null` for those two fields and the client falls back
+   * to waiting for the next `battle:question`. Fixing that properly means
+   * moving the per-battle timer state into Redis, which is a design change, not
+   * a patch. It is strictly better than the previous behaviour, which sent
+   * nothing on any instance.
+   */
   async sendStateToSocket(socketId: string, battleId: string) {
     try {
       const battle = await prisma.battle.findUnique({

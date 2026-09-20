@@ -71,6 +71,39 @@ export const SUPABASE_AUTH_TIMEOUT_MS = 5_000;
  */
 export const JWKS_TIMEOUT_MS = 5_000;
 
+/**
+ * The battle state machine's lock and transaction budgets.
+ *
+ * 🔴 THE INEQUALITY THAT MATTERS: a lock must outlive the work it guards.
+ *
+ * `submitAnswer` held a 15 000 ms Redlock around a Prisma interactive
+ * transaction whose own `timeout` was ALSO 15 000 ms. Two things make that
+ * strictly wrong rather than merely tight:
+ *
+ *  - Prisma counts `maxWait` (time spent waiting for a pool connection)
+ *    separately from `timeout`, so the guarded callback is permitted to run for
+ *    maxWait + timeout — 17 s against a 15 s lock.
+ *  - `redlock.acquire()` does NOT auto-extend. `automaticExtensionThreshold` is
+ *    read only by `redlock.using()`, and nothing in this codebase calls it
+ *    (`grep -rn 'redlock.using' src` → no matches). Redlock also subtracts
+ *    drift, so a "15 000 ms" lock actually expires at ~14 848 ms.
+ *
+ * The consequence is the failure the lock exists to prevent: it lapses while
+ * its holder is still writing, a second instance acquires the same resource,
+ * and two transactions recalculate ranks for the same battle at once.
+ *
+ * `battleLockSemantics.test.ts` asserts the inequality, not the numbers, so the
+ * transaction budget cannot be raised without moving the TTL with it.
+ */
+export const BATTLE_TX_MAX_WAIT_MS = 2_000;
+export const BATTLE_TX_TIMEOUT_MS = 15_000;
+/** Must exceed BATTLE_TX_MAX_WAIT_MS + BATTLE_TX_TIMEOUT_MS. */
+export const BATTLE_SUBMIT_LOCK_TTL_MS = 20_000;
+/** `completeBattle` writes one row per participant serially, outside a transaction. */
+export const BATTLE_COMPLETE_LOCK_TTL_MS = 20_000;
+/** `startBattle` is a read, a compare-and-set and a read-back. */
+export const BATTLE_START_LOCK_TTL_MS = 10_000;
+
 /** Judge0's breaker deadline. The transport timeouts below must stay under it. */
 export const JUDGE0_BREAKER_TIMEOUT_MS = 15_000;
 
