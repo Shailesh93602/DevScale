@@ -174,7 +174,7 @@ export default function Home() {
             id: '3',
             title: 'Unlock Achievements',
             description:
-              'Earn badges and certificates as you complete key steps on your roadmap.',
+              'Earn badges and keep your streak as you complete key steps on your roadmap.',
             icon: (
               <svg width="32" height="32" fill="none" viewBox="0 0 24 24">
                 <path

@@ -44,16 +44,19 @@ export const FAQS: Faq[] = [
       'You can track your progress through your dashboard where all your activities, completed challenges, streaks, and achievements are displayed.',
   },
   {
-    // This answer used to read "No, joining the community and accessing the
-    // core resources on EduScale is completely free." — which /pricing
-    // contradicts on the same site, selling Pro Learner at $29/mo and EduScale
-    // Team at $99/mo. Two pages making opposite claims means at most one of
-    // them is true, and search engines and readers both find the cheaper one
-    // first. Corrected to describe what the product actually offers.
+    // History, because this answer has now been wrong in both directions.
+    // It first read "completely free" while /pricing sold Pro Learner at
+    // $29/mo and EduScale Team at $99/mo, so it was corrected to describe the
+    // paid plans. Then (2026-09-20) the audit behind
+    // docs/PRICING-GROUND-TRUTH.md found those plans were the thing that did
+    // not exist: no feature in the product is gated on a tier, and nobody was
+    // ever charged. /pricing now sells nothing, so this answer says so. The
+    // guard in Frontend/src/lib/no-scale-claims.test.ts holds the two pages
+    // together in BOTH directions now, rather than only the one that bit.
     id: 'faq-5',
     question: 'Is there any cost to join?',
     answer:
-      'Signing up is free, and the Free Tier covers the community, coding challenges and roadmaps with no payment required. Paid plans (Pro Learner and EduScale Team) add higher limits and team features — see the Pricing page for the current details.',
+      'No. EduScale has one tier and it is free: roadmaps, quizzes, coding challenges, battles and the leaderboards are all available to any signed-in account, with no card and no checkout. There are no paid plans to buy today.',
   },
   {
     id: 'faq-6',
