@@ -58,11 +58,6 @@ export interface TopicData {
   prerequisites?: string[];
 }
 
-export interface SubjectOrder {
-  subject_id: string;
-  order: number;
-}
-
 export interface UserRoadmapData {
   user_id: string;
   roadmap_id: string;

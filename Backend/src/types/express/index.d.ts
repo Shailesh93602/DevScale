@@ -1,11 +1,21 @@
-import { User, UserRole } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { File } from 'express';
 
 declare module 'express-serve-static-core' {
   interface Request {
+    // 🔴 `Role`, not `UserRole`. `UserRole` is not a type `@prisma/client`
+    // exports — the model in schema.prisma is `Role` — so this import could
+    // never resolve. `tsconfig.json` sets `skipLibCheck: true`, which does not
+    // report a DECLARATION file's own errors, so the broken import was
+    // swallowed and `role` silently degraded to `any` for every consumer:
+    // `req.user.role.doesNotExist` type-checked clean across the whole repo.
+    //
+    // That is what let `assertOwnership` ship `req.user.role === 'ADMIN'` —
+    // an object compared to a string — with the compiler unable to say a word.
+    // Verified both ways before and after this change with a probe file.
     user: User & {
-      role?: UserRole | null;
+      role?: Role | null;
       subscription?: {
         tier?: string | null;
         status?: string | null;

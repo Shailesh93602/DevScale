@@ -47,6 +47,7 @@ vi.mock('@supabase/ssr', () => ({
 
 import { NextRequest } from 'next/server';
 import { updateSession } from './middleware';
+import { ADMIN_ROUTE_PREFIXES } from '@/lib/public-routes';
 
 function requestFor(path: string): NextRequest {
   return new NextRequest(new URL(`https://eduscale.vercel.app${path}`));
@@ -141,16 +142,42 @@ describe('/admin gate', () => {
     );
   });
 
-  it('reaches the admin check at all — /admin is not skipped by the public fast path', async () => {
-    // Load-bearing. The fast path returns BEFORE the admin block for anything
-    // that is not auth-required, so if /admin ever fell out of
-    // AUTH_REQUIRED_ROUTE_PREFIXES the gate would silently stop running and
-    // every assertion above would still pass, because a pass-through and an
-    // allow look identical.
-    //
-    // getUser being called is the proof the fast path did not fire.
-    signedInAs({ app_metadata: { role: 'ADMIN' } });
-    await updateSession(requestFor('/admin'));
-    expect(getUser).toHaveBeenCalled();
-  });
+  // Load-bearing. The fast path returns BEFORE the admin block for anything
+  // that is not auth-required, so if an admin prefix ever fell out of
+  // AUTH_REQUIRED_ROUTE_PREFIXES the gate would silently stop running and
+  // every assertion above would still pass, because a pass-through and an
+  // allow look identical.
+  //
+  // 🔴 DERIVED FROM `ADMIN_ROUTE_PREFIXES`, not written as the literal
+  // '/admin'. The previous version named the one prefix it knew about, which
+  // is the shape of guard this workspace has been burned by before: the
+  // expected value written twice, so the check keeps passing against the old
+  // copy. Adding a second admin prefix and forgetting the auth list would have
+  // left it green. Now every prefix in the list is exercised, and a new one
+  // cannot be added without this test covering it.
+  describe.each(ADMIN_ROUTE_PREFIXES)(
+    'the admin gate actually runs for %s',
+    (prefix) => {
+      it('is not skipped by the public fast path', async () => {
+        // getUser being called is the proof the fast path did not fire.
+        signedInAs({ app_metadata: { role: 'ADMIN' } });
+        await updateSession(requestFor(prefix));
+        expect(getUser).toHaveBeenCalled();
+      });
+
+      it('redirects a signed-in non-admin away rather than letting them through', async () => {
+        signedInAs({ app_metadata: { role: 'STUDENT' } });
+        expect(redirectTarget(await updateSession(requestFor(prefix)))).toBe(
+          '/dashboard',
+        );
+      });
+
+      it('sends an anonymous visitor to login', async () => {
+        getUser.mockResolvedValue({ data: { user: null } });
+        expect(redirectTarget(await updateSession(requestFor(prefix)))).toBe(
+          '/auth/login',
+        );
+      });
+    },
+  );
 });

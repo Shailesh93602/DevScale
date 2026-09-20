@@ -24,25 +24,6 @@ export const createRoadmapValidation = Joi.object({
   }),
 });
 
-export const updateSubjectsOrderValidation = Joi.object({
-  subjectOrders: Joi.array()
-    .required()
-    .messages({
-      'any.required': 'Subject orders must be an array',
-    })
-    .custom((orders) => {
-      return orders.every(
-        (order: { subjectId: string; order: number }) =>
-          typeof order.subjectId === 'string' &&
-          typeof order.order === 'number' &&
-          order.order >= 0
-      );
-    })
-    .messages({
-      'any.custom': 'Invalid subject order format',
-    }),
-});
-
 export const enrollRoadmapValidation = Joi.object({
   roadmapId: Joi.string().required().messages({
     'any.required': 'Roadmap ID is required',

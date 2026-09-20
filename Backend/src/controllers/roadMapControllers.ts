@@ -277,13 +277,45 @@ export default class RoadmapController {
     });
   });
 
-  public updateSubjectsOrder = catchAsync(
-    async (req: Request, res: Response) => {
-      return sendResponse(res, 'SUBJECT_ORDER_UPDATED', {
-        data: null,
-      });
-    }
-  );
+  /*
+   * REMOVED 2026-09-20: `PATCH /roadmaps/:id/subjects-order`.
+   *
+   * The endpoint answered `200 SUBJECT_ORDER_UPDATED — "Subject order updated
+   * successfully"` and wrote nothing. Its controller was, in full:
+   *
+   *     public updateSubjectsOrder = catchAsync(async (req, res) => {
+   *       return sendResponse(res, 'SUBJECT_ORDER_UPDATED', { data: null });
+   *     });
+   *
+   * It had been that way since the initial commit, had no caller anywhere in the
+   * repo or the frontend, and no test.
+   *
+   * IT WAS NOT WIRED UP INSTEAD, and that is the part worth recording.
+   * `roadmapRepository.updateSubjectsOrder(roadmap_id, subject_orders)` existed
+   * and looked like the missing call — but it accepted `roadmap_id` and never
+   * used it:
+   *
+   *     this.prismaClient.mainConceptSubject.updateMany({
+   *       where: { subject_id: order.subject_id },
+   *       data:  { order: order.order },
+   *     })
+   *
+   * `MainConceptSubject` is keyed `(main_concept_id, subject_id)` and main
+   * concepts are shared between roadmaps, so that `updateMany` reorders the
+   * subject in EVERY main concept in EVERY roadmap that contains it. Calling it
+   * would have turned a harmless lie into silent cross-roadmap data corruption
+   * triggered by a UI a moderator would reasonably expect to be local.
+   *
+   * The two halves did not even agree on a wire format: the Joi schema took
+   * `subjectOrders: [{ subjectId, order }]` while the repository expected
+   * `subject_orders: [{ subject_id, order }]`.
+   *
+   * So the whole feature is removed rather than half-connected. Reinstating it
+   * needs a decision this cleanup cannot make for anyone: what "a subject's
+   * order within THIS roadmap" means when the join row is shared — scope the
+   * update through `RoadmapMainConcept`, or give the roadmap its own ordering
+   * row. Until that is settled there is nothing honest to return.
+   */
 
   public enrollRoadMap = catchAsync(async (req: Request, res: Response) => {
     if (!req.user) {

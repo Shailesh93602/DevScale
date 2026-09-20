@@ -92,17 +92,39 @@ describe('the system-author contract holds against the sources it depends on', (
   it('every roadmap author render goes through the helper, not an inline name', () => {
     // The three places that used to assemble `${first_name} ${last_name}` by
     // hand. A fourth copy would bring "Admin User" back on that surface only.
+    //
+    // The dashboard's entry moved from `app/dashboard/page.tsx` to
+    // `lib/dashboard-roadmap.ts` when the summary→card mapper was extracted so
+    // it could be tested directly. The surface is the same one; only the file
+    // holding the call changed. THE PAGE IS STILL CHECKED, below, for the
+    // inline pattern — a guard that simply followed the code and forgot where
+    // it came from would let the old spelling back into the page it was
+    // removed from.
     const sites = [
       'Frontend/src/components/Roadmap/RoadmapCard.tsx',
       'Frontend/src/app/career-roadmap/roadmaps/page.tsx',
-      'Frontend/src/app/dashboard/page.tsx',
+      'Frontend/src/lib/dashboard-roadmap.ts',
     ];
     for (const rel of sites) {
       const src = read(rel);
       expect(src, `${rel} must import the helper`).toMatch(
         /from '@\/lib\/roadmap-author'/,
       );
-      expect(src, `${rel} still builds the author name inline`).not.toMatch(
+    }
+  });
+
+  it('no roadmap surface reassembles the author name inline', () => {
+    const surfaces = [
+      'Frontend/src/components/Roadmap/RoadmapCard.tsx',
+      'Frontend/src/app/career-roadmap/roadmaps/page.tsx',
+      'Frontend/src/lib/dashboard-roadmap.ts',
+      'Frontend/src/app/dashboard/page.tsx',
+    ];
+    for (const rel of surfaces) {
+      expect(
+        read(rel),
+        `${rel} still builds the author name inline`,
+      ).not.toMatch(
         /roadmap\.user\.first_name\}\s*\$\{roadmap\.user\.last_name/,
       );
     }

@@ -6,6 +6,7 @@ import prisma from '../lib/prisma.js';
 import crypto from 'node:crypto';
 import { redis } from '../services/cacheService.js';
 import { verifySupabaseToken } from '../utils/verifySupabaseToken.js';
+import { hasRole } from '../utils/requestRole.js';
 
 // ─── Token Blocklist ─────────────────────────────────────────────────────────
 const TOKEN_BLOCKLIST_PREFIX = 'eduscale:auth:blocklist:';
@@ -230,9 +231,12 @@ export const authorizeRoles = (...allowedRoles: string[]) => {
     // Compare case-insensitively: DB role names are uppercase ('ADMIN') but some
     // routes pass lowercase ('admin'). A case-sensitive check silently 403s real
     // admins on those routes (e.g. /analytics/platform, roadmap delete).
-    const userRoleName = req.user.role?.name?.toUpperCase();
-    const allowed = allowedRoles.map((r) => r.toUpperCase());
-    if (!userRoleName || !allowed.includes(userRoleName)) {
+    //
+    // Routed through the shared `hasRole` reader rather than reaching into
+    // `req.user.role` here. Two readers of the same field drifted apart once
+    // already — `assertOwnership` compared the relation OBJECT to the string
+    // 'ADMIN' and its admin bypass silently never fired. One reader, one rule.
+    if (!hasRole(req, ...allowedRoles)) {
       return next(createAppError('Insufficient permissions', 403));
     }
     next();

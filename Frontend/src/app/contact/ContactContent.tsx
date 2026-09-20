@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { BRANDING } from '@/constants';
+import { buildContactMailto } from '@/lib/contact-mailto';
 
 export default function ContactContent() {
   const [name, setName] = useState('');
@@ -10,16 +11,38 @@ export default function ContactContent() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  /**
+   * 🔴 This used to `await` a one-second timer with the comment "Simulate API
+   * call", then fire `toast.success('Message sent!')` and clear the form.
+   * There was no request. Every message was discarded while the visitor was
+   * told it had been delivered.
+   *
+   * There is no public contact endpoint to post to — `POST /support/tickets`
+   * requires a session and this page exists for people who do not have one —
+   * so the form hands off to the visitor's mail client, the same way the
+   * pricing page's Team plan already does.
+   *
+   * The fields are NOT cleared. If the mail client does not open (some
+   * browsers and locked-down desktops swallow `mailto:` entirely) the visitor
+   * still has what they wrote and the address to send it to is on this page.
+   * Clearing them would recreate the original bug in a new costume.
+   */
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    toast.success('Message sent! We will get back to you soon.');
-    setName('');
-    setEmail('');
-    setMessage('');
-    setIsSubmitting(false);
+    try {
+      window.location.href = buildContactMailto({
+        to: BRANDING.contactEmail,
+        name,
+        email,
+        message,
+      });
+      toast.info(
+        `Opening your email app to send this to ${BRANDING.contactEmail}.`,
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -116,7 +139,7 @@ export default function ContactContent() {
 
             <div className="flex items-center justify-between">
               <Button type="submit" disabled={isSubmitting} className="px-8">
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? 'Opening…' : 'Send Message'}
               </Button>
             </div>
           </form>

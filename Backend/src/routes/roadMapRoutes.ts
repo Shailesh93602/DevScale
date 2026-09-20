@@ -9,7 +9,6 @@ import { validateRequest, validateQuery } from '../middlewares/validateRequest';
 import {
   createRoadmapValidation,
   enrollRoadmapValidation,
-  updateSubjectsOrderValidation,
   addCommentValidation,
   roadmapQueryValidation,
 } from '../validations/roadmapValidation';
@@ -147,14 +146,6 @@ export class RoadMapRoutes extends BaseRouter {
       authMiddleware,
       authorizeRoles('admin'),
       this.bindRoute(this.roadMapController.deleteRoadMap)
-    );
-
-    this.router.patch(
-      '/:id/subjects-order',
-      authMiddleware,
-      authorizeRoles('ADMIN', 'MODERATOR'),
-      validateRequest(updateSubjectsOrderValidation),
-      this.bindRoute(this.roadMapController.updateSubjectsOrder)
     );
   }
 

@@ -16,7 +16,6 @@ import {
   ResourceStats,
   RoadmapData,
   SubjectData,
-  SubjectOrder,
   TopicData,
 } from '../types/index.js';
 
@@ -753,20 +752,6 @@ export default class RoadmapRepository extends BaseRepository<
     await this.prismaClient.roadmap.delete({
       where: { id },
     });
-  }
-
-  async updateSubjectsOrder(
-    roadmap_id: string,
-    subject_orders: SubjectOrder[]
-  ): Promise<void> {
-    await this.prismaClient.$transaction(
-      subject_orders.map((order) =>
-        this.prismaClient.mainConceptSubject.updateMany({
-          where: { subject_id: order.subject_id },
-          data: { order: order.order },
-        })
-      )
-    );
   }
 
   async createCustomRoadmap(data: RoadmapData & { sourceRoadmapId?: string }) {

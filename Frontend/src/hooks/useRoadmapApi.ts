@@ -29,8 +29,22 @@ export interface BaseRoadmap extends RoadmapSocialData {
   author: RoadmapAuthor;
   thumbnail?: string;
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
-  createdAt: string;
-  updatedAt: string;
+  // 🔴 OPTIONAL, and that is the fix rather than a loosening.
+  //
+  // These were REQUIRED while `created_at`/`updated_at` — the names the API
+  // actually sends — were optional, so every mapper for an endpoint that does
+  // not return timestamps had to produce a string from somewhere. The
+  // dashboard's did: it wrote `'2024-01-01T00:00:00.000Z'` for every roadmap.
+  // `/dashboard/summary` returns no timestamp of any kind (see `shapeRoadmap`
+  // in Backend/src/repositories/dashboardRepository.ts), so the type was
+  // demanding data that does not exist and a literal was the only way to
+  // satisfy it. A required field that callers can only fill by inventing a
+  // value is a type pushing code toward lying.
+  //
+  // `difficulty` above was already optional for the same reason, and
+  // RoadmapHero already reads `updated_at || updatedAt` with a fallback.
+  createdAt?: string;
+  updatedAt?: string;
   created_at?: string;
   updated_at?: string;
 }

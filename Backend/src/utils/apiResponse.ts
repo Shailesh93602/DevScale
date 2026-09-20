@@ -70,7 +70,6 @@ type ResponseType =
   | 'LEADERBOARD_FETCHED'
   | 'ROADMAP_FETCHED'
   | 'ROADMAP_CREATED'
-  | 'SUBJECT_ORDER_UPDATED'
   | 'ROADMAP_UPDATED'
   | 'ANALYTICS_FETCHED'
   | 'USER_ANALYTICS_FETCHED'
@@ -552,11 +551,6 @@ const RESPONSE_MESSAGES: Record<ResponseType, ResponseConfig> = {
     status: 201,
     success: true,
     message: 'Roadmap created successfully',
-  },
-  SUBJECT_ORDER_UPDATED: {
-    status: 200,
-    success: true,
-    message: 'Subject order updated successfully',
   },
   ROADMAP_UPDATED: {
     status: 200,

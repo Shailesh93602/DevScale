@@ -5,19 +5,15 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { BookOpen, Award, Flame, Swords, ArrowRight } from 'lucide-react';
 import StatCard from '@/components/dashboard/StatCard';
-import RoadmapCard, { RoadmapType } from '@/components/Roadmap/RoadmapCard';
+import RoadmapCard from '@/components/Roadmap/RoadmapCard';
 import StreakCalendar from '@/components/dashboard/StreakCalendar';
 import ActivityItem from '@/components/dashboard/ActivityItem';
 import AchievementItem from '@/components/dashboard/AchievementItem';
 import { DashboardSkeleton } from '@/components/dashboard/DashboardSkeletons';
-import {
-  useDashboard,
-  DashboardSummary,
-  RoadmapSummary,
-} from '@/hooks/useDashboard';
+import { useDashboard, DashboardSummary } from '@/hooks/useDashboard';
 import { useAuth } from '@/contexts/AuthContext';
 import { logger } from '@/lib/logger';
-import { roadmapAuthorName } from '@/lib/roadmap-author';
+import { mapToRoadmapType } from '@/lib/dashboard-roadmap';
 
 // ─── sessionStorage SWR helpers ───────────────────────────────────────────────
 const CACHE_KEY = 'dashboard:summary:v1';
@@ -45,35 +41,6 @@ function writeCache(data: DashboardSummary) {
     // sessionStorage full or unavailable — ignore
   }
 }
-
-const mapToRoadmapType = (
-  roadmap: RoadmapSummary,
-  isEnrolled: boolean,
-): RoadmapType => ({
-  id: roadmap.id,
-  title: roadmap.title,
-  author: {
-    id: roadmap.user?.id || 'anonymous',
-    name: roadmapAuthorName(roadmap.user, 'Anonymous'),
-    profileImage: roadmap.user?.avatar_url,
-  },
-  thumbnail: roadmap.thumbnail,
-  isEnrolled,
-  likesCount: roadmap._count?.likes || 0,
-  commentsCount: 0,
-  bookmarksCount: roadmap._count?.user_roadmaps || 0,
-  isLiked: Boolean(roadmap.likes?.length),
-  isBookmarked: Boolean(roadmap.user_roadmaps?.length),
-  description: (roadmap.description as string) || '',
-  enrollmentCount: roadmap._count?.user_roadmaps || 0,
-  rating: 0,
-  progress: 0,
-  steps: roadmap._count?.topics || 0,
-  estimatedTime: '2-3 hours',
-  createdAt: '2024-01-01T00:00:00.000Z',
-  updatedAt: '2024-01-01T00:00:00.000Z',
-  difficulty: 'beginner' as const,
-});
 
 /** Shared section heading + link */
 const SectionHeader = ({
