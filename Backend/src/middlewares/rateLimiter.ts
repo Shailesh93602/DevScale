@@ -2,16 +2,21 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { Redis } from 'ioredis';
 import { REDIS_URL } from '../config/index.js';
 import logger from '../utils/logger.js';
+import { isTest } from '../config/runtimeMode.js';
 
-let redisClient: Redis | null = null;
+export let redisClient: Redis | null = null;
 try {
   redisClient = new Redis(REDIS_URL || 'redis://localhost:6379', {
     enableOfflineQueue: false,
     maxRetriesPerRequest: 3,
+    retryStrategy(times) {
+      if (isTest() || times > 3) return null;
+      return Math.min(times * 50, 2000);
+    },
   });
 
   redisClient.on('error', (err: Error & { code?: string }) => {
-    if (err.code !== 'ECONNREFUSED') {
+    if (err.code !== 'ECONNREFUSED' && err.code !== 'ENOTFOUND') {
       logger.error('Redis connection error:', err);
     }
     // Deliberately NOT `redisClient = null`. ioredis reconnects on its own, but

@@ -3,6 +3,7 @@ import Redlock from 'redlock';
 import logger from '../utils/logger.js';
 import { REDIS_URL } from '../config/index.js';
 import { REDIS_COMMAND_TIMEOUT_MS } from '../utils/deadlines.js';
+import { isTest } from '../config/runtimeMode.js';
 
 type RedlockClient =
   ConstructorParameters<typeof Redlock>[0] extends Iterable<infer T>
@@ -19,21 +20,9 @@ export const redis = new Redis(REDIS_URL, {
   // REDIS_URL (`new Queue(name, REDIS_URL)`) and never uses this client, which
   // is why the command timeout below is safe to set here.
   maxRetriesPerRequest: null,
-  // 🔴 Without this, a Redis that is SLOW but connected produces awaits that
-  // never settle — `maxRetriesPerRequest: null` means "retry forever", so there
-  // is no rejection to catch. That silently disables every fail-open handler
-  // built on top of this client: `getCache`'s catch, `getAuthCache`'s catch,
-  // `isTokenBlocklisted`'s catch, and the rate limiter's "swallow any
-  // RedisStore throw" wrapper in main.ts. All four are written for a
-  // *rejection*, and a hang is not one — so requests stall in the rate-limit
-  // middleware before reaching any route.
-  //
-  // Safe for the two long-lived exceptions because neither uses this client:
-  // Socket.io's pub/sub connections are constructed separately in socket.ts
-  // (their `subscribe` blocks by design), and Bull's are constructed by Bull.
   commandTimeout: REDIS_COMMAND_TIMEOUT_MS,
   retryStrategy(times) {
-    if (times > 3) return null;
+    if (isTest() || times > 3) return null;
     return Math.min(times * 50, 2000);
   },
 });
@@ -67,7 +56,7 @@ redlock.on('clientError', (error: Error) => {
 
 redis.on('error', (err: unknown) => {
   const error = err as { code?: string };
-  if (error.code !== 'ECONNREFUSED') {
+  if (error.code !== 'ECONNREFUSED' && error.code !== 'ENOTFOUND') {
     logger.error('Redis Cache Error:', err);
   }
 });

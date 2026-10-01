@@ -2,25 +2,32 @@
 // This file runs after each test file
 
 import { redis } from '../services/cacheService';
+import { redisClient } from '../middlewares/rateLimiter';
 import prisma from '../lib/prisma';
 
 afterAll(async () => {
-  // Give Jest a moment to detect any remaining open handles
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  // Give Jest a moment to settle pending microtasks
+  await new Promise((resolve) => setTimeout(resolve, 100));
 
-  // Close Redis connection if it's connected
+  // Disconnect Redis clients cleanly
   try {
-    if (redis.status === 'ready') {
-      await redis.quit();
+    if (redisClient) {
+      redisClient.disconnect();
     }
-  } catch (error) {
-    console.log('Redis already disconnected or error:', error);
+  } catch {
+    // Ignore teardown disconnect errors
+  }
+
+  try {
+    redis.disconnect();
+  } catch {
+    // Ignore teardown disconnect errors
   }
 
   // Close Prisma connection
   try {
     await prisma.$disconnect();
-  } catch (error) {
-    console.log('Prisma already disconnected or error:', error);
+  } catch {
+    // Ignore teardown disconnect errors
   }
 });

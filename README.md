@@ -153,26 +153,20 @@ app.get('/metrics', async (req, res) => {
 });
 ```
 
-Metrics exposed: battle start count (by mode), code execution latency histogram, Redis lock acquisition failures, circuit breaker state.
+Metrics exposed: `http_request_duration_seconds` histogram (method, route, status_code), `active_connections` gauge, `memory_usage_bytes` heap gauge, and default Node.js process metrics via `prom-client`.
 
 ### 5. Bull queues — async background processing
 
-Score updates, badge awards, and leaderboard recalculations happen in Bull workers, not in the WebSocket handler. The handler returns immediately; the queue processes asynchronously:
+Background operations such as transactional email deliveries and periodic audit log retention cleanups are handled through Redis-backed Bull queues, decoupling asynchronous processing from request handlers:
 
 ```ts
-import Bull from 'bull';
+import Queue from 'bull';
 
-const scoreQueue = new Bull('score-update', { redis: process.env.REDIS_URL });
+// Transactional email dispatch queue
+export const emailQueue = new Queue('email-queue', REDIS_URL);
 
-// In WebSocket handler (fast path):
-await scoreQueue.add({ userId, battleId, score });
-
-// In worker (decoupled, retryable):
-scoreQueue.process(async (job) => {
-  await updateUserScore(job.data);
-  await recalculateLeaderboard(job.data.userId);
-  await awardBadgesIfEarned(job.data);
-});
+// Scheduled audit log retention cleanup
+export const auditRetentionQueue = new Queue('audit-retention', REDIS_URL);
 ```
 
 ---
@@ -248,9 +242,9 @@ npm run dev            # starts on :3000
 | Distributed locking | `redlock` | Redlock algorithm — prevents double-start race condition |
 | Circuit breaker | `opossum` | Protects code execution service; fallback keeps battles running |
 | Metrics | `prom-client` | Prometheus-compatible `/metrics` endpoint |
-| Background jobs | `bull` | Redis-backed queue for async score/badge processing |
+| Background jobs | `bull` | Redis-backed queue for async email delivery and audit retention cleanup |
 | ORM | `prisma` | Type-safe PostgreSQL queries |
-| Frontend | `next.js 15` | App Router, SSR, edge functions |
+| Frontend | `next.js 16` | App Router, SSR, Server Components |
 | State | `redux-toolkit` | Battle state, user session |
 
 ---
@@ -261,4 +255,4 @@ npm run dev            # starts on :3000
 
 ---
 
-Built by [Shailesh Chaudhary](https://shaileshchaudhari.vercel.app)
+Built by [Shailesh Chaudhari](https://shaileshchaudhari.vercel.app)
