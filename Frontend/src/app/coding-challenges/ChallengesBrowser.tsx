@@ -184,10 +184,10 @@ export default function CodingChallengesPage() {
                 challenges.map((challenge) => (
                   <li
                     key={challenge.id}
-                    className="flex flex-col rounded-lg border border-border bg-muted/30 p-6 shadow-sm transition-shadow hover:shadow-md"
+                    className="flex min-w-0 max-w-full flex-col overflow-hidden rounded-lg border border-border bg-muted/30 p-6 shadow-sm transition-shadow hover:shadow-md"
                   >
-                    <div className="mb-4 flex items-start justify-between">
-                      <h2 className="text-xl font-bold text-foreground">
+                    <div className="mb-4 flex items-start justify-between gap-2">
+                      <h2 className="break-words text-xl font-bold text-foreground">
                         {challenge.title}
                       </h2>
                       <span
@@ -202,7 +202,7 @@ export default function CodingChallengesPage() {
                         {challenge.difficulty}
                       </span>
                     </div>
-                    <div className="prose prose-sm mb-6 line-clamp-3 max-w-none flex-grow text-sm text-muted-foreground">
+                    <div className="prose prose-sm mb-6 line-clamp-3 max-w-none flex-grow break-words text-sm text-muted-foreground [&_pre]:max-w-full [&_pre]:overflow-x-auto">
                       <ReactMarkdown>{challenge.description}</ReactMarkdown>
                     </div>
                     <Link

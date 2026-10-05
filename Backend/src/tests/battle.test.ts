@@ -100,11 +100,16 @@ beforeAll(async () => {
 
 afterAll(async () => {
   // Cascade deletes handle battle children
-  await prisma.battle.deleteMany({
-    where: { user_id: { in: [userId1, userId2] } },
-  });
-  await prisma.user.deleteMany({ where: { id: { in: [userId1, userId2] } } });
-  await prisma.topic.deleteMany({ where: { id: topicId } });
+  const userIds = [userId1, userId2].filter((id): id is string => Boolean(id));
+  if (userIds.length > 0) {
+    await prisma.battle.deleteMany({
+      where: { user_id: { in: userIds } },
+    });
+    await prisma.user.deleteMany({ where: { id: { in: userIds } } });
+  }
+  if (topicId) {
+    await prisma.topic.deleteMany({ where: { id: topicId } });
+  }
   await prisma.$disconnect();
 });
 
