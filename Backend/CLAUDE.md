@@ -210,6 +210,16 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-10-13 — Large-file split (no behaviour change)
+
+### [P2] Oversized modules split by concern; dead code removed
+- **Repositories:** `battleRepository.ts` is now a thin facade over `repositories/battle/{battleShapes,scoring,lock,browse,questions,lifecycle,gameplay,results,userStats}.ts` (public class + `calculatePoints` export unchanged; tests still mock it by prototype). `roadmapRepository.ts` keeps only its 5 called methods, helpers in `repositories/roadmap/`. `adminDashboardRepository.ts` → `repositories/adminDashboard/{reportMetrics,healthMetrics}.ts`. `articleRepository.ts` keeps its 4 called methods.
+- **Other:** `utils/apiResponse.ts` message table → `utils/responseMessages/*` (`ResponseType` derived from the table; 30 never-sent keys dropped). `services/socket.ts` → `services/realtime/{socketContract,socketHandshake}.ts`. Roadmap controller inputs/likes → `controllers/roadmap/`. Seed data → `scripts/battleSeedData.ts`. `qa/run.mjs` → `qa/lib.mjs` + `qa/areas/*.mjs` (same areas, same order).
+- **Tests:** migration scanner → `tests/migrations/migrationSql.ts` + `migrationAnalyzer.test.ts` (hash pins stay in `migrationIdempotency.test.ts`); `calculatePoints` cases moved out of the DB-only `battle.test.ts` into `tests/repositories/battleScoring.test.ts`, so they now run without a database.
+- **Deleted (zero callers):** `types/response.ts`, `utils/contentFilter.ts`, 17 roadmap / 15 article repository methods (incl. private helpers), 6 legacy socket emit helpers. Recoverable from git if a caller appears.
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:

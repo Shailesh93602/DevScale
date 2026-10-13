@@ -103,8 +103,7 @@ export const isDevelopment = (env?: Env): boolean =>
   resolveRuntimeMode(env).isDevelopment;
 
 /** True under NODE_ENV=test. */
-export const isTest = (env?: Env): boolean =>
-  resolveRuntimeMode(env).isTest;
+export const isTest = (env?: Env): boolean => resolveRuntimeMode(env).isTest;
 
 /** Whether to set the `Secure` flag on cookies. */
 export const useSecureCookies = (env?: Env): boolean =>

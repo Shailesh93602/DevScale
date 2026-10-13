@@ -62,8 +62,13 @@ test('regression: redux-persist uses SSR-safe storage strategy', async () => {
 test('regression: navbar alignment classes are stable and no redux-persist SSR warning appears on public pages', async ({
   page,
 }) => {
-  const navbarFile = path.join(srcDir, 'components', 'Navbar', 'index.tsx');
-  const navbarContent = fs.readFileSync(navbarFile, 'utf8');
+  // The Navbar is split across several modules (index.tsx, DesktopNav.tsx, …),
+  // so check the classes against the whole folder rather than one file.
+  const navbarContent = collectSourceFiles(
+    path.join(srcDir, 'components', 'Navbar'),
+  )
+    .map((file) => fs.readFileSync(file, 'utf8'))
+    .join('\n');
 
   // Verify stable structural classes exist in the navbar
   expect(navbarContent).toContain('hidden flex-1 items-center justify-center');

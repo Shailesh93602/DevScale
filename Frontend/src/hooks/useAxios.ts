@@ -1,169 +1,15 @@
-import { createClient } from '@/utils/supabase/client';
-import axios, { AxiosRequestConfig, AxiosError } from 'axios';
+import { AxiosRequestConfig, AxiosError } from 'axios';
 import { useState, useCallback } from 'react';
+import { httpClient } from './axios/httpClient';
+import type {
+  ApiHookReturn,
+  ApiPostHookReturn,
+  ApiState,
+  BaseApiResponse,
+} from './axios/apiTypes';
 
-const httpClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  timeout: 20000,
-  withCredentials: true,
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-  },
-});
+type Replacements = { [key: string]: string };
 
-// Singleton Supabase client — created once, reused for all requests.
-const supabaseClient = createClient();
-
-// In-memory token cache: avoids calling getSession() on every request.
-// Supabase tokens are valid for 1 hour; we keep a 55-minute window to allow
-// early refresh before expiry. On 401 the cache is cleared and the real
-// session is fetched fresh.
-let _cachedToken: string | null = null;
-let _tokenExpiresAt: number = 0;
-
-async function getAccessToken(): Promise<string | null> {
-  const now = Date.now();
-  if (_cachedToken && now < _tokenExpiresAt) return _cachedToken;
-
-  const {
-    data: { session },
-  } = await supabaseClient.auth.getSession();
-  if (!session?.access_token) {
-    _cachedToken = null;
-    _tokenExpiresAt = 0;
-    return null;
-  }
-
-  _cachedToken = session.access_token;
-  // Cache for 55 minutes (tokens expire after 1 hour)
-  _tokenExpiresAt = now + 55 * 60 * 1000;
-  return _cachedToken;
-}
-
-// Add Supabase auth and CSRF interceptors
-httpClient.interceptors.request.use(async (config) => {
-  // 1. Auth Token
-  const token = await getAccessToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  // 2. CSRF Token (Double-Submit Token Pattern)
-  if (globalThis.document !== undefined) {
-    const csrfToken = document.cookie
-      .split('; ')
-      .find((row) => row.trim().startsWith('XSRF-TOKEN='))
-      ?.split('=')[1];
-
-    if (csrfToken) {
-      config.headers['X-XSRF-TOKEN'] = csrfToken;
-    }
-  }
-
-  return config;
-});
-
-let isRedirecting = false;
-
-// Add response interceptor to handle 401 Unauthorized
-httpClient.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    // Only act on 401 Unauthorized if not already redirecting and in the browser
-    if (
-      error.response?.status === 401 &&
-      !isRedirecting &&
-      globalThis.window !== undefined
-    ) {
-      // Clear cached token — it may be expired or revoked
-      _cachedToken = null;
-      _tokenExpiresAt = 0;
-
-      isRedirecting = true;
-      try {
-        await supabaseClient.auth.signOut();
-        const { logoutAction } = await import('@/app/auth/actions');
-        await logoutAction();
-      } catch (e) {
-        console.error('Logout sync failed:', e);
-      } finally {
-        document.cookie = 'token=; Max-Age=0; path=/;';
-
-        // Dynamically import router helpers to check if path requires auth
-        const { requiresAuthRoute } = await import('@/lib/public-routes');
-
-        if (requiresAuthRoute(globalThis.window?.location.pathname || '')) {
-          globalThis.window.location.href = '/auth/login';
-        } else {
-          // If we're on a public route, just reset the lock without redirecting
-          isRedirecting = false;
-        }
-      }
-    }
-    throw error;
-  },
-);
-
-// Base API response interface
-interface BaseApiResponse<T = unknown> {
-  success: boolean;
-  message: string;
-  error: boolean;
-  data: T;
-  /**
-   * Machine-readable error information, present only on handled CLIENT errors
-   * (the backend withholds it on 5xx — see middlewares/errorHandler.ts).
-   *
-   * It exists so a caller can BRANCH rather than only display. AI_KEY_REQUIRED
-   * is the case that forced it: "you have not added your API key" and "the AI
-   * service is down" need different UI, and a message string cannot be
-   * switched on without matching prose, which breaks the moment anyone edits
-   * the copy.
-   */
-  details?: { code?: string; [key: string]: unknown };
-  meta?: {
-    pagination?: {
-      total: number;
-      perPage: number;
-      currentPage: number;
-      lastPage: number;
-      totalPages: number;
-    };
-    [key: string]: unknown;
-  };
-}
-
-// Update type definitions
-type ApiState<T> = {
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-  error: AxiosError | null;
-  data: T | null;
-  meta?: BaseApiResponse<T>['meta'];
-} & Pick<BaseApiResponse, 'message' | 'success'>;
-
-type ApiHookReturn<T> = [
-  execute: (
-    config?: AxiosRequestConfig,
-    replacements?: { [key: string]: string },
-  ) => Promise<BaseApiResponse<T>>,
-  state: ApiState<T>,
-];
-
-type ApiPostHookReturn<T, D> = [
-  execute: (
-    data: D,
-    config?: AxiosRequestConfig,
-    replacements?: { [key: string]: string },
-  ) => Promise<BaseApiResponse<T>>,
-  state: ApiState<T>,
-];
-
-// Update error handler
 const handleError = <T>(error: unknown): BaseApiResponse<T> => {
   const axiosError = error as AxiosError<BaseApiResponse<T>>;
   return {
@@ -172,13 +18,12 @@ const handleError = <T>(error: unknown): BaseApiResponse<T> => {
     data: null as T,
     message: axiosError.response?.data?.message || 'An error occurred',
     meta: axiosError.response?.data?.meta,
-    // Preserved deliberately. Dropping it here is what made the API's
-    // machine-readable code invisible to every caller.
+    // Preserved deliberately: dropping it made the API's machine-readable code invisible.
     details: axiosError.response?.data?.details,
   };
 };
 
-// Update execute handler
+/** Never throws: an HTTP error comes back as a `handleError` response. */
 const createExecuteHandler =
   <T, D = unknown>(method: 'get' | 'post' | 'put' | 'patch' | 'delete') =>
   async (url: string, data?: D, config?: AxiosRequestConfig) => {
@@ -194,325 +39,154 @@ const createExecuteHandler =
     }
   };
 
-// Updated GET Hook
-export const useAxiosGet = <T>(url: string): ApiHookReturn<T> => {
-  const [state, setState] = useState<ApiState<T>>({
-    data: null,
-    message: '',
-    success: false,
-    isLoading: false,
-    isSuccess: false,
-    isError: false,
-    error: null,
-    meta: undefined,
-  });
+/** Fills `{{key}}` placeholders in a URL template. */
+function fillUrl(url: string, replacements: Replacements): string {
+  let modifiedUrl = url;
+  for (const key in replacements) {
+    modifiedUrl = modifiedUrl.replace(`{{${key}}}`, replacements[key]);
+  }
+  return modifiedUrl;
+}
 
-  const execute = useCallback(
-    async (
-      config?: AxiosRequestConfig,
-      replacements: { [key: string]: string } = {},
-    ) => {
-      setState((prev) => ({ ...prev, isLoading: true, isError: false }));
+const INITIAL_STATE: ApiState<never> = {
+  data: null,
+  message: '',
+  success: false,
+  isLoading: false,
+  isSuccess: false,
+  isError: false,
+  error: null,
+  meta: undefined,
+};
+
+/** Shared state machine for every verb: loading, then the response, or a handled error on throw. */
+function useApiCall<T>(resetErrorOnStart: boolean) {
+  const [state, setState] = useState<ApiState<T>>(INITIAL_STATE);
+
+  const run = useCallback(
+    async (send: () => Promise<BaseApiResponse<T>>) => {
+      setState((prev) =>
+        resetErrorOnStart
+          ? { ...prev, isLoading: true, isError: false }
+          : { ...prev, isLoading: true },
+      );
 
       try {
-        let modifiedUrl = url;
-        for (const key in replacements) {
-          modifiedUrl = modifiedUrl.replace(`{{${key}}}`, replacements[key]);
-        }
-
-        const response = await httpClient.get<BaseApiResponse<T>>(
-          modifiedUrl,
-          config,
-        );
-
+        const result = await send();
         setState({
-          data: response.data.data,
-          message: response.data.message,
-          success: response.data.success,
-          meta: response.data.meta,
+          data: result.data,
+          message: result.message,
+          success: result.success,
+          meta: result.meta,
           isLoading: false,
           isSuccess: true,
           isError: false,
           error: null,
         });
-
-        return response.data;
+        return result;
       } catch (error) {
-        const errorResponse = handleError<T>(error);
+        const result = handleError<T>(error);
         setState({
           data: null,
-          message: errorResponse.message,
+          message: result.message,
           success: false,
           isLoading: false,
           isSuccess: false,
           isError: true,
           error: error as AxiosError,
-          meta: errorResponse.meta,
+          meta: result.meta,
         });
-        return errorResponse;
+        return result;
       }
     },
-    [url],
+    [resetErrorOnStart],
+  );
+
+  return [run, state] as const;
+}
+
+export const useAxiosGet = <T>(url: string): ApiHookReturn<T> => {
+  const [run, state] = useApiCall<T>(true);
+
+  const execute = useCallback(
+    (config?: AxiosRequestConfig, replacements: Replacements = {}) =>
+      run(async () => {
+        const response = await httpClient.get<BaseApiResponse<T>>(
+          fillUrl(url, replacements),
+          config,
+        );
+        return response.data;
+      }),
+    [url, run],
   );
 
   return [execute, state];
 };
 
-// Update other hooks similarly (POST, PUT, PATCH, DELETE)
 export const useAxiosPost = <T, D = unknown>(
   url: string,
 ): ApiPostHookReturn<T, D> => {
-  const [state, setState] = useState<ApiState<T>>({
-    data: null,
-    message: '',
-    success: false,
-    isLoading: false,
-    isSuccess: false,
-    isError: false,
-    error: null,
-    meta: undefined,
-  });
+  const [run, state] = useApiCall<T>(false);
 
   const execute = useCallback(
-    async (
-      data: D,
-      config?: AxiosRequestConfig,
-      replacements: { [key: string]: string } = {},
-    ) => {
-      setState((prev) => ({ ...prev, isLoading: true }));
-
-      try {
-        let modifiedUrl = url;
-        for (const key in replacements) {
-          modifiedUrl = modifiedUrl.replace(`{{${key}}}`, replacements[key]);
-        }
-
+    (data: D, config?: AxiosRequestConfig, replacements: Replacements = {}) =>
+      run(async () => {
         const response = await httpClient.post<BaseApiResponse<T>>(
-          modifiedUrl,
+          fillUrl(url, replacements),
           data,
           config,
         );
-
-        setState({
-          data: response.data.data,
-          message: response.data.message,
-          success: response.data.success,
-          meta: response.data.meta,
-          isLoading: false,
-          isSuccess: true,
-          isError: false,
-          error: null,
-        });
-
         return response.data;
-      } catch (error) {
-        const errorResponse = handleError<T>(error);
-        setState({
-          data: null,
-          message: errorResponse.message,
-          success: false,
-          isLoading: false,
-          isSuccess: false,
-          isError: true,
-          error: error as AxiosError,
-          meta: errorResponse.meta,
-        });
-        return errorResponse;
-      }
-    },
-    [url],
+      }),
+    [url, run],
   );
 
   return [execute, state];
 };
 
-// PUT Hook
+/** PUT/PATCH settle HTTP errors inside `createExecuteHandler`, so state reports `isSuccess` for them. */
+function useAxiosBodyMutation<T, D>(
+  url: string,
+  method: 'put' | 'patch',
+): ApiPostHookReturn<T, D> {
+  const [run, state] = useApiCall<T>(false);
+
+  const execute = useCallback(
+    (data: D, config?: AxiosRequestConfig, replacements: Replacements = {}) =>
+      run(() =>
+        createExecuteHandler<T, D>(method)(
+          fillUrl(url, replacements),
+          data,
+          config,
+        ),
+      ),
+    [url, run, method],
+  );
+
+  return [execute, state];
+}
+
 export const useAxiosPut = <T, D = unknown>(
   url: string,
-): ApiPostHookReturn<T, D> => {
-  const [state, setState] = useState<ApiState<T>>({
-    data: null,
-    message: '',
-    success: false,
-    isLoading: false,
-    isSuccess: false,
-    isError: false,
-    error: null,
-    meta: undefined,
-  });
+): ApiPostHookReturn<T, D> => useAxiosBodyMutation<T, D>(url, 'put');
 
-  const execute = useCallback(
-    async (
-      data: D,
-      config?: AxiosRequestConfig,
-      replacements: { [key: string]: string } = {},
-    ) => {
-      setState((prev) => ({ ...prev, isLoading: true }));
-
-      try {
-        let modifiedUrl = url;
-        for (const key in replacements) {
-          modifiedUrl = modifiedUrl.replace(`{{${key}}}`, replacements[key]);
-        }
-        const result = await createExecuteHandler<T, D>('put')(
-          modifiedUrl,
-          data,
-          config,
-        );
-        setState({
-          data: result.data,
-          message: result.message,
-          success: result.success,
-          meta: result.meta,
-          isLoading: false,
-          isSuccess: true,
-          isError: false,
-          error: null,
-        });
-        return result;
-      } catch (error) {
-        const result = handleError<T>(error);
-        setState({
-          data: null,
-          message: result.message,
-          success: false,
-          isLoading: false,
-          isSuccess: false,
-          isError: true,
-          error: error as AxiosError,
-          meta: result.meta,
-        });
-        return result;
-      }
-    },
-    [url],
-  );
-
-  return [execute, state];
-};
-
-// PATCH Hook
 export const useAxiosPatch = <T, D = unknown>(
   url: string,
-): ApiPostHookReturn<T, D> => {
-  const [state, setState] = useState<ApiState<T>>({
-    data: null,
-    message: '',
-    success: false,
-    isLoading: false,
-    isSuccess: false,
-    isError: false,
-    error: null,
-    meta: undefined,
-  });
+): ApiPostHookReturn<T, D> => useAxiosBodyMutation<T, D>(url, 'patch');
 
-  const execute = useCallback(
-    async (
-      data: D,
-      config?: AxiosRequestConfig,
-      replacements: { [key: string]: string } = {},
-    ) => {
-      setState((prev) => ({ ...prev, isLoading: true }));
-
-      try {
-        let modifiedUrl = url;
-        for (const key in replacements) {
-          modifiedUrl = modifiedUrl.replace(`{{${key}}}`, replacements[key]);
-        }
-        const result = await createExecuteHandler<T, D>('patch')(
-          modifiedUrl,
-          data,
-          config,
-        );
-        setState({
-          data: result.data,
-          message: result.message,
-          success: result.success,
-          meta: result.meta,
-          isLoading: false,
-          isSuccess: true,
-          isError: false,
-          error: null,
-        });
-        return result;
-      } catch (error) {
-        const result = handleError<T>(error);
-        setState({
-          data: null,
-          message: result.message,
-          success: false,
-          isLoading: false,
-          isSuccess: false,
-          isError: true,
-          error: error as AxiosError,
-          meta: result.meta,
-        });
-        return result;
-      }
-    },
-    [url],
-  );
-
-  return [execute, state];
-};
-
-// DELETE Hook
 export const useAxiosDelete = <T = void>(url: string): ApiHookReturn<T> => {
-  const [state, setState] = useState<ApiState<T>>({
-    data: null,
-    message: '',
-    success: false,
-    isLoading: false,
-    isSuccess: false,
-    isError: false,
-    error: null,
-    meta: undefined,
-  });
+  const [run, state] = useApiCall<T>(false);
 
   const execute = useCallback(
-    async (
-      config?: AxiosRequestConfig,
-      replacements: { [key: string]: string } = {},
-    ) => {
-      setState((prev) => ({ ...prev, isLoading: true }));
-
-      try {
-        let modifiedUrl = url;
-        for (const key in replacements) {
-          modifiedUrl = modifiedUrl.replace(`{{${key}}}`, replacements[key]);
-        }
-        const result = await createExecuteHandler<T>('delete')(
-          modifiedUrl,
+    (config?: AxiosRequestConfig, replacements: Replacements = {}) =>
+      run(() =>
+        createExecuteHandler<T>('delete')(
+          fillUrl(url, replacements),
           undefined,
           config,
-        );
-        setState({
-          data: result.data,
-          message: result.message,
-          success: result.success,
-          meta: result.meta,
-          isLoading: false,
-          isSuccess: true,
-          isError: false,
-          error: null,
-        });
-        return result;
-      } catch (error) {
-        const result = handleError<T>(error);
-        setState({
-          data: null,
-          message: result.message,
-          success: false,
-          isLoading: false,
-          isSuccess: false,
-          isError: true,
-          error: error as AxiosError,
-          meta: result.meta,
-        });
-        return result;
-      }
-    },
-    [url],
+        ),
+      ),
+    [url, run],
   );
 
   return [execute, state];

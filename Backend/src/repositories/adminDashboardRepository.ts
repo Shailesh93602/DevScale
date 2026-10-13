@@ -1,5 +1,5 @@
-import { Prisma, AdminAuditLog, Content } from '@prisma/client';
-import { ContentStatus, Status } from '../constants/enums';
+import { AdminAuditLog, Content } from '@prisma/client';
+import { ContentStatus } from '../constants/enums';
 import type { User } from '@prisma/client';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
@@ -8,16 +8,15 @@ import {
   DashboardMetrics,
   ResourceAllocation,
   ReportConfig,
-  MetricData,
-  MetricDataType,
-  UserGrowthMetric,
-  ContentEngagementMetric,
-  ChallengeCompletionMetric,
-  ResourceUsageMetric,
 } from '../types/adminDashboard';
 import { Parser } from 'json2csv';
 import BaseRepository from './baseRepository.js';
 import UserRepository from './userRepository';
+import {
+  getActivityMetrics,
+  getSystemHealth,
+} from './adminDashboard/healthMetrics.js';
+import { fetchMetricData } from './adminDashboard/reportMetrics.js';
 
 import prisma from '../lib/prisma.js';
 
@@ -81,7 +80,8 @@ export default class AdminDashboardRepository extends BaseRepository<
 
       await Promise.all(
         metrics.map(async (metric) => {
-          data[metric] = await this.fetchMetricData(
+          data[metric] = await fetchMetricData(
+            this,
             metric,
             filters,
             groupBy,
@@ -99,132 +99,6 @@ export default class AdminDashboardRepository extends BaseRepository<
     } catch (error) {
       logger.error('Error generating report:', error);
       throw createAppError('Failed to generate report', 500);
-    }
-  }
-
-  private async fetchMetricData(
-    metric: string,
-    filters?: Record<string, unknown>,
-    groupBy?: string[],
-    timeRange?: { start: Date; end: Date }
-  ): Promise<MetricData[]> {
-    const baseQuery = this.buildMetricQuery(
-      metric,
-      filters,
-      groupBy,
-      timeRange
-    );
-
-    try {
-      const result = await baseQuery;
-      if (!Array.isArray(result)) {
-        throw createAppError('Invalid metric data format', 500);
-      }
-      return this.transformMetricData(metric, result as MetricDataType[]);
-    } catch (error) {
-      logger.error(`Error fetching metric ${metric}:`, error);
-      throw createAppError(`Failed to fetch metric ${metric}`, 500);
-    }
-  }
-
-  private buildMetricQuery(
-    metric: string,
-    filters?: Record<string, unknown>,
-    groupBy?: string[],
-    timeRange?: { start: Date; end: Date }
-  ) {
-    const timeFilter = timeRange
-      ? {
-          created_at: {
-            gte: timeRange.start,
-            lte: timeRange.end,
-          },
-        }
-      : {};
-
-    switch (metric) {
-      case 'userGrowth':
-        return this.groupBy({
-          by: ['created_at'] as Prisma.UserScalarFieldEnum[],
-          where: { ...timeFilter, ...filters },
-          _count: true,
-          orderBy: {
-            created_at: 'asc',
-          },
-        });
-
-      case 'contentEngagement':
-        return prisma.resource.groupBy({
-          by: ['type', 'difficulty'] as Prisma.ResourceScalarFieldEnum[],
-          where: { ...timeFilter, ...filters },
-          _count: {
-            _all: true,
-          },
-          _avg: {
-            downloadCount: true,
-            rating: true,
-          },
-        });
-
-      case 'challengeCompletion':
-        return prisma.challengeSubmission.groupBy({
-          by: ['status'] as Prisma.ChallengeSubmissionScalarFieldEnum[],
-          where: { ...timeFilter, ...filters },
-          _count: true,
-        });
-
-      case 'resourceUsage':
-        return prisma.resource.groupBy({
-          by: ['type'] as Prisma.ResourceScalarFieldEnum[],
-          where: { ...timeFilter, ...filters },
-          _count: {
-            _all: true,
-          },
-          _sum: {
-            downloadCount: true,
-          },
-        });
-
-      default:
-        throw createAppError(`Unsupported metric: ${metric}`, 400);
-    }
-  }
-
-  private transformMetricData(
-    metric: string,
-    data: MetricDataType[]
-  ): MetricData[] {
-    switch (metric) {
-      case 'userGrowth':
-        return (data as UserGrowthMetric[]).map((item) => ({
-          date: item.created_at,
-          count: item._count,
-        }));
-
-      case 'contentEngagement':
-        return (data as ContentEngagementMetric[]).map((item) => ({
-          type: item.type,
-          difficulty: item.difficulty,
-          count: item._count._all,
-          downloads: item._avg.downloadCount ?? 0,
-          rating: item._avg.rating ?? 0,
-        }));
-
-      case 'challengeCompletion':
-        return (data as ChallengeCompletionMetric[]).map((item) => ({
-          status: item.status,
-          count: item._count,
-        }));
-
-      case 'resourceUsage':
-        return (data as ResourceUsageMetric[]).map((item) => ({
-          type: item.type,
-          count: item._count._all,
-          downloads: item._sum.downloadCount ?? 0,
-        }));
-
-      default:
-        throw createAppError(`Unsupported metric: ${metric}`, 400);
     }
   }
 
@@ -300,127 +174,8 @@ export default class AdminDashboardRepository extends BaseRepository<
     }
   }
 
-  private async getCompletionRates(): Promise<Record<string, number>> {
-    const roadmaps = await prisma.roadmap.findMany({
-      include: {
-        _count: {
-          select: {
-            progress: true,
-          },
-        },
-        progress: {
-          where: {
-            status: Status.APPROVED,
-          },
-        },
-      },
-    });
-
-    return Object.fromEntries(
-      roadmaps.map((roadmap) => [
-        roadmap.title,
-        roadmap._count.progress > 0
-          ? (roadmap.progress.length / roadmap._count.progress) * 100
-          : 0,
-      ])
-    );
-  }
-
-  private async getPeakUsageTimes(): Promise<string[]> {
-    const hourlyUsage = await prisma.auditLog.groupBy({
-      by: ['timestamp'],
-      where: {
-        action: 'LOGIN',
-        timestamp: {
-          gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        },
-      },
-      _count: true,
-      orderBy: {
-        _count: {
-          timestamp: 'desc',
-        },
-      },
-      take: 3,
-    });
-
-    return hourlyUsage.map(
-      ({ timestamp }) =>
-        new Date(timestamp).getHours().toString().padStart(2, '0') + ':00'
-    );
-  }
-
-  private async getActivityMetrics(): Promise<{
-    dailyActiveUsers: number;
-    weeklyActiveUsers: number;
-    monthlyActiveUsers: number;
-    averageSessionDuration: number | null;
-    peakUsageTimes: string[];
-  }> {
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const oneMonthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-
-    const [daily, weekly, monthly] = await Promise.all([
-      prisma.auditLog.count({
-        where: {
-          timestamp: { gte: oneDayAgo },
-          action: 'LOGIN',
-        },
-      }),
-      prisma.auditLog.count({
-        where: {
-          timestamp: { gte: oneWeekAgo },
-          action: 'LOGIN',
-        },
-      }),
-      prisma.auditLog.count({
-        where: {
-          timestamp: { gte: oneMonthAgo },
-          action: 'LOGIN',
-        },
-      }),
-    ]);
-
-    // Calculate average session duration from audit logs
-    const sessionDurations = await prisma.auditLog.findMany({
-      where: {
-        action: 'SESSION',
-        timestamp: { gte: oneMonthAgo },
-      },
-      select: {
-        details: true,
-      },
-    });
-
-    // `|| 1` on the divisor turned an EMPTY result set into a clean 0, and the
-    // panel rendered that as "0m" — a measured fact. Nothing in this codebase
-    // writes to `auditLog` (grep: zero `auditLog.create` call sites), so the
-    // set is always empty and the figure was always a fabricated zero.
-    //
-    // null distinguishes "no data" from "measured, and it was zero". The panel
-    // renders it as "—". Restore a real number by writing SESSION rows, not by
-    // reinstating the divisor.
-    const averageSessionDuration =
-      sessionDurations.length === 0
-        ? null
-        : sessionDurations.reduce((acc, { details }) => {
-            const duration =
-              typeof details === 'object' && details
-                ? ((details as { duration?: number }).duration ?? 0)
-                : 0;
-            return acc + duration;
-          }, 0) / sessionDurations.length;
-
-    const peakUsageTimes = await this.getPeakUsageTimes();
-
-    return {
-      dailyActiveUsers: daily,
-      weeklyActiveUsers: weekly,
-      monthlyActiveUsers: monthly,
-      averageSessionDuration,
-      peakUsageTimes,
-    };
+  private getActivityMetrics() {
+    return getActivityMetrics();
   }
 
   private async getPlatformMetrics(): Promise<{
@@ -458,97 +213,7 @@ export default class AdminDashboardRepository extends BaseRepository<
     };
   }
 
-  private async getSystemHealth(): Promise<{
-    databaseStatus: string;
-    cacheStatus: string;
-    averageResponseTime: number | null;
-    errorRate: number | null;
-  }> {
-    try {
-      const databaseStatus = 'healthy';
-
-      // Check cache status with a real round-trip. The old check read a key named
-      // 'test' that nothing ever wrote, so it ALWAYS reported 'error' even when
-      // Redis was healthy. Write-then-read a probe key instead.
-      let cacheStatus = 'error';
-      try {
-        const probeKey = 'health:cache-probe';
-        await setCache(probeKey, 'ok', { ttl: 30 });
-        cacheStatus =
-          (await getCache<string>(probeKey)) === 'ok' ? 'healthy' : 'error';
-      } catch {
-        cacheStatus = 'error';
-      }
-
-      // Get average response time from audit logs
-      const responseTimes = await prisma.auditLog.findMany({
-        where: {
-          action: 'API_REQUEST',
-          timestamp: {
-            gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
-          },
-        },
-        select: {
-          details: true,
-        },
-      });
-
-      // Same fabricated zero as averageSessionDuration above, and this one is
-      // worse: it is read inside the health check, so "0ms average response"
-      // was being reported as a health signal on every probe.
-      const averageResponseTime =
-        responseTimes.length === 0
-          ? null
-          : responseTimes.reduce((acc, { details }) => {
-              const duration =
-                typeof details === 'object' && details
-                  ? ((details as { duration?: number }).duration ?? 0)
-                  : 0;
-              return acc + duration;
-            }, 0) / responseTimes.length;
-
-      // Calculate error rate
-      const [totalRequests, errorRequests] = await Promise.all([
-        prisma.auditLog.count({
-          where: {
-            action: 'API_REQUEST',
-            timestamp: {
-              gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
-            },
-          },
-        }),
-        prisma.auditLog.count({
-          where: {
-            action: 'ERROR',
-            timestamp: {
-              gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
-            },
-          },
-        }),
-      ]);
-
-      // Also derived from the never-written auditLog: with no requests
-      // recorded, "0% error rate" was a reassuring number that measured
-      // nothing. null so the panel can say so.
-      const errorRate =
-        totalRequests > 0 ? (errorRequests / totalRequests) * 100 : null;
-
-      return {
-        databaseStatus,
-        cacheStatus,
-        averageResponseTime,
-        errorRate,
-      };
-    } catch (error) {
-      logger.error('Error checking system health:', error);
-      return {
-        databaseStatus: 'error',
-        cacheStatus: 'error',
-        // Not measured, because the check itself failed — distinct from a
-        // measured zero, which is what this used to claim.
-        averageResponseTime: null,
-        errorRate: null,
-      };
-    }
+  private getSystemHealth() {
+    return getSystemHealth();
   }
 }

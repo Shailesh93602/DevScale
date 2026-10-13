@@ -9,7 +9,7 @@
  * The audit that followed found three more of the same shape, all shipping code:
  *
  *   clsx                 imported by src/utils/cn.ts        arrived under class-variance-authority
- *   lodash               imported by RoadmapDashboard.tsx   arrived under recharts
+ *   lodash               imported by useRoadmapDashboard.ts arrived under recharts
  *   tsparticles-engine   imported by ParticlesBackground    arrived under react-tsparticles
  *
  * `@types/lodash` was declared while `lodash` itself was not, which is the whole

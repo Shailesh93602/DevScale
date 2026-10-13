@@ -25,12 +25,9 @@ import {
 } from '@/lib/battle-replay';
 
 /**
- * Replays a recorded battle with the same markup the live battle page uses
- * for its question, feedback and leaderboard blocks (battle-zone/[id]/page.tsx
- * renderQuestion / renderLeaderboard / renderCompleted). The live page cannot
- * be reused directly — it is one 1,200-line component that owns its socket,
- * its auth and its API calls — so the visual pieces are mirrored here and
- * driven by a pure replay state instead of events.
+ * Replays a recorded battle with markup mirroring battle-zone/[id]/components
+ * (QuestionPhase, LeaderboardTab, CompletedPhase), which take live-page types,
+ * so the pieces are kept here and driven by a pure replay state, not events.
  *
  * Playback: auto-play advances one recorded event per tick; the scrubber and
  * the step buttons set the step directly. Nothing here talks to the network.

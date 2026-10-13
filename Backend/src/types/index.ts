@@ -27,37 +27,6 @@ export interface CategoryTree {
   children: CategoryTree[];
 }
 
-export interface RoadmapData {
-  title: string;
-  description: string;
-  author_id: string;
-  is_public?: boolean;
-  concepts?: ConceptData[];
-}
-
-export interface ConceptData {
-  title: string;
-  description: string;
-  order: number;
-  subjects?: SubjectData[];
-}
-
-export interface SubjectData {
-  title: string;
-  description: string;
-  order: number;
-  topics?: TopicData[];
-}
-
-export interface TopicData {
-  title: string;
-  description: string;
-  order: number;
-  content?: string;
-  resources?: string[];
-  prerequisites?: string[];
-}
-
 export interface UserRoadmapData {
   user_id: string;
   roadmap_id: string;

@@ -223,15 +223,27 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                     new challenge.
                   </p>
                 </div>
-                <Link href="/battle-zone/create" className="shrink-0">
-                  <Button
-                    size="lg"
-                    className="shadow-primary/30 flex items-center gap-2 rounded-xl px-8 shadow-md"
-                  >
-                    <Swords className="h-5 w-5" />
-                    Create Battle
-                  </Button>
-                </Link>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Link href="/instant-battle">
+                    <Button
+                      size="lg"
+                      className="shadow-primary/30 flex items-center gap-2 rounded-xl px-6 shadow-md"
+                    >
+                      <Zap className="h-5 w-5" />
+                      Quick Match
+                    </Button>
+                  </Link>
+                  <Link href="/battle-zone/create" className="shrink-0">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="flex items-center gap-2 rounded-xl px-6"
+                    >
+                      <Swords className="h-5 w-5" />
+                      Create Battle
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </motion.div>
           )}
