@@ -40,10 +40,10 @@ const FeaturesSection: React.FC = () => (
               <FaUsers className="text-4xl text-primary" />
             </span>
           }
-          title="Active Community"
-          description="Connect, collaborate, and grow with fellow students."
+          title="Learn With Others"
+          description="Discuss each roadmap in its comment thread and see how other students approach it."
           delay={0.2}
-          href="/auth/register"
+          href="/career-roadmap"
         />
         <FeatureCard
           icon={

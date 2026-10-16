@@ -50,9 +50,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           className="mx-auto mb-10 max-w-3xl text-lg text-foreground/90 md:text-xl"
         >
           {BRANDING.name} is the all-in-one platform for engineering students.
-          Personalized roadmaps, community support, placement preparation, and
-          interactive challenges—all designed to transform your learning
-          experience.
+          Personalized roadmaps, real-time coding battles, placement
+          preparation, and interactive challenges—all designed to transform your
+          learning experience.
         </motion.p>
 
         <motion.div

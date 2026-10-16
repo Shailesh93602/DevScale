@@ -324,3 +324,65 @@ describe('a paid tier must gate something', () => {
     ).toBe(false);
   });
 });
+
+/**
+ * Features that exist only behind a page, so the claim is tied to that page
+ * rather than to a hand-kept list: while the page renders ComingSoon, no
+ * marketing surface may name the feature (except on a denial line). main
+ * shipped "matchmaking" on /pricing while /instant-battle said "Coming Soon".
+ */
+describe('a feature is advertised only while its page is built', () => {
+  const GATED_BY_PAGE: Array<{ label: string; pattern: RegExp; page: string }> =
+    [
+      {
+        label: 'matchmaking',
+        pattern: /matchmaking/i,
+        page: 'Frontend/src/app/instant-battle/page.tsx',
+      },
+      {
+        label: 'forums',
+        pattern: /\bforums?\b/i,
+        page: 'Frontend/src/app/discussion-forums/page.tsx',
+      },
+      {
+        label: 'events',
+        pattern: /(?<![-\w])events?\b/i,
+        page: 'Frontend/src/app/events/page.tsx',
+      },
+      {
+        label: 'community',
+        pattern: /community support|join the community|active community/i,
+        page: 'Frontend/src/app/community/page.tsx',
+      },
+      {
+        label: 'collaboration opportunities',
+        pattern: /\bcollaborat(e|ion)\b/i,
+        page: 'Frontend/src/app/collaboration-opportunities/page.tsx',
+      },
+    ];
+
+  const rendersComingSoon = (rel: string) =>
+    !existsSync(join(repoRoot, rel)) || /\bComingSoon\b/.test(read(rel));
+
+  for (const feature of GATED_BY_PAGE) {
+    it(`"${feature.label}" is named only if ${feature.page} is built`, () => {
+      if (!rendersComingSoon(feature.page)) return;
+      const hits = UI_FILES.flatMap((rel) =>
+        read(rel)
+          .split('\n')
+          .map((line, i) => ({ line, i }))
+          .filter(
+            ({ line }) =>
+              !COMMENT_LINE.test(line) &&
+              !DENIAL.test(line) &&
+              feature.pattern.test(line),
+          )
+          .map(({ line, i }) => `${rel}:L${i + 1} ${line.trim()}`),
+      );
+      expect(
+        hits,
+        `${feature.page} renders ComingSoon, but these lines advertise ${feature.label}:\n  ${hits.join('\n  ')}`,
+      ).toEqual([]);
+    });
+  }
+});

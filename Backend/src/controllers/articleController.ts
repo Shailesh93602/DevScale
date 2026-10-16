@@ -20,13 +20,26 @@ export default class ArticleController {
   // see unpublished/draft articles. (Moderators use getModerationQueue instead.)
   public getArticles = catchAsync(async (req: Request, res: Response) => {
     try {
-      const { search } = req.query as { search?: string };
+      const { page = 1, limit = 10, offset = 0, search } = req.pagination ?? {};
 
-      const articles = await this.articleRepository.getArticles({
-        status: Status.APPROVED,
-        search,
+      const { items, total } =
+        await this.articleRepository.listPublishedArticles({
+          search,
+          limit,
+          offset,
+        });
+      const totalPages = Math.ceil(total / limit);
+      sendResponse(res, 'ARTICLE_FETCHED', {
+        data: items,
+        meta: {
+          total,
+          currentPage: page,
+          totalPages,
+          limit,
+          hasNextPage: page < totalPages,
+          hasPreviousPage: page > 1,
+        },
       });
-      sendResponse(res, 'ARTICLE_FETCHED', { data: articles });
     } catch (error) {
       logger.error('Failed to retrieve articles:', error);
       sendResponse(res, 'ARTICLE_NOT_FOUND', {

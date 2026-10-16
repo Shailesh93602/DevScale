@@ -2,6 +2,7 @@ import { BaseRouter } from './BaseRouter';
 import ArticleController from '../controllers/articleController';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
+import paginationMiddleware from '../middlewares/paginationMiddleware';
 import {
   createArticleSchema,
   updateArticleStatusSchema,
@@ -22,7 +23,11 @@ export class ArticleRoutes extends BaseRouter {
     // Public reads. NOTE: literal paths (/all, /my-articles) MUST be registered
     // before the '/:id' param route, otherwise Express matches '/:id' first and
     // e.g. /my-articles is read as id="my-articles" → 404.
-    this.router.get('/all', this.articleController.getArticles);
+    this.router.get(
+      '/all',
+      paginationMiddleware,
+      this.articleController.getArticles
+    );
 
     // Authenticated — own articles (literal path, before '/:id')
     this.router.get(

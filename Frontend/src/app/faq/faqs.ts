@@ -23,13 +23,13 @@ export const FAQS: Faq[] = [
     id: 'faq-1',
     question: 'What is EduScale?',
     answer:
-      'EduScale is an all-in-one platform for engineering students. It provides personalized roadmaps, coding challenges, community support, placement preparation, and interactive learning tools to help you succeed.',
+      'EduScale is an all-in-one platform for engineering students. It provides personalized roadmaps, coding challenges, real-time coding battles, placement preparation, and interactive learning tools to help you succeed.',
   },
   {
     id: 'faq-2',
-    question: 'How can I join the community?',
+    question: 'Can I learn alongside other students?',
     answer:
-      'You can join the community by signing up for a free account and participating in forums, events, and collaboration opportunities.',
+      'Yes. Sign up for a free account to comment on roadmaps, challenge other students to real-time coding battles and climb the leaderboards. Discussion forums, events and collaboration boards are not built yet.',
   },
   {
     id: 'faq-3',

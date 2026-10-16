@@ -130,4 +130,42 @@ test.describe('anonymous read-only view', () => {
     expect(url.pathname).toBe('/auth/login');
     expect(url.searchParams.get('callbackUrl')).toBe('/create-battle');
   });
+
+  // /interview-question is public and sitemapped. Its API used to 401 for
+  // visitors and the page rendered that as "No questions yet" — a false empty
+  // state served to every crawler.
+  test('GET /interview-question shows an honest failure, never a false empty state, when the API refuses', async ({
+    page,
+  }) => {
+    await page.route('**/resources/interview-questions', (route) =>
+      route.fulfill({
+        status: 401,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: false,
+          error: true,
+          message: 'Authorization token required',
+        }),
+      }),
+    );
+    const res = await page.goto('/interview-question', {
+      waitUntil: 'domcontentloaded',
+    });
+    expect(res?.status()).toBe(200);
+    await expect(page.getByText('Unable to load the questions')).toBeVisible();
+    await expect(page.getByText('No questions yet')).toHaveCount(0);
+  });
+
+  test('GET /interview-question, unstubbed, renders questions or the failure state — never "No questions yet"', async ({
+    page,
+  }) => {
+    await page.goto('/interview-question', { waitUntil: 'domcontentloaded' });
+    await expect(
+      page
+        .getByRole('heading', { level: 2 })
+        .filter({ hasText: /Interview Questions|Unable to load the questions/ })
+        .first(),
+    ).toBeVisible();
+    await expect(page.getByText('No questions yet')).toHaveCount(0);
+  });
 });

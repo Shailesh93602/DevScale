@@ -48,19 +48,20 @@ const Page = () => {
     }[]
   >('/resources/interview-questions');
 
+  // useAxiosGet never throws: an HTTP error (a 401, a 500) comes back as
+  // `success: false`. A try/catch here never ran, so a failed load rendered
+  // as "No questions yet".
   const fetchInterviewQuestions = async () => {
-    try {
-      dispatch(showLoader('fetching interview questions'));
-      const response = await getInterviewQuestions();
-      dispatch(hideLoader('fetching interview questions'));
+    dispatch(showLoader('fetching interview questions'));
+    const response = await getInterviewQuestions();
+    dispatch(hideLoader('fetching interview questions'));
+    if (response.success) {
       setInterviewQuestions(response.data ?? []);
-      setIsLoading(false);
-    } catch (error) {
-      logger.error('Error fetching interview questions:', error);
+    } else {
+      logger.error('Error fetching interview questions:', response.message);
       setLoadFailed(true);
-      setIsLoading(false);
-      dispatch(hideLoader('fetching interview questions'));
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {

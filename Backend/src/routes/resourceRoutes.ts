@@ -14,10 +14,18 @@ export class ResourceRoutes extends BaseRouter {
   constructor() {
     super();
     this.resourceController = new ResourceController();
-    this.router.use(authMiddleware);
   }
 
   protected initializeRoutes(): void {
+    // Public and registered BEFORE the router-level auth: it serves a static
+    // JSON file, and /interview-question is a public, sitemapped page. Behind
+    // auth it 401'd for every visitor, and before that the handler was not
+    // mounted at all, so the path fell through to GET /:id.
+    this.router.get(
+      '/interview-questions',
+      this.resourceController.getInterviewQuestions
+    );
+    this.router.use(authMiddleware);
     this.router.get(
       '/',
       paginationMiddleware,

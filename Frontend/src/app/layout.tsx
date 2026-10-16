@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: '%s | EduScale',
   },
   description:
-    'EduScale is the all-in-one platform for engineering students. Personalized roadmaps, community support, placement preparation, coding challenges, and interactive learning. Built by Shailesh Chaudhari.',
+    'EduScale is the all-in-one platform for engineering students. Personalized roadmaps, real-time coding battles, placement preparation, coding challenges, and interactive learning. Built by Shailesh Chaudhari.',
   keywords: [
     'engineering',
     'learning platform',
@@ -42,14 +42,14 @@ export const metadata: Metadata = {
     url: 'https://eduscale.vercel.app',
     title: 'EduScale | All-in-One Engineering Learning Platform',
     description:
-      'Personalized roadmaps, community support, and interactive challenges for engineering students.',
+      'Personalized roadmaps, real-time coding battles, and interactive challenges for engineering students.',
     siteName: 'EduScale',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'EduScale | Engineering Learning Platform',
     description:
-      'Personalized roadmaps, community support, and interactive challenges.',
+      'Personalized roadmaps, real-time coding battles, and interactive challenges.',
   },
   robots: {
     index: true,

@@ -4,6 +4,7 @@ import type { Router } from 'express';
 import { ChallengeRoutes } from '../../routes/challengeRoutes';
 import { RoadMapRoutes } from '../../routes/roadMapRoutes';
 import { RatingRoutes } from '../../routes/ratingRoutes';
+import { ResourceRoutes } from '../../routes/resourceRoutes';
 
 /**
  * The anonymous read-only surface — exactly what a signed-out visitor may
@@ -51,14 +52,29 @@ function routes(router: Router) {
   return out;
 }
 
+// Order-aware: Express runs the stack top to bottom, so a router-level
+// `use(authMiddleware)` guards only the routes registered after it.
 function guardOf(
   router: Router,
   key: string
 ): 'required' | 'optional' | 'none' {
-  const routerMw = routerLevelMiddleware(router);
-  const route = routes(router).find((r) => r.key === key);
-  if (!route) throw new Error(`route ${key} is not declared`);
-  const chain = [...routerMw, ...route.handlers];
+  const stack = (router as unknown as { stack: Layer[] }).stack ?? [];
+  const index = stack.findIndex(
+    (layer) =>
+      layer.route &&
+      Object.keys(layer.route.methods).some(
+        (m) => `${m.toUpperCase()} ${layer.route!.path}` === key
+      )
+  );
+  if (index === -1) throw new Error(`route ${key} is not declared`);
+  const routerMw = stack
+    .slice(0, index)
+    .filter((layer) => !layer.route)
+    .map((layer) => layer.name ?? '<anonymous>');
+  const handlers = stack[index].route!.stack.map(
+    (h) => h.name ?? '<anonymous>'
+  );
+  const chain = [...routerMw, ...handlers];
   if (chain.includes('authMiddleware')) return 'required';
   if (chain.includes('optionalAuthMiddleware')) return 'optional';
   return 'none';
@@ -121,5 +137,24 @@ describe('ratingRoutes — the public leaderboard', () => {
   it('the leaderboard is public and /me is not', () => {
     expect(guardOf(router, 'GET /leaderboard')).toBe('none');
     expect(guardOf(router, 'GET /me')).toBe('required');
+  });
+});
+
+describe('resourceRoutes — the public interview-question bank', () => {
+  const router = new ResourceRoutes().getRouter();
+
+  // /interview-question is a public, sitemapped page that reads this route.
+  // Behind auth, every signed-out visitor (and Google) got a 401 rendered as
+  // an empty bank.
+  it('the static interview-question bank is readable signed out', () => {
+    expect(guardOf(router, 'GET /interview-questions')).toBe('none');
+  });
+
+  it('every other resource route stays authenticated', () => {
+    const open = routes(router)
+      .filter((r) => r.key !== 'GET /interview-questions')
+      .filter((r) => guardOf(router, r.key) !== 'required')
+      .map((r) => r.key);
+    expect(open).toEqual([]);
   });
 });

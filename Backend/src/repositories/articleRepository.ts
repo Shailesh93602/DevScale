@@ -52,6 +52,40 @@ export class ArticleRepository extends BaseRepository<
     }
   }
 
+  // The public listing. A list projection (no `content`) and one page at a
+  // time: the unprojected, unpaginated version returned every approved article
+  // in full — 3.3 MB uncompressed in one anonymous response.
+  async listPublishedArticles(params: {
+    search?: string;
+    limit: number;
+    offset: number;
+  }) {
+    const where: Prisma.ArticleWhereInput = { status: Status.APPROVED };
+    if (params.search) {
+      where.OR = [
+        { title: { contains: params.search, mode: 'insensitive' } },
+        { content: { contains: params.search, mode: 'insensitive' } },
+      ];
+    }
+    const [items, total] = await Promise.all([
+      prisma.article.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          created_at: true,
+          author: { select: { username: true } },
+        },
+        orderBy: { created_at: 'desc' },
+        take: params.limit,
+        skip: params.offset,
+      }),
+      prisma.article.count({ where }),
+    ]);
+    return { items, total };
+  }
+
   async getArticleById(id: string) {
     try {
       const article = await this.findUnique({
