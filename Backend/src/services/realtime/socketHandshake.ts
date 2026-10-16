@@ -4,6 +4,7 @@ import { isProduction } from '../../config/runtimeMode';
 import prisma from '../../lib/prisma';
 import logger from '../../utils/logger';
 import { verifySupabaseToken } from '../../utils/verifySupabaseToken';
+import { isBarred } from '../../middlewares/authMiddleware';
 
 type OriginCallback = (err: Error | null, allow?: boolean) => void;
 
@@ -52,10 +53,20 @@ export async function authenticateSocket(
     const supabaseUser = await verifySupabaseToken(token);
     const dbUser = await prisma.user.findUnique({
       where: { supabase_id: supabaseUser.id },
-      select: { id: true, username: true, avatar_url: true },
+      select: {
+        id: true,
+        username: true,
+        avatar_url: true,
+        status: true,
+        is_active: true,
+      },
     });
     if (!dbUser) {
       return next(new Error('Invalid authentication token'));
+    }
+    // Same rule as the REST authMiddleware: a suspended account is refused.
+    if (isBarred(dbUser)) {
+      return next(new Error('Account suspended'));
     }
 
     socket.data.user = {

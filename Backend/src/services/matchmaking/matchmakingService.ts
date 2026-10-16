@@ -22,6 +22,8 @@ import socketService from '../socket.js';
 import prisma from '../../lib/prisma.js';
 import { DEFAULT_RATING } from '../rating/ratingMath.js';
 import logger from '../../utils/logger.js';
+import { createAppError } from '../../utils/errorHandler.js';
+import { getRandomPoolQuestions } from '../questionPoolService.js';
 
 const QUEUE_KEY = 'matchmaking:queue:quick';
 const META_KEY = 'matchmaking:meta:quick';
@@ -29,6 +31,7 @@ const BASE_BAND = 100; // rating points
 const BAND_PER_SECOND = 20; // widen while waiting
 const MAX_BAND = 600;
 const LOCK_TTL_MS = 5000;
+const RANKED_QUESTIONS = 5;
 
 export interface MatchResult {
   matched: boolean;
@@ -91,16 +94,25 @@ const battleRepo = new BattleRepository();
 const defaultDeps: MatchmakingDeps = {
   redis: defaultRedis as unknown as QueueRedis,
   redlock: defaultRedlock as unknown as QueueRedlock,
-  createBattle: async (aId) => {
+  createBattle: async (aId, bId) => {
+    // Without questions startBattle refuses (_count.questions <
+    // total_questions), and without seats a third user could take a matched
+    // player's place — so both go into the same INSERT as the battle.
+    const questions = await getRandomPoolQuestions(RANKED_QUESTIONS);
+    if (questions.length < RANKED_QUESTIONS) {
+      throw createAppError('Not enough questions for a ranked match', 503);
+    }
     const battle = await battleRepo.createBattle({
       title: 'Ranked Match',
       type: 'QUICK',
       difficulty: 'MEDIUM',
       max_participants: 2,
-      total_questions: 5,
+      total_questions: RANKED_QUESTIONS,
       time_per_question: 30,
       points_per_question: 100,
       user_id: aId,
+      participant_ids: [aId, bId],
+      pool_questions: questions,
     });
     return { battleId: battle.id, slug: battle.slug };
   },
@@ -215,10 +227,30 @@ export class MatchmakingService {
       ]);
       if (s1 === null || s2 === null) return { matched: false };
 
+      const opponentEnqueuedAt = await this.d.redis.hget(
+        META_KEY,
+        opponent.userId
+      );
       await this.d.redis.zrem(QUEUE_KEY, userId, opponent.userId);
       await this.d.redis.hdel(META_KEY, userId, opponent.userId);
 
-      const battle = await this.d.createBattle(userId, opponent.userId);
+      let battle: { battleId: string; slug: string };
+      try {
+        battle = await this.d.createBattle(userId, opponent.userId);
+      } catch (err) {
+        // No battle, so nobody was matched: put both players back exactly as
+        // they were, or the waiter silently drops out of matchmaking.
+        const now = String(this.d.now());
+        await this.d.redis.zadd(QUEUE_KEY, Number(s1), userId);
+        await this.d.redis.hset(META_KEY, userId, enqueuedAtStr ?? now);
+        await this.d.redis.zadd(QUEUE_KEY, Number(s2), opponent.userId);
+        await this.d.redis.hset(
+          META_KEY,
+          opponent.userId,
+          opponentEnqueuedAt ?? now
+        );
+        throw err;
+      }
 
       // The caller gets the result inline; the waiter learns via their socket.
       this.d.notify(opponent.userId, 'matchmaking:matched', {

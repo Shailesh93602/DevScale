@@ -47,5 +47,6 @@ module.exports = {
   maxWorkers: '50%',
   detectOpenHandles: true,
   forceExit: true,
+  setupFiles: ['<rootDir>/src/tests/jest-env.ts'],
   setupFilesAfterEnv: ['<rootDir>/src/tests/jest-setup.ts'],
 };

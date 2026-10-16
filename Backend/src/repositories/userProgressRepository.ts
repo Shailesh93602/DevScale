@@ -72,29 +72,63 @@ export default class UserProgressRepository extends BaseRepository<
   }
 
   // Update user progress
+  /**
+   * Records progress and returns true only when this call should pay the
+   * topic-completion points: the first time the topic is marked completed.
+   * `points_awarded` is set in the same conditional updateMany (or create), so
+   * two concurrent completions cannot both pay, and un-completing then
+   * re-completing pays nothing. A topic completed by its quiz has not been
+   * paid yet, so a later completion pays once. time_spent is left alone (this
+   * endpoint does not measure it).
+   */
   async updateUserProgress(
     user_id: string,
-    data: {
-      topic_id: string;
-      is_completed: boolean;
-      timeSpent: number;
+    data: { topic_id: string; is_completed: boolean }
+  ): Promise<boolean> {
+    const { topic_id } = data;
+
+    if (!data.is_completed) {
+      await prisma.userProgress.upsert({
+        where: { user_id_topic_id: { user_id, topic_id } },
+        update: { is_completed: false, completed_at: null },
+        create: { user_id, topic_id, is_completed: false, time_spent: 0 },
+      });
+      return false;
     }
-  ): Promise<void> {
-    await this.upsert({
-      where: { user_id_topic_id: { user_id, topic_id: data.topic_id } },
-      update: {
-        is_completed: data.is_completed,
-        completed_at: data.is_completed ? new Date() : null,
-        time_spent: data.timeSpent,
-      },
-      create: {
-        user_id,
-        topic_id: data.topic_id,
-        is_completed: data.is_completed,
-        completed_at: data.is_completed ? new Date() : null,
-        time_spent: data.timeSpent ?? 0,
-      },
+
+    const now = new Date();
+    const pay = async () =>
+      (
+        await prisma.userProgress.updateMany({
+          where: { user_id, topic_id, points_awarded: false },
+          data: { is_completed: true, completed_at: now, points_awarded: true },
+        })
+      ).count === 1;
+
+    if (await pay()) return true;
+    // Row exists and was already paid: re-complete it without paying.
+    const recompleted = await prisma.userProgress.updateMany({
+      where: { user_id, topic_id, is_completed: false },
+      data: { is_completed: true, completed_at: now },
     });
+    if (recompleted.count === 1) return false;
+    try {
+      await prisma.userProgress.create({
+        data: {
+          user_id,
+          topic_id,
+          is_completed: true,
+          completed_at: now,
+          time_spent: 0,
+          points_awarded: true,
+        },
+      });
+      return true;
+    } catch (error) {
+      // P2002: the row exists (already completed, or created concurrently).
+      if ((error as { code?: string })?.code !== 'P2002') throw error;
+      return pay();
+    }
   }
 
   // Get user's achievements

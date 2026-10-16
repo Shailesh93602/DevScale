@@ -120,10 +120,17 @@ export async function rbac({ tok }) {
   // Privilege escalation: a student must not be able to hand themselves ADMIN.
   const adminRole = await prisma.role.findFirst({ where: { name: 'ADMIN' }, select: { id: true } }).catch(() => null);
   if (adminRole && studentId) {
-    await api('PATCH', `/admin/users/${studentId}/role`, { token: tok.student, body: { roleId: adminRole.id } });
-    await api('POST', '/rbac/users/role', { token: tok.student, body: { userId: studentId, roleId: adminRole.id } });
-    const stillStudent = await prisma.user.findUnique({ where: { id: studentId }, include: { role: true } }).catch(() => null);
-    rec('rbac', 'student cannot self-escalate to ADMIN (DB role unchanged)', stillStudent?.role?.name === 'STUDENT', `role=${stillStudent?.role?.name}`);
+    // Snapshot first: if the guard under test is broken the probe succeeds,
+    // and the escalation must not outlive the run.
+    const before = await prisma.user.findUnique({ where: { id: studentId }, select: { role_id: true } });
+    try {
+      await api('PATCH', `/admin/users/${studentId}/role`, { token: tok.student, body: { roleId: adminRole.id } });
+      await api('POST', '/rbac/users/role', { token: tok.student, body: { userId: studentId, roleId: adminRole.id } });
+      const stillStudent = await prisma.user.findUnique({ where: { id: studentId }, include: { role: true } }).catch(() => null);
+      rec('rbac', 'student cannot self-escalate to ADMIN (DB role unchanged)', stillStudent?.role?.name === 'STUDENT', `role=${stillStudent?.role?.name}`);
+    } finally {
+      if (before) await prisma.user.update({ where: { id: studentId }, data: { role_id: before.role_id } });
+    }
   }
 }
 
@@ -145,11 +152,17 @@ export async function idor({ tok }) {
   }
 
   // A roadmap owned by someone else must not be editable.
-  const foreign = await prisma.roadmap.findFirst({ where: { user_id: { not: studentId } }, select: { id: true, title: true, description: true } }).catch(() => null);
+  const foreign = await prisma.roadmap.findFirst({ where: { user_id: { not: studentId } }, select: { id: true, title: true, description: true, difficulty: true } }).catch(() => null);
   if (foreign) {
-    const upd = await api('PUT', `/roadmaps/${foreign.id}`, { token: tok.student, body: { title: foreign.title, description: 'HIJACKED', difficulty: 'BEGINNER' } });
-    const after = await prisma.roadmap.findUnique({ where: { id: foreign.id }, select: { description: true } });
-    rec('idor', 'student cannot edit a roadmap they do not own', upd.status === 403 && after?.description !== 'HIJACKED', `status=${upd.status} desc_changed=${after?.description === 'HIJACKED'}`);
+    try {
+      const upd = await api('PUT', `/roadmaps/${foreign.id}`, { token: tok.student, body: { title: foreign.title, description: 'HIJACKED', difficulty: 'BEGINNER' } });
+      const after = await prisma.roadmap.findUnique({ where: { id: foreign.id }, select: { description: true } });
+      rec('idor', 'student cannot edit a roadmap they do not own', upd.status === 403 && after?.description !== 'HIJACKED', `status=${upd.status} desc_changed=${after?.description === 'HIJACKED'}`);
+    } finally {
+      // Restore unconditionally: a broken ownership guard must not leave the
+      // owner's roadmap rewritten.
+      await prisma.roadmap.update({ where: { id: foreign.id }, data: { title: foreign.title, description: foreign.description, difficulty: foreign.difficulty } });
+    }
   }
 
   // A battle you never joined must not leak its questions or accept answers.

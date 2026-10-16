@@ -159,6 +159,7 @@ export default abstract class BaseRepository<
     selection?: {
       include?: Record<string, unknown>;
       select?: Record<string, unknown>;
+      omit?: Record<string, boolean>;
     },
     whereClause: Record<string, unknown> = {}
   ): Promise<PaginatedResult<T>> {

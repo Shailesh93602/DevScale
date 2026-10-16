@@ -1,5 +1,6 @@
 import { BaseRouter } from './BaseRouter';
 import PlacementController from '../controllers/placementControllers';
+import { authMiddleware } from '../middlewares/authMiddleware';
 
 export class PlacementRoutes extends BaseRouter {
   private readonly placementController: PlacementController;
@@ -11,7 +12,13 @@ export class PlacementRoutes extends BaseRouter {
   }
 
   protected initializeRoutes(): void {
-    this.router.get('/resources', this.placementController.getResources);
+    // A user's own placement rows: the id comes from the session, never the
+    // query (it used to be ?userId=, readable anonymously for anyone).
+    this.router.get(
+      '/resources',
+      authMiddleware,
+      this.placementController.getResources
+    );
     this.router.get('/books', this.placementController.getBooks);
   }
 }

@@ -119,8 +119,15 @@ export function useCreateRoadmapForm({
   async function onSubmit(values: RoadmapFormData) {
     try {
       setIsSubmitting(true);
-      await createRoadmap({ data: values });
-      toast.success('Roadmap created successfully!');
+      // The API validates title/description/difficulty at the top level, and
+      // useAxiosPost never throws: a 4xx comes back as `success: false`.
+      const res = await createRoadmap(values);
+      if (!res.success) {
+        toast.error(
+          res.message || 'Unable to create the roadmap. Please try again.',
+        );
+        return;
+      }
       onSuccess();
       onClose();
     } catch (error) {

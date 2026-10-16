@@ -683,6 +683,8 @@ model UserProgress {
   confidence_level    Int?      @db.SmallInt
   last_reviewed       DateTime?
   progress_percentage Int?      @db.SmallInt
+  /// Topic-completion points have been paid for this row (once, ever).
+  points_awarded      Boolean   @default(false)
   subject             Subject?  @relation(fields: [subject_id], references: [id])
   topic               Topic?    @relation(fields: [topic_id], references: [id])
   user                User      @relation(fields: [user_id], references: [id])

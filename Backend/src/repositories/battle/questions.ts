@@ -6,6 +6,17 @@ import { battleDetailInclude, type BattleDetail } from './battleShapes.js';
 import { invalidateBattleListCache } from './browse.js';
 import { resolveBattleId } from './lock.js';
 
+type PoolQuestionInput = {
+  source_quiz_question_id: string | null;
+  source_challenge_id: string | null;
+  question: string;
+  options: string[];
+  correct_answer: number;
+  explanation: string | null;
+  points: number;
+  time_limit: number;
+};
+
 // ── Create ──────────────────────────────────────────────────────────────
 
 export async function createBattle(data: {
@@ -22,6 +33,12 @@ export async function createBattle(data: {
   user_id: string;
   question_source_type?: string | null;
   question_source_id?: string | null;
+  /**
+   * Seated and seeded in the same INSERT as the battle (ranked matchmaking):
+   * nobody can take a matched player's seat, and the battle is startable.
+   */
+  participant_ids?: string[];
+  pool_questions?: PoolQuestionInput[];
 }): Promise<BattleDetail & { slug: string }> {
   const battle = await prisma.battle.create({
     data: {
@@ -39,6 +56,30 @@ export async function createBattle(data: {
       user_id: data.user_id,
       question_source_type: data.question_source_type ?? null,
       question_source_id: data.question_source_id ?? null,
+      ...(data.participant_ids && {
+        current_participants: data.participant_ids.length,
+        participants: {
+          create: data.participant_ids.map((user_id) => ({
+            user_id,
+            status: 'JOINED',
+          })),
+        },
+      }),
+      ...(data.pool_questions && {
+        questions: {
+          create: data.pool_questions.map((q, idx) => ({
+            question: q.question,
+            options: q.options,
+            correct_answer: q.correct_answer,
+            explanation: q.explanation,
+            points: data.points_per_question,
+            time_limit: data.time_per_question,
+            order: idx + 1,
+            source_quiz_question_id: q.source_quiz_question_id,
+            source_challenge_id: q.source_challenge_id,
+          })),
+        },
+      }),
     },
     include: battleDetailInclude,
   });
@@ -57,16 +98,7 @@ export async function createBattle(data: {
  */
 export async function addQuestionsFromPool(
   battleId: string,
-  questions: {
-    source_quiz_question_id: string | null;
-    source_challenge_id: string | null;
-    question: string;
-    options: string[];
-    correct_answer: number;
-    explanation: string | null;
-    points: number;
-    time_limit: number;
-  }[]
+  questions: PoolQuestionInput[]
 ) {
   const battle = await prisma.battle.findUnique({
     where: { id: battleId },

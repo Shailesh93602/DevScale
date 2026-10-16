@@ -135,6 +135,16 @@ const syncUser = async (user: SupabaseUser): Promise<Request['user']> => {
   return userData;
 };
 
+/**
+ * An admin suspend (bulkUpdateUsers -> status 'suspended') or is_active=false
+ * must actually end access; a valid Supabase JWT alone is not enough. The
+ * auth cache holds userData for up to its TTL, so a suspension takes effect
+ * within that window.
+ */
+export const isBarred = (
+  u: { status?: string | null; is_active?: boolean } | undefined
+) => u?.status === 'suspended' || u?.is_active === false;
+
 // ─── Main Auth Middleware (Required) ──────────────────────────────────────────
 export const authMiddleware = async (
   req: Request,
@@ -154,6 +164,9 @@ export const authMiddleware = async (
 
     const cached = await getAuthCache(token);
     if (cached) {
+      if (isBarred(cached.userData)) {
+        return next(createAppError('Account suspended', 403));
+      }
       req.user = cached.userData;
       req.supabaseUser = cached.user;
       return next();
@@ -163,6 +176,9 @@ export const authMiddleware = async (
     const userData = await syncUser(user);
 
     await setAuthCache(token, user, userData);
+    if (isBarred(userData)) {
+      return next(createAppError('Account suspended', 403));
+    }
     req.user = userData;
     req.supabaseUser = user;
 
@@ -192,15 +208,18 @@ export const optionalAuthMiddleware = async (
 
     const cached = await getAuthCache(token);
     if (cached) {
-      req.user = cached.userData;
-      req.supabaseUser = cached.user;
+      // A suspended account browses public routes as anonymous.
+      if (!isBarred(cached.userData)) {
+        req.user = cached.userData;
+        req.supabaseUser = cached.user;
+      }
       return next();
     }
 
     const user = await verifyToken(token);
     const userData = await syncUser(user);
 
-    if (userData) {
+    if (userData && !isBarred(userData)) {
       await setAuthCache(token, user, userData);
       req.user = userData;
       req.supabaseUser = user;

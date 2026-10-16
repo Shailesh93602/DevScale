@@ -32,6 +32,9 @@ const h = vi.hoisted(() => {
     leaveMock: vi.fn(),
     statusMock: vi.fn(),
     sessionToken: 'test-token' as string | null,
+    authListeners: [] as Array<
+      (event: string, session: { access_token: string } | null) => void
+    >,
   };
 
   return { makeSocket, state };
@@ -56,6 +59,12 @@ vi.mock('@/utils/supabase/client', () => ({
               : null,
           },
         }),
+      onAuthStateChange: (
+        fn: (event: string, session: { access_token: string } | null) => void,
+      ) => {
+        h.state.authListeners.push(fn);
+        return { data: { subscription: { unsubscribe: () => {} } } };
+      },
     },
   }),
 }));
@@ -85,10 +94,15 @@ describe('useMatchmaking', () => {
     vi.useFakeTimers();
     h.state.sockets.length = 0;
     h.state.sessionToken = 'test-token';
+    h.state.authListeners.length = 0;
     h.state.joinMock.mockReset();
     h.state.leaveMock.mockReset();
     h.state.statusMock.mockReset();
 
+    h.state.leaveMock.mockResolvedValue({
+      success: true,
+      data: { left: true },
+    });
     h.state.statusMock.mockResolvedValue({
       success: true,
       data: { inQueue: false, queueSize: 0, rating: 1250 },
@@ -263,5 +277,109 @@ describe('useMatchmaking', () => {
 
     expect(result.current.phase).toBe('error');
     expect(result.current.error).toBe('Redis queue connection unavailable');
+  });
+
+  describe('the server queue is left whenever the client stops waiting', () => {
+    const queue = async () => {
+      h.state.joinMock.mockResolvedValueOnce({
+        success: true,
+        data: { matched: false },
+      });
+      const hook = renderHook(() => useMatchmaking({ timeoutMs: 15000 }));
+      await act(async () => {
+        await hook.result.current.joinQueue();
+      });
+      expect(hook.result.current.phase).toBe('queuing');
+      return hook;
+    };
+
+    it('on the client-side timeout', async () => {
+      const { result } = await queue();
+      await act(async () => {
+        vi.advanceTimersByTime(16000);
+        await Promise.resolve();
+      });
+      expect(result.current.phase).toBe('timeout');
+      expect(h.state.leaveMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('on reset() while queuing', async () => {
+      const { result } = await queue();
+      act(() => result.current.reset());
+      expect(result.current.phase).toBe('idle');
+      expect(h.state.leaveMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('on unmount while queuing', async () => {
+      const { unmount } = await queue();
+      unmount();
+      expect(h.state.leaveMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('on unmount while the join is still in flight', async () => {
+      let resolveJoin!: (v: unknown) => void;
+      h.state.joinMock.mockReturnValueOnce(
+        new Promise((r) => (resolveJoin = r)),
+      );
+      const { result, unmount } = renderHook(() => useMatchmaking());
+      let joining!: Promise<void>;
+      act(() => {
+        joining = result.current.joinQueue();
+      });
+      unmount();
+      // The server handles that leave first, then the join enqueues the user.
+      resolveJoin({ success: true, data: { matched: false } });
+      await joining;
+      expect(h.state.leaveMock).toHaveBeenCalledTimes(2);
+    });
+
+    it('but not on unmount from idle', () => {
+      const { unmount } = renderHook(() => useMatchmaking());
+      unmount();
+      expect(h.state.leaveMock).not.toHaveBeenCalled();
+    });
+
+    it('a failed leave is surfaced, not reported as idle', async () => {
+      const { result } = await queue();
+      h.state.leaveMock.mockResolvedValueOnce({
+        success: false,
+        message: 'Queue unavailable',
+      });
+      await act(async () => {
+        await result.current.leaveQueue();
+      });
+      expect(result.current.phase).toBe('error');
+      expect(result.current.error).toBe('Queue unavailable');
+    });
+  });
+
+  it('connects the socket once a session appears after mount, and hears the match', async () => {
+    h.state.sessionToken = null;
+    h.state.joinMock.mockResolvedValueOnce({
+      success: true,
+      data: { matched: false },
+    });
+    const { result } = renderHook(() => useMatchmaking());
+    await act(async () => {
+      await result.current.joinQueue();
+      await Promise.resolve();
+    });
+    expect(h.state.sockets).toHaveLength(0);
+
+    act(() => {
+      for (const fn of h.state.authListeners)
+        fn('SIGNED_IN', { access_token: 'late-token' });
+    });
+    expect(h.state.sockets).toHaveLength(1);
+
+    await act(async () => {
+      h.state.sockets[0].receive('matchmaking:matched', {
+        matched: true,
+        battleId: 'battle-late',
+      });
+      await Promise.resolve();
+    });
+    expect(result.current.phase).toBe('matched');
+    expect(result.current.matchedBattle?.battleId).toBe('battle-late');
   });
 });

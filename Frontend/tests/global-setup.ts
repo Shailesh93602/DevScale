@@ -1,5 +1,7 @@
 import { execSync } from 'child_process';
 import path from 'path';
+import { existsSync, readFileSync } from 'fs';
+import { remoteTargets, resolveTargetEnv } from '../src/test/remoteTargets';
 
 /**
  * Seeds the five battles the battle-zone specs rely on by running
@@ -24,6 +26,26 @@ import path from 'path';
  * Recipe: docs/QA_COVERAGE.md → "Running the default Playwright suite safely".
  */
 export default async function globalSetup() {
+  // Runs even with PLAYWRIGHT_SKIP_SEED: the specs write whether or not the
+  // seed ran. The env is resolved the way `next dev` will resolve it.
+  if (process.env.PLAYWRIGHT_ALLOW_REMOTE !== '1') {
+    const frontendDir = path.resolve(__dirname, '..');
+    const remote = remoteTargets(
+      resolveTargetEnv(process.env, (name) => {
+        const file = path.join(frontendDir, name);
+        return existsSync(file) ? readFileSync(file, 'utf8') : null;
+      }),
+    );
+    if (remote.length > 0) {
+      throw new Error(
+        `[global-setup] ${remote.join(' and ')} point(s) off localhost. ` +
+          'This suite creates, plays and approves real content as the test ' +
+          'accounts, so it runs only against a local stack. Set ' +
+          'PLAYWRIGHT_ALLOW_REMOTE=1 to override deliberately.',
+      );
+    }
+  }
+
   if (process.env.PLAYWRIGHT_SKIP_SEED === '1') {
     console.log(
       '\n[global-setup] PLAYWRIGHT_SKIP_SEED=1 — battle seeding SKIPPED. ' +

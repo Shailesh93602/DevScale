@@ -246,3 +246,58 @@ describe('clearAuthCache', () => {
     );
   });
 });
+
+// eduscale-backend#23-01: a suspended account kept authenticating, because
+// neither the cache path nor syncUser looked at status / is_active.
+describe('suspended accounts', () => {
+  let res: Response;
+  let next: jest.Mock;
+  const SUSPENDED = { ...MOCK_DB_USER, status: 'suspended', is_active: true };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    res = makeRes();
+    next = jest.fn() as jest.Mock;
+    mockRedis.exists.mockResolvedValue(0 as never);
+  });
+
+  it('are refused with 403 on a cache hit', async () => {
+    mockRedis.get.mockResolvedValue(
+      JSON.stringify({ user: MOCK_USER, userData: SUSPENDED }) as never
+    );
+    const req = makeReq();
+    await authMiddleware(req, res, next as NextFunction);
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({ statusCode: 403 })
+    );
+    expect(req.user).toBeUndefined();
+  });
+
+  it('are refused with 403 after a fresh sync', async () => {
+    mockRedis.get.mockResolvedValue(null as never);
+    mockGetUser.mockResolvedValue({
+      data: { user: MOCK_USER },
+      error: null,
+    } as never);
+    mockPrisma.user.findUnique.mockResolvedValue({
+      ...MOCK_DB_USER,
+      is_active: false,
+    } as never);
+    const req = makeReq();
+    await authMiddleware(req, res, next as NextFunction);
+    expect(next).toHaveBeenCalledWith(
+      expect.objectContaining({ statusCode: 403 })
+    );
+    expect(req.user).toBeUndefined();
+  });
+
+  it('are treated as anonymous by optionalAuthMiddleware', async () => {
+    mockRedis.get.mockResolvedValue(
+      JSON.stringify({ user: MOCK_USER, userData: SUSPENDED }) as never
+    );
+    const req = makeReq();
+    await optionalAuthMiddleware(req, res, next as NextFunction);
+    expect(req.user).toBeUndefined();
+    expect(next).toHaveBeenCalledWith();
+  });
+});

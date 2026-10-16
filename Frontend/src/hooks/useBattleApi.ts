@@ -37,6 +37,20 @@ export interface MyBattleResults {
   questions: MyResultQuestion[];
 }
 
+/**
+ * useAxios* never throws: an HTTP error resolves to `{ success: false }`. Turn
+ * that into a throw so `wrap` can set `error` and return null; without it every
+ * mutation below reported success whatever the server answered.
+ */
+function ensureOk<R extends { success?: boolean; message?: string }>(
+  res: R,
+): R {
+  if (res?.success === false) {
+    throw new Error(res.message || 'An error occurred');
+  }
+  return res;
+}
+
 export const useBattleApi = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -104,7 +118,7 @@ export const useBattleApi = () => {
             ([, v]) => v !== undefined && v !== null && v !== '' && v !== 'all',
           ),
         );
-        const res = await getBattles({ params });
+        const res = ensureOk(await getBattles({ params }));
         const data = res.data as unknown as
           | { data?: Battle[]; meta?: unknown }
           | Battle[];
@@ -122,7 +136,7 @@ export const useBattleApi = () => {
   const fetchMyBattles = useCallback(
     (page = 1, limit = 10) =>
       wrap(async () => {
-        const res = await getMyBattles({ params: { page, limit } });
+        const res = ensureOk(await getMyBattles({ params: { page, limit } }));
         const data = res.data as unknown as
           | { data?: Battle[]; meta?: unknown }
           | Battle[];
@@ -142,7 +156,7 @@ export const useBattleApi = () => {
   const fetchBattle = useCallback(
     (id: string) =>
       wrap(async () => {
-        const res = await getBattle({}, { id });
+        const res = ensureOk(await getBattle({}, { id }));
         return res.data
           ? normalizeBattle(res.data as unknown as Record<string, unknown>)
           : null;
@@ -153,7 +167,7 @@ export const useBattleApi = () => {
   const fetchBattleQuestions = useCallback(
     (id: string) =>
       wrap(async () => {
-        const res = await getBattleQuestions({}, { id });
+        const res = ensureOk(await getBattleQuestions({}, { id }));
         return Array.isArray(res.data) ? (res.data as BattleQuestion[]) : [];
       }),
     [getBattleQuestions, wrap],
@@ -162,7 +176,7 @@ export const useBattleApi = () => {
   const fetchBattleLeaderboard = useCallback(
     (id: string) =>
       wrap(async () => {
-        const res = await getBattleLeaderboard({}, { id });
+        const res = ensureOk(await getBattleLeaderboard({}, { id }));
         return Array.isArray(res.data) ? (res.data as LeaderboardEntry[]) : [];
       }),
     [getBattleLeaderboard, wrap],
@@ -171,7 +185,7 @@ export const useBattleApi = () => {
   const fetchBattleResults = useCallback(
     (id: string) =>
       wrap(async () => {
-        const res = await getBattleResults({}, { id });
+        const res = ensureOk(await getBattleResults({}, { id }));
         return res.data;
       }),
     [getBattleResults, wrap],
@@ -180,7 +194,7 @@ export const useBattleApi = () => {
   const fetchMyResults = useCallback(
     (id: string) =>
       wrap(async () => {
-        const res = await getMyResultsReq({}, { id });
+        const res = ensureOk(await getMyResultsReq({}, { id }));
         return res.data ?? null;
       }),
     [getMyResultsReq, wrap],
@@ -202,7 +216,7 @@ export const useBattleApi = () => {
       start_time?: string;
     }) =>
       wrap(async () => {
-        const res = await createBattleReq(battleData);
+        const res = ensureOk(await createBattleReq(battleData));
         if (!res?.data) throw new Error('Failed to create battle');
         return normalizeBattle(res.data as unknown as Record<string, unknown>);
       }),
@@ -235,7 +249,7 @@ export const useBattleApi = () => {
   const leaveExistingBattle = useCallback(
     (id: string) =>
       wrap(async () => {
-        await leaveBattleReq({}, undefined, { id });
+        ensureOk(await leaveBattleReq({}, undefined, { id }));
         return true;
       }),
     [leaveBattleReq, wrap],
@@ -244,7 +258,7 @@ export const useBattleApi = () => {
   const markReady = useCallback(
     (id: string) =>
       wrap(async () => {
-        const res = await markReadyReq({}, undefined, { id });
+        const res = ensureOk(await markReadyReq({}, undefined, { id }));
         return res?.data;
       }),
     [markReadyReq, wrap],
@@ -253,7 +267,7 @@ export const useBattleApi = () => {
   const openLobby = useCallback(
     (id: string) =>
       wrap(async () => {
-        await openLobbyReq({}, undefined, { id });
+        ensureOk(await openLobbyReq({}, undefined, { id }));
         return true;
       }),
     [openLobbyReq, wrap],
@@ -262,7 +276,7 @@ export const useBattleApi = () => {
   const startBattle = useCallback(
     (id: string) =>
       wrap(async () => {
-        await startBattleReq({}, undefined, { id });
+        ensureOk(await startBattleReq({}, undefined, { id }));
         return true;
       }),
     [startBattleReq, wrap],
@@ -271,7 +285,7 @@ export const useBattleApi = () => {
   const cancelBattle = useCallback(
     (id: string) =>
       wrap(async () => {
-        await cancelBattleReq({}, undefined, { id });
+        ensureOk(await cancelBattleReq({}, undefined, { id }));
         return true;
       }),
     [cancelBattleReq, wrap],
@@ -290,7 +304,9 @@ export const useBattleApi = () => {
       }>,
     ) =>
       wrap(async () => {
-        const res = await addQuestionsReq({ questions }, undefined, { id });
+        const res = ensureOk(
+          await addQuestionsReq({ questions }, undefined, { id }),
+        );
         return res?.data ?? null;
       }),
     [addQuestionsReq, wrap],
@@ -304,7 +320,7 @@ export const useBattleApi = () => {
       time_taken_ms: number;
     }) =>
       wrap(async () => {
-        const res = await submitAnswerReq(data);
+        const res = ensureOk(await submitAnswerReq(data));
         return res?.data ?? null;
       }),
     [submitAnswerReq, wrap],

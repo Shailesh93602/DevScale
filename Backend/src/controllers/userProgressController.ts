@@ -6,6 +6,8 @@ import { catchAsync } from '../utils/index.js';
 import { sendResponse } from '../utils/apiResponse.js';
 import { invalidatePattern } from '../services/memoryCache.js';
 
+const TOPIC_COMPLETION_POINTS = 10;
+
 export default class UserProgressController {
   private readonly userProgressRepo: UserProgressRepository;
   private readonly userPointsRepo: UserPointsRepository;
@@ -34,16 +36,20 @@ export default class UserProgressController {
     const userId = req.user?.id;
     if (!userId) throw createAppError('User not found', 404);
 
-    const { topicId, status, score } = req.body;
+    const { topicId, status } = req.body;
 
-    await this.userProgressRepo.updateUserProgress(userId, {
-      topic_id: topicId,
-      is_completed: status === 'completed',
-      timeSpent: 0,
-    });
+    const newlyCompleted = await this.userProgressRepo.updateUserProgress(
+      userId,
+      { topic_id: topicId, is_completed: status === 'completed' }
+    );
 
-    if (status === 'completed') {
-      await this.userPointsRepo.updateUserPoints(userId, score || 10);
+    // Points are fixed on the server and paid once per topic; the client's
+    // `score` is not trusted.
+    if (newlyCompleted) {
+      await this.userPointsRepo.updateUserPoints(
+        userId,
+        TOPIC_COMPLETION_POINTS
+      );
     }
 
     invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard shows progress

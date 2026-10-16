@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   // if "next" is in search params, use it as the redirect URL after login
-  const next = searchParams.get('next') ?? '/dashboard';
+  // Parsed, not concatenated raw: `${origin}@evil.com` is a redirect to evil.com.
+  const next = safeRedirectPath(searchParams.get('next'), '/dashboard');
 
   if (code) {
     const supabase = await createClient();

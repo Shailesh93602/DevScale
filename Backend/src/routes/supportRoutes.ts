@@ -5,6 +5,15 @@ import { authMiddleware } from '../middlewares/authMiddleware';
 import { requirePermission } from '../middlewares/rbacMiddleware';
 import { Action, Resource } from '../constants/permissions';
 import { BaseRouter } from './BaseRouter';
+import { validateRequest } from '../middlewares/validateRequest';
+import {
+  ticketSchema,
+  bugReportSchema,
+  featureRequestSchema,
+  helpArticleSchema,
+  ticketResponseSchema,
+  ticketStatusSchema,
+} from '../validations/supportValidations';
 
 export class SupportRoutes extends BaseRouter {
   private readonly supportController: SupportController;
@@ -19,6 +28,7 @@ export class SupportRoutes extends BaseRouter {
     this.router.post(
       '/tickets',
       authMiddleware,
+      validateRequest(ticketSchema),
       this.supportController.createTicket
     );
 
@@ -37,12 +47,14 @@ export class SupportRoutes extends BaseRouter {
       // case the override system exists to serve. MODERATOR and ADMIN hold this
       // permission by default, so nobody who could do it before loses access.
       requirePermission(Resource.TICKETS, Action.UPDATE),
+      validateRequest(ticketStatusSchema),
       this.supportController.updateTicketStatus
     );
 
     this.router.post(
       '/tickets/:ticketId/responses',
       authMiddleware,
+      validateRequest(ticketResponseSchema),
       this.supportController.addTicketResponse
     );
 
@@ -50,6 +62,7 @@ export class SupportRoutes extends BaseRouter {
     this.router.post(
       '/bug-reports',
       authMiddleware,
+      validateRequest(bugReportSchema),
       this.supportController.createBugReport
     );
 
@@ -57,6 +70,7 @@ export class SupportRoutes extends BaseRouter {
     this.router.post(
       '/feature-requests',
       authMiddleware,
+      validateRequest(featureRequestSchema),
       this.supportController.createFeatureRequest
     );
 
@@ -72,6 +86,7 @@ export class SupportRoutes extends BaseRouter {
       authMiddleware,
       // Same story: help-centre articles are published content.
       requirePermission(Resource.HELP, Action.CREATE),
+      validateRequest(helpArticleSchema),
       this.supportController.createHelpArticle
     );
 

@@ -216,3 +216,23 @@ describe('MatchmakingService', () => {
     expect(status).toEqual({ inQueue: true, queueSize: 2, rating: 1400 });
   });
 });
+
+describe('MatchmakingService — battle creation fails', () => {
+  it('puts both players back in the queue and tells nobody they matched', async () => {
+    const t = build({ ratings: { waiter: 1300, joiner: 1310 } });
+    await t.service.joinQueue('waiter');
+    const waiterEnqueuedAt = t.redis._meta.get('waiter');
+    t.createBattle.mockRejectedValueOnce(new Error('not enough questions'));
+
+    await expect(t.service.joinQueue('joiner')).rejects.toThrow(
+      'not enough questions'
+    );
+
+    expect(t.redis._z.get('waiter')).toBe(1300);
+    expect(t.redis._z.get('joiner')).toBe(1310);
+    expect(t.redis._meta.get('waiter')).toBe(waiterEnqueuedAt);
+    expect(t.redis._meta.has('joiner')).toBe(true);
+    expect(t.notify).not.toHaveBeenCalled();
+    expect(t.release).toHaveBeenCalled();
+  });
+});

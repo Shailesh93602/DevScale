@@ -57,7 +57,10 @@ export default function InstantBattlePage() {
               Instant 1-v-1 battles require an authenticated account to track
               your competitive Elo rating, win rate, and leaderboard standing.
             </p>
-            <Link href="/auth/login?redirect=/instant-battle" className="mt-6">
+            <Link
+              href="/auth/login?callbackUrl=/instant-battle"
+              className="mt-6"
+            >
               <Button
                 size="lg"
                 className="flex items-center gap-2 rounded-xl font-bold"

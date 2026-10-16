@@ -236,6 +236,10 @@ const APPLIED_CHECKSUMS = new Map<string, string>([
     '20260905120000_content_embedding_dimensions',
     'f07b60a2b0ca8272b50e3352d717530ee29f839dc0b091e42ffa4d6415ff38cb',
   ],
+  [
+    '20261016120000_user_progress_points_awarded',
+    'e02f5a1db77ac30dccd7ba74d991efc275596b7ec9d2883ccded1f998024abee',
+  ],
 ]);
 
 describe('migrations create objects idempotently', () => {

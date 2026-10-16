@@ -23,6 +23,7 @@ import React, {
   ReactNode,
 } from 'react';
 import { createClient } from '@/utils/supabase/client';
+import { clearDashboardCache } from '@/lib/dashboard-cache';
 import type { Session, User as SupabaseUser } from '@supabase/supabase-js';
 import type { IUser, UserRole } from '@/types';
 
@@ -203,6 +204,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
+    clearDashboardCache();
     setUser(null);
     setSession(null);
     setStatus('unauthenticated');
@@ -220,6 +222,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(newSession);
 
       if (event === 'SIGNED_OUT') {
+        clearDashboardCache();
         setUser(null);
         setStatus('unauthenticated');
         return;

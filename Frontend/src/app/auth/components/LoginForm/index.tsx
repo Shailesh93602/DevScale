@@ -9,6 +9,7 @@ import PasswordInput from '@/components/PasswordInput';
 import { login } from '@/app/auth/actions';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import { safeRedirectPath } from '@/lib/safe-redirect';
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -35,16 +36,15 @@ const LoginForm = () => {
     setIsLoading(false);
 
     if (response?.success) {
-      const callbackUrl = searchParams.get('callbackUrl');
-      const isValidCallback =
-        callbackUrl &&
-        callbackUrl.startsWith('/') &&
-        !callbackUrl.startsWith('/auth');
+      const callbackUrl = safeRedirectPath(
+        searchParams.get('callbackUrl'),
+        '/dashboard',
+      );
 
       // Use a hard redirect to completely bypass Next.js client-side Suspense locking bugs
       // and ensure the new Server Cookie is firmly established before mounting the dashboard.
       globalThis.window.location.assign(
-        isValidCallback ? callbackUrl : '/dashboard',
+        callbackUrl.startsWith('/auth') ? '/dashboard' : callbackUrl,
       );
     } else if (response?.error) {
       setServerError(response.error);

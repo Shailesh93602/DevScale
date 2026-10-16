@@ -3,6 +3,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import App from './App';
 import { ToastContainer } from 'react-toastify';
+import { Toaster } from '@/components/ui/toaster';
 import 'react-toastify/dist/ReactToastify.css';
 import { ReactNode, Suspense } from 'react';
 import { WebSocketProvider } from '@/contexts/WebSocketContext';
@@ -165,6 +166,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           disableTransitionOnChange
         >
           <ToastContainer />
+          {/* Renders toast() from hooks/use-toast (battle, admin, moderation). */}
+          <Toaster />
           <WebSocketProvider>
             <ReduxProvider>
               {/* AuthProvider must be inside ReduxProvider — App.tsx syncs auth → Redux */}

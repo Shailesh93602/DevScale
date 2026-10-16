@@ -79,6 +79,14 @@ export function useMatchmaking(
   const pollTimerRef = useRef<NodeJS.Timeout | null>(null);
   const socketRef = useRef<Socket | null>(null);
   const startTimeRef = useRef<number | null>(null);
+  // Read by unmount cleanup and reset(), which must not depend on `phase`.
+  const phaseRef = useRef<MatchmakingPhase>('idle');
+  const postLeaveRef = useRef(postLeave);
+  const unmountedRef = useRef(false);
+  useEffect(() => {
+    phaseRef.current = phase;
+    postLeaveRef.current = postLeave;
+  }, [phase, postLeave]);
 
   // Clean up all running timers
   const clearTimers = useCallback(() => {
@@ -92,18 +100,16 @@ export function useMatchmaking(
     }
   }, []);
 
-  // Connect socket to receive push notifications for matchmaking:matched
+  // Connect socket to receive push notifications for matchmaking:matched.
+  // The session may not exist yet on mount, so connect again when it arrives:
+  // this socket is the only way the waiting player hears about a match.
   useEffect(() => {
     let isSubscribed = true;
+    let unsubscribeAuth: (() => void) | undefined;
 
-    async function initSocket() {
+    function connect(token: string | undefined) {
       try {
-        const supabase = createClient();
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        const token = session?.access_token;
-        if (!token || !isSubscribed) return;
+        if (!token || !isSubscribed || socketRef.current) return;
 
         const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
         const wsUrl =
@@ -131,10 +137,25 @@ export function useMatchmaking(
       }
     }
 
-    void initSocket();
+    try {
+      const supabase = createClient();
+      supabase.auth
+        .getSession()
+        .then(({ data: { session } }) => connect(session?.access_token))
+        .catch(() => {});
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) =>
+        connect(session?.access_token),
+      );
+      unsubscribeAuth = () => subscription.unsubscribe();
+    } catch {
+      // No auth client — matchmaking still works through the inline join result.
+    }
 
     return () => {
       isSubscribed = false;
+      unsubscribeAuth?.();
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
@@ -166,6 +187,9 @@ export function useMatchmaking(
       if (elapsedMs >= timeoutMs) {
         clearTimers();
         setPhase('timeout');
+        // The server queue has no TTL: leave it, or a later pairing puts this
+        // user in a battle they are no longer watching.
+        void postLeaveRef.current({});
       }
     }, 1000);
 
@@ -213,6 +237,12 @@ export function useMatchmaking(
     setPhase('joining');
 
     const res = await postJoin({});
+    // Unmounted mid-join: the cleanup's leave may have reached the server
+    // before this join did, so leave again now that the join has landed.
+    if (unmountedRef.current) {
+      if (res.success && !res.data?.matched) void postLeaveRef.current({});
+      return;
+    }
     if (!res.success) {
       setError(res.message || 'Failed to join matchmaking queue.');
       setPhase('error');
@@ -234,7 +264,12 @@ export function useMatchmaking(
   // Leave matchmaking
   const leaveQueue = useCallback(async () => {
     clearTimers();
-    await postLeave({});
+    const res = await postLeave({});
+    if (!res.success) {
+      setError(res.message || 'Failed to leave the matchmaking queue.');
+      setPhase('error');
+      return;
+    }
     setPhase('idle');
     setElapsedSeconds(0);
     setMatchedBattle(null);
@@ -243,6 +278,9 @@ export function useMatchmaking(
   // Reset to idle
   const reset = useCallback(() => {
     clearTimers();
+    if (['joining', 'queuing', 'timeout'].includes(phaseRef.current)) {
+      void postLeaveRef.current({});
+    }
     setPhase('idle');
     setElapsedSeconds(0);
     setCurrentBand(baseBand);
@@ -250,10 +288,14 @@ export function useMatchmaking(
     setError(null);
   }, [clearTimers, baseBand]);
 
-  // Cleanup on unmount
+  // Cleanup on unmount — and leave the server queue if still waiting in it.
   useEffect(() => {
     return () => {
+      unmountedRef.current = true;
       clearTimers();
+      if (['joining', 'queuing'].includes(phaseRef.current)) {
+        void postLeaveRef.current({});
+      }
     };
   }, [clearTimers]);
 

@@ -88,17 +88,8 @@ export default class SupportRepository extends BaseRepository<
         content,
         is_internal,
       },
-      include: {
-        ticket: {
-          include: {
-            user: {
-              select: {
-                email: true,
-              },
-            },
-          },
-        },
-      },
+      // No ticket.user.email: the reply is returned to the replier.
+      include: { ticket: true },
     });
 
     return response;

@@ -18,6 +18,9 @@ export const createChallengeValidation = Joi.object({
   category: Joi.string().required().messages({
     'any.required': 'Category is required',
   }),
+  points: Joi.number().integer().min(0).required().messages({
+    'any.required': 'Points are required',
+  }),
   inputFormat: Joi.string().required().messages({
     'any.required': 'Input format is required',
   }),
@@ -26,6 +29,9 @@ export const createChallengeValidation = Joi.object({
   }),
   exampleInput: Joi.string().required().messages({
     'any.required': 'Example input is required',
+  }),
+  exampleOutput: Joi.string().required().messages({
+    'any.required': 'Example output is required',
   }),
   constraints: Joi.string().required().messages({
     'any.required': 'Constraints are required',
@@ -44,15 +50,26 @@ export const createChallengeValidation = Joi.object({
   tags: Joi.array().optional().messages({
     'any.required': 'Tags must be an array',
   }),
-  testCases: Joi.array().required().messages({
-    'any.required': 'Test cases must be an array',
-  }),
-  'testCases.*.input': Joi.string().required().messages({
-    'any.required': 'Test case input is required',
-  }),
-  'testCases.*.output': Joi.string().required().messages({
-    'any.required': 'Test case output is required',
-  }),
+  // Joi keys are literal property names, not wildcard paths: the former
+  // 'testCases.*.input' key demanded a top-level property by that name, so
+  // every create/update returned 400. Items are validated here instead.
+  testCases: Joi.array()
+    .items(
+      Joi.object({
+        input: Joi.string().allow('').required().messages({
+          'any.required': 'Test case input is required',
+        }),
+        output: Joi.string().allow('').required().messages({
+          'any.required': 'Test case output is required',
+        }),
+      })
+    )
+    .min(1)
+    .max(100)
+    .required()
+    .messages({
+      'any.required': 'Test cases must be an array',
+    }),
   language: Joi.string()
     .valid('javascript', 'python', 'java', 'cpp', 'go')
     .required()
@@ -61,6 +78,13 @@ export const createChallengeValidation = Joi.object({
       'any.only': 'Unsupported programming language',
     }),
 });
+
+// PATCH: every field optional, but at least one must be present.
+export const updateChallengeValidation = createChallengeValidation
+  .fork(Object.keys(createChallengeValidation.describe().keys), (schema) =>
+    schema.optional()
+  )
+  .min(1);
 
 export const submitChallengeValidation = Joi.object({
   code: Joi.string().required().messages({

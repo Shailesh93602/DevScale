@@ -8,6 +8,16 @@ import logger from '../utils/logger';
 import { ArticleRepository } from '../repositories/articleRepository';
 import { recordActionBestEffort } from '../services/auditTrail';
 import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
+import { hasRole } from '../utils/requestRole';
+
+/**
+ * The by-id routes are public. A non-APPROVED article, and every article's
+ * moderation history (moderator notes and usernames), is visible only to its
+ * author and to moderators/admins.
+ */
+const canSeeUnpublished = (req: Request, authorId: string) =>
+  !!req.user &&
+  (req.user.id === authorId || hasRole(req, 'ADMIN', 'MODERATOR'));
 
 export default class ArticleController {
   private readonly articleRepository: ArticleRepository;
@@ -217,10 +227,16 @@ export default class ArticleController {
     try {
       const { id } = req.params;
       const article = await this.articleRepository.getArticleById(id);
-      if (!article) {
+      const privileged = !!article && canSeeUnpublished(req, article.author_id);
+      if (!article || (article.status !== 'APPROVED' && !privileged)) {
         return sendResponse(res, 'ARTICLE_NOT_FOUND', {
           error: 'Article not found',
         });
+      }
+      if (!privileged) {
+        const publicArticle: Record<string, unknown> = { ...article };
+        delete publicArticle.moderations;
+        return sendResponse(res, 'ARTICLE_FETCHED', { data: publicArticle });
       }
       sendResponse(res, 'ARTICLE_FETCHED', { data: article });
     } catch (error) {
@@ -317,9 +333,10 @@ export default class ArticleController {
     async (req: Request, res: Response) => {
       try {
         const { id } = req.params;
-        const article = (await this.articleRepository.getArticleById(
-          id
-        )) as Prisma.ArticleInclude;
+        const found = await this.articleRepository.getArticleById(id);
+        const article = (
+          found && canSeeUnpublished(req, found.author_id) ? found : null
+        ) as Prisma.ArticleInclude | null;
         if (!article) {
           return sendResponse(res, 'ARTICLE_NOT_FOUND', {
             error: 'Article not found',

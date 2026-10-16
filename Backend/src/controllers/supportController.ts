@@ -1,15 +1,10 @@
 import { Request, Response } from 'express';
 import SupportRepository from '../repositories/supportRepository';
 import { createAppError } from '../middlewares/errorHandler';
-import { validateRequest } from '../middlewares/validateRequest';
 import { sendResponse } from '../utils/apiResponse';
-import {
-  ticketSchema,
-  bugReportSchema,
-  featureRequestSchema,
-  helpArticleSchema,
-} from '../validations/supportValidations';
 import { catchAsync } from '../utils';
+import { canDo } from '../services/permissionService';
+import { Action, Resource } from '../constants/permissions';
 
 export default class SupportController {
   private readonly supportRepo: SupportRepository;
@@ -19,10 +14,9 @@ export default class SupportController {
   }
 
   public createTicket = catchAsync(async (req: Request, res: Response) => {
-    validateRequest(ticketSchema, req.body);
     const ticket = await this.supportRepo.createTicket({
       ...req.body,
-      userId: req.user?.id,
+      user_id: req.user.id,
     });
     sendResponse(res, 'TICKET_CREATED', { data: ticket });
   });
@@ -43,30 +37,38 @@ export default class SupportController {
   public addTicketResponse = catchAsync(async (req: Request, res: Response) => {
     const { ticketId } = req.params;
     const { content, isInternal } = req.body;
+    // Only the ticket's owner or support staff may reply, and only staff may
+    // write an internal note.
+    const ticket = await this.supportRepo.findUnique({
+      where: { id: ticketId },
+      select: { user_id: true },
+    });
+    const isStaff = await canDo(req.user.id, Resource.TICKETS, Action.UPDATE);
+    if (!ticket || (ticket.user_id !== req.user.id && !isStaff)) {
+      throw createAppError('Ticket not found', 404);
+    }
     const response = await this.supportRepo.addTicketResponse(
       ticketId,
-      req.user?.id,
+      req.user.id,
       content,
-      isInternal
+      isStaff ? Boolean(isInternal) : false
     );
     sendResponse(res, 'TICKET_RESPONSE_ADDED', { data: response });
   });
 
   public createBugReport = catchAsync(async (req: Request, res: Response) => {
-    validateRequest(bugReportSchema, req.body);
     const report = await this.supportRepo.createBugReport({
       ...req.body,
-      userId: req.user?.id,
+      user_id: req.user.id,
     });
     sendResponse(res, 'BUG_REPORT_CREATED', { data: report });
   });
 
   public createFeatureRequest = catchAsync(
     async (req: Request, res: Response) => {
-      validateRequest(featureRequestSchema, req.body);
       const request = await this.supportRepo.createFeatureRequest({
         ...req.body,
-        userId: req.user?.id,
+        user_id: req.user.id,
       });
       sendResponse(res, 'FEATURE_REQUEST_CREATED', { data: request });
     }
@@ -81,7 +83,6 @@ export default class SupportController {
   );
 
   public createHelpArticle = catchAsync(async (req: Request, res: Response) => {
-    validateRequest(helpArticleSchema, req.body);
     const article = await this.supportRepo.createHelpArticle(req.body);
     sendResponse(res, 'HELP_ARTICLE_CREATED', { data: article });
   });

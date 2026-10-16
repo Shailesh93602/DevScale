@@ -6,6 +6,57 @@ import { ChallengeRepository } from '../repositories/challengeRepository';
 import { recordActionBestEffort } from '../services/auditTrail';
 import logger from '../utils/logger';
 import prisma from '../lib/prisma';
+// The validated body is camelCase; the Challenge columns are snake_case and
+// test cases live in their own table. `language` has no column.
+type ChallengeBody = {
+  title?: string;
+  description?: string;
+  points?: number;
+  difficulty?: string;
+  category?: string;
+  inputFormat?: string;
+  outputFormat?: string;
+  exampleInput?: string;
+  exampleOutput?: string;
+  constraints?: string;
+  functionSignature?: string;
+  timeLimit?: number;
+  memoryLimit?: number;
+  tags?: string[];
+  testCases?: Array<{ input: string; output: string }>;
+};
+
+const toChallengeData = (body: ChallengeBody, replaceTestCases: boolean) => {
+  const data: Record<string, unknown> = {
+    title: body.title,
+    description: body.description,
+    points: body.points,
+    difficulty: body.difficulty,
+    category: body.category,
+    input_format: body.inputFormat,
+    output_format: body.outputFormat,
+    example_input: body.exampleInput,
+    example_output: body.exampleOutput,
+    constraints: body.constraints,
+    function_signature: body.functionSignature,
+    time_limit: body.timeLimit,
+    memory_limit: body.memoryLimit,
+    tags: body.tags,
+  };
+  if (body.testCases) {
+    const create = body.testCases.map(({ input, output }) => ({
+      input,
+      output,
+    }));
+    data.test_cases = replaceTestCases
+      ? { deleteMany: {}, create }
+      : { create };
+  }
+  return Object.fromEntries(
+    Object.entries(data).filter(([, v]) => v !== undefined)
+  );
+};
+
 export default class ChallengeController {
   private readonly challengeRepo: ChallengeRepository;
 
@@ -45,13 +96,16 @@ export default class ChallengeController {
 
   public getChallenges = catchAsync(async (req: Request, res: Response) => {
     const { page = 1, limit = 10, search = '' } = req.query;
+    // Clamped: an uncapped limit dumps the table, a negative page gives a
+    // negative skip (Prisma 500).
     const result = await this.challengeRepo.paginate(
       {
-        page: Number(page),
-        limit: Number(limit),
+        page: Math.max(1, Math.floor(Number(page)) || 1),
+        limit: Math.min(100, Math.max(1, Math.floor(Number(limit)) || 10)),
         search: String(search),
       },
-      ['title', 'description']
+      ['title', 'description'],
+      { omit: { solutions: true, editorial: true } }
     );
 
     return sendResponse(res, 'CHALLENGES_FETCHED', {
@@ -62,8 +116,12 @@ export default class ChallengeController {
 
   public getChallenge = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
+    // Reference solutions are never public. (The editorial stays: the
+    // problem page renders it; gating it on an accepted submission is a
+    // product call.)
     const challenge = await this.challengeRepo.findUnique({
       where: { id },
+      omit: { solutions: true },
     });
 
     if (!challenge) {
@@ -75,7 +133,9 @@ export default class ChallengeController {
 
   public createNewChallenge = catchAsync(
     async (req: Request, res: Response) => {
-      const challenge = await this.challengeRepo.create(req.body);
+      const challenge = await this.challengeRepo.create({
+        data: toChallengeData(req.body as ChallengeBody, false),
+      });
 
       // A challenge body includes its TEST CASES — the expected outputs every
       // other user is graded against. Creating or editing one silently changes
@@ -103,7 +163,7 @@ export default class ChallengeController {
       const { id } = req.params;
       const challenge = await this.challengeRepo.update({
         where: { id },
-        data: req.body,
+        data: toChallengeData(req.body as ChallengeBody, true),
       });
 
       // Field NAMES, not values: a challenge body carries test cases and

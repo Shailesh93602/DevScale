@@ -6,6 +6,7 @@ import { camelCaseResponse } from '../middlewares/responseTransformer';
 import {
   createChallengeValidation,
   submitChallengeValidation,
+  updateChallengeValidation,
 } from '../validations/challengeValidation';
 
 export class ChallengeRoutes extends BaseRouter {
@@ -71,7 +72,7 @@ export class ChallengeRoutes extends BaseRouter {
       '/:id',
       authMiddleware,
       authorizeRoles('ADMIN', 'MODERATOR'),
-      validateRequest(createChallengeValidation),
+      validateRequest(updateChallengeValidation),
       this.challengeController.updateExistingChallenge
     );
 

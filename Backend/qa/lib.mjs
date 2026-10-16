@@ -1,5 +1,6 @@
 // Shared plumbing for the functional QA runner (qa/run.mjs).
 import 'dotenv/config';
+import './localOnly.mjs';
 import { createClient } from '@supabase/supabase-js';
 import { PrismaClient } from '@prisma/client';
 import { TEST_USERS as USERS } from './testUsers.mjs';

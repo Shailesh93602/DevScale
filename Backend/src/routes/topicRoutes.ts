@@ -1,6 +1,8 @@
 import { BaseRouter } from './BaseRouter';
 import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
 import TopicController from '../controllers/topicController';
+import { validateRequest } from '../middlewares/validateRequest';
+import { submitQuizSchema } from '../validations/quizValidations';
 
 export class TopicRoutes extends BaseRouter {
   private readonly topicController: TopicController;
@@ -16,7 +18,11 @@ export class TopicRoutes extends BaseRouter {
     this.router.get('/:id/articles', this.topicController.getArticlesForTopic);
     this.router.get('/:id/article', this.topicController.getArticlesForTopic);
     this.router.get('/:id/quiz', this.topicController.getQuizByTopicId);
-    this.router.post('/quiz/submit', this.topicController.submitQuiz);
+    this.router.post(
+      '/quiz/submit',
+      validateRequest(submitQuizSchema),
+      this.topicController.submitQuiz
+    );
     // Unpublished = not yet released to learners. Authenticated-only exposed
     // draft curriculum to every student.
     this.router.get(

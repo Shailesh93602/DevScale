@@ -44,32 +44,29 @@ export default class TopicController {
 
   public getQuizByTopicId = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const topic = (await this.topicRepo.findUnique({
-      where: { id },
-      include: {
-        quizzes: {
-          include: {
-            questions: {
-              include: {
-                options: true,
-              },
+    // Learner-facing fields only. correct_answer, Option.is_correct and
+    // test_cases are what submitQuiz grades against; sending them before the
+    // submission hands the learner the answer key.
+    const include = {
+      quizzes: {
+        include: {
+          questions: {
+            select: {
+              id: true,
+              quiz_id: true,
+              question: true,
+              type: true,
+              points: true,
+              options: { select: { id: true, text: true, question_id: true } },
             },
           },
         },
       },
-    })) as Prisma.TopicGetPayload<{
-      include: {
-        quizzes: {
-          include: {
-            questions: {
-              include: {
-                options: true;
-              };
-            };
-          };
-        };
-      };
-    }>;
+    } satisfies Prisma.TopicInclude;
+    const topic = (await this.topicRepo.findUnique({
+      where: { id },
+      include,
+    })) as Prisma.TopicGetPayload<{ include: typeof include }>;
 
     if (!topic || !topic.quizzes || topic.quizzes.length === 0) {
       return sendResponse(res, 'QUIZ_NOT_FOUND');

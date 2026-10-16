@@ -95,7 +95,8 @@ export default function BattleLobbyPage() {
   // Handle leave battle
   const handleLeaveBattle = useCallback(async () => {
     try {
-      await leaveExistingBattle(battleId);
+      // wrap() never throws: a refused leave resolves to null.
+      if (!(await leaveExistingBattle(battleId))) throw new Error();
       toast({ title: 'You have left the battle' });
       router.push('/battle-zone');
     } catch {

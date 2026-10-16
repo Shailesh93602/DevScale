@@ -1,6 +1,7 @@
 // Realtime WebSocket QA — proves the socket handshake (auth) + live event
 // delivery work end to end. Run: node qa/socket.mjs   (backend up on :4000)
 import "dotenv/config";
+import "./localOnly.mjs";
 import { createClient } from "@supabase/supabase-js";
 import { PrismaClient } from "@prisma/client";
 import { io } from "socket.io-client";

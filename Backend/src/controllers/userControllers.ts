@@ -153,11 +153,14 @@ export default class UserController {
       }
     });
 
+    // Identity comes from the session and is spread LAST: the body may carry
+    // `id`/`email` (the schema allows them), and spreading it after these let
+    // a caller choose which row to upsert and set an unverified email.
     const user = await this.userRepo.upsertUserProfile({
+      ...sanitizedData,
       id: userId,
       supabase_id: req.user?.supabase_id,
       email: req.user?.email,
-      ...sanitizedData,
     });
 
     const token = req.headers.authorization?.split(' ')[1];

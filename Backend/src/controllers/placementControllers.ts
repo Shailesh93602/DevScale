@@ -15,11 +15,13 @@ export default class PlacementController {
   }
 
   public getResources = catchAsync(async (req: Request, res: Response) => {
-    const { error, value } = getResourcesSchema.validate(req.query);
+    const { error, value } = getResourcesSchema.validate(req.query, {
+      stripUnknown: true,
+    });
     if (error) throw createAppError(error.message, 400);
 
     const resources = await this.placementRepo.getPlacementResources(
-      value.userId,
+      req.user.id,
       value.subjectId
     );
 

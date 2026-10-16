@@ -14,33 +14,7 @@ import { useDashboard, DashboardSummary } from '@/hooks/useDashboard';
 import { useAuth } from '@/contexts/AuthContext';
 import { logger } from '@/lib/logger';
 import { mapToRoadmapType } from '@/lib/dashboard-roadmap';
-
-// ─── sessionStorage SWR helpers ───────────────────────────────────────────────
-const CACHE_KEY = 'dashboard:summary:v1';
-const CACHE_MAX_AGE_MS = 5 * 60 * 1000; // 5 minutes — mirrors backend TTL
-
-function readCache(): DashboardSummary | null {
-  try {
-    const raw = sessionStorage.getItem(CACHE_KEY);
-    if (!raw) return null;
-    const { data, ts } = JSON.parse(raw) as {
-      data: DashboardSummary;
-      ts: number;
-    };
-    if (Date.now() - ts > CACHE_MAX_AGE_MS) return null;
-    return data;
-  } catch {
-    return null;
-  }
-}
-
-function writeCache(data: DashboardSummary) {
-  try {
-    sessionStorage.setItem(CACHE_KEY, JSON.stringify({ data, ts: Date.now() }));
-  } catch {
-    // sessionStorage full or unavailable — ignore
-  }
-}
+import { readDashboardCache, writeDashboardCache } from '@/lib/dashboard-cache';
 
 /** Shared section heading + link */
 const SectionHeader = ({
@@ -108,14 +82,36 @@ const DashboardPage: React.FC = () => {
   const { getDashboardSummary } = useDashboard();
   const { user } = useAuth();
 
+  const userId = user?.id;
+
   // Seed from sessionStorage immediately — no skeleton on repeat visits
-  const [isLoading, setIsLoading] = useState(() => readCache() === null);
+  const [isLoading, setIsLoading] = useState(
+    () => readDashboardCache(userId) === null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [summary, setSummary] = useState<DashboardSummary | null>(() =>
-    readCache(),
+    readDashboardCache(userId),
   );
   // Track whether a background revalidation is in progress (for UX purposes)
   const revalidatingRef = useRef(false);
+  // AuthGuard renders on a session before the profile loads, so the user id
+  // can arrive after mount; the cache is read and written with the latest one.
+  const userIdRef = useRef(userId);
+  userIdRef.current = userId;
+  const freshRef = useRef<DashboardSummary | null>(null);
+
+  useEffect(() => {
+    if (!userId) return;
+    if (freshRef.current) {
+      writeDashboardCache(userId, freshRef.current);
+      return;
+    }
+    const cached = readDashboardCache(userId);
+    if (cached) {
+      setSummary(cached);
+      setIsLoading(false);
+    }
+  }, [userId]);
 
   useEffect(() => {
     let cancelled = false;
@@ -147,7 +143,10 @@ const DashboardPage: React.FC = () => {
         }
         const fresh = res.data ?? null;
         setSummary(fresh);
-        if (fresh) writeCache(fresh);
+        if (fresh) {
+          freshRef.current = fresh;
+          writeDashboardCache(userIdRef.current, fresh);
+        }
       } catch (err) {
         if (cancelled) return;
         logger.error('Error fetching dashboard summary:', err);

@@ -16,12 +16,21 @@ export const httpClient = axios.create({
 // Singleton Supabase client — created once, reused for all requests.
 const supabaseClient = createClient();
 
-// In-memory token cache: avoids calling getSession() on every request.
-// Supabase tokens are valid for 1 hour; we keep a 55-minute window to allow
-// early refresh before expiry. On 401 the cache is cleared and the real
-// session is fetched fresh.
+// In-memory token cache: avoids calling getSession() on every request. It
+// lives until a minute before the token's OWN expiry (a session read from
+// storage can already be most of an hour old), and any auth change clears it,
+// so a sign-out or a background refresh is never answered with a stale token.
 let _cachedToken: string | null = null;
 let _tokenExpiresAt: number = 0;
+
+function clearCachedToken() {
+  _cachedToken = null;
+  _tokenExpiresAt = 0;
+}
+
+if (globalThis.window !== undefined) {
+  supabaseClient.auth.onAuthStateChange(() => clearCachedToken());
+}
 
 async function getAccessToken(): Promise<string | null> {
   const now = Date.now();
@@ -31,14 +40,13 @@ async function getAccessToken(): Promise<string | null> {
     data: { session },
   } = await supabaseClient.auth.getSession();
   if (!session?.access_token) {
-    _cachedToken = null;
-    _tokenExpiresAt = 0;
+    clearCachedToken();
     return null;
   }
 
   _cachedToken = session.access_token;
-  // Cache for 55 minutes (tokens expire after 1 hour)
-  _tokenExpiresAt = now + 55 * 60 * 1000;
+  // No expires_at → expiry unknown → do not cache.
+  _tokenExpiresAt = session.expires_at ? session.expires_at * 1000 - 60_000 : 0;
   return _cachedToken;
 }
 
@@ -78,8 +86,7 @@ httpClient.interceptors.response.use(
       globalThis.window !== undefined
     ) {
       // Clear cached token — it may be expired or revoked
-      _cachedToken = null;
-      _tokenExpiresAt = 0;
+      clearCachedToken();
 
       isRedirecting = true;
       try {

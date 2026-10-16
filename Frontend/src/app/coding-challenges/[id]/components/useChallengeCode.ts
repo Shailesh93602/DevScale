@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { logger } from '@/lib/logger';
 import { DEFAULT_BOILERPLATE, IChallenge } from './challengeTypes';
@@ -14,10 +14,16 @@ const progressKey = (id: string) => `challenge_progress_${id}`;
 export function useChallengeCode(id: string, language: string) {
   const [challenge, setChallenge] = useState<IChallenge>();
   const [userCode, setUserCode] = useState<CodeByLanguage>(DEFAULT_BOILERPLATE);
+  // Nothing is persisted until the saved code has been restored, and nothing
+  // reaches the cloud until the user edits that language: otherwise a
+  // boilerplate is written over localStorage and the user's real cloud draft.
+  const [restored, setRestored] = useState(false);
+  const editedRef = useRef(new Set<string>());
 
   const [getChallenge] = useAxiosGet<IChallenge>(`/challenges/${id}`);
   const [saveDraft] = useAxiosPost('/run-code/draft');
-  const [getCloudDraft] = useAxiosGet<{ data: { code: string } }>(
+  // The envelope's `data` IS the draft row (or null).
+  const [getCloudDraft] = useAxiosGet<{ code: string } | null>(
     `/run-code/draft/${id}`,
   );
 
@@ -43,11 +49,9 @@ export function useChallengeCode(id: string, language: string) {
     // Priority 2: Cloud Draft, Priority 3: Standard boilerplates
     try {
       const cloudResp = await getCloudDraft({ params: { language } });
-      if (cloudResp.data?.data?.code) {
-        setUserCode((prev) => ({
-          ...prev,
-          [language]: cloudResp.data.data.code,
-        }));
+      const cloudCode = cloudResp.data?.code;
+      if (cloudCode) {
+        setUserCode((prev) => ({ ...prev, [language]: cloudCode }));
         console.log('[DEBUG] Restored code from Cloud');
       } else {
         applyBoilerplates(data);
@@ -64,6 +68,7 @@ export function useChallengeCode(id: string, language: string) {
       if (data) {
         setChallenge(data);
         await restoreSavedCode(data);
+        setRestored(true);
       }
     } catch (error) {
       logger.error('Error fetching challenge:', error);
@@ -72,15 +77,15 @@ export function useChallengeCode(id: string, language: string) {
 
   // Auto-save to LocalStorage (Immediate)
   useEffect(() => {
-    if (userCode && Object.keys(userCode).length > 0) {
+    if (restored && userCode && Object.keys(userCode).length > 0) {
       localStorage.setItem(progressKey(id), JSON.stringify(userCode));
     }
-  }, [userCode, id]);
+  }, [userCode, id, restored]);
 
   // Cloud Sync (Debounced 2s)
   useEffect(() => {
     const timeout = setTimeout(async () => {
-      if (userCode[language]) {
+      if (restored && editedRef.current.has(language) && userCode[language]) {
         try {
           await saveDraft({
             challengeId: id,
@@ -95,7 +100,7 @@ export function useChallengeCode(id: string, language: string) {
     }, 2000);
 
     return () => clearTimeout(timeout);
-  }, [userCode[language], id, language]);
+  }, [userCode[language], id, language, restored]);
 
   useEffect(() => {
     fetchChallenge();
@@ -112,11 +117,9 @@ export function useChallengeCode(id: string, language: string) {
       ) {
         try {
           const cloudResp = await getCloudDraft({ params: { language } });
-          if (cloudResp.data?.data?.code) {
-            setUserCode((prev) => ({
-              ...prev,
-              [language]: cloudResp.data.data.code,
-            }));
+          const cloudCode = cloudResp.data?.code;
+          if (cloudCode) {
+            setUserCode((prev) => ({ ...prev, [language]: cloudCode }));
           }
         } catch {
           // Ignore
@@ -128,11 +131,13 @@ export function useChallengeCode(id: string, language: string) {
 
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
+      editedRef.current.add(language);
       setUserCode((prev) => ({ ...prev, [language]: value }));
     }
   };
 
   const resetCode = () => {
+    editedRef.current.add(language);
     setUserCode((prev) => ({
       ...prev,
       [language]:

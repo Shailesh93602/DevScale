@@ -3,15 +3,23 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
+import { scrubSentryEvent, SENTRY_TRACES_SAMPLE_RATE } from '@/lib/sentryScrub';
 
 Sentry.init({
   dsn: 'https://b2457212bfce5f01cc4c450a340a19b3@o4511120779444224.ingest.us.sentry.io/4511120817324032',
 
   // Add optional integrations for additional features
-  integrations: [Sentry.replayIntegration()],
+  integrations: [
+    Sentry.replayIntegration({ maskAllText: true, blockAllMedia: true }),
+  ],
+
+  ignoreErrors: [
+    'ResizeObserver loop limit exceeded',
+    'Non-Error promise rejection captured',
+  ],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  tracesSampleRate: SENTRY_TRACES_SAMPLE_RATE,
   // Enable logs to be sent to Sentry
   enableLogs: true,
 
@@ -23,9 +31,10 @@ Sentry.init({
   // Define how likely Replay events are sampled when an error occurs.
   replaysOnErrorSampleRate: 1.0,
 
-  // Enable sending user PII (Personally Identifiable Information)
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/options/#sendDefaultPii
-  sendDefaultPii: true,
+  // Off: with it on, events carry request cookies and headers, which here
+  // include the Supabase auth-token cookies. scrubSentryEvent strips them too.
+  sendDefaultPii: false,
+  beforeSend: scrubSentryEvent,
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;

@@ -1,6 +1,10 @@
 import { BaseRouter } from './BaseRouter';
 import ArticleController from '../controllers/articleController';
-import { authMiddleware, authorizeRoles } from '../middlewares/authMiddleware';
+import {
+  authMiddleware,
+  authorizeRoles,
+  optionalAuthMiddleware,
+} from '../middlewares/authMiddleware';
 import { validateRequest } from '../middlewares/validateRequest';
 import paginationMiddleware from '../middlewares/paginationMiddleware';
 import {
@@ -44,8 +48,17 @@ export class ArticleRoutes extends BaseRouter {
       this.articleController.getModerationQueue
     );
 
-    this.router.get('/:id', this.articleController.getArticleById);
-    this.router.get('/:id/comments', this.articleController.getArticleComments);
+    // optionalAuth: the author and moderators may read a draft by id.
+    this.router.get(
+      '/:id',
+      optionalAuthMiddleware,
+      this.articleController.getArticleById
+    );
+    this.router.get(
+      '/:id/comments',
+      optionalAuthMiddleware,
+      this.articleController.getArticleComments
+    );
 
     // Author submits a new article (any authenticated user) → enters review queue
     this.router.post(

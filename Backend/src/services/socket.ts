@@ -27,6 +27,14 @@ export {
   type ParticipantUpdate,
 } from './realtime/socketContract';
 
+const MAX_CHAT_MESSAGE_LENGTH = 500;
+
+/** The payload's battle_id when it is a non-empty string, else null. */
+function battleIdOf(data: unknown): string | null {
+  const id = (data as { battle_id?: unknown } | null | undefined)?.battle_id;
+  return typeof id === 'string' && id !== '' ? id : null;
+}
+
 class SocketService {
   private io: SocketIOServer | null = null;
   // Redis clients — pub/sub must be separate connections per Socket.io adapter requirements
@@ -84,17 +92,37 @@ class SocketService {
       this.trackConnection(socket, userId);
       logger.info(`User ${userId} connected with socket ${socket.id}`);
 
+      // Payloads are client-controlled. A throw or rejection here becomes an
+      // uncaughtException / unhandledRejection, which main.ts answers with
+      // process.exit(1) — so every handler checks types and catches.
+      const onFail = (event: string) => (err: unknown) =>
+        logger.warn(`socket ${event} handler failed`, { err, userId });
+
       // Handle battle join (also used for reconnect)
-      socket.on(SocketEvents.BATTLE_JOIN, (data: { battle_id: string }) => {
-        void this.joinAndReplayState(socket, userId, data.battle_id);
+      socket.on(SocketEvents.BATTLE_JOIN, (data: unknown) => {
+        const battleId = battleIdOf(data);
+        if (!battleId) return;
+        this.joinAndReplayState(socket, userId, battleId).catch(
+          onFail(SocketEvents.BATTLE_JOIN)
+        );
       });
 
-      socket.on(SocketEvents.BATTLE_LEAVE, (data: { battle_id: string }) => {
-        this.leaveBattleRoom(socket, userId, data.battle_id);
+      socket.on(SocketEvents.BATTLE_LEAVE, (data: unknown) => {
+        const battleId = battleIdOf(data);
+        if (!battleId) return;
+        this.leaveBattleRoom(socket, userId, battleId);
       });
 
-      socket.on(SocketEvents.CHAT_MESSAGE, (data: ChatMessage) => {
-        this.handleChatMessage(socket, userId, data);
+      socket.on(SocketEvents.CHAT_MESSAGE, (data: unknown) => {
+        const battleId = battleIdOf(data);
+        if (!battleId) return;
+        const message = (data as { message?: unknown }).message;
+        if (typeof message !== 'string') return;
+        if (message.length > MAX_CHAT_MESSAGE_LENGTH) return;
+        this.handleChatMessage(socket, userId, {
+          battle_id: battleId,
+          message,
+        } as ChatMessage).catch(onFail(SocketEvents.CHAT_MESSAGE));
       });
 
       socket.on(SocketEvents.DISCONNECT, () => {
@@ -149,6 +177,14 @@ class SocketService {
     battleId: string
   ): Promise<boolean> {
     const allowed = await this.canObserveBattle(userId, battleId);
+    if (allowed === null) {
+      socket.emit(SocketEvents.ERROR, {
+        message: 'Could not verify access to this battle — try again',
+        battle_id: battleId,
+        retryable: true,
+      });
+      return false;
+    }
     if (!allowed) {
       socket.emit(SocketEvents.ERROR, {
         message: 'You are not a participant in this battle',
@@ -189,12 +225,12 @@ class SocketService {
     return true;
   }
 
-  // Participant, creator, or an unstarted (open) lobby. Fails OPEN on a DB
-  // error so a transient blip never locks real players out of their own game.
+  // Participant, creator, or an unstarted (open) lobby. Returns null on a DB
+  // error (fails closed); joinBattleRoom refuses with a retryable error.
   private async canObserveBattle(
     userId: string,
     battleId: string
-  ): Promise<boolean> {
+  ): Promise<boolean | null> {
     try {
       const battle = await prisma.battle.findUnique({
         where: { id: battleId },
@@ -209,10 +245,12 @@ class SocketService {
       if (battle.participants.length > 0) return true;
       return battle.status === 'WAITING' || battle.status === 'LOBBY';
     } catch (err) {
-      logger.warn(`canObserveBattle ${battleId} check failed — allowing`, {
+      // Fail closed: a DB blip must not admit a non-participant to a
+      // players-only room (room membership is what chat trusts).
+      logger.warn(`canObserveBattle ${battleId} check failed — refusing`, {
         err,
       });
-      return true;
+      return null;
     }
   }
 

@@ -59,12 +59,19 @@ export default class QuizRepository extends BaseRepository<
 
     if (!quiz) throw createAppError('Quiz not found', 404);
 
+    if (!Array.isArray(data.answers)) {
+      throw createAppError('answers must be an array', 400);
+    }
+
     let totalScore = 0;
     const results = [];
+    const graded = new Set<string>();
 
     for (const answer of data.answers) {
-      const question = quiz.questions.find((q) => q.id === answer.question_id);
-      if (!question) continue;
+      const question = quiz.questions.find((q) => q.id === answer?.question_id);
+      // One answer per question: a repeated question_id must not score twice.
+      if (!question || graded.has(question.id)) continue;
+      graded.add(question.id);
 
       const { isCorrect, score } = await this.calculateAnswerScore(
         answer.answer,
@@ -81,7 +88,7 @@ export default class QuizRepository extends BaseRepository<
         quiz_id: data.quiz_id,
         score: totalScore,
         time_spent: data.time_spent,
-        is_passed: totalScore >= quiz.passing_score,
+        is_passed: QuizRepository.isPassed(totalScore, quiz),
         results,
       },
       include: { quiz: true },
@@ -89,6 +96,15 @@ export default class QuizRepository extends BaseRepository<
 
     await this.updateProgress(data.user_id, quiz, submission.is_passed);
     return submission;
+  }
+
+  /** passing_score is a percentage of the quiz's total points, not raw points. */
+  static isPassed(
+    totalScore: number,
+    quiz: { passing_score: number; questions: Array<{ points: number }> }
+  ): boolean {
+    const maxScore = quiz.questions.reduce((sum, q) => sum + q.points, 0);
+    return maxScore > 0 && (totalScore * 100) / maxScore >= quiz.passing_score;
   }
 
   async getQuizzesByLevel(type: QuizType, id: string): Promise<Quiz[]> {

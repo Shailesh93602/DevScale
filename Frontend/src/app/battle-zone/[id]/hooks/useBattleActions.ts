@@ -44,8 +44,12 @@ export function useBattleActions(deps: BattleActionDeps) {
   const handleLeave = async () => {
     if (actionLoading) return;
     setActionLoading(true);
-    await api.leaveExistingBattle(battleId);
+    const left = await api.leaveExistingBattle(battleId);
     setActionLoading(false);
+    if (!left) {
+      toast({ title: 'Could not leave battle', variant: 'destructive' });
+      return;
+    }
     router.push('/battle-zone');
   };
 
@@ -88,8 +92,10 @@ export function useBattleActions(deps: BattleActionDeps) {
   const handleCancelBattle = async () => {
     if (actionLoading) return;
     setActionLoading(true);
-    await api.cancelBattle(battleId);
+    const ok = await api.cancelBattle(battleId);
     setActionLoading(false);
+    if (!ok)
+      toast({ title: 'Could not cancel battle', variant: 'destructive' });
   };
 
   const handleSubmitAnswer = async () => {

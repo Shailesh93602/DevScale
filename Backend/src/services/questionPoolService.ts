@@ -331,6 +331,24 @@ export async function getQuestionPool(
 }
 
 /**
+ * Random questions from all quiz content, for a battle with no source
+ * (ranked matchmaking). Only questions whose correct option can be keyed.
+ */
+export async function getRandomPoolQuestions(
+  count: number
+): Promise<PoolQuestion[]> {
+  const rows = await prisma.question.findMany({
+    where: { options: { some: {} } },
+    include: { options: { orderBy: { id: 'asc' } } },
+    take: 200,
+  });
+  const converted = rows
+    .map(convertQuestion)
+    .filter((q): q is PoolQuestion => q !== null);
+  return shuffle(converted).slice(0, count);
+}
+
+/**
  * Get recently used question IDs for anti-repeat logic, given source type + id.
  * Call this before getQuestionPool to populate exclude_question_ids.
  */

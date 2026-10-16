@@ -1,5 +1,5 @@
 import { Battle } from '@prisma/client';
-import { BattleStatus, BattleType, Difficulty } from '../constants/enums';
+import { BattleStatus } from '../constants/enums';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 import type {
@@ -85,21 +85,9 @@ export class BattleRepository extends BaseRepository<
 
   // ── Creation & questions ─────────────────────────────────────────────────
 
-  createBattle(data: {
-    title: string;
-    description?: string;
-    type: BattleType;
-    topic_id?: string | null;
-    difficulty: Difficulty;
-    max_participants: number;
-    total_questions: number;
-    time_per_question: number;
-    points_per_question: number;
-    start_time?: Date;
-    user_id: string;
-    question_source_type?: string | null;
-    question_source_id?: string | null;
-  }): Promise<BattleDetail & { slug: string }> {
+  createBattle(
+    data: Parameters<typeof createBattle>[0]
+  ): Promise<BattleDetail & { slug: string }> {
     return createBattle(data);
   }
 
