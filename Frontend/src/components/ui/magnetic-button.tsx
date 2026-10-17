@@ -114,7 +114,7 @@ export const MagneticButton = ({
       >
         {/* Magnetic pull effect */}
         <motion.span
-          className="bg-primary/5 absolute inset-0 rounded-full"
+          className="absolute inset-0 rounded-full bg-primary/5"
           style={{
             scale: active ? 1 : 0,
             opacity: active ? 1 : 0,

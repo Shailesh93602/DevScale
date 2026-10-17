@@ -4,7 +4,6 @@ import { PinContainer } from '@/components/3dPin';
 import { HoverEffect } from '@/components/CardHoverEffect';
 import { InfiniteMovingCards } from '@/components/InfiniteMovingCards';
 import { AceternityLogo } from '@/components/AceternityLogo';
-import { Button } from '@/components/ui/button';
 import { CustomLink } from '@/components/ui/custom-link';
 
 export default function PlacementPreparation() {
@@ -19,61 +18,51 @@ export default function PlacementPreparation() {
       title: 'Data Structures & Algorithms',
       description:
         'Master fundamental data structures (arrays, linked lists, trees, graphs) and algorithms (sorting, searching, dynamic programming). Practice solving problems on platforms like LeetCode or HackerRank regularly.',
-      link: '/resources',
     },
     {
       title: 'System Design Basics',
       description:
         'Understand basic system design concepts like scalability, load balancing, and caching. Be prepared to discuss high-level architecture for simple applications.',
-      link: '/resources',
     },
     {
       title: 'Programming Languages',
       description:
         'Be proficient in at least one programming language (e.g., Java, Python, C++). Understand object-oriented programming principles and be able to write clean, efficient code.',
-      link: '/resources',
     },
     {
       title: 'Project Experience',
       description:
         'Develop personal projects or contribute to open-source. Be prepared to discuss your projects in detail, explaining your role, challenges faced, and solutions implemented.',
-      link: '/resources',
     },
     {
       title: 'Behavioral Questions',
       description:
         'Prepare for common behavioral questions using the STAR method (Situation, Task, Action, Result). Have examples ready for teamwork, conflict resolution, and problem-solving scenarios.',
-      link: '/resources',
     },
     {
       title: 'Company Research',
       description:
         "Research the company you're interviewing with. Understand their products, culture, and recent news. Prepare thoughtful questions to ask your interviewers.",
-      link: '/resources',
     },
     {
       title: 'Mock Interviews',
       description:
         'Practice mock interviews with peers or use online platforms. Get comfortable explaining your thought process while solving problems out loud.',
-      link: '/resources',
     },
     {
       title: 'Soft Skills',
       description:
         'Develop your communication skills. Practice explaining complex technical concepts in simple terms. Show enthusiasm for learning and teamwork.',
-      link: '/resources',
     },
     {
       title: 'Resume Building',
       description:
         'Craft a clear, concise resume highlighting your skills, projects, and any internship experience. Tailor your resume for each application.',
-      link: '/resources',
     },
     {
       title: 'Technical Concepts',
       description:
         'Review core CS concepts like operating systems, databases, and networking. Be prepared to discuss basic principles and their practical applications.',
-      link: '/resources',
     },
   ];
 
@@ -187,25 +176,14 @@ export default function PlacementPreparation() {
           we’ve got you covered.
         </p>
         <div className="pt-5">
-          <Button className="flex items-center gap-2">
+          <CustomLink
+            variant="default"
+            href="/interview-question"
+            className="flex items-center gap-2"
+          >
             <AceternityLogo />
-            <span>Read Interview Tips</span>
-          </Button>
-        </div>
-      </div>
-
-      <div className="mb-8 rounded-lg bg-lightSecondary p-6 shadow">
-        <h2 className="mb-4 text-2xl font-semibold">Resume Building</h2>
-        <p className="text-grayText">
-          Create a professional resume that stands out. Use our resume building
-          tools and templates to highlight your skills and experiences
-          effectively.
-        </p>
-        <div className="pt-5">
-          <Button className="flex items-center gap-2">
-            <AceternityLogo />
-            <span>Build your Resume</span>
-          </Button>
+            <span>Read Interview Questions</span>
+          </CustomLink>
         </div>
       </div>
 

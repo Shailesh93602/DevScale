@@ -101,7 +101,8 @@ describe('SimpleWeeklyLeaderboard', () => {
   });
 
   it('reports a failed request rather than rendering an empty podium', async () => {
-    fetchMock.mockRejectedValue(new Error('network'));
+    // The real hook never rejects: a 5xx/timeout resolves `{ success: false }`.
+    fetchMock.mockResolvedValue({ success: false, error: true, data: null });
 
     render(<SimpleWeeklyLeaderboard />);
 

@@ -36,7 +36,7 @@ export default function EditProfilePage() {
           <Button
             variant="ghost"
             onClick={() => router.back()}
-            className="hover:bg-primary/10 group gap-2 transition-colors"
+            className="group gap-2 transition-colors hover:bg-primary/10"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             Back to Profile
@@ -47,9 +47,9 @@ export default function EditProfilePage() {
         </div>
 
         <Card className="overflow-hidden border-none bg-card shadow-xl ring-1 ring-border/50">
-          <CardHeader className="from-primary/10 via-purple-500/5 border-b border-border/50 bg-gradient-to-r to-transparent p-8">
+          <CardHeader className="via-purple-500/5 border-b border-border/50 bg-gradient-to-r from-primary/10 to-transparent p-8">
             <div className="flex items-center gap-4">
-              <div className="bg-primary/10 rounded-2xl p-3 text-primary shadow-inner">
+              <div className="rounded-2xl bg-primary/10 p-3 text-primary shadow-inner">
                 <Pencil className="h-8 w-8" />
               </div>
               <div>
@@ -96,7 +96,7 @@ export default function EditProfilePage() {
                   </Button>
                   <Button
                     type="submit"
-                    className="hover:bg-primary/90 shadow-primary/20 h-12 gap-3 rounded-xl bg-primary px-12 text-lg font-bold text-primary-foreground shadow-xl transition-all active:scale-[0.98]"
+                    className="h-12 gap-3 rounded-xl bg-primary px-12 text-lg font-bold text-primary-foreground shadow-xl shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
                     disabled={
                       isSubmitting ||
                       usernameStatus === 'checking' ||

@@ -58,7 +58,7 @@ export default function Resources({ id }: { id: string }) {
             className="relative mb-8 overflow-hidden rounded-2xl border border-border/40 bg-card p-6 shadow-2xl transition-all duration-500 hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.1)] md:p-10"
           >
             {/* Decorative background blur */}
-            <div className="bg-primary/20 absolute -right-40 -top-40 -z-10 h-96 w-96 rounded-full blur-3xl"></div>
+            <div className="absolute -right-40 -top-40 -z-10 h-96 w-96 rounded-full bg-primary/20 blur-3xl"></div>
             <h1 className="mb-4 border-b border-border/40 bg-gradient-to-r from-primary via-primary2 to-purple bg-clip-text pb-4 text-3xl font-extrabold tracking-tight text-transparent md:text-5xl">
               {selectedTopic?.topic?.title}
             </h1>

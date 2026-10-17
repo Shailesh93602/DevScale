@@ -6,23 +6,8 @@ export interface DailyActivity {
   activityType: string;
 }
 
-export interface WeeklyActivity {
-  id: string;
-  type:
-    | 'completed_topic'
-    | 'enrolled_roadmap'
-    | 'friend_activity'
-    | 'liked_roadmap';
-  description: string;
-  timestamp: string;
-  roadmapId: string;
-  roadmapTitle: string;
-  user?: {
-    id: string;
-    name: string;
-    profileImage?: string;
-  };
-}
+/** What `GET /streak/weekly-activity` returns: one row per (day, activity type). */
+export type WeeklyActivity = DailyActivity;
 
 export interface StreakStats {
   currentStreak: number;

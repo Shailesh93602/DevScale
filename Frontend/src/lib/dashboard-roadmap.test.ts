@@ -40,7 +40,6 @@ describe('mapToRoadmapType', () => {
     expect(card.id).toBe('rm-1');
     expect(card.title).toBe('Backend Engineering');
     expect(card.steps).toBe(42);
-    expect(card.likesCount).toBe(7);
     expect(card.isEnrolled).toBe(true);
     expect(card.author.name).toContain('Ada');
   });
@@ -74,12 +73,26 @@ describe('mapToRoadmapType', () => {
     expect(serialised).not.toContain('beginner');
   });
 
+  it('does NOT invent like/bookmark state or counts — the summary hardcodes them to 0', () => {
+    const card = mapToRoadmapType(summaryPayload(), false);
+    for (const field of [
+      'isLiked',
+      'isBookmarked',
+      'likesCount',
+      'bookmarksCount',
+      'commentsCount',
+      'enrollmentCount',
+    ] as const) {
+      expect(card[field], field).toBeUndefined();
+    }
+  });
+
   it('degrades to an honest empty card when the payload is bare', () => {
     // No user, no counts. Everything unknown must stay unknown rather than
     // falling back to something that renders as a claim.
     const card = mapToRoadmapType({ id: 'rm-2', title: 'Untitled' }, false);
     expect(card.steps).toBe(0);
-    expect(card.likesCount).toBe(0);
+    expect(card.likesCount).toBeUndefined();
     expect(card.estimatedTime).toBeUndefined();
     expect(card.difficulty).toBeUndefined();
     expect(card.author.id).toBe('anonymous');

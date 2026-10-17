@@ -8,7 +8,7 @@ import {
   ReactNode,
   useCallback,
 } from 'react';
-import { getCookie } from 'cookies-next';
+import { createClient } from '@/utils/supabase/client';
 import { validateWebSocketEvent } from '@/lib/validations/helpers';
 
 type WebSocketEvent = {
@@ -33,16 +33,24 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     new Map(),
   );
 
-  const connect = useCallback(() => {
-    const token = getCookie('authToken');
+  const reconnectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closed = useRef(false);
+
+  const connect = useCallback(async () => {
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL;
+    if (!wsUrl || !/^wss?:\/\//.test(wsUrl)) return;
+    const {
+      data: { session },
+    } = await createClient().auth.getSession();
+    const token = session?.access_token;
+    if (!token || closed.current) return;
 
-    if (!wsUrl || !token) return;
-
-    ws.current = new WebSocket(`${wsUrl}?token=${token}`);
+    // The bearer token goes in the first frame, never the URL: proxies and access logs record URLs.
+    ws.current = new WebSocket(wsUrl);
 
     ws.current.onopen = () => {
       reconnectAttempts.current = 0;
+      ws.current?.send(JSON.stringify({ type: 'auth', data: { token } }));
     };
 
     ws.current.onmessage = async (event) => {
@@ -61,10 +69,10 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
     };
 
     ws.current.onclose = (event) => {
-      if (event.code !== 1000) {
+      if (event.code !== 1000 && !closed.current) {
         // 1000 is normal closure
         const delay = Math.min(5000 * (reconnectAttempts.current + 1), 30000);
-        setTimeout(connect, delay);
+        reconnectTimer.current = setTimeout(() => void connect(), delay);
         reconnectAttempts.current += 1;
       }
     };
@@ -91,8 +99,11 @@ export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   );
 
   useEffect(() => {
-    connect();
+    closed.current = false;
+    void connect();
     return () => {
+      closed.current = true;
+      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
       ws.current?.close(1000, 'Component unmounted');
     };
   }, [connect]);

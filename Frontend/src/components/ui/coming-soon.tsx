@@ -23,7 +23,7 @@ export const ComingSoon: React.FC<ComingSoonProps> = ({
       >
         <div className="mb-6 flex justify-center">
           <div className="relative">
-            <div className="bg-primary/20 h-24 w-24 animate-pulse rounded-full blur-2xl" />
+            <div className="h-24 w-24 animate-pulse rounded-full bg-primary/20 blur-2xl" />
             <div className="absolute inset-0 flex items-center justify-center">
               <span className="text-6xl">🚀</span>
             </div>

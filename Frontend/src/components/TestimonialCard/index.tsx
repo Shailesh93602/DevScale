@@ -19,7 +19,7 @@ const Testimonial = ({
 }) => {
   return (
     <motion.div
-      className="from-[var(--primary)]/20 to-[var(--primary2)]/20 hover:from-[var(--primary)]/30 hover:to-[var(--primary2)]/30 group relative flex cursor-pointer flex-col items-center rounded-xl border border-border bg-card/80 bg-gradient-to-br p-8 shadow-lg backdrop-blur-md transition-shadow duration-300 hover:shadow-2xl"
+      className="to-[var(--primary2)]/20 hover:to-[var(--primary2)]/30 group relative flex cursor-pointer flex-col items-center rounded-xl border border-border bg-card/80 bg-gradient-to-br from-primary/20 p-8 shadow-lg backdrop-blur-md transition-shadow duration-300 hover:from-primary/30 hover:shadow-2xl"
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}
@@ -27,7 +27,7 @@ const Testimonial = ({
       whileHover={{ scale: 1.03 }}
     >
       <motion.div
-        className="border-[var(--primary)]/30 bg-primary/10 !shadow-primary/30 group-hover:!shadow-primary/50 relative mb-4 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 text-primary shadow-lg transition-shadow duration-300 group-hover:shadow-2xl"
+        className="relative mb-4 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-primary/30 bg-primary/10 text-primary shadow-lg !shadow-primary/30 transition-shadow duration-300 group-hover:shadow-2xl group-hover:!shadow-primary/50"
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.2 }}
       >

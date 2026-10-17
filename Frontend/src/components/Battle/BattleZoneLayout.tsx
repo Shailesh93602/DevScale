@@ -207,7 +207,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
             <motion.div
               initial={{ opacity: 0, translateY: 20 }}
               animate={{ opacity: 1, translateY: 0 }}
-              className="border-primary/20 rounded-2xl border bg-card p-10 shadow-lg"
+              className="rounded-2xl border border-primary/20 bg-card p-10 shadow-lg"
               style={{
                 background:
                   'linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--primary)/0.08) 100%)',
@@ -227,7 +227,7 @@ const BattleZoneLayout: React.FC<BattleZoneLayoutProps> = ({ children }) => {
                   <Link href="/instant-battle">
                     <Button
                       size="lg"
-                      className="shadow-primary/30 flex items-center gap-2 rounded-xl px-6 shadow-md"
+                      className="flex items-center gap-2 rounded-xl px-6 shadow-md shadow-primary/30"
                     >
                       <Zap className="h-5 w-5" />
                       Quick Match

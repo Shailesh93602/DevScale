@@ -55,7 +55,7 @@ const plans: PricingPlan[] = [
       'Coding challenges in an in-browser editor',
       'Submissions run in a sandboxed code runner',
       'AI review of your own challenge submissions',
-      'Real-time coding battles, matchmaking and leaderboards',
+      'Real-time quiz battles, matchmaking and leaderboards',
       'Progress tracking, streaks and achievement badges',
       'Articles, blogs and curated learning resources',
     ],
@@ -107,7 +107,7 @@ export default function PricingPage() {
             key={plan.id}
             className={`relative transform rounded-3xl border p-8 transition-all duration-300 ${
               plan.highlighted
-                ? 'border-primary/50 ring-primary/30 bg-card shadow-[0_0_30px_hsl(var(--primary)/0.18)] ring-1 hover:-translate-y-2'
+                ? 'border-primary/50 bg-card shadow-[0_0_30px_hsl(var(--primary)/0.18)] ring-1 ring-primary/30 hover:-translate-y-2'
                 : 'border-border bg-card opacity-80'
             }`}
           >
@@ -159,7 +159,7 @@ export default function PricingPage() {
               aria-disabled={!plan.available}
               className={`flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-bold transition-all duration-300 ${
                 plan.available
-                  ? 'shadow-primary/20 hover:bg-primary/90 bg-primary text-primary-foreground shadow-lg'
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90'
                   : 'cursor-not-allowed bg-muted text-muted-foreground'
               }`}
             >

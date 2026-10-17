@@ -35,12 +35,8 @@ export const isValidEventData = <T extends keyof RealTimeEventMap>(
   data: unknown,
 ): data is RealTimeEventMap[T] => {
   try {
-    // Use Yup's resolve to get the correct schema
-    const schema = realTimeEventSchema.resolve({
-      value: { type: eventType },
-      context: {},
-    });
-    return schema.isValidSync(data);
+    // resolve() on the envelope returns the envelope schema, not the per-type data schema.
+    return realTimeEventSchema.isValidSync({ type: eventType, data });
   } catch {
     return false;
   }

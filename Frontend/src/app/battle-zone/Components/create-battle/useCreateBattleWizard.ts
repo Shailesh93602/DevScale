@@ -18,15 +18,21 @@ export const LAST_STEP = 4;
 
 type BattleType = 'QUICK' | 'SCHEDULED' | 'PRACTICE';
 
-function scheduledStartTime(values: BattleFormValues): string | undefined {
+/** Local wall-clock start: `new Date('YYYY-MM-DD')` is UTC midnight and lands on the previous day west of UTC. */
+export function scheduledStartTime(
+  values: Pick<BattleFormValues, 'type' | 'date' | 'time'>,
+  now: Date = new Date(),
+): string | undefined {
   if (values.type !== 'SCHEDULED' || !values.date || !values.time) {
     return undefined;
   }
-  const [h, m] = values.time.split(':');
-  const dt = new Date(values.date);
-  dt.setHours(Number(h), Number(m), 0, 0);
+  const [y, mo, d] = values.date.split('-').map(Number);
+  const [h, m] = values.time.split(':').map(Number);
+  const dt = new Date(y, mo - 1, d, h, m, 0, 0);
   if (Number.isNaN(dt.getTime()))
     throw new Error('Invalid date/time for scheduled battle.');
+  if (dt.getTime() <= now.getTime())
+    throw new Error('The scheduled start must be in the future.');
   return dt.toISOString();
 }
 

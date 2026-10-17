@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   title: 'Interview Questions',
   description:
     'Practice interview questions across core engineering topics, with answers.',
+  alternates: { canonical: '/interview-question' },
 };
 
 export default function InterviewQuestionLayout({

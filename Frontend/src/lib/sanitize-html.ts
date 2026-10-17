@@ -1,9 +1,20 @@
+import { useSyncExternalStore } from 'react';
 import DOMPurify from 'dompurify';
 
-// DOMPurify needs a DOM: on the server `sanitize` is not a function and threw, forcing client-only render.
-// Content is already sanitised server-side on every write (Backend/src/utils/sanitize.ts); this is
-// browser-side defence in depth, so it is skipped when there is no DOM.
+// Without a DOM there is nothing to sanitise with, so emit nothing: raw HTML in the SSR pass is stored XSS.
 export function sanitizeContent(content: string): string {
-  if (typeof window === 'undefined') return content;
+  if (typeof window === 'undefined') return '';
   return DOMPurify.sanitize(content);
+}
+
+const noopSubscribe = () => () => {};
+
+/** Sanitised HTML for `dangerouslySetInnerHTML`: empty on the server and during hydration, filled after. */
+export function useSanitizedHtml(content: string): string {
+  const isClient = useSyncExternalStore(
+    noopSubscribe,
+    () => true,
+    () => false,
+  );
+  return isClient ? sanitizeContent(content) : '';
 }

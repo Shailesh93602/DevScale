@@ -5,6 +5,7 @@ import { buildFaqJsonLd } from './faqs';
 export const metadata: Metadata = {
   title: 'FAQ',
   description: 'Frequently Asked Questions about EduScale.',
+  alternates: { canonical: '/faq' },
 };
 
 // /faq previously shipped with no FAQPage markup at all — the content lived

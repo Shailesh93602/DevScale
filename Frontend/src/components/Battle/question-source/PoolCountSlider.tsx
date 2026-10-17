@@ -4,10 +4,12 @@ import { cn } from '@/lib/utils';
 
 function PoolStatus({
   poolLoading,
+  poolError,
   totalAvailable,
   count,
 }: {
   poolLoading: boolean;
+  poolError?: boolean;
   totalAvailable: number | null;
   count: number;
 }) {
@@ -15,6 +17,13 @@ function PoolStatus({
     return (
       <span className="flex items-center gap-1 text-xs text-muted-foreground">
         <Loader2 className="h-3 w-3 animate-spin" /> Checking pool...
+      </span>
+    );
+  }
+  if (poolError) {
+    return (
+      <span role="alert" className="text-xs font-medium text-destructive">
+        Could not check the question pool — try again
       </span>
     );
   }
@@ -39,12 +48,14 @@ export function PoolCountSlider({
   setCount,
   maxCount,
   poolLoading,
+  poolError,
   totalAvailable,
 }: {
   count: number;
   setCount: (count: number) => void;
   maxCount: number;
   poolLoading: boolean;
+  poolError?: boolean;
   totalAvailable: number | null;
 }) {
   return (
@@ -53,6 +64,7 @@ export function PoolCountSlider({
         <label className="text-sm font-medium">Questions: {count}</label>
         <PoolStatus
           poolLoading={poolLoading}
+          poolError={poolError}
           totalAvailable={totalAvailable}
           count={count}
         />

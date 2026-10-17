@@ -77,7 +77,8 @@
     --popover-foreground: 220 20% 8%;
 
     /* Brand Purple */
-    --primary: #8300b8;
+    /* HSL channels, not hex: Tailwind can only apply `/10`-style opacity to `hsl(var(--x) / <alpha-value>)`. #8300b8 */
+    --primary: 282.7 100% 36.1%;
     --primary2: #690091;
     --primary-light: rgba(131, 0, 184, 0.12);
     --primary-foreground: 210 20% 98%;
@@ -193,7 +194,7 @@
      * lightness 36% -> 62%: 5.01:1 on the dark background, AA for body text
      * with headroom rather than scraping the large-text minimum.
      */
-    --primary: #c73dff;
+    --primary: 282.7 100% 62%; /* #c73dff */
     --primary2: #c01aff;
     --primary-light: rgba(199, 61, 255, 0.16);
 
@@ -380,7 +381,7 @@
   /* ── Section Label ────────────────────────────────────────── */
   .section-label {
     @apply text-xs font-semibold uppercase tracking-widest;
-    color: var(--primary);
+    color: hsl(var(--primary));
     letter-spacing: 0.12em;
   }
 
@@ -410,7 +411,7 @@
     outline: none;
   }
   .input-premium:focus {
-    border-color: var(--primary);
+    border-color: hsl(var(--primary));
     box-shadow: 0 0 0 3px rgba(131, 0, 184, 0.12);
   }
 }
@@ -452,7 +453,7 @@
 
   /* Focus ring */
   .focus-ring:focus-visible {
-    outline: 2px solid var(--primary);
+    outline: 2px solid hsl(var(--primary));
     outline-offset: 2px;
     border-radius: 4px;
   }

@@ -6,12 +6,13 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function CreateResource({ id }: { id: string }) {
   const [content, setContent] = useState('');
 
   const dispatch = useDispatch();
-  const [updateResource] = useAxiosPost<{ success?: boolean }>(
+  const [updateResource] = useAxiosPost<unknown>(
     '/resources/save/{{resourceId}}',
   );
 
@@ -24,7 +25,7 @@ export default function CreateResource({ id }: { id: string }) {
         { resourceId: id },
       );
 
-      if (response.data?.success) {
+      if (response.success) {
         toast.success('Resource saved successfully!');
         setContent('');
         window.location.href = '/resources';
@@ -43,34 +44,13 @@ export default function CreateResource({ id }: { id: string }) {
       <Navbar />
       <div className="container mx-auto p-6">
         <div className="mb-6 rounded-lg bg-card p-6 shadow-md">
-          {/* <ReactQuill
+          <Textarea
+            aria-label="Resource content"
             value={content}
-            onChange={setContent}
-            preserveWhitespace
-            modules={{
-              toolbar: [
-                [{ font: [] }, { size: [] }],
-                ["bold", "italic", "underline", "strike"],
-                [{ color: [] }, { background: [] }],
-                [{ script: "sub" }, { script: "super" }],
-                [
-                  { header: "1" },
-                  { header: "2" },
-                  { header: "3" },
-                  "blockquote",
-                  "code-block",
-                ],
-                [{ list: "ordered" }, { list: "bullet" }],
-                [{ indent: "-1" }, { indent: "+1" }],
-                [{ direction: "rtl" }, { align: [] }],
-                ["link", "image", "video"],
-                ["clean"],
-              ],
-              // indent: {
-              //   levels: [1, 2, 3, 4, 5],
-              // },
-            }}
-          /> */}
+            onChange={(e) => setContent(e.target.value)}
+            rows={20}
+            className="font-mono"
+          />
         </div>
         <Button onClick={saveResource}>Save Resource</Button>
       </div>

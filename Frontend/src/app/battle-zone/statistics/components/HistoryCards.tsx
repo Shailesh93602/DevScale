@@ -122,7 +122,7 @@ function TopTopicsCard({
                 key={topic.label}
                 className="flex items-center gap-4 rounded-lg border p-4"
               >
-                <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full text-primary">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1">

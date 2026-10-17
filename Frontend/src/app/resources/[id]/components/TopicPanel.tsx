@@ -4,7 +4,7 @@ import { FaQuestionCircle } from 'react-icons/fa';
 import { BookOpen, CheckCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { sanitizeContent } from '@/lib/sanitize-html';
+import { useSanitizedHtml } from '@/lib/sanitize-html';
 
 const ARTICLE_PROSE_CLASS =
   'prose prose-base max-w-none dark:prose-invert md:prose-lg prose-headings:text-foreground prose-h2:text-3xl prose-p:leading-relaxed prose-a:text-primary hover:prose-a:text-primary2 prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:text-muted-foreground prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-xl prose-pre:border prose-pre:border-border/50 prose-pre:bg-muted prose-pre:text-muted-foreground prose-li:marker:text-primary prose-img:rounded-xl prose-img:shadow-lg prose-hr:border-border/40';
@@ -24,7 +24,7 @@ export function EnrollControl({
         <Button
           onClick={onEnroll}
           disabled={isEnrolling}
-          className="shadow-primary/20 rounded-xl bg-primary px-6 font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+          className="rounded-xl bg-primary px-6 font-bold text-white shadow-lg shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
         >
           {isEnrolling ? 'Enrolling...' : 'Enroll in Roadmap'}
         </Button>
@@ -99,8 +99,8 @@ export function MarkCompletedButton({
         disabled={isUpdating}
         className={`h-12 rounded-xl px-8 font-bold transition-all duration-300 ${
           isCompleted
-            ? 'border-primary/30 hover:bg-primary/5 text-primary'
-            : 'shadow-primary/25 hover:bg-primary/90 bg-primary text-white shadow-lg'
+            ? 'border-primary/30 text-primary hover:bg-primary/5'
+            : 'bg-primary text-white shadow-lg shadow-primary/25 hover:bg-primary/90'
         }`}
       >
         {label}
@@ -121,6 +121,7 @@ export function TopicBody({
   articleContent: string;
   quiz: ReactNode;
 }) {
+  const articleHtml = useSanitizedHtml(articleContent);
   return (
     <AnimatePresence mode="wait">
       {isArticleLoading ? (
@@ -146,7 +147,7 @@ export function TopicBody({
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
           className={ARTICLE_PROSE_CLASS}
-          dangerouslySetInnerHTML={{ __html: sanitizeContent(articleContent) }}
+          dangerouslySetInnerHTML={{ __html: articleHtml }}
         ></motion.div>
       ) : (
         <motion.div

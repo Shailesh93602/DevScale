@@ -70,7 +70,7 @@ const RoadmapSkeleton = () => {
   return (
     <div className="space-y-8">
       {/* Hero Section Skeleton */}
-      <div className="from-primary/5 relative rounded-2xl bg-gradient-to-b to-transparent p-8">
+      <div className="relative rounded-2xl bg-gradient-to-b from-primary/5 to-transparent p-8">
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Left Column Skeleton */}
           <div className="space-y-6 rounded-2xl bg-card/60 p-8">
@@ -235,7 +235,7 @@ export default function CareerPathPage({
                     ) : (
                       <>
                         <div className="relative mt-8">
-                          <div className="from-primary/20 via-primary/5 relative rounded-2xl bg-gradient-to-b to-transparent p-8">
+                          <div className="relative rounded-2xl bg-gradient-to-b from-primary/20 via-primary/5 to-transparent p-8">
                             <div className="bg-grid-foreground/[0.02] absolute inset-0 rounded-2xl" />
                             <div className="relative">
                               <div className="grid gap-8 lg:grid-cols-2">

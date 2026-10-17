@@ -7,15 +7,11 @@ import { Toaster } from '@/components/ui/toaster';
 import 'react-toastify/dist/ReactToastify.css';
 import { ReactNode, Suspense } from 'react';
 import { WebSocketProvider } from '@/contexts/WebSocketContext';
+import { SITE_URL } from '@/lib/site-url';
 import { ReduxProvider } from '@/contexts/ReduxContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import Loader from '@/components/Loader';
 import type { Metadata } from 'next';
-
-/** Absolute site origin — metadataBase, canonicals and JSON-LD all need it. */
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ||
-  'https://eduscale.vercel.app';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
@@ -26,7 +22,7 @@ export const metadata: Metadata = {
     template: '%s | EduScale',
   },
   description:
-    'EduScale is the all-in-one platform for engineering students. Personalized roadmaps, real-time coding battles, placement preparation, coding challenges, and interactive learning. Built by Shailesh Chaudhari.',
+    'EduScale is the all-in-one platform for engineering students. Personalized roadmaps, real-time quiz battles, placement preparation, coding challenges, and interactive learning. Built by Shailesh Chaudhari.',
   keywords: [
     'engineering',
     'learning platform',
@@ -40,17 +36,16 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://eduscale.vercel.app',
     title: 'EduScale | All-in-One Engineering Learning Platform',
     description:
-      'Personalized roadmaps, real-time coding battles, and interactive challenges for engineering students.',
+      'Personalized roadmaps, real-time quiz battles, and interactive challenges for engineering students.',
     siteName: 'EduScale',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'EduScale | Engineering Learning Platform',
     description:
-      'Personalized roadmaps, real-time coding battles, and interactive challenges.',
+      'Personalized roadmaps, real-time quiz battles, and interactive challenges.',
   },
   robots: {
     index: true,
@@ -60,7 +55,7 @@ export const metadata: Metadata = {
   // absolute URL that crawlers and social cards require — it warns at build
   // time and emits a relative URL that every scraper then fails to fetch.
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: '/' },
+  // No `alternates.canonical` or `openGraph.url` here: children inherit them, so every page claimed to be '/'.
 };
 
 /**
@@ -145,7 +140,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           what a site IS — without it they are left inferring from prose, and
           they infer badly. There was none of this at all.
 
-          WebSite + Organization on the root only. Per-page types (Course,
+          WebSite + Organization on the root only. Per-page types (such as
           Article) belong on those pages, where the data to fill them honestly
           actually exists; emitting a half-filled schema sitewide is worse than
           emitting none, because it asserts things the page cannot back up.
@@ -156,7 +151,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body
-        className={`${outfit.variable} ${inter.variable} font-outfit selection:bg-primary/30 min-h-screen bg-background text-foreground antialiased selection:text-primary`}
+        className={`${outfit.variable} ${inter.variable} font-outfit min-h-screen bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary`}
         suppressHydrationWarning
       >
         <ThemeProvider

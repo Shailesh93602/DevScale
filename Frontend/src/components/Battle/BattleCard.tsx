@@ -76,7 +76,7 @@ function CardBadges({
           {battle.type.toLowerCase()}
         </Badge>
         {isUserJoined && (
-          <Badge className="bg-primary/10 border-primary/20 text-xs text-primary">
+          <Badge className="border-primary/20 bg-primary/10 text-xs text-primary">
             Joined
           </Badge>
         )}

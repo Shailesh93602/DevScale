@@ -32,6 +32,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { Search, Trash2, Users as UsersIcon } from 'lucide-react';
 
 interface Role {
@@ -50,6 +51,14 @@ interface AdminUser {
   role?: { id: string; name: string } | null;
 }
 
+/** Shape of `userRepository.searchUsers`: the total lives under `pagination`. */
+export interface AdminUsersPage {
+  users: AdminUser[];
+  pagination?: { total: number; pages: number; page: number; limit: number };
+}
+
+const PAGE_SIZE = 50;
+
 const roleBadge = (name?: string) => {
   const n = (name || 'STUDENT').toUpperCase();
   // Theme tokens, not palette shades with a dark-mode variant — see the contract in
@@ -60,13 +69,23 @@ const roleBadge = (name?: string) => {
 };
 
 export default function AdminUsers() {
+  const { user: currentUser } = useAuth();
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
   const [toDelete, setToDelete] = useState<AdminUser | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [pendingRole, setPendingRole] = useState<{
+    user: AdminUser;
+    roleId: string;
+  } | null>(null);
+  const [roleSaving, setRoleSaving] = useState(false);
+  // Results live here, not in the hook's state, so a slow earlier search
+  // cannot overwrite a newer one: only the latest request id may write.
+  const [result, setResult] = useState<AdminUsersPage | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const latestRequest = useRef(0);
 
-  const [getUsers, usersState] = useAxiosGet<{
-    users: AdminUser[];
-    total: number;
-  }>('/admin/users');
+  const [getUsers, usersState] = useAxiosGet<AdminUsersPage>('/admin/users');
   const [getRoles, rolesState] = useAxiosGet<Role[]>('/admin/roles');
   const [patchRole] = useAxiosPatch<unknown, { roleId: string }>(
     '/admin/users/{{userId}}/role',
@@ -75,14 +94,24 @@ export default function AdminUsers() {
   const { toast } = useToast();
 
   const load = useCallback(
-    (q?: string) => {
-      void getUsers({ params: { limit: 50, ...(q ? { search: q } : {}) } });
+    async (q?: string, p = 1) => {
+      const requestId = ++latestRequest.current;
+      const res = await getUsers({
+        params: { limit: PAGE_SIZE, page: p, ...(q ? { search: q } : {}) },
+      });
+      if (requestId !== latestRequest.current) return;
+      if (res.success) {
+        setResult(res.data);
+        setLoadFailed(false);
+      } else {
+        setLoadFailed(true);
+      }
     },
     [getUsers],
   );
 
   useEffect(() => {
-    load();
+    void load();
     void getRoles();
   }, []);
 
@@ -90,21 +119,35 @@ export default function AdminUsers() {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onSearch = (v: string) => {
     setSearch(v);
+    setPage(1);
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => load(v.trim() || undefined), 400);
+    timer.current = setTimeout(() => void load(v.trim() || undefined, 1), 400);
+  };
+
+  const reload = () => void load(search.trim() || undefined, page);
+  const goToPage = (p: number) => {
+    setPage(p);
+    void load(search.trim() || undefined, p);
   };
 
   const roles = rolesState.data ?? [];
-  const users = usersState.data?.users ?? [];
+  const users = result?.users ?? [];
+  const total = result?.pagination?.total ?? users.length;
+  const totalPages = Math.max(1, result?.pagination?.pages ?? 1);
+  const isSelf = (u: AdminUser) => !!currentUser && u.id === currentUser.id;
 
   const changeRole = async (user: AdminUser, roleId: string) => {
+    if (roleSaving) return;
+    setRoleSaving(true);
     const res = await patchRole({ roleId }, undefined, { userId: user.id });
+    setRoleSaving(false);
+    setPendingRole(null);
     if (res?.success) {
       toast({
         title: 'Role updated',
         description: `${user.username} updated.`,
       });
-      load(search.trim() || undefined);
+      reload();
     } else {
       toast({
         title: 'Failed to update role',
@@ -115,15 +158,17 @@ export default function AdminUsers() {
   };
 
   const confirmDelete = async () => {
-    if (!toDelete) return;
+    if (!toDelete || deleting) return;
+    setDeleting(true);
     const res = await deleteUser(undefined, { userId: toDelete.id });
+    setDeleting(false);
     if (res?.success) {
       toast({
         title: 'User deleted',
         description: `${toDelete.username} removed.`,
       });
       setToDelete(null);
-      load(search.trim() || undefined);
+      reload();
     } else {
       toast({
         title: 'Failed to delete',
@@ -139,9 +184,7 @@ export default function AdminUsers() {
       <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold">User Management</h2>
-          <p className="text-sm text-muted-foreground">
-            {usersState.data?.total ?? users.length} users
-          </p>
+          <p className="text-sm text-muted-foreground">{total} users</p>
         </div>
         <div className="relative w-full sm:w-72">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -160,12 +203,9 @@ export default function AdminUsers() {
             <Skeleton key={i} className="h-12 w-full rounded-lg" />
           ))}
         </div>
-      ) : usersState.isError ? (
+      ) : loadFailed ? (
         <div className="p-6">
-          <ErrorState
-            title="Couldn't load users"
-            onRetry={() => load(search.trim() || undefined)}
-          />
+          <ErrorState title="Couldn't load users" onRetry={reload} />
         </div>
       ) : users.length === 0 ? (
         <div className="p-6">
@@ -198,7 +238,7 @@ export default function AdminUsers() {
                   <TableRow key={u.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="bg-primary/10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-primary">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
                           {(name || 'U').charAt(0).toUpperCase()}
                         </div>
                         <div className="min-w-0">
@@ -213,9 +253,20 @@ export default function AdminUsers() {
                       {roles.length ? (
                         <Select
                           value={u.role?.id}
-                          onValueChange={(v) => changeRole(u, v)}
+                          disabled={isSelf(u)}
+                          onValueChange={(v) =>
+                            setPendingRole({ user: u, roleId: v })
+                          }
                         >
-                          <SelectTrigger className="h-8 w-[140px]">
+                          <SelectTrigger
+                            className="h-8 w-[140px]"
+                            aria-label={`Role for ${name}`}
+                            title={
+                              isSelf(u)
+                                ? 'You cannot change your own role'
+                                : undefined
+                            }
+                          >
                             <SelectValue
                               placeholder={u.role?.name ?? 'Set role'}
                             />
@@ -258,6 +309,12 @@ export default function AdminUsers() {
                         size="sm"
                         className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                         onClick={() => setToDelete(u)}
+                        disabled={isSelf(u)}
+                        title={
+                          isSelf(u)
+                            ? 'You cannot delete your own account'
+                            : undefined
+                        }
                         aria-label={`Delete ${name}`}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -268,8 +325,73 @@ export default function AdminUsers() {
               })}
             </TableBody>
           </Table>
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-border p-4 text-sm">
+              <span className="text-muted-foreground">
+                Page {page} of {totalPages}
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page <= 1}
+                  onClick={() => goToPage(page - 1)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page >= totalPages}
+                  onClick={() => goToPage(page + 1)}
+                >
+                  Next
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
+
+      <Dialog
+        open={!!pendingRole}
+        onOpenChange={(o) => !o && !roleSaving && setPendingRole(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Change role?</DialogTitle>
+            <DialogDescription>
+              Set{' '}
+              <span className="font-medium text-foreground">
+                {pendingRole?.user.username}
+              </span>{' '}
+              to{' '}
+              <span className="font-medium text-foreground">
+                {roles.find((r) => r.id === pendingRole?.roleId)?.name ??
+                  'the selected role'}
+              </span>
+              ?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              disabled={roleSaving}
+              onClick={() => setPendingRole(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={roleSaving}
+              onClick={() =>
+                pendingRole && changeRole(pendingRole.user, pendingRole.roleId)
+              }
+            >
+              {roleSaving ? 'Saving…' : 'Change role'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
         <DialogContent>
@@ -287,8 +409,12 @@ export default function AdminUsers() {
             <Button variant="outline" onClick={() => setToDelete(null)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmDelete}>
-              Delete user
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deleting}
+            >
+              {deleting ? 'Deleting…' : 'Delete user'}
             </Button>
           </DialogFooter>
         </DialogContent>

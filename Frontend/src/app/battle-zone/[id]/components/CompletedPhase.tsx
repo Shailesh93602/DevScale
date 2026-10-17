@@ -100,7 +100,7 @@ export function CompletedPhase({ s }: { s: LoadedBattleState }) {
         {leaderboard.map((entry, i) => (
           <div
             key={entry.user_id}
-            className={`flex items-center gap-3 rounded-lg p-3 ${entry.user_id === userId ? 'bg-primary/5 border-primary/20 border' : 'border'}`}
+            className={`flex items-center gap-3 rounded-lg p-3 ${entry.user_id === userId ? 'border border-primary/20 bg-primary/5' : 'border'}`}
           >
             <span
               className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${rankChipClass(i)}`}

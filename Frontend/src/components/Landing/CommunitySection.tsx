@@ -41,7 +41,7 @@ const CommunitySection: React.FC = () => (
               transition={{ duration: 0.5, delay: 0.1 * index }}
               className="rounded-2xl border border-border bg-card p-8 text-card-foreground shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
             >
-              <div className="bg-primary/10 mb-5 flex h-12 w-12 items-center justify-center rounded-xl text-primary">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Icon className="h-6 w-6" />
               </div>
               <h3 className="mb-2 text-xl font-semibold text-foreground">
@@ -63,7 +63,7 @@ const CommunitySection: React.FC = () => (
       >
         <Link
           href="/auth/register"
-          className="hover:shadow-primary/30 inline-flex items-center rounded-full bg-gradient-to-r from-primary to-primary2 px-6 py-3 text-lg font-semibold text-white transition-all duration-300 hover:shadow-lg"
+          className="inline-flex items-center rounded-full bg-gradient-to-r from-primary to-primary2 px-6 py-3 text-lg font-semibold text-white transition-all duration-300 hover:shadow-lg hover:shadow-primary/30"
         >
           Get Started
           <svg className="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

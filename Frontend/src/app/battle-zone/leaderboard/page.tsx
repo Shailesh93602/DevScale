@@ -3,17 +3,8 @@
 import { useState, useEffect } from 'react';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import {
   Search,
   Trophy,
@@ -21,76 +12,52 @@ import {
   Award,
   Users,
   BarChart,
-  Swords,
   CheckCircle,
 } from 'lucide-react';
 import { useAxiosGet } from '@/hooks/useAxios';
-
-interface LeaderboardEntry {
-  id: string;
-  user_id: string;
-  username: string;
-  avatar_url?: string;
-  rank: number;
-  score: number;
-  battles_won: number;
-  battles_participated: number;
-  win_rate: number;
-  badges: string[];
-  last_active: string;
-}
+import type { RatingLeaderboardEntry } from '@/components/Landing/SimpleWeeklyLeaderboard';
+import {
+  toLeaderboardEntries,
+  type LeaderboardEntry,
+} from '@/lib/rating-leaderboard';
 
 export default function LeaderboardPage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [timeframe, setTimeframe] = useState('all-time');
-  const [category, setCategory] = useState('overall');
 
-  const [getLeaderboard] = useAxiosGet<LeaderboardEntry[]>('/leaderboard');
+  const [getLeaderboard] = useAxiosGet<RatingLeaderboardEntry[]>(
+    '/ratings/leaderboard',
+  );
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
-      setIsLoading(true);
-      try {
-        // In a real app, you would pass the timeframe and category as query params
-        const response = await getLeaderboard();
-        if (response.data) {
-          setLeaderboard(response.data || []);
-        }
-      } catch (error) {
-        console.error('Failed to fetch leaderboard:', error);
-      } finally {
-        setIsLoading(false);
-      }
+    let cancelled = false;
+    void getLeaderboard({ params: { limit: 100 } }).then((response) => {
+      if (cancelled) return;
+      setLoadFailed(!response.success);
+      setLeaderboard(
+        response.success ? toLeaderboardEntries(response.data) : [],
+      );
+      setIsLoading(false);
+    });
+    return () => {
+      cancelled = true;
     };
+  }, [getLeaderboard]);
 
-    fetchLeaderboard();
-  }, [timeframe, category]);
-
-  // Filter leaderboard by search term
   const filteredLeaderboard = leaderboard.filter((entry) =>
     entry.username.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const totalBattles = leaderboard.reduce(
-    (sum, entry) => sum + entry.battles_participated,
-    0,
-  );
-  const averageScore = leaderboard.length
+  const averageRating = leaderboard.length
     ? leaderboard.reduce((sum, entry) => sum + entry.score, 0) /
       leaderboard.length
     : 0;
 
-  // Derived stats from leaderboard response
   const stats = [
     {
-      label: 'Total Battles',
-      value: totalBattles.toLocaleString(),
-      icon: <Swords className="h-5 w-5 text-primary" />,
-    },
-    {
-      label: 'Active Users',
+      label: 'Rated Players',
       value: leaderboard.length.toLocaleString(),
       icon: <Users className="h-5 w-5 text-primary" />,
     },
@@ -102,8 +69,8 @@ export default function LeaderboardPage() {
       icon: <CheckCircle className="h-5 w-5 text-primary" />,
     },
     {
-      label: 'Avg. Score',
-      value: averageScore.toFixed(1),
+      label: 'Avg. Rating',
+      value: averageRating.toFixed(0),
       icon: <BarChart className="h-5 w-5 text-primary" />,
     },
   ];
@@ -180,7 +147,7 @@ export default function LeaderboardPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-3">
           {stats.map((stat) => (
             <Card key={stat.label}>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -196,84 +163,27 @@ export default function LeaderboardPage() {
           ))}
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <Select value={timeframe} onValueChange={setTimeframe}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select timeframe" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all-time">All Time</SelectItem>
-                <SelectItem value="this-month">This Month</SelectItem>
-                <SelectItem value="this-week">This Week</SelectItem>
-                <SelectItem value="today">Today</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="overall">Overall</SelectItem>
-                <SelectItem value="wins">Most Wins</SelectItem>
-                <SelectItem value="participation">Most Active</SelectItem>
-                <SelectItem value="win-rate">Best Win Rate</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search users..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+        <div className="relative sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search players..."
+            aria-label="Search players"
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
 
-        {/* Leaderboard Tabs */}
-        <Tabs defaultValue="global">
-          <TabsList className="w-full">
-            <TabsTrigger value="global" className="flex-1">
-              Global
-            </TabsTrigger>
-            <TabsTrigger value="friends" className="flex-1">
-              Friends
-            </TabsTrigger>
-            <TabsTrigger value="topic" className="flex-1">
-              By Topic
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="global" className="mt-6">
-            <LeaderboardTable entries={filteredLeaderboard} />
-          </TabsContent>
-
-          <TabsContent value="friends" className="mt-6">
-            <LeaderboardTable entries={filteredLeaderboard.slice(0, 5)} />
-          </TabsContent>
-
-          <TabsContent value="topic" className="mt-6">
-            <div className="mb-4">
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a topic" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="javascript">JavaScript</SelectItem>
-                  <SelectItem value="python">Python</SelectItem>
-                  <SelectItem value="react">React</SelectItem>
-                  <SelectItem value="algorithms">Algorithms</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <LeaderboardTable entries={filteredLeaderboard.slice(2, 8)} />
-          </TabsContent>
-        </Tabs>
+        {loadFailed ? (
+          <div role="alert" className="py-12 text-center">
+            <h2 className="mb-2 text-xl font-bold">
+              The leaderboard could not be loaded
+            </h2>
+            <p className="text-muted-foreground">Please refresh the page.</p>
+          </div>
+        ) : (
+          <LeaderboardTable entries={filteredLeaderboard} />
+        )}
       </div>
     </BattleZoneLayout>
   );
@@ -328,10 +238,9 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
       <div className="hidden items-center rounded-lg border bg-muted p-4 font-medium sm:flex">
         <div className="w-12 text-center">#</div>
         <div className="flex-1">User</div>
-        <div className="w-24 text-center">Score</div>
+        <div className="w-24 text-center">Rating</div>
         <div className="w-24 text-center">Wins</div>
         <div className="w-24 text-center">Win Rate</div>
-        <div className="w-32 text-center">Badges</div>
       </div>
 
       {/* Table Rows */}
@@ -349,7 +258,6 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
 
             <div className="flex flex-1 items-center gap-3 sm:w-auto">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={entry.avatar_url} alt={entry.username} />
                 <AvatarFallback>
                   {entry.username.charAt(0).toUpperCase()}
                 </AvatarFallback>
@@ -362,7 +270,7 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
               </div>
             </div>
 
-            <div className="font-bold sm:hidden">{entry.score} pts</div>
+            <div className="font-bold sm:hidden">{entry.score}</div>
           </div>
 
           <div className="hidden w-24 justify-center text-center font-bold sm:flex">
@@ -375,14 +283,6 @@ function LeaderboardTable({ entries }: { entries: LeaderboardEntry[] }) {
 
           <div className="hidden w-24 justify-center text-center sm:flex">
             {entry.win_rate}%
-          </div>
-
-          <div className="mt-2 flex w-full flex-wrap gap-2 sm:mt-0 sm:w-32 sm:justify-center">
-            {entry.badges.map((badge) => (
-              <Badge key={badge} variant="outline" className="text-xs">
-                {badge}
-              </Badge>
-            ))}
           </div>
         </div>
       ))}

@@ -22,7 +22,6 @@ import { MatchmakingPhase, MatchResult } from '@/hooks/useMatchmaking';
 interface MatchmakingRadarProps {
   phase: MatchmakingPhase;
   elapsedSeconds: number;
-  currentBand: number;
   queueSize: number;
   userRating: number | null;
   error: string | null;
@@ -34,7 +33,6 @@ interface MatchmakingRadarProps {
 export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
   phase,
   elapsedSeconds,
-  currentBand,
   queueSize,
   userRating,
   error,
@@ -49,15 +47,15 @@ export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
   };
 
   return (
-    <div className="border-primary/20 relative overflow-hidden rounded-2xl border bg-card p-6 shadow-xl md:p-8">
+    <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-card p-6 shadow-xl md:p-8">
       {/* Background ambient radar glow */}
-      <div className="bg-primary/10 pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
 
       {phase === 'idle' && (
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
           <div className="space-y-2 text-center md:text-left">
-            <div className="border-primary/30 bg-primary/10 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold text-primary">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <Sparkles className="h-3.5 w-3.5" />
               <span>Skill-Based Elo Matchmaking</span>
             </div>
@@ -65,15 +63,15 @@ export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
               1-on-1 Instant Ranked Duel
             </h3>
             <p className="max-w-xl text-sm text-muted-foreground md:text-base">
-              Enter the competitive queue. We dynamically pair you with an
-              opponent of comparable Elo within an expanding rating band.
+              Enter the competitive queue. When you join, we pair you with a
+              waiting player within ±100 Elo of your rating, if there is one.
             </p>
           </div>
 
           <Button
             size="lg"
             onClick={onJoin}
-            className="shadow-primary/25 hover:shadow-primary/40 group flex h-14 items-center gap-3 rounded-xl px-8 text-base font-bold shadow-lg transition-all active:scale-[0.98]"
+            className="group flex h-14 items-center gap-3 rounded-xl px-8 text-base font-bold shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 active:scale-[0.98]"
           >
             <Swords className="h-5 w-5 transition-transform group-hover:rotate-12" />
             <span>Find Instant Match</span>
@@ -101,7 +99,7 @@ export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
             <motion.div
               animate={{ scale: [1, 1.8], opacity: [0.8, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-              className="border-primary/50 bg-primary/10 absolute inset-0 rounded-full border"
+              className="absolute inset-0 rounded-full border border-primary/50 bg-primary/10"
             />
             <motion.div
               animate={{ scale: [1, 2.3], opacity: [0.5, 0] }}
@@ -111,11 +109,11 @@ export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
                 repeat: Infinity,
                 ease: 'easeOut',
               }}
-              className="border-primary/30 bg-primary/5 absolute inset-0 rounded-full border"
+              className="absolute inset-0 rounded-full border border-primary/30 bg-primary/5"
             />
 
             {/* Center icon */}
-            <div className="border-primary/40 relative z-10 flex h-20 w-20 items-center justify-center rounded-full border bg-background shadow-lg">
+            <div className="relative z-10 flex h-20 w-20 items-center justify-center rounded-full border border-primary/40 bg-background shadow-lg">
               <Compass className="h-9 w-9 animate-spin text-primary [animation-duration:8s]" />
             </div>
           </div>
@@ -129,7 +127,7 @@ export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
             </div>
           </div>
 
-          {/* Dynamic rating band & queue stats badges */}
+          {/* Rating & queue stats badges */}
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Badge
               variant="outline"
@@ -149,19 +147,11 @@ export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
                 In Queue: <strong>{queueSize}</strong>
               </span>
             </Badge>
-            <Badge
-              variant="outline"
-              className="flex items-center gap-1.5 px-3 py-1 text-xs"
-            >
-              <span>
-                Search Range: <strong>±{currentBand} Elo</strong>
-              </span>
-            </Badge>
           </div>
 
           <p className="max-w-md text-xs text-muted-foreground">
-            Search band expands by +20 Elo every second up to ±600 to guarantee
-            a prompt match.
+            Matching runs when you join: if nobody within ±100 Elo is waiting,
+            you stay queued until a player in range joins.
           </p>
 
           <Button
@@ -284,11 +274,11 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="border-primary/30 w-full max-w-md overflow-hidden rounded-2xl border bg-card p-6 shadow-2xl md:p-8"
+          className="w-full max-w-md overflow-hidden rounded-2xl border border-primary/30 bg-card p-6 shadow-2xl md:p-8"
         >
           <div className="flex flex-col items-center text-center">
             {/* Visual match badge */}
-            <div className="bg-primary/20 flex h-16 w-16 items-center justify-center rounded-2xl text-primary shadow-inner">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/20 text-primary shadow-inner">
               <Swords className="h-8 w-8 animate-bounce" />
             </div>
 
@@ -320,7 +310,7 @@ export const MatchFoundModal: React.FC<MatchFoundModalProps> = ({
                   onAccept();
                   router.push(battleDestination);
                 }}
-                className="shadow-primary/20 flex h-12 w-full items-center justify-center gap-2 rounded-xl font-bold shadow-md"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl font-bold shadow-md shadow-primary/20"
               >
                 <span>Enter Arena</span>
                 <ArrowRight className="h-4 w-4" />

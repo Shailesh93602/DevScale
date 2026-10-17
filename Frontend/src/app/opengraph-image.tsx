@@ -56,7 +56,7 @@ export default function OG() {
           <p
             style={{ fontSize: 30, margin: 0, opacity: 0.85, lineHeight: 1.3 }}
           >
-            Real-time coding battles, distributed locking, circuit breakers,
+            Real-time quiz battles, distributed locking, circuit breakers,
             Prometheus metrics. Built for engineering students.
           </p>
         </div>

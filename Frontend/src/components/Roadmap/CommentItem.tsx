@@ -60,7 +60,7 @@ export const CommentItem = ({
   roadmapId,
   onCommentUpdate,
   depth = 0,
-  maxDepth = 3,
+  maxDepth = 1, // the comments API returns one level of replies; a deeper reply vanishes on refresh
 }: CommentItemProps) => {
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
@@ -157,7 +157,7 @@ export const CommentItem = ({
     <Card
       className={cn(
         'bg-card p-4',
-        depth > 0 && 'border-l-primary/10 border-l-4',
+        depth > 0 && 'border-l-4 border-l-primary/10',
       )}
     >
       <div className="flex gap-4">
@@ -209,7 +209,7 @@ export const CommentItem = ({
               className={cn(
                 'gap-2 transition-all duration-200 ease-in-out',
                 comment.isLiked
-                  ? 'hover:text-primary/80 text-primary'
+                  ? 'text-primary hover:text-primary/80'
                   : 'text-muted-foreground hover:text-primary',
               )}
               onClick={handleLike}

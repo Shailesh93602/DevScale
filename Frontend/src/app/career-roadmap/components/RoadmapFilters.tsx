@@ -130,7 +130,7 @@ function CategoryList({ s }: { s: S }) {
           >
             <div className="flex items-center gap-2">
               {category.icon && (
-                <div className="bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10">
                   <i className={category.icon} />
                 </div>
               )}

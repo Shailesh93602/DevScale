@@ -111,7 +111,7 @@ export default function CodingChallenge({ id }: { id: string }) {
 
         <ResizableHandle
           className={cn(
-            'hover:bg-primary/20 bg-background transition-colors',
+            'bg-background transition-colors hover:bg-primary/20',
             isNarrow ? 'h-1.5 w-full' : 'w-1.5',
           )}
         />
@@ -127,7 +127,7 @@ export default function CodingChallenge({ id }: { id: string }) {
               />
             </ResizablePanel>
 
-            <ResizableHandle className="hover:bg-primary/20 h-1.5 bg-background transition-colors" />
+            <ResizableHandle className="h-1.5 bg-background transition-colors hover:bg-primary/20" />
 
             <ResizablePanel
               defaultSize={30}

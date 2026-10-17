@@ -21,32 +21,38 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import { BaseRoadmap, RoadmapAuthor } from '@/hooks/useRoadmapApi';
+import {
+  BaseRoadmap,
+  RoadmapAuthor,
+  RoadmapSocialData,
+} from '@/hooks/useRoadmapApi';
 import { useRoadmapSocial } from '@/hooks/useRoadmapSocial';
 import { useSignInGate } from '@/hooks/useSignInGate';
 import { roadmapAuthorInitial, roadmapAuthorName } from '@/lib/roadmap-author';
 
-export type RoadmapType = BaseRoadmap & {
-  description: string;
-  enrollmentCount?: number;
-  rating?: number;
-  steps?: number;
-  estimatedTime?: string;
-  progress?: number;
-  isEnrolled?: boolean;
-  isFeatured?: boolean;
-  tags?: string;
-  difficulty?: string;
-  estimatedHours?: number;
-  popularity?: number;
-  version?: string;
-  user?: {
-    username: string;
-    first_name: string | null;
-    last_name: string | null;
-    avatar_url: string | null;
-  } & RoadmapAuthor;
-};
+// Social fields are optional: an endpoint that does not send them must not be shown as 0 / not-liked.
+export type RoadmapType = Omit<BaseRoadmap, keyof RoadmapSocialData> &
+  Partial<RoadmapSocialData> & {
+    description: string;
+    enrollmentCount?: number;
+    rating?: number;
+    steps?: number;
+    estimatedTime?: string;
+    progress?: number;
+    isEnrolled?: boolean;
+    isFeatured?: boolean;
+    tags?: string;
+    difficulty?: string;
+    estimatedHours?: number;
+    popularity?: number;
+    version?: string;
+    user?: {
+      username: string;
+      first_name: string | null;
+      last_name: string | null;
+      avatar_url: string | null;
+    } & RoadmapAuthor;
+  };
 
 // Create a skeleton loader component for RoadmapCard
 export const RoadmapCardSkeleton = () => (
@@ -229,10 +235,10 @@ export const RoadmapCard = ({
     >
       {/* Card header with difficulty badge and icon */}
       <div className="relative p-6 pb-4">
-        <div className="to-primary/5 absolute inset-0 bg-gradient-to-br from-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-primary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
         <div className="flex items-start justify-between">
-          <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full text-primary">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
             <Route size={24} />
           </div>
 
@@ -351,7 +357,7 @@ export const RoadmapCard = ({
                 <Badge
                   key={tag}
                   variant="secondary"
-                  className="bg-primary/10 hover:bg-primary/20 text-primary"
+                  className="bg-primary/10 text-primary hover:bg-primary/20"
                 >
                   {tag.trim()}
                 </Badge>
@@ -380,24 +386,26 @@ export const RoadmapCard = ({
             </div>
 
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                aria-label="Like"
-                onClick={handleLikeClick}
-                disabled={isLoading}
-                className={cn(
-                  'flex items-center gap-1.5 rounded-full px-3 transition-colors',
-                  isLiked
-                    ? 'bg-destructive/10 text-destructive hover:bg-destructive/20'
-                    : '',
-                )}
-              >
-                <Heart
-                  className={cn('h-4 w-4', isLiked ? 'fill-current' : '')}
-                />
-                <span className="text-xs font-medium">{likeCount}</span>
-              </Button>
+              {roadmap.isLiked !== undefined && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-label="Like"
+                  onClick={handleLikeClick}
+                  disabled={isLoading}
+                  className={cn(
+                    'flex items-center gap-1.5 rounded-full px-3 transition-colors',
+                    isLiked
+                      ? 'bg-destructive/10 text-destructive hover:bg-destructive/20'
+                      : '',
+                  )}
+                >
+                  <Heart
+                    className={cn('h-4 w-4', isLiked ? 'fill-current' : '')}
+                  />
+                  <span className="text-xs font-medium">{likeCount}</span>
+                </Button>
+              )}
 
               <Button
                 variant="ghost"
@@ -408,28 +416,35 @@ export const RoadmapCard = ({
               >
                 <MessageCircle className="h-4 w-4" />
                 <span className="text-xs font-medium">
-                  {roadmap.commentsCount > 0 ? roadmap.commentsCount : ''}
+                  {(roadmap.commentsCount ?? 0) > 0
+                    ? roadmap.commentsCount
+                    : ''}
                 </span>
               </Button>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                aria-label="Bookmark"
-                onClick={handleBookmarkClick}
-                disabled={isLoading}
-                className={cn(
-                  'flex items-center gap-1.5 rounded-full px-3 transition-colors',
-                  isBookmarked
-                    ? 'bg-blue-500/10 text-blue-500 hover:bg-blue-500/20'
-                    : '',
-                )}
-              >
-                <Bookmark
-                  className={cn('h-4 w-4', isBookmarked ? 'fill-current' : '')}
-                />
-                <span className="text-xs font-medium">{bookmarkCount}</span>
-              </Button>
+              {roadmap.isBookmarked !== undefined && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-label="Bookmark"
+                  onClick={handleBookmarkClick}
+                  disabled={isLoading}
+                  className={cn(
+                    'flex items-center gap-1.5 rounded-full px-3 transition-colors',
+                    isBookmarked
+                      ? 'bg-blue-500/10 text-blue-500 hover:bg-blue-500/20'
+                      : '',
+                  )}
+                >
+                  <Bookmark
+                    className={cn(
+                      'h-4 w-4',
+                      isBookmarked ? 'fill-current' : '',
+                    )}
+                  />
+                  <span className="text-xs font-medium">{bookmarkCount}</span>
+                </Button>
+              )}
             </div>
           </div>
         </div>

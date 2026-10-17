@@ -69,11 +69,12 @@ export default function QuestionSourceSelector({
         setCount={s.setCount}
         maxCount={maxCount}
         poolLoading={s.poolLoading}
+        poolError={s.poolError}
         totalAvailable={s.totalAvailable}
       />
 
       {value && (
-        <div className="border-primary/30 bg-primary/5 rounded-md border px-3 py-2 text-sm">
+        <div className="rounded-md border border-primary/30 bg-primary/5 px-3 py-2 text-sm">
           <span className="font-medium text-primary">Source: </span>
           <span className="text-foreground">{value.label}</span>
           <span className="ml-2 text-xs capitalize text-muted-foreground">

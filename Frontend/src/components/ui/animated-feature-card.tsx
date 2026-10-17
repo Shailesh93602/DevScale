@@ -118,7 +118,7 @@ export const AnimatedFeatureCard = ({
         className="absolute inset-0 rounded-xl opacity-70"
         style={{
           background:
-            'linear-gradient(45deg, var(--primary), var(--primary2), var(--primary-light), var(--primary2))',
+            'linear-gradient(45deg, hsl(var(--primary)), var(--primary2), var(--primary-light), var(--primary2))',
           backgroundSize: '400% 400%',
           zIndex: 0,
         }}
@@ -207,7 +207,7 @@ export const AnimatedFeatureCard = ({
               {particleData.map((p, i) => (
                 <motion.div
                   key={i}
-                  className="bg-primary/30 pointer-events-none absolute h-2 w-2 rounded-full"
+                  className="pointer-events-none absolute h-2 w-2 rounded-full bg-primary/30"
                   initial={{
                     translateX: mousePosition.x,
                     translateY: mousePosition.y,

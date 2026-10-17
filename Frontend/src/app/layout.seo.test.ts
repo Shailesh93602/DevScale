@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { SITEMAP_PATHS } from './sitemap';
 
 /**
  * SEO invariants for the root layout.
@@ -54,8 +55,21 @@ describe('root layout SEO', () => {
     expect(layout).toMatch(/metadataBase:\s*new URL\(/);
   });
 
-  it('declares a canonical URL', () => {
-    expect(layout).toMatch(/alternates:\s*\{\s*canonical:/);
+  it('sets NO canonical or og:url — every child segment would inherit it and claim to be "/"', () => {
+    expect(layout).not.toMatch(/canonical:/);
+    expect(layout).not.toMatch(/openGraph:\s*\{[^}]*\burl:/);
+  });
+
+  it.each(SITEMAP_PATHS)('%s declares its own canonical', (path) => {
+    const dir = join(process.cwd(), 'src', 'app', ...path.split('/'));
+    const sources = ['page.tsx', 'layout.tsx']
+      .map((f) => join(dir, f))
+      .filter(existsSync)
+      .map((f) => stripComments(readFileSync(f, 'utf8')));
+    const escaped = path.replace(/[/]/g, '\\/');
+    expect(sources.join('\n')).toMatch(
+      new RegExp(`canonical:\\s*['"]${escaped}['"]`),
+    );
   });
 
   it('emits JSON-LD structured data', () => {
@@ -66,7 +80,13 @@ describe('root layout SEO', () => {
   });
 
   it('derives the site origin instead of repeating a literal', () => {
-    expect(layout).toMatch(/NEXT_PUBLIC_SITE_URL/);
+    expect(layout).toMatch(/SITE_URL/);
+    for (const f of ['robots.ts', 'sitemap.ts', 'manifest.ts']) {
+      const src = stripComments(
+        readFileSync(join(process.cwd(), 'src', 'app', f), 'utf8'),
+      );
+      expect(src, f).not.toMatch(/https:\/\/eduscale\.vercel\.app/);
+    }
   });
 
   it('claims no logo or social profiles it does not have', () => {

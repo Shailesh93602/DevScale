@@ -53,7 +53,7 @@ export function TopicsSidebar({
       {/* Mobile toggle - hidden on desktop via both CSS and JS */}
       <Button
         className={cn(
-          'bg-primary/90 fixed left-4 top-[70px] z-50 h-10 w-10 rounded-full p-0 text-white shadow-xl backdrop-blur-sm transition-all duration-300 hover:bg-primary lg:hidden',
+          'fixed left-4 top-[70px] z-50 h-10 w-10 rounded-full bg-primary/90 p-0 text-white shadow-xl backdrop-blur-sm transition-all duration-300 hover:bg-primary lg:hidden',
           isDesktop && 'hidden',
         )}
         onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -101,8 +101,8 @@ export function TopicsSidebar({
                 key={topic?.id}
                 className={`group flex cursor-pointer items-center justify-between rounded-xl px-4 py-3 transition-all duration-200 ${
                   selected
-                    ? 'shadow-primary/20 bg-primary text-white shadow-lg'
-                    : 'hover:bg-primary/10 text-muted-foreground hover:text-primary'
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                    : 'text-muted-foreground hover:bg-primary/10 hover:text-primary'
                 }`}
                 onClick={() => {
                   onSelect(topic);

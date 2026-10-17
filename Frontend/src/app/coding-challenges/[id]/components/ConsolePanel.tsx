@@ -136,7 +136,7 @@ export function ConsolePanel({ runner }: { runner: ChallengeRunner }) {
         type="button"
         aria-expanded={consoleExpanded}
         aria-label={consoleExpanded ? 'Collapse console' : 'Expand console'}
-        className="focus:ring-primary/50 flex h-12 w-full cursor-pointer items-center justify-between border-b border-border px-4 transition-colors hover:bg-accent/30 focus:outline-none focus:ring-1"
+        className="flex h-12 w-full cursor-pointer items-center justify-between border-b border-border px-4 transition-colors hover:bg-accent/30 focus:outline-none focus:ring-1 focus:ring-primary/50"
         onClick={() => setConsoleExpanded(!consoleExpanded)}
       >
         <div className="flex items-center gap-2 text-sm font-medium text-primary">

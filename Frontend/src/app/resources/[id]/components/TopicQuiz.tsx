@@ -16,9 +16,9 @@ function QuestionCard({
   onSelect: (questionId: string, text: string) => void;
 }) {
   return (
-    <div className="hover:border-primary/20 rounded-2xl border border-border/40 bg-card/40 p-8 shadow-sm transition-all duration-300 hover:shadow-md">
+    <div className="rounded-2xl border border-border/40 bg-card/40 p-8 shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md">
       <div className="mb-6 flex items-start">
-        <span className="bg-primary/10 mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-sm font-bold text-primary">
+        <span className="mr-4 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
           {index + 1}
         </span>
         <p className="text-xl font-semibold leading-tight text-foreground">
@@ -33,8 +33,8 @@ function QuestionCard({
               key={option.id}
               className={`duration-250 group relative flex cursor-pointer items-center rounded-xl border p-4 transition-all ${
                 checked
-                  ? 'bg-primary/5 border-primary ring-1 ring-primary'
-                  : 'hover:border-primary/40 border-border/50 bg-secondary/30 hover:bg-secondary/50'
+                  ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                  : 'border-border/50 bg-secondary/30 hover:border-primary/40 hover:bg-secondary/50'
               }`}
             >
               <div className="flex w-full items-center justify-between">
@@ -43,7 +43,7 @@ function QuestionCard({
                     className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all ${
                       checked
                         ? 'border-primary bg-primary'
-                        : 'group-hover:border-primary/50 border-muted-foreground/30'
+                        : 'border-muted-foreground/30 group-hover:border-primary/50'
                     }`}
                   >
                     {checked && (
@@ -109,7 +109,7 @@ export function TopicQuiz({
       <div className="mt-12 flex justify-end">
         <Button
           onClick={onSubmit}
-          className="hover:shadow-primary/20 h-14 rounded-2xl bg-primary px-12 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          className="h-14 rounded-2xl bg-primary px-12 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-primary/20 active:scale-[0.98]"
         >
           Submit Quiz
         </Button>

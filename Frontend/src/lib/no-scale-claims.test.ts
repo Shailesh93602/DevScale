@@ -71,6 +71,11 @@ const UI_DIRS = [
 const UI_EXTRA_FILES = [
   'Frontend/src/app/page.tsx',
   'Frontend/src/components/ui/stats-showcase.tsx',
+  // The PWA description, every social preview card and the root metadata.
+  'Frontend/src/app/manifest.ts',
+  'Frontend/src/app/opengraph-image.tsx',
+  'Frontend/src/app/layout.tsx',
+  'Frontend/src/constants/branding.ts',
 ];
 
 const UI_FILES = [
@@ -117,6 +122,11 @@ const UNSHIPPED_FEATURE_CLAIMS: Array<{
     label: 'certificates',
     pattern: /certificat(e|es|ion|ions)\b/i,
     why: 'the Certificate model has zero references anywhere in Backend/src or Frontend/src',
+  },
+  {
+    label: 'coding battle',
+    pattern: /coding battles?|coding arena/i,
+    why: 'battles are multiple-choice: BattleQuestion has `options Json` and `correct_answer Int`, and no code is written or run in a battle',
   },
   {
     label: 'account manager',

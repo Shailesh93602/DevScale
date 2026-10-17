@@ -44,52 +44,34 @@ export default function CodingChallengesPage() {
     setSearchTerm(e.target.value);
   };
 
-  const fetchChallenges = async (
-    currentPage: number,
-    search: string,
-    replace = false,
-  ) => {
-    try {
-      setIsFetching(true);
-      setError(null);
+  const latestRequest = useRef(0);
 
-      const response = await getChallenges({
-        params: {
-          page: currentPage,
-          search: search,
-          limit: 12,
-        },
-      });
-
-      // Based on network tab, pagination data is in response.meta directly
-      const data = Array.isArray(response) ? response : response.data;
-      const meta = response.meta;
-
-      if (data) {
-        setChallenges((prevChallenges) => {
-          const newChallenges = data ?? [];
-          return replace
-            ? newChallenges
-            : [...prevChallenges, ...newChallenges];
-        });
-        if (meta) {
-          setTotalPages((meta as unknown as ChallengesMeta).totalPages || 0);
-          setTotalCount((meta as unknown as ChallengesMeta).total || 0);
-        }
-      }
-      setIsFetching(false);
-    } catch (error) {
-      if (error instanceof Error) {
-        setIsFetching(false);
-        setError(error.message);
-      }
+  // Numbered pagination: every page replaces the list, and only the newest request may write.
+  const fetchChallenges = async (currentPage: number, search: string) => {
+    const requestId = ++latestRequest.current;
+    setIsFetching(true);
+    setError(null);
+    const response = await getChallenges({
+      params: { page: currentPage, search, limit: 12 },
+    });
+    if (requestId !== latestRequest.current) return;
+    setIsFetching(false);
+    if (!response.success) {
+      setError(response.message || 'Failed to load challenges');
+      return;
+    }
+    setChallenges(Array.isArray(response.data) ? response.data : []);
+    const meta = response.meta as unknown as ChallengesMeta | undefined;
+    if (meta) {
+      setTotalPages(meta.totalPages || 0);
+      setTotalCount(meta.total || 0);
     }
   };
 
   // Initial fetch on component mount
   useEffect(() => {
     const initializeChallenges = async () => {
-      await fetchChallenges(1, '', true);
+      await fetchChallenges(1, '');
       hasInitialized.current = true;
       setIsInitialized(true);
     };
@@ -102,26 +84,15 @@ export default function CodingChallengesPage() {
 
     const delayDebounceFn = setTimeout(() => {
       setPage(1);
-      const fetchWithSearch = async () => {
-        await fetchChallenges(1, searchTerm, true);
-      };
-      fetchWithSearch();
+      void fetchChallenges(1, searchTerm);
     }, 500);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
-  useEffect(() => {
-    if (page > 1) {
-      const fetchPage = async () => {
-        await fetchChallenges(page, searchTerm, false);
-      };
-      fetchPage();
-    }
-  }, [page]);
-
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
+    void fetchChallenges(newPage, searchTerm);
   };
 
   return (
@@ -207,7 +178,7 @@ export default function CodingChallengesPage() {
                     </div>
                     <Link
                       href={`/coding-challenges/${challenge.id}`}
-                      className="hover:bg-primary/90 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors"
+                      className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
                     >
                       Solve Challenge
                     </Link>

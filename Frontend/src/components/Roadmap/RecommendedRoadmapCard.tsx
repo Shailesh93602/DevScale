@@ -34,7 +34,7 @@ export const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
             <span>{roadmap?.rating?.toFixed(1)} rating</span>
           </div>
           <div className="mt-4">
-            <span className="bg-primary/10 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium text-primary">
+            <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
               {roadmap?.matchScore}% match - {roadmap?.matchReason}
             </span>
           </div>

@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   title: 'Blog',
   description:
     'Articles on engineering learning, interview preparation and building software.',
+  alternates: { canonical: '/blogs' },
 };
 
 export default function BlogsLayout({

@@ -18,7 +18,7 @@ import { BattleReplay } from './BattleReplay';
 export const metadata: Metadata = {
   title: 'Recorded Battle Demo',
   description:
-    'Watch a recorded two-player coding battle replay — the live Battle Zone UI, no account needed.',
+    'Watch a recorded two-player quiz battle replay — the live Battle Zone UI, no account needed.',
   alternates: { canonical: '/battles/demo' },
 };
 

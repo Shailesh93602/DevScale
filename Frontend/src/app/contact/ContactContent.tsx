@@ -48,7 +48,7 @@ export default function ContactContent() {
   return (
     <div className="min-h-screen bg-background py-12">
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
-        <div className="from-primary/10 to-primary/10 mb-10 rounded-2xl border border-border bg-gradient-to-r via-background p-8">
+        <div className="mb-10 rounded-2xl border border-border bg-gradient-to-r from-primary/10 via-background to-primary/10 p-8">
           <p className="text-sm font-semibold uppercase tracking-wide text-primary">
             Let&apos;s connect
           </p>

@@ -45,7 +45,7 @@ export default function Footer() {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="hover:border-primary/30 hover:bg-primary/8 flex h-11 w-11 items-center justify-center rounded-lg border border-border text-muted-foreground no-underline transition-all duration-150 hover:text-primary"
+                  className="hover:bg-primary/8 flex h-11 w-11 items-center justify-center rounded-lg border border-border text-muted-foreground no-underline transition-all duration-150 hover:border-primary/30 hover:text-primary"
                   aria-label={link.name}
                   target="_blank"
                   rel="noopener noreferrer"

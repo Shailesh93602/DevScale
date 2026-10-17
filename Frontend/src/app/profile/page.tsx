@@ -153,7 +153,7 @@ export default function ProfilePage() {
           <div className="relative h-56 w-full overflow-hidden">
             {/* Background Transitions - Professional & Clean */}
             <div className="absolute inset-0 bg-background" />
-            <div className="from-primary/10 to-primary/5 absolute inset-0 bg-gradient-to-br via-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5" />
 
             {/* Professional Grid/Dot Pattern */}
             <div
@@ -166,8 +166,8 @@ export default function ProfilePage() {
             />
 
             {/* Subtle Gradient Glow in corners - Light/Dark Optimized */}
-            <div className="bg-primary/10 absolute -left-1/4 -top-1/2 h-[150%] w-[100%] blur-[120px]" />
-            <div className="bg-primary/5 absolute -bottom-1/2 -right-1/4 h-[150%] w-[100%] blur-[100px]" />
+            <div className="absolute -left-1/4 -top-1/2 h-[150%] w-[100%] bg-primary/10 blur-[120px]" />
+            <div className="absolute -bottom-1/2 -right-1/4 h-[150%] w-[100%] bg-primary/5 blur-[100px]" />
 
             {/* Bottom Divider */}
             <div className="absolute bottom-0 left-0 right-0 h-px bg-border/50" />
@@ -440,7 +440,7 @@ export default function ProfilePage() {
                           <Badge
                             key={index}
                             variant="secondary"
-                            className="bg-primary/5 hover:bg-primary/10 border-primary/20 rounded-full border px-3 py-1 text-sm font-medium text-primary transition-colors"
+                            className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
                           >
                             {skill}
                           </Badge>
@@ -458,13 +458,13 @@ export default function ProfilePage() {
 
             {profile.note && (
               <motion.div variants={itemVariants}>
-                <Card className="from-primary/5 to-purple-500/5 ring-primary/20 overflow-hidden border-none bg-gradient-to-br shadow-lg ring-1">
+                <Card className="to-purple-500/5 overflow-hidden border-none bg-gradient-to-br from-primary/5 shadow-lg ring-1 ring-primary/20">
                   <CardContent className="p-6">
                     <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-foreground">
                       <Edit3 className="h-5 w-5 text-primary" />
                       Current Focus / Note
                     </h3>
-                    <div className="border-primary/10 rounded-xl border bg-card/50 p-4 shadow-inner">
+                    <div className="rounded-xl border border-primary/10 bg-card/50 p-4 shadow-inner">
                       <p className="animate-pulse-slow text-base italic leading-relaxed text-muted-foreground">
                         &ldquo;{profile.note}&rdquo;
                       </p>

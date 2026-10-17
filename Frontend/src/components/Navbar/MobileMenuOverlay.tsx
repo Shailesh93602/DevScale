@@ -107,9 +107,9 @@ export const MobileMenuOverlay = ({
                     <Link
                       href="/admin"
                       onClick={handleLinkClick}
-                      className="hover:bg-primary/5 flex items-center gap-3 rounded-xl px-3 py-3 text-[14px] font-semibold text-primary no-underline transition-colors"
+                      className="flex items-center gap-3 rounded-xl px-3 py-3 text-[14px] font-semibold text-primary no-underline transition-colors hover:bg-primary/5"
                     >
-                      <div className="bg-primary/10 flex h-8 w-8 items-center justify-center rounded-lg text-primary">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                         <FiShield size={16} />
                       </div>
                       Admin Panel

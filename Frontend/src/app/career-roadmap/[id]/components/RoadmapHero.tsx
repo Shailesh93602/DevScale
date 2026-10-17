@@ -47,7 +47,7 @@ export const RoadmapHero = ({ roadmapDetails }: RoadmapHeroProps) => {
       </div>
 
       <div className="flex items-center space-x-4 rounded-lg bg-card/80 p-4 shadow-sm">
-        <Avatar className="ring-primary/10 h-12 w-12 ring-2">
+        <Avatar className="h-12 w-12 ring-2 ring-primary/10">
           <AvatarImage src={roadmapDetails?.user?.avatar_url || undefined} />
           <AvatarFallback className="bg-primary/5 text-primary">
             {(

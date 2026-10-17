@@ -5,7 +5,7 @@ const AnimatedBackground: React.FC = () => {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       <motion.div
-        className="bg-primary/20 absolute -top-1/2 left-0 h-[1000px] w-[1000px] rounded-full blur-3xl"
+        className="absolute -top-1/2 left-0 h-[1000px] w-[1000px] rounded-full bg-primary/20 blur-3xl"
         animate={{
           x: [0, 100, 0],
           y: [0, 50, 0],

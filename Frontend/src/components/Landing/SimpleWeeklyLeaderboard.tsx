@@ -84,6 +84,10 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = ({
     fetchLeaderboard({ params: { limit: LIMIT } })
       .then((res) => {
         if (cancelled) return;
+        if (res?.success === false) {
+          setState('error');
+          return;
+        }
         setEntries(Array.isArray(res?.data) ? res.data : []);
         setState('ready');
       })

@@ -1,99 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Users } from 'lucide-react';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useAxiosGet } from '@/hooks/useAxios';
-import type { Post, User } from './components/communityTypes';
-import {
-  CommunityUsersCard,
-  UpcomingEventsCard,
-} from './components/CommunitySidebar';
-import { CommunityFeed } from './components/CommunityFeed';
+import { Button } from '@/components/ui/button';
 
-function CommunitySkeleton() {
-  return (
-    <BattleZoneLayout>
-      <div className="space-y-6">
-        <Skeleton className="h-12 w-3/4" />
-        <Skeleton className="h-6 w-1/2" />
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="space-y-4">
-            <Skeleton className="h-[400px]" />
-          </div>
-          <div className="space-y-4 md:col-span-2">
-            <Skeleton className="h-[200px]" />
-            <Skeleton className="h-[200px]" />
-          </div>
-        </div>
-      </div>
-    </BattleZoneLayout>
-  );
-}
-
+// No backend exists for a community feed or member list (`/users` and `/forums/posts` both 404),
+// so this says so instead of rendering invented members, events and comments.
 export default function CommunityPage() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [users, setUsers] = useState<User[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const [getUsers] = useAxiosGet<User[]>('/users');
-  const [getPosts] = useAxiosGet<Post[]>('/forums/posts');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const [usersResponse, postsResponse] = await Promise.all([
-          getUsers(),
-          getPosts(),
-        ]);
-
-        if (usersResponse.data) {
-          setUsers(usersResponse.data || []);
-        }
-
-        if (postsResponse.data) {
-          setPosts(postsResponse.data || []);
-        }
-      } catch (error) {
-        console.error('Failed to fetch community data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const filteredUsers = users.filter((user) =>
-    user.username.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  if (isLoading) return <CommunitySkeleton />;
-
   return (
     <BattleZoneLayout>
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold">Community</h1>
-          <p className="text-muted-foreground">
-            Connect with other battle participants and share your experiences
-          </p>
+      <div className="mx-auto max-w-xl rounded-xl border border-dashed border-border bg-card p-10 text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+          <Users className="h-6 w-6 text-muted-foreground" />
         </div>
-
-        <div className="grid gap-8 md:grid-cols-3">
-          <div className="space-y-6">
-            <CommunityUsersCard
-              users={filteredUsers}
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-            />
-            <UpcomingEventsCard />
-          </div>
-
-          <CommunityFeed posts={posts} />
-        </div>
+        <h1 className="mb-2 text-2xl font-bold">Community is not built yet</h1>
+        <p className="mb-6 text-muted-foreground">
+          There is no community feed or member directory yet. Battles and the
+          leaderboard are where other players show up today.
+        </p>
+        <Button asChild>
+          <Link href="/battle-zone/leaderboard">See the leaderboard</Link>
+        </Button>
       </div>
     </BattleZoneLayout>
   );

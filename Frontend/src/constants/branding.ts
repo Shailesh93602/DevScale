@@ -31,7 +31,7 @@ export const BRANDING = {
     {
       title: 'Real-time Battle Zone',
       description:
-        'Go head-to-head in live coding battles with shared problems and a synced timer — practice under real pressure.',
+        'Go head-to-head in live quiz battles with shared questions and a synced timer — practice under real pressure.',
       icon: 'FaBolt',
     },
     {

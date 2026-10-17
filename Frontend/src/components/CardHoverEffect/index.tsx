@@ -3,11 +3,34 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { ReactNode, useState } from 'react';
 
+/** A card that links only when it has somewhere real to go. */
+function HoverItem({
+  link,
+  children,
+  ...handlers
+}: {
+  link?: string;
+  children: ReactNode;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+}) {
+  const className = 'group relative block h-full w-full p-2';
+  return link ? (
+    <Link href={link} className={className} {...handlers}>
+      {children}
+    </Link>
+  ) : (
+    <div className={className} {...handlers}>
+      {children}
+    </div>
+  );
+}
+
 export const HoverEffect = ({
   items,
   className,
 }: {
-  items: { link: string; title?: string; description?: string }[];
+  items: { link?: string; title?: string; description?: string }[];
   className?: string;
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -20,10 +43,9 @@ export const HoverEffect = ({
       )}
     >
       {items.map((item, idx) => (
-        <Link
-          href={item?.link}
-          key={item?.link}
-          className="group relative block h-full w-full p-2"
+        <HoverItem
+          link={item.link}
+          key={item.title ?? item.link ?? idx}
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
         >
@@ -48,7 +70,7 @@ export const HoverEffect = ({
             <CardTitle>{item.title}</CardTitle>
             <CardDescription>{item.description}</CardDescription>
           </Card>
-        </Link>
+        </HoverItem>
       ))}
     </div>
   );

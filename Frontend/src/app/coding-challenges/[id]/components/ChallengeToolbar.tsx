@@ -75,7 +75,7 @@ export function ChallengeToolbar({
         </Button>
         <Button
           variant="default"
-          className="hover:bg-primary/90 h-9 gap-2 bg-primary px-6 font-semibold text-white"
+          className="h-9 gap-2 bg-primary px-6 font-semibold text-white hover:bg-primary/90"
           onClick={runner.handleSubmit}
           disabled={isRunning || isSubmitting || isReviewing}
         >

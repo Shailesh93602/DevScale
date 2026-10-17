@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next';
+import { SITE_URL } from '@/lib/site-url';
 import { isPublicRoute, isGuestOnlyRoute } from '@/lib/public-routes';
 
-const BASE = 'https://eduscale.vercel.app';
+const BASE = SITE_URL;
 
 /**
  * Candidate routes for the sitemap.
@@ -29,7 +30,6 @@ const CANDIDATE_PATHS = [
   '/',
   '/about',
   '/articles',
-  '/article-listing',
   '/blogs',
   '/career-roadmap',
   '/coding-challenges',

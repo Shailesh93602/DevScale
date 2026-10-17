@@ -37,7 +37,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background-color: var(--primary);
+  background-color: hsl(var(--primary));
   opacity: 0.15;
   animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
 }

@@ -150,7 +150,7 @@ const BattleLobby: React.FC<BattleLobbyProps> = ({
       navigator
         .share({
           title: `Join my battle: ${battle.title}`,
-          text: `Join my coding battle on ${battle.topic?.title ?? battle.title}!`,
+          text: `Join my quiz battle on ${battle.topic?.title ?? battle.title}!`,
           url: battleUrl,
         })
         .catch(() => {

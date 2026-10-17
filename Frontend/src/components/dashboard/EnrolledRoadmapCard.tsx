@@ -67,7 +67,7 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
             height={500}
           />
         ) : (
-          <div className="from-primary/20 flex h-full w-full items-center justify-center bg-gradient-to-br to-secondary/20">
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20">
             <span className="text-lg font-semibold text-muted-foreground">
               {title.substring(0, 1)}
             </span>
@@ -127,7 +127,7 @@ const EnrolledRoadmapCard: React.FC<EnrolledRoadmapCardProps> = ({
 
         <Link
           href={`/career-roadmap/${id}`}
-          className="hover:text-primary/80 mt-4 flex items-center justify-end text-sm font-medium text-primary"
+          className="mt-4 flex items-center justify-end text-sm font-medium text-primary hover:text-primary/80"
         >
           <span>Continue</span>
           <ChevronRight size={16} />

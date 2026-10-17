@@ -130,7 +130,7 @@ export const RoadmapHeaderActions = ({
             size="icon"
             onClick={handleShare}
             aria-label="Share roadmap"
-            className="hover:bg-primary/10 h-10 w-10 rounded-full bg-muted transition-all"
+            className="h-10 w-10 rounded-full bg-muted transition-all hover:bg-primary/10"
           >
             <Share2 className="h-5 w-5 text-muted-foreground transition-colors hover:text-primary" />
           </Button>

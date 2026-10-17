@@ -324,7 +324,7 @@ export function BattleReplay({ fixture }: BattleReplayProps) {
                   return (
                     <div
                       key={idx}
-                      className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all ${isCorrect ? 'border-green-500 bg-green-500/10 text-green-700' : ''} ${isWrong ? 'border-destructive bg-destructive/10 text-destructive' : ''} ${!state.revealed && pickedBy.length > 0 ? 'bg-primary/10 border-primary' : ''}`}
+                      className={`flex w-full items-center gap-3 rounded-xl border p-4 text-left transition-all ${isCorrect ? 'border-green-500 bg-green-500/10 text-green-700' : ''} ${isWrong ? 'border-destructive bg-destructive/10 text-destructive' : ''} ${!state.revealed && pickedBy.length > 0 ? 'border-primary bg-primary/10' : ''}`}
                     >
                       <span
                         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm font-bold ${isCorrect ? 'border-green-500 bg-green-500 text-white' : ''} ${isWrong ? 'border-destructive bg-destructive text-destructive-foreground' : ''} ${!isCorrect && !isWrong ? 'border-muted-foreground/30' : ''}`}

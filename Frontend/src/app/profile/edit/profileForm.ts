@@ -133,8 +133,14 @@ export function profileToFormValues(userData: UserProfile): ProfileFormValues {
 }
 
 export function formValuesToPayload(values: ProfileFormValues) {
+  // Never send an id: the server must take identity from the session. (`email` stays until the
+  // backend's userInsertionSchema stops requiring it, or every save would 400.)
+  const { id: _id, ...editable } = values as ProfileFormValues & {
+    id?: unknown;
+  };
+  void _id;
   return {
-    ...values,
+    ...editable,
     skills: values.skills
       ? values.skills
           .split(',')

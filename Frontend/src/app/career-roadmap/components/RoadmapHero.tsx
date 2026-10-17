@@ -10,13 +10,13 @@ export function RoadmapHero({
   onExplore: () => void;
 }) {
   return (
-    <div className="from-primary/10 relative overflow-hidden bg-gradient-to-b to-background px-6 py-20 sm:py-28 lg:px-8">
-      <div className="shadow-primary/10 ring-primary/10 absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-background/10 shadow-xl ring-1" />
+    <div className="relative overflow-hidden bg-gradient-to-b from-primary/10 to-background px-6 py-20 sm:py-28 lg:px-8">
+      <div className="absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-background/10 shadow-xl shadow-primary/10 ring-1 ring-primary/10" />
 
       {/* Decorative elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="bg-primary/10 absolute -right-40 -top-40 h-80 w-80 rounded-full blur-3xl" />
-        <div className="bg-primary/10 absolute -bottom-40 -left-40 h-80 w-80 rounded-full blur-3xl" />
+        <div className="absolute -right-40 -top-40 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
       </div>
 
       <div className="mx-auto max-w-3xl text-center">

@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next';
+import { SITE_URL } from '@/lib/site-url';
 import {
   AUTH_REQUIRED_ROUTE_PREFIXES,
   GUEST_ONLY_ROUTE_PREFIXES,
 } from '@/lib/public-routes';
 
-const BASE = 'https://eduscale.vercel.app';
+const BASE = SITE_URL;
 
 /**
  * Paths no crawler should spend budget on, derived rather than typed out.

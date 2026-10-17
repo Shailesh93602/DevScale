@@ -99,7 +99,7 @@ export const EnhancedProgressVisualization = ({
       )}
     >
       {/* Background decorative elements */}
-      <div className="bg-primary/10 absolute -left-20 -top-20 h-40 w-40 rounded-full blur-3xl"></div>
+      <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-primary/10 blur-3xl"></div>
       <div className="absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-secondary/10 blur-3xl"></div>
       <div className="absolute left-1/2 top-1/3 h-40 w-40 -translate-x-1/2 rounded-full bg-amber-500/10 blur-3xl"></div>
 
@@ -108,7 +108,7 @@ export const EnhancedProgressVisualization = ({
         <h3 className="text-xl font-bold text-foreground">
           Your Learning Dashboard
         </h3>
-        <div className="bg-primary/20 flex items-center rounded-full px-3 py-1 text-sm font-medium text-primary">
+        <div className="flex items-center rounded-full bg-primary/20 px-3 py-1 text-sm font-medium text-primary">
           <FaTrophy className="mr-1" size={14} />
           Level {skills[activeSkill].level}
         </div>
@@ -195,8 +195,8 @@ export const EnhancedProgressVisualization = ({
               className={cn(
                 'group relative cursor-pointer overflow-hidden rounded-xl border p-3 transition-all duration-300',
                 activeSkill === index
-                  ? 'bg-primary/10 border-primary'
-                  : 'hover:border-primary/50 hover:bg-primary/5 border-border bg-card',
+                  ? 'border-primary bg-primary/10'
+                  : 'border-border bg-card hover:border-primary/50 hover:bg-primary/5',
               )}
               onClick={() => handleSkillClick(index)}
               onMouseEnter={() => setHoverIndex(index)}
@@ -230,7 +230,7 @@ export const EnhancedProgressVisualization = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="from-primary/90 to-primary2/90 absolute inset-0 flex items-center justify-center bg-gradient-to-br text-white"
+                    className="to-primary2/90 absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/90 text-white"
                   >
                     <div className="text-center">
                       <div className="text-lg font-bold">{skill.progress}%</div>
@@ -246,7 +246,7 @@ export const EnhancedProgressVisualization = ({
 
       {/* Next milestone */}
       <motion.div
-        className="border-primary/20 bg-primary/5 mt-6 rounded-xl border p-4"
+        className="mt-6 rounded-xl border border-primary/20 bg-primary/5 p-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
@@ -265,7 +265,7 @@ export const EnhancedProgressVisualization = ({
             </p>
           </div>
         </div>
-        <div className="bg-primary/20 mt-3 h-2 w-full overflow-hidden rounded-full">
+        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-primary/20">
           <motion.div
             className="h-full rounded-full bg-gradient-to-r from-amber-400 to-amber-600"
             initial={{ width: 0 }}

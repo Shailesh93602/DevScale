@@ -14,7 +14,7 @@ export const LogoSection = ({
       href={isAuthenticated ? '/dashboard' : '/'}
       className="group flex items-center gap-2 no-underline"
     >
-      <div className="shadow-primary/20 flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-lg">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
         <span className="text-lg font-bold tracking-widest text-white">
           {BRANDING.name.charAt(0)}
         </span>

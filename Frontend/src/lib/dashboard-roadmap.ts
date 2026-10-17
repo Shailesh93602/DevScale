@@ -33,13 +33,9 @@ export const mapToRoadmapType = (
   },
   thumbnail: roadmap.thumbnail,
   isEnrolled,
-  likesCount: roadmap._count?.likes || 0,
-  commentsCount: 0,
-  bookmarksCount: roadmap._count?.user_roadmaps || 0,
-  isLiked: Boolean(roadmap.likes?.length),
-  isBookmarked: Boolean(roadmap.user_roadmaps?.length),
+  // likes / bookmarks / comments / enrolment counts and the viewer's flags: absent too. The summary
+  // hardcodes `_count.likes: 0`, and the like toggle would UNLIKE a roadmap the card showed as unliked.
   description: (roadmap.description as string) || '',
-  enrollmentCount: roadmap._count?.user_roadmaps || 0,
   progress: 0,
   steps: roadmap._count?.topics || 0,
   // estimatedTime / difficulty / rating / createdAt / updatedAt: deliberately

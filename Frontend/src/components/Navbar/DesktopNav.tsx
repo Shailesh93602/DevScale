@@ -36,7 +36,7 @@ export const DesktopNav = ({
                 'flex h-9 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-all duration-200 focus:outline-none',
                 battleZoneOpen
                   ? 'bg-primary/10 text-primary shadow-sm'
-                  : 'hover:bg-primary/5 text-muted-foreground hover:text-primary',
+                  : 'text-muted-foreground hover:bg-primary/5 hover:text-primary',
               )}
             >
               {item.label}
@@ -63,9 +63,9 @@ export const DesktopNav = ({
                         href={battleItem.path}
                         prefetch={true}
                         onClick={handleLinkClick}
-                        className="hover:bg-primary/10 group flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-foreground/70 no-underline transition-all duration-200 hover:text-primary"
+                        className="group flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-foreground/70 no-underline transition-all duration-200 hover:bg-primary/10 hover:text-primary"
                       >
-                        <div className="group-hover:bg-primary/20 flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground/5 transition-all group-hover:scale-110 group-hover:text-primary">
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-foreground/5 transition-all group-hover:scale-110 group-hover:bg-primary/20 group-hover:text-primary">
                           {battleItem.icon}
                         </div>
                         {battleItem.label}

@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { format, startOfWeek, addDays } from 'date-fns';
 import { StreakStats as StreakStatsType } from '@/hooks/useStreakApi';
 import type { WeeklyActivity } from '@/hooks/useStreakApi';
+import { minutesByDay } from '@/lib/activity-days';
 
 interface StreakStatsProps {
   stats: StreakStatsType | null;
@@ -24,16 +25,11 @@ export const StreakStats: React.FC<StreakStatsProps> = ({
   const weekStart = startOfWeek(new Date());
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
-  const chartData = weekDays.map((day) => {
-    const dateStr = format(day, 'yyyy-MM-dd');
-    const activity = weeklyActivity.find(
-      (a) => format(new Date(a.timestamp), 'yyyy-MM-dd') === dateStr,
-    );
-    return {
-      name: format(day, 'EEE'),
-      minutes: activity ? 1 : 0, // Count activities per day
-    };
-  });
+  const totals = minutesByDay(weeklyActivity);
+  const chartData = weekDays.map((day) => ({
+    name: format(day, 'EEE'),
+    minutes: totals.get(format(day, 'yyyy-MM-dd')) ?? 0,
+  }));
 
   const totalActivities = weeklyActivity.length;
   const averageActivities = Math.round(totalActivities / 7);
@@ -79,7 +75,7 @@ export const StreakStats: React.FC<StreakStatsProps> = ({
                 <Tooltip />
                 <Bar
                   dataKey="minutes"
-                  fill="var(--primary)"
+                  fill="hsl(var(--primary))"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>

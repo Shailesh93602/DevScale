@@ -64,7 +64,7 @@ const CountUp = ({
       whileHover={{ translateY: -5, transition: { duration: 0.2 } }}
     >
       <motion.div
-        className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary2)] text-white shadow-lg"
+        className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-primary to-[var(--primary2)] text-white shadow-lg"
         initial={{ rotate: 0 }}
         animate={{ rotate: isInView ? 360 : 0 }}
         transition={{ duration: 1.5, delay: 0.2, ease: 'easeOut' }}

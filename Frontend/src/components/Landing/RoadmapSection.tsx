@@ -49,7 +49,7 @@ const RoadmapSection: React.FC<RoadmapSectionProps> = ({
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 + idx * 0.1 }}
           >
-            <div className="bg-primary/10 mb-4 flex h-16 w-16 items-center justify-center rounded-full text-primary">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
               {step.icon}
             </div>
             <h3 className="mb-2 text-center text-xl font-bold text-foreground">

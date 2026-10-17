@@ -22,7 +22,7 @@ const Loader = ({ type, className }: LoadersProps) => {
             <div className="pulsing-ring"></div>
 
             {/* The Logo with pulse-dot from CSS */}
-            <div className="loader-logo shadow-primary/40 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary shadow-2xl ring-1 ring-inset ring-white/10">
+            <div className="loader-logo flex h-20 w-20 items-center justify-center rounded-2xl bg-primary shadow-2xl shadow-primary/40 ring-1 ring-inset ring-white/10">
               <span className="select-none text-4xl font-black tracking-widest text-white">
                 {BRANDING.name.charAt(0)}
               </span>
@@ -34,12 +34,12 @@ const Loader = ({ type, className }: LoadersProps) => {
             <span className="text-xs font-bold uppercase tracking-[0.5em] text-muted-foreground">
               {BRANDING.name}
             </span>
-            <div className="via-primary/30 h-0.5 w-12 rounded-full bg-gradient-to-r from-transparent to-transparent"></div>
+            <div className="h-0.5 w-12 rounded-full bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
           </div>
         </div>
       ) : (
         <span
-          className={`border-primary/20 inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-t-primary ${
+          className={`inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-primary/20 border-t-primary ${
             className ?? ''
           }`}
         />

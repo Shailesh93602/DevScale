@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { debounce } from '@/lib/utils';
 import { useAxiosGet } from '@/hooks/useAxios';
 
@@ -13,6 +13,7 @@ export function PersonalInfo() {
     setError,
     clearErrors,
     watch,
+    getValues,
   } = useFormContext();
   const [isChecking, setIsChecking] = useState(false);
   const usernameValue = watch('username');
@@ -21,17 +22,22 @@ export function PersonalInfo() {
   );
 
   // Debounced username check
-  const checkUsername = useCallback(
-    debounce(async (username: string) => {
-      if (username.length < 3) return;
+  const checkUsername = useMemo(
+    () =>
+      debounce(async (username: string) => {
+        if (username.length < 3) return;
 
-      try {
         setIsChecking(true);
-        const { data } = await checkUsernameAvailability({
-          params: { username },
-        });
-
-        if (!data?.isAvailable) {
+        const res = await checkUsernameAvailability({ params: { username } });
+        // A reply for an earlier keystroke must not judge the name typed since.
+        if (getValues('username') !== username) return;
+        setIsChecking(false);
+        if (!res.success) {
+          setError('username', {
+            type: 'manual',
+            message: 'Error checking username',
+          });
+        } else if (!res.data?.isAvailable) {
           setError('username', {
             type: 'manual',
             message: 'Username is not available',
@@ -39,18 +45,11 @@ export function PersonalInfo() {
         } else {
           clearErrors('username');
         }
-      } catch (error) {
-        console.error(error);
-        setError('username', {
-          type: 'manual',
-          message: 'Error checking username',
-        });
-      } finally {
-        setIsChecking(false);
-      }
-    }, 500),
-    [],
+      }, 500),
+    [checkUsernameAvailability, getValues, setError, clearErrors],
   );
+
+  const usernameField = register('username');
 
   // Watch username changes
   useEffect(() => {
@@ -85,12 +84,11 @@ export function PersonalInfo() {
         <Label htmlFor="username">Username</Label>
         <Input
           id="username"
-          {...register('username')}
+          {...usernameField}
           onChange={(e) => {
+            // Chain, not replace: RHF's own onChange is what updates the submitted value.
+            void usernameField.onChange(e);
             clearErrors('username');
-            if (e.target.value.length >= 3) {
-              checkUsername(e.target.value);
-            }
           }}
         />
         {isChecking && (

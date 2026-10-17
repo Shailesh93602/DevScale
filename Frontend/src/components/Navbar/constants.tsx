@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiUser, FiLogOut, FiSettings } from 'react-icons/fi';
-import { Swords, Trophy, Users, Calendar, BarChart, Home } from 'lucide-react';
+import { Swords, Trophy, Calendar, BarChart, Home } from 'lucide-react';
 
 export interface NavItem {
   path: string;
@@ -62,11 +62,6 @@ export const battleZoneItems: BattleZoneItem[] = [
     path: '/battle-zone/leaderboard',
     label: 'Leaderboard',
     icon: <Trophy className="h-4 w-4" />,
-  },
-  {
-    path: '/battle-zone/community',
-    label: 'Community',
-    icon: <Users className="h-4 w-4" />,
   },
   {
     path: '/battle-zone/statistics',

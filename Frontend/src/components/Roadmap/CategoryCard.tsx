@@ -51,11 +51,11 @@ const CategoryCard = ({
       variants={cardVariants}
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
       className={`flex cursor-pointer flex-col items-center justify-center rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md ${
-        isSelected ? 'bg-primary/5 border-primary' : 'hover:border-primary/40'
+        isSelected ? 'border-primary bg-primary/5' : 'hover:border-primary/40'
       }`}
       onClick={() => onSelect(category.id)}
     >
-      <div className="bg-primary/10 mb-3 rounded-full p-3 text-primary">
+      <div className="mb-3 rounded-full bg-primary/10 p-3 text-primary">
         <Icon size={24} />
       </div>
       <h3 className="text-center font-medium">{category.name}</h3>

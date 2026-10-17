@@ -37,16 +37,34 @@ const skeletonIds = Array.from(
 
 interface BattleListProps {
   initialFilters?: BattleFilters;
-  onJoinBattle?: (battleId: string) => Promise<void>;
+  onJoinBattle?: (battleId: string) => Promise<unknown>;
+  /** `mine` reads `/battles/my` (created or joined by the caller); `select` then narrows that page. */
+  scope?: 'all' | 'mine';
+  select?: (battle: Battle) => boolean;
 }
+
+type ListMeta = { page: number; lastPage: number } | null;
+
+const readMeta = (meta: Record<string, unknown> | undefined): ListMeta => {
+  const p = meta?.pagination as
+    | { currentPage?: number; lastPage?: number }
+    | undefined;
+  const page = Number(p?.currentPage ?? meta?.page);
+  const lastPage = Number(p?.lastPage ?? meta?.totalPages);
+  return Number.isFinite(page) && Number.isFinite(lastPage)
+    ? { page, lastPage }
+    : null;
+};
 
 export const BattleList: React.FC<BattleListProps> = ({
   initialFilters,
   onJoinBattle,
+  scope = 'all',
+  select,
 }) => {
   const { toast } = useToast();
   const { user } = useAuth();
-  const { filters, setFilters } = useBattleStore();
+  const { filters, setFilters, resetFilters } = useBattleStore();
   const [searchTerm, setSearchTerm] = useState(filters.search);
   const appliedInitialFiltersRef = useRef<string | null>(null);
   const initialFiltersKey = useMemo(
@@ -54,7 +72,13 @@ export const BattleList: React.FC<BattleListProps> = ({
     [initialFilters],
   );
 
-  const [execute, state] = useAxiosGet<Battle[]>('/battles');
+  const [executeAll] = useAxiosGet<Battle[]>('/battles');
+  const [executeMine] = useAxiosGet<Battle[]>('/battles/my');
+  const [battles, setBattles] = useState<Battle[] | null>(null);
+  const [meta, setMeta] = useState<ListMeta>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const latestRequest = useRef(0);
 
   useEffect(() => {
     if (
@@ -62,35 +86,56 @@ export const BattleList: React.FC<BattleListProps> = ({
       appliedInitialFiltersRef.current !== initialFiltersKey
     ) {
       appliedInitialFiltersRef.current = initialFiltersKey;
+      // The store merges, so replace: a tab's keys must not leak into the next tab.
+      resetFilters();
       setFilters(initialFilters);
     }
-  }, [initialFilters, initialFiltersKey, setFilters]);
+  }, [initialFilters, initialFiltersKey, setFilters, resetFilters]);
+
+  // The store is global; without this, My Battles' filters followed the user to /battle-zone.
+  useEffect(
+    () => () => {
+      appliedInitialFiltersRef.current = null; // StrictMode remounts must re-apply them
+      resetFilters();
+    },
+    [resetFilters],
+  );
 
   const fetchBattles = async () => {
-    try {
-      const sanitizedFilters = Object.fromEntries(
-        Object.entries({
-          ...filters,
-          search: searchTerm,
-        }).filter(([, value]) => value !== '' && value !== 'all'),
-      );
-      await execute({
-        params: {
-          ...sanitizedFilters,
-        },
-      });
-    } catch {
+    const requestId = ++latestRequest.current;
+    setIsLoading(true);
+    const sanitizedFilters = Object.fromEntries(
+      Object.entries({
+        ...filters,
+        search: searchTerm,
+      }).filter(([, value]) => value !== '' && value !== 'all'),
+    );
+    const res =
+      scope === 'mine'
+        ? await executeMine({
+            params: { page: filters.page ?? 1, limit: filters.limit ?? 12 },
+          })
+        : await executeAll({ params: { ...sanitizedFilters } });
+    if (requestId !== latestRequest.current) return;
+    setIsLoading(false);
+    if (!res.success) {
+      setLoadError(res.message || 'Failed to fetch battles.');
       toast({
         title: 'Error',
         description: 'Failed to fetch battles. Please try again.',
         variant: 'destructive',
       });
+      return;
     }
+    setLoadError(null);
+    const list = Array.isArray(res.data) ? res.data.map(normalizeBattle) : [];
+    setBattles(select ? list.filter(select) : list);
+    setMeta(readMeta(res.meta));
   };
 
   useEffect(() => {
     fetchBattles();
-  }, [filters, searchTerm]);
+  }, [filters, searchTerm, scope, select]);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -106,8 +151,8 @@ export const BattleList: React.FC<BattleListProps> = ({
   };
 
   const renderPagination = () => {
-    if (!state.meta?.pagination) return null;
-    const { currentPage: page, lastPage: totalPages } = state.meta.pagination;
+    if (!meta) return null;
+    const { page, lastPage: totalPages } = meta;
     if (totalPages <= 1) return null;
 
     return (
@@ -131,7 +176,7 @@ export const BattleList: React.FC<BattleListProps> = ({
   };
 
   const renderContent = () => {
-    if (state.isLoading) {
+    if (isLoading) {
       return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {skeletonIds.map((id) => (
@@ -141,14 +186,31 @@ export const BattleList: React.FC<BattleListProps> = ({
       );
     }
 
-    if (state.data && state.data.length > 0) {
+    if (loadError) {
+      return (
+        <div
+          role="alert"
+          className="col-span-full rounded-xl border border-destructive/40 bg-card py-12 text-center"
+        >
+          <h3 className="mb-2 text-xl font-bold tracking-tight">
+            Could not load battles
+          </h3>
+          <p className="mb-6 text-sm text-muted-foreground">{loadError}</p>
+          <Button variant="outline" onClick={() => fetchBattles()}>
+            Retry
+          </Button>
+        </div>
+      );
+    }
+
+    if (battles && battles.length > 0) {
       return (
         <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {state.data.map((battle) => (
+            {battles.map((battle) => (
               <Suspense key={battle.id} fallback={<BattleCardSkeleton />}>
                 <BattleCard
-                  battle={normalizeBattle(battle)}
+                  battle={battle}
                   onJoin={onJoinBattle}
                   currentUserId={user?.id}
                 />
@@ -161,9 +223,9 @@ export const BattleList: React.FC<BattleListProps> = ({
     }
 
     return (
-      <div className="border-primary/20 col-span-full rounded-xl border border-dashed bg-card py-16 text-center shadow-inner">
+      <div className="col-span-full rounded-xl border border-dashed border-primary/20 bg-card py-16 text-center shadow-inner">
         <div className="mx-auto flex max-w-[400px] flex-col items-center justify-center p-4">
-          <div className="bg-primary/10 mb-4 flex h-20 w-20 items-center justify-center rounded-full">
+          <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="40"

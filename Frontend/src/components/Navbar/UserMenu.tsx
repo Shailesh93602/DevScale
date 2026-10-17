@@ -27,7 +27,7 @@ export const UserMenu = ({
       className={cn(
         'group relative flex h-[42px] items-center gap-2.5 rounded-full border border-border/60 bg-card/50 px-1.5 shadow-sm transition-all duration-300 hover:bg-card focus:outline-none',
         dropdownOpen &&
-          'ring-primary/20 border-primary/40 bg-zinc-800/80 ring-4',
+          'border-primary/40 bg-zinc-800/80 ring-4 ring-primary/20',
       )}
       aria-label="User Profile Menu"
     >
@@ -72,9 +72,9 @@ export const UserMenu = ({
               <Link
                 href="/admin"
                 onClick={handleLinkClick}
-                className="hover:bg-primary/10 flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold text-primary no-underline transition-all duration-200"
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-semibold text-primary no-underline transition-all duration-200 hover:bg-primary/10"
               >
-                <span className="bg-primary/10 flex h-7 w-7 items-center justify-center rounded-md text-primary">
+                <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-primary">
                   <FiShield size={14} />
                 </span>{' '}
                 Admin Panel

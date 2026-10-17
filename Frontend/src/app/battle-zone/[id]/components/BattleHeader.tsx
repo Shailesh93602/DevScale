@@ -92,7 +92,7 @@ export function BattleTabs({
         >
           {tab === 'battle' ? battleLabel : 'Leaderboard'}
           {tab === 'leaderboard' && leaderboardCount > 0 && (
-            <span className="bg-primary/10 ml-1.5 rounded-full px-1.5 py-0.5 text-xs text-primary">
+            <span className="ml-1.5 rounded-full bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
               {leaderboardCount}
             </span>
           )}

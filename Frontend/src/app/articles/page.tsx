@@ -14,19 +14,17 @@ const MyArticles = () => {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const [getArticles] = useAxiosGet<{
-    success?: boolean;
-    articles: { id: string; title: string; status: string }[];
-    message?: string;
-  }>('/articles/my-articles');
+  const [getArticles] = useAxiosGet<
+    { id: string; title: string; status: string }[]
+  >('/articles/my-articles');
 
   useEffect(() => {
     const fetchMyArticles = async () => {
       setIsLoading(true);
       try {
         const response = await getArticles();
-        if (response.data?.success) {
-          setArticles(response.data.articles);
+        if (response.success && Array.isArray(response.data)) {
+          setArticles(response.data);
         } else {
           toast.error('Unable to load the articles. Please refresh the page.');
         }
@@ -98,7 +96,7 @@ const MyArticles = () => {
                     {article.title}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="bg-primary/10 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium text-primary">
+                    <span className="inline-flex rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
                       {article.status}
                     </span>
                   </td>

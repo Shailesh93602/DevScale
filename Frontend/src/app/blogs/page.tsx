@@ -42,9 +42,9 @@ export default function Blogs() {
               <Link
                 key={blog.id}
                 href={blog.link}
-                className="hover:border-primary/30 group rounded-lg border border-border bg-card p-6 no-underline shadow-sm transition-all hover:shadow-md"
+                className="group rounded-lg border border-border bg-card p-6 no-underline shadow-sm transition-all hover:border-primary/30 hover:shadow-md"
               >
-                <span className="bg-primary/10 mb-3 inline-block rounded-full px-2.5 py-0.5 text-xs font-medium text-primary">
+                <span className="mb-3 inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
                   {blog.category}
                 </span>
                 <h2 className="mb-2 text-xl font-bold text-foreground">

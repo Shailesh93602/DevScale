@@ -47,7 +47,7 @@ export const NavItem = ({
         'group relative flex h-9 items-center justify-center rounded-full px-5 text-[14px] font-bold no-underline transition-all duration-300',
         isActive
           ? 'text-primary'
-          : 'hover:bg-primary/5 text-muted-foreground hover:text-primary',
+          : 'text-muted-foreground hover:bg-primary/5 hover:text-primary',
         isPill && 'py-1',
       )}
     >
@@ -55,7 +55,7 @@ export const NavItem = ({
       {isActive && (
         <motion.div
           layoutId="navbar-pill"
-          className="bg-primary/10 absolute inset-0 rounded-full shadow-sm"
+          className="absolute inset-0 rounded-full bg-primary/10 shadow-sm"
           transition={{ type: 'spring', bounce: 0.25, duration: 0.5 }}
         />
       )}

@@ -50,7 +50,7 @@ const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
             height={500}
           />
         ) : (
-          <div className="from-primary/20 flex h-full w-full items-center justify-center bg-gradient-to-br to-secondary/20">
+          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20">
             <span className="text-2xl font-semibold text-muted-foreground">
               {title.substring(0, 1)}
             </span>
@@ -96,7 +96,7 @@ const RecommendedRoadmapCard: React.FC<RecommendedRoadmapCardProps> = ({
 
         <Link
           href={`/career-roadmap/${id}`}
-          className="bg--primary hover:bg-primary/90 mt-4 block w-full rounded-md bg-primary py-2 text-center text-sm font-medium text-primary-foreground"
+          className="bg--primary mt-4 block w-full rounded-md bg-primary py-2 text-center text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
           Explore Roadmap
         </Link>

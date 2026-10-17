@@ -105,7 +105,7 @@ export default function ModeratePage() {
         {/* Header */}
         <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <div className="border-primary/20 bg-primary/10 mb-2 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium text-primary">
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
               <ShieldCheck className="h-3.5 w-3.5" />
               Moderation
             </div>

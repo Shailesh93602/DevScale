@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -90,7 +90,7 @@ const transformRoadmap = (apiRoadmap: APIRoadmap): RoadmapType => {
       id: apiRoadmap.user_id,
       name: 'Anonymous', // You might want to fetch user details separately or include them in the API response
     },
-    steps: apiRoadmap.main_concepts.length,
+    steps: apiRoadmap.main_concepts?.length ?? 0,
     estimatedTime: apiRoadmap.estimatedHours
       ? `${apiRoadmap.estimatedHours} hours`
       : undefined,
@@ -178,15 +178,14 @@ const RoadmapsPage = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isFilterExpanded, setIsFilterExpanded] = useState(true);
 
-  const [getRoadmaps, { isLoading }] = useAxiosGet<{
-    data: APIRoadmap[];
-    meta: APIResponseMeta;
-  }>('/roadmaps');
+  const [getRoadmaps, { isLoading }] = useAxiosGet<APIRoadmap[]>('/roadmaps');
+  const latestRequest = useRef(0);
 
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const isIntersecting = useIntersection(loadMoreRef);
 
   const fetchRoadmaps = useCallback(async () => {
+    const requestId = ++latestRequest.current;
     try {
       const params = new URLSearchParams({
         page: page.toString(),
@@ -206,16 +205,15 @@ const RoadmapsPage = () => {
         params.append('difficulty', difficultyFilter);
       }
 
+      // The hook returns the envelope: `data` is the array, `meta` the pagination.
       const response = await getRoadmaps({ params });
-      const responseData = response.data;
-
-      // Defensive: the API can return null/empty (no roadmaps seeded, or an
-      // error envelope). Destructuring null here used to throw
-      // "Cannot destructure property 'data' of 'responseData' as it is null".
-      const apiData = Array.isArray(responseData?.data)
-        ? responseData.data
-        : [];
-      const meta = responseData?.meta;
+      if (requestId !== latestRequest.current) return;
+      if (!response.success) {
+        toast.error('Unable to load the roadmaps. Please refresh the page.');
+        return;
+      }
+      const apiData = Array.isArray(response.data) ? response.data : [];
+      const meta = response.meta as Partial<APIResponseMeta> | undefined;
       const transformedRoadmaps = apiData.map(transformRoadmap);
 
       if (page === 1) {
@@ -231,12 +229,15 @@ const RoadmapsPage = () => {
     }
   }, [page, searchQuery, difficultyFilter, sortBy, type, getRoadmaps]);
 
+  // Reset only when the list's identity changes; fetching follows page and filters.
   useEffect(() => {
     setPage(1);
-
     setRoadmaps([]);
+  }, [type]);
+
+  useEffect(() => {
     fetchRoadmaps();
-  }, [type, fetchRoadmaps]);
+  }, [fetchRoadmaps]);
 
   useEffect(() => {
     if (isIntersecting && hasMore) {
@@ -244,11 +245,15 @@ const RoadmapsPage = () => {
     }
   }, [isIntersecting, hasMore]);
 
-  const handleSearch = debounce((value: string) => {
-    setSearchQuery(value);
-    setPage(1);
-    setRoadmaps([]);
-  }, 500);
+  const handleSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        setSearchQuery(value);
+        setPage(1);
+        setRoadmaps([]);
+      }, 500),
+    [],
+  );
 
   const handleDifficultyChange = (value: string) => {
     setDifficultyFilter(value);

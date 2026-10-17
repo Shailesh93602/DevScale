@@ -1,15 +1,13 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
 import { BattleList } from '@/components/Battle/BattleList';
 import { BattleFilters } from '@/types/battle';
-import useBattleApi from '@/hooks/useBattleApi';
+import { useJoinAndEnterBattle } from '@/hooks/useJoinAndEnterBattle';
 
 export default function BattlesPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const { joinExistingBattle } = useBattleApi();
 
   // Parse search params for initial filters
   const initialFilters: BattleFilters = {
@@ -22,16 +20,7 @@ export default function BattlesPage() {
     sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || 'desc',
   };
 
-  const handleJoinBattle = async (battleId: string) => {
-    try {
-      const response = await joinExistingBattle(battleId);
-      if (response) {
-        router.push(`/battle-zone/${battleId}`);
-      }
-    } catch (error) {
-      console.error('Failed to join battle:', error);
-    }
-  };
+  const handleJoinBattle = useJoinAndEnterBattle();
 
   return (
     <BattleZoneLayout>

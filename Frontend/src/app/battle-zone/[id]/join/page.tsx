@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
 import { Battle } from '@/types/battle';
 import useBattleApi from '@/hooks/useBattleApi';
+import { useJoinAndEnterBattle } from '@/hooks/useJoinAndEnterBattle';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import {
@@ -43,7 +44,10 @@ export default function JoinBattlePage() {
   const { toast } = useToast();
   const battleId = params.id as string;
 
-  const { fetchBattle, joinExistingBattle, isLoading, error } = useBattleApi();
+  const { fetchBattle, isLoading, error } = useBattleApi();
+  const joinAndEnter = useJoinAndEnterBattle({
+    successToast: 'Successfully joined the battle!',
+  });
   const [battle, setBattle] = useState<Battle | null>(null);
   const [isJoining, setIsJoining] = useState(false);
   const [agreedToRules, setAgreedToRules] = useState(false);
@@ -67,14 +71,7 @@ export default function JoinBattlePage() {
 
     setIsJoining(true);
     try {
-      const response = await joinExistingBattle(battleId);
-      if (response) {
-        toast({ title: 'Successfully joined the battle!' });
-        router.push(`/battle-zone/${battleId}`);
-      }
-    } catch (err) {
-      toast({ title: 'Failed to join battle', variant: 'destructive' });
-      console.error('Failed to join battle:', err);
+      await joinAndEnter(battleId);
     } finally {
       setIsJoining(false);
     }

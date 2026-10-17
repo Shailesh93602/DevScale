@@ -232,7 +232,7 @@ export const AnimatedBattleCard = ({
               {particleData.map((p, i) => (
                 <motion.div
                   key={i}
-                  className="bg-primary/30 pointer-events-none absolute h-2 w-2 rounded-full"
+                  className="pointer-events-none absolute h-2 w-2 rounded-full bg-primary/30"
                   initial={{
                     translateX: mousePosition.x,
                     translateY: mousePosition.y,

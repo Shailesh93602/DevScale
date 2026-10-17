@@ -38,7 +38,7 @@ export const CommentSkeleton = () => {
 
               {/* Nested replies (only for first comment) */}
               {index === 1 && (
-                <div className="border-l-primary/10 mt-4 space-y-4 border-l-4 pl-6">
+                <div className="mt-4 space-y-4 border-l-4 border-l-primary/10 pl-6">
                   {[1, 2].map((replyIndex) => (
                     <Card key={replyIndex} className="p-4">
                       <div className="flex gap-4">

@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   title: 'About',
   description:
     'About EduScale — why it exists, how it is built, and who builds it.',
+  alternates: { canonical: '/about' },
 };
 
 export default function AboutLayout({

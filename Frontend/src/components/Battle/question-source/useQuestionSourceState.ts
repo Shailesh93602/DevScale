@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAxiosGet } from '@/hooks/useAxios';
 import {
   CategoryOption,
@@ -121,6 +121,7 @@ export function useQuestionSourceState({
 
   const [totalAvailable, setTotalAvailable] = useState<number | null>(null);
   const [poolLoading, setPoolLoading] = useState(false);
+  const [poolError, setPoolError] = useState(false);
   const [count, setCount] = useState(defaultCount);
 
   const [getCategories] = useAxiosGet<CategoryOption[]>(
@@ -130,8 +131,6 @@ export function useQuestionSourceState({
     questions: unknown[];
     total_available: number;
   }>('/battles/question-pool');
-
-  const poolTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => c.loadRoadmaps(), []);
 
@@ -152,14 +151,17 @@ export function useQuestionSourceState({
     const src = resolveActiveSource({ mode, selectedCategories, ...c });
     if (!src) {
       setTotalAvailable(null);
+      setPoolLoading(false);
       onChange(null);
       return;
     }
 
-    if (poolTimer.current) clearTimeout(poolTimer.current);
+    // A source the UI has moved past must not land after the current one's answer.
+    let cancelled = false;
     setPoolLoading(true);
+    setPoolError(false);
 
-    poolTimer.current = setTimeout(() => {
+    const timer = setTimeout(() => {
       const effectiveDifficulty = dsaDifficulty || parentDifficulty;
       const params: Record<string, string | number> = {
         type: src.type,
@@ -171,25 +173,29 @@ export function useQuestionSourceState({
         params.categories = selectedCategories.join(',');
       }
 
-      getPool({ params, timeout: 25000 })
-        .then((res) => {
-          setTotalAvailable(res.data?.total_available ?? 0);
-          onChange({
-            ...src,
-            count,
-            difficulty: effectiveDifficulty ?? undefined,
-            categories: mode === 'dsa' ? selectedCategories : undefined,
-          });
-        })
-        .catch(() => {
+      void getPool({ params, timeout: 25000 }).then((res) => {
+        if (cancelled) return;
+        setPoolLoading(false);
+        if (!res.success) {
+          setPoolError(true);
           setTotalAvailable(null);
           onChange(null);
-        })
-        .finally(() => setPoolLoading(false));
+          return;
+        }
+        setTotalAvailable(res.data?.total_available ?? 0);
+        onChange({
+          ...src,
+          count,
+          difficulty: effectiveDifficulty ?? undefined,
+          categories: mode === 'dsa' ? selectedCategories : undefined,
+        });
+      });
     }, 500);
 
     return () => {
-      if (poolTimer.current) clearTimeout(poolTimer.current);
+      cancelled = true;
+      clearTimeout(timer);
+      setPoolLoading(false);
     };
   }, [
     c.selectedRoadmap,
@@ -230,6 +236,7 @@ export function useQuestionSourceState({
     setDsaDifficulty,
     totalAvailable,
     poolLoading,
+    poolError,
     count,
     setCount,
   };

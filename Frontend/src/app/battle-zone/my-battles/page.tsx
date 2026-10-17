@@ -1,59 +1,40 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
 import { BattleList } from '@/components/Battle/BattleList';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import useBattleApi from '@/hooks/useBattleApi';
+import { useJoinAndEnterBattle } from '@/hooks/useJoinAndEnterBattle';
 import { useAuth } from '@/contexts/AuthContext';
-import { BattleFilters } from '@/types/battle';
+import { Battle, BattleFilters } from '@/types/battle';
 
 export default function MyBattlesPage() {
-  const router = useRouter();
-  const { joinExistingBattle } = useBattleApi();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<
     'created' | 'joined' | 'upcoming' | 'completed'
   >('created');
 
-  const handleJoinBattle = async (battleId: string) => {
-    try {
-      const response = await joinExistingBattle(battleId);
-      if (response) {
-        router.push(`/battle-zone/${battleId}`);
-      }
-    } catch (error) {
-      console.error('Failed to join battle:', error);
-    }
-  };
+  const handleJoinBattle = useJoinAndEnterBattle();
 
-  const activeFilters = useMemo<BattleFilters>(() => {
+  // `/battles` has no participant filter, so every tab but "created" reads `/battles/my`.
+  const view = useMemo<{
+    filters: BattleFilters;
+    select?: (battle: Battle) => boolean;
+  }>(() => {
+    const page = { limit: 12, page: 1 };
     switch (activeTab) {
       case 'created':
-        return {
-          user_id: user?.id,
-          limit: 12,
-          page: 1,
-        };
+        return { filters: { user_id: user?.id, ...page } };
       case 'upcoming':
         return {
-          status: 'WAITING' as const,
-          limit: 12,
-          page: 1,
+          filters: page,
+          select: (b) => b.status === 'WAITING' || b.status === 'LOBBY',
         };
       case 'completed':
-        return {
-          status: 'COMPLETED',
-          limit: 12,
-          page: 1,
-        };
+        return { filters: page, select: (b) => b.status === 'COMPLETED' };
       case 'joined':
       default:
-        return {
-          limit: 12,
-          page: 1,
-        };
+        return { filters: page, select: (b) => b.user_id !== user?.id };
     }
   }, [activeTab, user?.id]);
 
@@ -92,7 +73,9 @@ export default function MyBattlesPage() {
         </Tabs>
 
         <BattleList
-          initialFilters={activeFilters}
+          initialFilters={view.filters}
+          scope={activeTab === 'created' ? 'all' : 'mine'}
+          select={view.select}
           onJoinBattle={handleJoinBattle}
         />
       </div>

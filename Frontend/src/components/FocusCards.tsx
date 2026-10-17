@@ -56,7 +56,7 @@ export const FocusCards: React.FC<FocusCardsProps> = ({ roadmaps }) => {
       {roadmaps?.map((roadmap) => (
         <Card
           key={roadmap?.id}
-          className="hover:shadow-primary/5 group relative overflow-hidden border bg-card transition-all hover:shadow-lg"
+          className="group relative overflow-hidden border bg-card transition-all hover:shadow-lg hover:shadow-primary/5"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-muted/10" />
 
@@ -132,7 +132,7 @@ export const FocusCards: React.FC<FocusCardsProps> = ({ roadmaps }) => {
             <Button
               variant="ghost"
               size="sm"
-              className="hover:text-primary/90 hover:bg-primary/10 text-primary"
+              className="text-primary hover:bg-primary/10 hover:text-primary/90"
               disabled={!roadmap?.id}
             >
               <BookOpen className="mr-2 h-4 w-4" />

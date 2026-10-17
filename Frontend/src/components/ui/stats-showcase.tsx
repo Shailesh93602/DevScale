@@ -24,7 +24,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
   // what it does rather than fabricated user counts (QA: no fabricated proof).
   const platformStats = [
     {
-      label: 'Coding Battles',
+      label: 'Quiz Battles',
       value: 'Real-Time',
       icon: <FaLaptopCode size={24} />,
     },
@@ -126,7 +126,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
             animate={{ opacity: 1, translateY: 0 }}
             transition={{ delay: i * 0.1 }}
           >
-            <div className="bg-primary/20 mb-3 flex h-14 w-14 items-center justify-center rounded-full text-primary">
+            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/20 text-primary">
               {stat.icon}
             </div>
             <div className="text-2xl font-bold">{stat.value}</div>
@@ -171,7 +171,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
               <div className="w-full lg:w-1/2">
                 <div className="mb-8 space-y-6">
                   <div className="flex items-start">
-                    <div className="bg-primary/20 mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-primary">
+                    <div className="mr-4 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
                       {tabs[activeTab].icon}
                     </div>
                     <div>
@@ -195,7 +195,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
                       animate={{ opacity: 1, translateX: 0 }}
                       transition={{ delay: i * 0.1 }}
                     >
-                      <div className="bg-primary/20 mr-3 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-primary">
+                      <div className="mr-3 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
                         <svg
                           width="12"
                           height="12"
@@ -227,7 +227,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
                 >
                   <div className="relative h-full w-full overflow-hidden rounded-xl bg-card shadow-md">
                     {/* Background gradient and decorations */}
-                    <div className="from-primary/5 to-primary2/5 absolute inset-0 z-0 bg-gradient-to-br"></div>
+                    <div className="to-primary2/5 absolute inset-0 z-0 bg-gradient-to-br from-primary/5"></div>
                     <div className="absolute inset-0 z-0 overflow-hidden opacity-10">
                       <div className="absolute -left-20 top-20 h-64 w-64 rounded-full bg-primary blur-3xl"></div>
                       <div className="absolute -right-20 bottom-20 h-64 w-64 rounded-full bg-primary2 blur-3xl"></div>
@@ -235,7 +235,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
 
                     {/* Content */}
                     <div className="relative z-10 flex h-full w-full flex-col items-center justify-center p-6 text-center">
-                      <div className="bg-primary/10 mb-6 flex h-20 w-20 items-center justify-center rounded-full text-primary">
+                      <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary">
                         <div className="text-4xl">{tabs[activeTab].icon}</div>
                       </div>
                       <h4 className="mb-2 text-2xl font-bold">
@@ -260,7 +260,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
                               } as Record<string, string>
                             )[tabs[activeTab].name] ?? '/auth/register'
                           }
-                          className="bg-primary/10 hover:bg-primary/20 inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-primary transition-colors"
+                          className="inline-flex items-center rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/20"
                         >
                           {/*
                             The tab's name is appended for screen readers and
@@ -302,7 +302,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
       <div className="border-t border-border p-6">
         <Link
           href="/career-roadmap"
-          className="hover:shadow-primary/30 group relative inline-flex items-center overflow-hidden rounded-full bg-primary px-6 py-3 text-lg font-semibold text-primary-foreground transition-all duration-300 hover:shadow-lg"
+          className="group relative inline-flex items-center overflow-hidden rounded-full bg-primary px-6 py-3 text-lg font-semibold text-primary-foreground transition-all duration-300 hover:shadow-lg hover:shadow-primary/30"
         >
           <span className="relative z-10">Explore Roadmaps</span>
           <span className="absolute inset-0 z-0 bg-gradient-to-r from-primary2 to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>

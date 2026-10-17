@@ -61,10 +61,10 @@ const fadeUp = {
 
 export default function About() {
   return (
-    <main className="selection:bg-primary/30 min-h-screen overflow-hidden bg-background">
+    <main className="min-h-screen overflow-hidden bg-background selection:bg-primary/30">
       {/* Hero Section */}
       <section className="relative px-6 pb-20 pt-32 lg:pb-32 lg:pt-48">
-        <div className="from-primary/10 absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] via-background to-background opacity-80" />
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background opacity-80" />
 
         <div className="mx-auto max-w-5xl text-center">
           <motion.div
@@ -72,7 +72,7 @@ export default function About() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
           >
-            <div className="border-primary/20 bg-primary/5 mb-8 inline-flex items-center gap-2 rounded-full border px-4 py-1.5">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
               <span className="flex h-2 w-2 animate-pulse rounded-full bg-primary" />
               <span className="text-sm font-medium tracking-wide text-primary">
                 About {BRANDING.name}
@@ -105,9 +105,9 @@ export default function About() {
             className="mx-auto max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl"
           >
             A learning platform for engineering students, built and run by one
-            engineer. Competitive coding battles, structured roadmaps, and
-            coding challenges in one place — a real product, still early, with
-            its scale stated honestly.
+            engineer. Competitive quiz battles, structured roadmaps, and coding
+            challenges in one place — a real product, still early, with its
+            scale stated honestly.
           </motion.p>
         </div>
       </section>
@@ -186,9 +186,9 @@ export default function About() {
             className="w-full flex-1"
           >
             <div className="glass group relative overflow-hidden rounded-3xl border border-border/50 p-8">
-              <div className="from-primary/10 absolute inset-0 bg-gradient-to-br to-transparent opacity-50 transition-opacity group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50 transition-opacity group-hover:opacity-100" />
               <div className="relative z-10 flex flex-col gap-6">
-                <div className="bg-primary/10 flex h-14 w-14 items-center justify-center rounded-2xl text-primary">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                   <Code2 className="h-7 w-7" />
                 </div>
                 <div>
@@ -229,9 +229,9 @@ export default function About() {
               <motion.div
                 key={i}
                 variants={fadeUp}
-                className="hover:border-primary/30 group rounded-3xl border border-border/50 bg-background p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="group rounded-3xl border border-border/50 bg-background p-8 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg"
               >
-                <div className="bg-primary/5 mb-6 flex h-12 w-12 items-center justify-center rounded-xl text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/5 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                   {value.icon}
                 </div>
                 <h3 className="mb-3 text-xl font-semibold text-foreground">
@@ -249,7 +249,7 @@ export default function About() {
       {/* Origin Section */}
       <section className="px-6 py-24 text-center">
         <div className="glass relative mx-auto max-w-3xl overflow-hidden rounded-3xl border border-border/50 p-12 shadow-sm">
-          <div className="bg-primary/20 absolute -right-24 -top-24 h-48 w-48 rounded-full blur-3xl" />
+          <div className="absolute -right-24 -top-24 h-48 w-48 rounded-full bg-primary/20 blur-3xl" />
           <div className="bg-purple-500/20 absolute -bottom-24 -left-24 h-48 w-48 rounded-full blur-3xl" />
 
           <div className="relative z-10 flex flex-col items-center">

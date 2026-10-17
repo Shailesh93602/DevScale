@@ -25,7 +25,7 @@ const FeaturesSection: React.FC = () => (
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         <FeatureCard
           icon={
-            <span className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg">
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
               <FaCogs className="text-4xl text-primary" />
             </span>
           }
@@ -36,7 +36,7 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg">
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
               <FaUsers className="text-4xl text-primary" />
             </span>
           }
@@ -47,7 +47,7 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg">
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
               <FaBriefcase className="text-4xl text-primary" />
             </span>
           }
@@ -58,7 +58,7 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg">
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
               <FaGamepad className="text-4xl text-primary" />
             </span>
           }
@@ -69,7 +69,7 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg">
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
               <FaMedal className="text-4xl text-primary" />
             </span>
           }
@@ -80,7 +80,7 @@ const FeaturesSection: React.FC = () => (
         />
         <FeatureCard
           icon={
-            <span className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg">
+            <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
               <FaBook className="text-4xl text-primary" />
             </span>
           }

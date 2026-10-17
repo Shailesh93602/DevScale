@@ -2,6 +2,7 @@ import React from 'react';
 import { Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { CustomLink } from '@/components/ui/custom-link';
+import { lastDays, minutesByDay } from '@/lib/activity-days';
 
 interface StreakCalendarProps {
   currentStreak: number;
@@ -12,14 +13,17 @@ interface StreakCalendarProps {
   }[];
 }
 
-const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 const StreakCalendar: React.FC<StreakCalendarProps> = ({
   currentStreak,
   longestStreak,
   thisWeek,
 }) => {
-  const hasActivity = thisWeek.some((day) => day.minutesSpent > 0);
+  const totals = minutesByDay(thisWeek);
+  const days = lastDays(7).map((d) => ({
+    ...d,
+    minutesSpent: totals.get(d.key) ?? 0,
+  }));
+  const hasActivity = days.some((day) => day.minutesSpent > 0);
 
   return (
     <div
@@ -65,7 +69,7 @@ const StreakCalendar: React.FC<StreakCalendarProps> = ({
         {hasActivity ? (
           <>
             <div className="grid grid-cols-7 gap-1.5">
-              {thisWeek.map((day, index) => {
+              {days.map((day) => {
                 const intensity =
                   day.minutesSpent > 0 ? Math.min(day.minutesSpent / 60, 1) : 0;
                 const opacityLevel =
@@ -81,11 +85,11 @@ const StreakCalendar: React.FC<StreakCalendarProps> = ({
 
                 return (
                   <div
-                    key={day.date}
+                    key={day.key}
                     className="flex flex-col items-center gap-1"
                   >
                     <p className="text-[10px] font-medium text-muted-foreground">
-                      {DAY_LABELS[index]}
+                      {day.label}
                     </p>
                     <div
                       className={cn(
@@ -96,7 +100,7 @@ const StreakCalendar: React.FC<StreakCalendarProps> = ({
                         opacity:
                           day.minutesSpent > 0 ? 0.3 + opacityLevel * 0.7 : 1,
                       }}
-                      title={`${day.minutesSpent} minutes on ${day.date}`}
+                      title={`${day.minutesSpent} minutes on ${day.key}`}
                     />
                   </div>
                 );

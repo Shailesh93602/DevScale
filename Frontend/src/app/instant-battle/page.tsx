@@ -19,7 +19,6 @@ export default function InstantBattlePage() {
   const {
     phase,
     elapsedSeconds,
-    currentBand,
     queueSize,
     userRating,
     matchedBattle,
@@ -46,8 +45,8 @@ export default function InstantBattlePage() {
       <div className="container mx-auto max-w-4xl space-y-8 p-4 md:py-8">
         {/* Unauthenticated gate */}
         {!isAuthenticated && status !== 'loading' ? (
-          <div className="border-primary/20 flex flex-col items-center justify-center rounded-2xl border bg-card p-10 text-center shadow-lg">
-            <div className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-2xl text-primary">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-primary/20 bg-card p-10 text-center shadow-lg">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <Swords className="h-8 w-8" />
             </div>
             <h2 className="mt-4 text-2xl font-black tracking-tight">
@@ -76,7 +75,6 @@ export default function InstantBattlePage() {
             <MatchmakingRadar
               phase={phase}
               elapsedSeconds={elapsedSeconds}
-              currentBand={currentBand}
               queueSize={queueSize}
               userRating={userRating}
               error={error}
@@ -97,7 +95,7 @@ export default function InstantBattlePage() {
             {/* Rules & Fair Play Guidance */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div className="rounded-xl border border-border/50 bg-card/60 p-5 shadow-sm">
-                <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg text-primary">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <Trophy className="h-5 w-5" />
                 </div>
                 <h4 className="mt-3 font-bold">Elo Rating Stakes</h4>

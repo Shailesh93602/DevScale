@@ -153,7 +153,7 @@ export default function QuestionPreviewList({
 
       {/* Footer summary */}
       {questions.length > 0 && (
-        <div className="bg-primary/5 flex items-center gap-2 rounded-md px-3 py-2 text-sm text-primary">
+        <div className="flex items-center gap-2 rounded-md bg-primary/5 px-3 py-2 text-sm text-primary">
           <CheckCircle2 className="h-4 w-4 shrink-0" />
           <span>
             {questions.length} questions ready · {source.label} · answers hidden
