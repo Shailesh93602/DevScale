@@ -24,15 +24,17 @@ export class SubscriptionRoutes {
       '/stripe/webhook',
       express.raw({ type: 'application/json' }),
       async (req, res) => {
+        // Without a secret, anyone could sign an event with the empty key; refuse instead.
+        const secret = env.STRIPE_WEBHOOK_SECRET;
+        if (!secret) {
+          logger.error('[Stripe Webhook] STRIPE_WEBHOOK_SECRET is not set');
+          return res.status(503).send('Webhook not configured');
+        }
         const sig = req.headers['stripe-signature'] as string;
         let event: Stripe.Event;
 
         try {
-          event = stripe.webhooks.constructEvent(
-            req.body,
-            sig,
-            env.STRIPE_WEBHOOK_SECRET || ''
-          );
+          event = stripe.webhooks.constructEvent(req.body, sig, secret);
         } catch (err) {
           const message = err instanceof Error ? err.message : 'Unknown error';
           logger.error(`[Stripe Webhook Error] ${message}`);
