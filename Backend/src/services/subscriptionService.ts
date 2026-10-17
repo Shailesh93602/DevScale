@@ -8,6 +8,12 @@ import { createAppError } from '../utils/errorHandler.js';
 const subscriptionRepo = new SubscriptionRepository();
 const userRepo = new UserRepository();
 
+// CORS_ORIGIN is a comma-separated list; a redirect needs exactly one origin.
+const frontendOrigin = (): string =>
+  (process.env.FRONTEND_URL || env.CORS_ORIGIN.split(',')[0])
+    .trim()
+    .replace(/\/+$/, '');
+
 export async function createCheckoutSession(userId: string, priceId: string) {
   const user = (await userRepo.findUnique({
     where: { id: userId },
@@ -34,8 +40,8 @@ export async function createCheckoutSession(userId: string, priceId: string) {
     customer: stripeCustomerId,
     line_items: [{ price: priceId, quantity: 1 }],
     mode: 'subscription',
-    success_url: `${env.CORS_ORIGIN}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${env.CORS_ORIGIN}/subscription/cancel`,
+    success_url: `${frontendOrigin()}/subscription/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${frontendOrigin()}/subscription/cancel`,
     metadata: { userId },
   });
 
@@ -57,7 +63,7 @@ export async function createPortalSession(userId: string) {
 
   const session = await stripe.billingPortal.sessions.create({
     customer: user.subscription.stripe_customer_id,
-    return_url: `${env.CORS_ORIGIN}/settings/subscription`,
+    return_url: `${frontendOrigin()}/settings/subscription`,
   });
 
   return session.url;

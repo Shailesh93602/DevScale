@@ -3,6 +3,9 @@ import BaseRepository from './baseRepository.js';
 
 import prisma from '../lib/prisma.js';
 
+const joinRows = (permissionIds: string[]) =>
+  permissionIds.map((id) => ({ permission: { connect: { id } } }));
+
 export class RBACRepository extends BaseRepository<Role, typeof prisma.role> {
   constructor() {
     super(prisma.role);
@@ -17,10 +20,10 @@ export class RBACRepository extends BaseRepository<Role, typeof prisma.role> {
     return this.create({
       data: {
         ...roleData,
+        // Role.permissions is the RolePermission join table, keyed by its own
+        // ids, so permission ids become join rows rather than connects.
         ...(permissions && {
-          permissions: {
-            connect: permissions.map((id) => ({ id })),
-          },
+          permissions: { create: joinRows(permissions) },
         }),
       },
     });
@@ -40,9 +43,7 @@ export class RBACRepository extends BaseRepository<Role, typeof prisma.role> {
       data: {
         ...roleData,
         ...(permissions && {
-          permissions: {
-            set: permissions.map((id) => ({ id })),
-          },
+          permissions: { deleteMany: {}, create: joinRows(permissions) },
         }),
       },
     });

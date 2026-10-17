@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { runIfEntryPoint } from './runSeeder.js';
 
 const prisma = new PrismaClient();
 
@@ -26,10 +27,11 @@ const seedRoles = async () => {
     console.log(`Seeded ${roles.length} roles`);
   } catch (error) {
     console.error('Error seeding roles:', error);
-    process.exit(1);
+    throw error;
   } finally {
     await prisma.$disconnect();
   }
 };
 
-seedRoles();
+export default seedRoles;
+runIfEntryPoint('role.seeder', seedRoles);

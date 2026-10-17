@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { runIfEntryPoint } from './runSeeder.js';
 
 const prisma = new PrismaClient();
 
@@ -37,10 +38,11 @@ const seedPermissions = async () => {
     console.log(`Seeded ${permissions.length} permissions`);
   } catch (error) {
     console.error('Error seeding permissions:', error);
-    process.exit(1);
+    throw error;
   } finally {
     await prisma.$disconnect();
   }
 };
 
-seedPermissions();
+export default seedPermissions;
+runIfEntryPoint('permission.seeder', seedPermissions);

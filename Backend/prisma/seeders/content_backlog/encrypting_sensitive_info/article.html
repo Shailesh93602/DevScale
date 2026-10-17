@@ -1,13 +1,34 @@
 <section>
-    <h2>Understanding How to Encrypt Sensitive Information</h2>
-    <p>Using the powerful, integrated, and feature-rich development tools to encrypt your project's sensitive information—such as its **Passwords**, its **API Keys**, and its **User Profiles**—is critical for Maintaining high-quality software. By following these steps, you can set it up in minutes.</p>
+    <h2>Protecting Sensitive Information: Hash or Encrypt?</h2>
+    <p>Sensitive data falls into two groups, and they need different tools. Data you only ever need to <em>verify</em> (passwords) should be hashed. Data you need to <em>read back</em> (API keys for third-party services, personal details) must be encrypted. Using a password hash such as bcrypt on an API key destroys it: you can never recover the key to use it.</p>
 
-    <h3>1. Identifying Sensitive Data</h3>
-    <p>Identifying exactly what part of your project's data is sensitive is the process of correctly and securely managing exactly how your application is secured—ensuring only authorized parts of its code can access its most valuable asset.</p>
+    <h3>1. Passwords: hash with a slow, salted algorithm</h3>
+    <p>Store passwords with a password-hashing function such as <strong>argon2id</strong> or <strong>bcrypt</strong>. Both generate a random per-user salt and are deliberately slow, which makes brute-forcing a stolen database expensive. Never use a fast hash such as SHA-256 on its own for passwords.</p>
+    <pre><code>import bcrypt from 'bcrypt';
 
-    <h3>2. Implementing Encryption</h3>
-    <p>Ideally, you should use popular and secure encryption libraries—such as **Bcrypt** or **Crypto**—to ensure that your project's overall security remains safe and performant as intended.</p>
+const hash = await bcrypt.hash(password, 12); // salt is generated and stored inside the hash
+const ok = await bcrypt.compare(attempt, hash);</code></pre>
+
+    <h3>2. Recoverable secrets: encrypt with an authenticated cipher</h3>
+    <p>Encrypt values you must read later with an AEAD cipher such as <strong>AES-256-GCM</strong> (built into <code>node:crypto</code>). Use a fresh random 12-byte IV for every encryption and store the IV and auth tag next to the ciphertext. GCM's tag makes decryption fail if the ciphertext was tampered with.</p>
+    <pre><code>import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
+
+function encrypt(plaintext, key) {
+  const iv = randomBytes(12);
+  const cipher = createCipheriv('aes-256-gcm', key, iv);
+  const data = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
+  return { iv, data, tag: cipher.getAuthTag() };
+}
+
+function decrypt({ iv, data, tag }, key) {
+  const decipher = createDecipheriv('aes-256-gcm', key, iv);
+  decipher.setAuthTag(tag);
+  return Buffer.concat([decipher.update(data), decipher.final()]).toString('utf8');
+}</code></pre>
+
+    <h3>3. Keep the key out of the database</h3>
+    <p>Encryption is only as strong as the key's storage. Keep the 32-byte key in a key-management service (AWS KMS, GCP KMS, HashiCorp Vault) or at minimum an environment secret, never in the same database as the ciphertext and never in source control. Plan for rotation by storing a key id with each encrypted value.</p>
 
     <h3>Conclusion</h3>
-    <p>By making sensitive information encryption a priority, you can ensure that your application's most valuable asset—its data—remains safe and performant for your users.</p>
+    <p>Hash what you only verify, encrypt what you must read back, and protect the encryption key separately from the data it protects.</p>
 </section>

@@ -1,4 +1,6 @@
-import { PrismaClient, Difficulty, ChallengeCategory, ChallengeStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Difficulty, ChallengeCategory, ChallengeStatus } from '../../src/constants/enums';
+import { runIfEntryPoint } from './runSeeder.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'node:url';
@@ -266,12 +268,14 @@ const seedChallenges = async () => {
   ❌ Errors  : ${errors}
   📦 Total   : ${challenges.length}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+    if (errors > 0) throw new Error(`${errors} challenge(s) failed to seed`);
   } catch (err) {
     console.error('❌ Fatal error in challenge seeder:', err);
-    process.exit(1);
+    throw err;
   } finally {
     await prisma.$disconnect();
   }
 };
 
-seedChallenges();
+export default seedChallenges;
+runIfEntryPoint('masterChallenge.seeder', seedChallenges);

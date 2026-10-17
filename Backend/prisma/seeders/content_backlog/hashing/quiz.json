@@ -4,8 +4,8 @@
   "passingScore": 70,
   "questions": [
     {
-      "question": "Regarding the web security, what is the primary role of 'Hashing'?项目",
-      "options": ["To collect and analyze data", "Correctly and mathematically converting your project's data into a unique, fixed-length, and irreversible string", "To record a commit", "To view your version history"],
+      "question": "Which statement about cryptographic hashes is true?",
+      "options": ["They can be decrypted with the right key", "Collisions exist but are infeasible to find for a secure hash such as SHA-256", "Every input produces a unique digest", "SHA-256 is the best choice for storing passwords"],
       "correctAnswer": 1,
       "points": 10
     }

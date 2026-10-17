@@ -1,4 +1,5 @@
 import { FeatureEnum } from './../../src/constants';
+import { runIfEntryPoint } from './runSeeder.js';
 
 import { PrismaClient } from '@prisma/client';
 
@@ -23,10 +24,11 @@ const seedFeatures = async () => {
     console.log(`Seeded ${features.length} features`);
   } catch (error) {
     console.error('Error seeding features:', error);
-    process.exit(1);
+    throw error;
   } finally {
     await prisma.$disconnect();
   }
 };
 
-seedFeatures();
+export default seedFeatures;
+runIfEntryPoint('feature.seeder', seedFeatures);

@@ -23,6 +23,15 @@ const safeStringify = (obj: unknown): string => {
   });
 };
 
+// Built from the validated query, so unknown params cannot mint new keys.
+const defaultKey = (req: Request): string => {
+  const query = req.query as Record<string, unknown>;
+  const sorted = Object.keys(query)
+    .sort()
+    .map((k) => [k, query[k]]);
+  return `${req.method}:${req.baseUrl}${req.path}:${JSON.stringify(sorted)}`;
+};
+
 export const cacheResponse = (options: CacheOptions) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -31,11 +40,12 @@ export const cacheResponse = (options: CacheOptions) => {
         return next();
       }
 
-      // Generate cache key
-      const cacheKey =
+      // `http:` keeps these envelopes apart from repository-level cache keys.
+      const cacheKey = `http:${
         typeof options.key === 'function'
           ? options.key(req)
-          : options.key || `${req.method}:${req.originalUrl}`;
+          : options.key || defaultKey(req)
+      }`;
 
       // Try to get from cache
       const cachedData = await getCache(cacheKey);
@@ -55,8 +65,8 @@ export const cacheResponse = (options: CacheOptions) => {
       // Override json function to cache response
       res.json = function (body: unknown) {
         try {
-          // Only cache if body is not null/undefined
-          if (body) {
+          // Never cache an error envelope: the replay path answers 200.
+          if (body && res.statusCode >= 200 && res.statusCode < 300) {
             const stringifiedBody = safeStringify(body);
             setCache(cacheKey, stringifiedBody, {
               ttl: options.duration,

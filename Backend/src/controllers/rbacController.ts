@@ -14,6 +14,7 @@ import { recordActionBestEffort } from '../services/auditTrail';
 import prisma from '../lib/prisma.js';
 import {
   invalidatePermissions,
+  invalidateAllPermissions,
   getEffectivePermissions,
   effectiveKeys,
 } from '../services/permissionService.js';
@@ -45,6 +46,7 @@ export default class RBACController {
     const { roleId } = req.params;
     validateRequest(roleSchema, req.body);
     const role = await this.rbacRepository.updateRole(roleId, req.body);
+    if (req.body.permissions) invalidateAllPermissions();
     await this.record(req, 'UPDATE_ROLE', 'ROLE', roleId, {
       name: req.body.name,
     });

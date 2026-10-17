@@ -1,5 +1,16 @@
 import prisma from '../../lib/prisma.js';
 import { invalidatePattern } from '../../services/memoryCache.js';
+import { invalidateCachePattern } from '../../services/cacheService.js';
+
+/** Drops every viewer's cached detail (Redis + in-process); lists too if asked. */
+export async function invalidateRoadmapCaches(
+  roadmapId: string,
+  { lists = false } = {}
+): Promise<void> {
+  invalidatePattern(`roadmap:detail:${roadmapId}`);
+  await invalidateCachePattern(`roadmap:detail:${roadmapId}:*`);
+  if (lists) await invalidateCachePattern('roadmaps:list:*');
+}
 
 /** Flips the viewer's like on a roadmap; null when the roadmap does not exist. */
 export async function toggleRoadmapLike(
@@ -24,15 +35,21 @@ export async function toggleRoadmapLike(
       data: { user_id: userId, roadmap_id: roadmapId },
     });
   }
-  invalidatePattern(`roadmap:detail:${roadmapId}`);
+  await invalidateRoadmapCaches(roadmapId);
   return existingLike ? 'unliked' : 'liked';
 }
 
-/** Flips the viewer's bookmark (a UserRoadmap row) on a roadmap. */
+/** Flips the viewer's bookmark (a UserRoadmap row); null when no such roadmap. */
 export async function toggleRoadmapBookmark(
   userId: string,
   roadmapId: string
-): Promise<'bookmarked' | 'unbookmarked'> {
+): Promise<'bookmarked' | 'unbookmarked' | null> {
+  const roadmapExists = await prisma.roadmap.findUnique({
+    where: { id: roadmapId },
+    select: { id: true },
+  });
+  if (!roadmapExists) return null;
+
   const existingBookmark = await prisma.userRoadmap.findFirst({
     where: { user_id: userId, roadmap_id: roadmapId },
   });
@@ -45,7 +62,7 @@ export async function toggleRoadmapBookmark(
     });
   }
 
-  invalidatePattern(`roadmap:detail:${roadmapId}`);
+  await invalidateRoadmapCaches(roadmapId);
   invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard reflects change
   return existingBookmark ? 'unbookmarked' : 'bookmarked';
 }

@@ -1,4 +1,6 @@
-import { PrismaClient, BattleType, BattleStatus, Difficulty } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { BattleType, BattleStatus, Difficulty } from '../../src/constants/enums';
+import { runIfEntryPoint } from './runSeeder.js';
 
 const prisma = new PrismaClient();
 const admin = 'admin@eduscale.io';
@@ -11,15 +13,13 @@ const seedBattles = async () => {
         });
 
         if (!user) {
-            console.error('❌ Admin user not found. Please run user seeder first.');
-            return;
+            throw new Error('Admin user not found. Please run user seeder first.');
         }
 
         const topic = await prisma.topic.findFirst();
 
         if (!topic) {
-            console.error('❌ Could not find any topic. Please run topic/roadmap seeder first.');
-            return;
+            throw new Error('Could not find any topic. Please run topic/roadmap seeder first.');
         }
 
         const difficulties = [Difficulty.EASY, Difficulty.MEDIUM, Difficulty.HARD];
@@ -82,9 +82,11 @@ const seedBattles = async () => {
         console.log('Battles seeded successfully');
     } catch (error) {
         console.error('Error seeding battles:', error);
+        throw error;
     } finally {
         await prisma.$disconnect();
     }
 };
 
-seedBattles();
+export default seedBattles;
+runIfEntryPoint('battle.seeder', seedBattles);

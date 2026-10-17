@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { runIfEntryPoint } from './runSeeder.js';
 import { roadmapCategories, roadmaps, RoadmapData } from '../../resources/roadmaps/roadmap';
 
 const prisma = new PrismaClient();
@@ -27,7 +28,6 @@ const seedDatabase = async () => {
       categoriesMap.set(category, dbCategory.id);
     }
 
-    const categoriesWithRoadmaps = new Set<string>();
 
     // Cache to avoid slow repeated searches
     const existingSubjectTopics = await prisma.subjectTopic.findMany({
@@ -183,81 +183,18 @@ const seedDatabase = async () => {
       if (roadmapData.title.toLowerCase().includes('data science')) {
         matchedCategory = 'DataAnalysis';
       }
-      categoriesWithRoadmaps.add(matchedCategory);
       console.log(`Seeding roadmap: ${roadmapData.title} with category ${matchedCategory}`);
       await seedRoadmapData(roadmapData, matchedCategory);
-    }
-
-    // Seed dummies for missing categories
-    for (const category of roadmapCategories) {
-      if (!categoriesWithRoadmaps.has(category)) {
-        const dummyRoadmap: RoadmapData = {
-          title: `${category} Developer Masterclass`,
-          description: `Comprehensive guide and roadmap for mastering ${category}.`,
-          tags: category,
-          mainConcepts: [
-            {
-              name: `Introduction to ${category}`,
-              description: `Basic fundamentals of ${category} development.`,
-              order: 1,
-              subjects: [
-                {
-                  name: `${category} Basics`,
-                  description: `Core concepts of ${category}.`,
-                  order: 1,
-                  topics: [
-                    {
-                      name: `Getting Started with ${category}`,
-                      description: `Setting up your environment for ${category}.`,
-                      order: 1,
-                    },
-                    {
-                      name: `First project in ${category}`,
-                      description: `Build your "Hello World" in ${category}.`,
-                      order: 2,
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              name: `Advanced ${category}`,
-              description: `Advanced topics in ${category} development.`,
-              order: 2,
-              subjects: [
-                {
-                  name: `${category} Architecture`,
-                  description: `Building scalable apps in ${category}.`,
-                  order: 1,
-                  topics: [
-                    {
-                      name: `Design Patterns in ${category}`,
-                      description: `Common patterns and practices.`,
-                      order: 1,
-                    },
-                    {
-                      name: `Performance Tuning in ${category}`,
-                      description: `Optimize your ${category} applications.`,
-                      order: 2,
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        };
-
-        categoriesWithRoadmaps.add(category);
-        await seedRoadmapData(dummyRoadmap, category);
-      }
     }
 
     console.log('Database seeded successfully');
   } catch (error) {
     console.error('Error seeding database:', error);
+    throw error;
   } finally {
     await prisma.$disconnect();
   }
 };
 
-seedDatabase();
+export default seedDatabase;
+runIfEntryPoint('roadmapMainConceptSubjectTopics.seeder', seedDatabase);

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { runIfEntryPoint } from './runSeeder.js';
 import { createClient } from '@supabase/supabase-js';
 
 const prisma = new PrismaClient();
@@ -186,9 +187,11 @@ async function seedUsers() {
     console.log('User seeding completed successfully');
   } catch (error) {
     console.error('Error seeding users:', error);
+    throw error;
   } finally {
     await prisma.$disconnect();
   }
 }
 
-seedUsers();
+export default seedUsers;
+runIfEntryPoint('user.seeder', seedUsers);

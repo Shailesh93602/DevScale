@@ -1,4 +1,7 @@
-import { PrismaClient, Difficulty, Status, QuizType } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Difficulty, Status, QuizType } from '../../src/constants/enums';
+import { sanitizeRichText } from '../../src/utils/sanitize';
+import { runIfEntryPoint } from './runSeeder.js';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -190,7 +193,7 @@ async function processQuiz(topicId: string, tPath: string, tTitle: string) {
 
 async function processArticle(topicId: string, tPath: string, tTitle: string, userId: string) {
   const articlePath = path.join(tPath, 'article.html');
-  const articleContent = readText(articlePath);
+  const articleContent = sanitizeRichText(readText(articlePath));
   if (!articleContent) return;
 
   const existingArticle = await prisma.article.findFirst({
@@ -390,10 +393,11 @@ const seedDatabase = async () => {
     console.log('🎉 All roadmaps seeded successfully!');
   } catch (error) {
     console.error('❌ Error seeding database:', error);
-    process.exit(1);
+    throw error;
   } finally {
     await prisma.$disconnect();
   }
 };
 
-seedDatabase();
+export default seedDatabase;
+runIfEntryPoint('masterRoadmap.seeder', seedDatabase);

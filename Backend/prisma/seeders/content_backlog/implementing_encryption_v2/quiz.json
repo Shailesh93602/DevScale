@@ -4,8 +4,8 @@
   "passingScore": 70,
   "questions": [
     {
-      "question": "Regarding the web security, what is a primary step within an encryption implementation workflow?项目",
-      "options": ["Benefit from popular and secure libraries—such as Bcrypt—to correctly handle exactly how its encryption is handled as intended", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "question": "When encrypting with AES-256-GCM, what must be different for every message encrypted with the same key?",
+      "options": ["The IV (nonce)", "The algorithm", "The key length", "Nothing; reusing the IV is safe"],
       "correctAnswer": 0,
       "points": 10
     }

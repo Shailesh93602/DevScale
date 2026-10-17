@@ -8,10 +8,10 @@
 const users = await User.findAll();
 
 // Find one user by primary key
-const user = await User.findByPk(1);
+const userById = await User.findByPk(1);
 
 // Find one user matching criteria
-const user = await User.findOne({ where: { email: 'john@example.com' } });
+const userByEmail = await User.findOne({ where: { email: 'john@example.com' } });
     </code></pre>
 
     <h3>2. Filtering with Operators</h3>

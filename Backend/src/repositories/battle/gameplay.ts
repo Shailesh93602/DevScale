@@ -47,6 +47,7 @@ export async function submitAnswer(
 
 async function recordAnswer(tx: Prisma.TransactionClient, input: AnswerInput) {
   const { battleId, userId } = input;
+  await assertStillPlaying(tx, battleId, userId);
   const question = await loadAnswerableQuestion(tx, input);
 
   const isCorrect = question.correct_answer === input.selectedOption;
@@ -81,6 +82,28 @@ async function recordAnswer(tx: Prisma.TransactionClient, input: AnswerInput) {
     participant_done: participantDone,
     leaderboard,
   };
+}
+
+// Re-checked under the lock: an answer queued behind completeBattle must not
+// change a frozen leaderboard.
+async function assertStillPlaying(
+  tx: Prisma.TransactionClient,
+  battleId: string,
+  userId: string
+): Promise<void> {
+  const [battle, participant] = await Promise.all([
+    tx.battle.findUnique({ where: { id: battleId }, select: { status: true } }),
+    tx.battleParticipant.findUnique({
+      where: { battle_id_user_id: { battle_id: battleId, user_id: userId } },
+      select: { status: true },
+    }),
+  ]);
+  if (battle?.status !== 'IN_PROGRESS') {
+    throw createAppError('This battle is not in progress', 409);
+  }
+  if (!participant || participant.status === 'DISCONNECTED') {
+    throw createAppError('You are not playing in this battle', 409);
+  }
 }
 
 async function loadAnswerableQuestion(

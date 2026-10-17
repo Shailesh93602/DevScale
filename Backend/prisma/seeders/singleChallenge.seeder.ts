@@ -1,4 +1,5 @@
-import { PrismaClient, Difficulty, ChallengeCategory, ChallengeStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Difficulty, ChallengeCategory, ChallengeStatus } from '../../src/constants/enums';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 

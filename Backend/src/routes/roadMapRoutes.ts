@@ -54,18 +54,10 @@ export class RoadMapRoutes extends BaseRouter {
     // Roadmap detail is readable signed out (owner's decision, 2026-09-03).
     // optionalAuthMiddleware rather than none: the controller passes
     // req.user?.id through so a signed-in reader still gets isLiked /
-    // isBookmarked / progress, and the cache key below already had an 'anon'
-    // branch that was unreachable while authMiddleware sat in front of it.
+    // isBookmarked / progress. No route-level cache: getRoadmap caches it.
     this.router.get(
       '/:id',
       optionalAuthMiddleware,
-      (req: Request, res: Response, next: NextFunction) => {
-        const cacheMiddleware = cacheResponse({
-          duration: 120,
-          key: (r) => `roadmap:detail:${r.params.id}:${r.user?.id || 'anon'}`,
-        });
-        cacheMiddleware(req, res, next).catch(next);
-      },
       this.bindRoute(this.roadMapController.getRoadMap)
     );
 

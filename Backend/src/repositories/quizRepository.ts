@@ -210,27 +210,16 @@ export default class QuizRepository extends BaseRepository<
     return results;
   }
 
+  // UserProgress is keyed by (user, topic) only. A subject- or concept-level
+  // quiz has no row it can honestly write to (topic_id would be null or a
+  // non-topic id), so only topic quizzes record progress.
   private async updateProgress(
     user_id: string,
     quiz: Quiz,
     passed: boolean
   ): Promise<void> {
-    if (!passed) return;
-    try {
-      if (quiz.topic_id) {
-        await this.updateTopicProgress(user_id, quiz.topic_id);
-      } else if (quiz.subject_id) {
-        await this.updateSubjectProgress(
-          user_id,
-          quiz.subject_id,
-          quiz.topic_id
-        );
-      } else if (quiz.main_concept_id) {
-        await this.updateConceptProgress(user_id, quiz.main_concept_id);
-      }
-    } catch (error) {
-      logger.error('Error updating progress:', error);
-    }
+    if (!passed || !quiz.topic_id) return;
+    await this.updateTopicProgress(user_id, quiz.topic_id);
   }
 
   private async updateTopicProgress(
@@ -240,53 +229,6 @@ export default class QuizRepository extends BaseRepository<
     await prisma.userProgress.upsert({
       where: { user_id_topic_id: { user_id, topic_id } },
       update: { is_completed: true, completed_at: new Date() },
-      create: {
-        user_id,
-        topic_id,
-        is_completed: true,
-        completed_at: new Date(),
-      },
-    });
-  }
-
-  private async updateSubjectProgress(
-    user_id: string,
-    subject_id: string,
-    topic_id: string | null
-  ): Promise<void> {
-    await prisma.userProgress.upsert({
-      where: {
-        user_id_topic_id: {
-          user_id,
-          topic_id: topic_id as string,
-        },
-      },
-      update: { is_completed: true, completed_at: new Date() },
-      create: {
-        user_id,
-        subject_id,
-        topic_id,
-        is_completed: true,
-        completed_at: new Date(),
-      },
-    });
-  }
-
-  private async updateConceptProgress(
-    user_id: string,
-    topic_id: string
-  ): Promise<void> {
-    await prisma.userProgress.upsert({
-      where: {
-        user_id_topic_id: {
-          user_id,
-          topic_id,
-        },
-      },
-      update: {
-        is_completed: true,
-        completed_at: new Date(),
-      },
       create: {
         user_id,
         topic_id,

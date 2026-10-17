@@ -10,35 +10,6 @@ import interviewQuestions from '../../resources/interviewquestions.json' with { 
 // Root directory of the project (for resource file paths)
 
 export default class ResourceController {
-  public getSubjects = catchAsync(async (_req: Request, res: Response) => {
-    const subjects = await prisma.subject.findMany({
-      orderBy: { created_at: 'asc' },
-    });
-    sendResponse(res, 'SUBJECTS_FETCHED', { data: subjects });
-  });
-
-  // Topics
-  public getTopics = catchAsync(async (req: Request, res: Response) => {
-    const topics = await prisma.topic.findMany({
-      where: { subjects: { some: { id: req.params.id } } },
-      orderBy: { created_at: 'asc' },
-    });
-    sendResponse(res, 'TOPICS_FETCHED', { data: topics });
-  });
-
-  public addTopic = catchAsync(async (req: Request, res: Response) => {
-    const { title, description, subject_id } = req.body;
-    const topic = await prisma.topic.create({
-      data: {
-        title,
-        description,
-        subjects: { connect: { id: subject_id } },
-        order: 0,
-      },
-    });
-    sendResponse(res, 'TOPIC_ADDED', { data: topic });
-  });
-
   // Resources Listing
   public getResources = catchAsync(async (req: Request, res: Response) => {
     const { limit, offset, search } = req.pagination ?? {};
@@ -96,30 +67,6 @@ export default class ResourceController {
     }
     await prisma.subject.deleteMany({ where: { id: { in: ids } } });
     sendResponse(res, 'SUBJECTS_DELETED');
-  });
-
-  // Articles
-  public createArticle = catchAsync(async (req: Request, res: Response) => {
-    const { title, content, author_id, topic_id } = req.body;
-    const article = await prisma.article.create({
-      data: { title, content, author_id, topic_id },
-    });
-    sendResponse(res, 'ARTICLE_CREATED', { data: article });
-  });
-
-  public getArticle = catchAsync(async (req: Request, res: Response) => {
-    const topic_id = req.params.id;
-    const articles = await prisma.article.findMany({ where: { topic_id } });
-    sendResponse(res, 'ARTICLES_FETCHED', { data: articles });
-  });
-
-  public selectArticle = catchAsync(async (req: Request, res: Response) => {
-    const articleId = req.params.id;
-    const article = await prisma.article.update({
-      where: { id: articleId },
-      data: { status: 'APPROVED' },
-    });
-    sendResponse(res, 'ARTICLE_UPDATED', { data: article });
   });
 
   // Interview Questions.

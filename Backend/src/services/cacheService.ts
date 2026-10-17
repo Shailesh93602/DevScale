@@ -99,12 +99,21 @@ export async function deleteCache(key: string): Promise<void> {
   }
 }
 
+// SCAN, not KEYS: KEYS is O(N) and blocks Redis for every other client.
 export async function invalidateCachePattern(pattern: string): Promise<void> {
   try {
-    const keys = await redis.keys(pattern);
-    if (keys.length > 0) {
-      await redis.del(...keys);
-    }
+    let cursor = '0';
+    do {
+      const [next, keys] = await redis.scan(
+        cursor,
+        'MATCH',
+        pattern,
+        'COUNT',
+        500
+      );
+      cursor = next;
+      if (keys.length > 0) await redis.del(...keys);
+    } while (cursor !== '0');
   } catch (error) {
     logger.error('Cache pattern invalidation error:', error);
   }

@@ -27,6 +27,9 @@ import { getRandomPoolQuestions } from '../questionPoolService.js';
 
 const QUEUE_KEY = 'matchmaking:queue:quick';
 const META_KEY = 'matchmaking:meta:quick';
+// Last time each queued player was seen (join or a status poll, every ~3 s).
+const SEEN_KEY = 'matchmaking:seen:quick';
+const STALE_AFTER_MS = 30_000;
 const BASE_BAND = 100; // rating points
 const BAND_PER_SECOND = 20; // widen while waiting
 const MAX_BAND = 600;
@@ -141,16 +144,21 @@ export class MatchmakingService {
     const rating = await this.d.getRating(userId);
     await this.d.redis.zadd(QUEUE_KEY, rating, userId);
     await this.d.redis.hset(META_KEY, userId, String(this.d.now()));
+    await this.d.redis.hset(SEEN_KEY, userId, String(this.d.now()));
     return this.tryMatch(userId);
   }
 
   async leaveQueue(userId: string): Promise<void> {
     await this.d.redis.zrem(QUEUE_KEY, userId);
     await this.d.redis.hdel(META_KEY, userId);
+    await this.d.redis.hdel(SEEN_KEY, userId);
   }
 
   async getStatus(userId: string): Promise<QueueStatus> {
     const score = await this.d.redis.zscore(QUEUE_KEY, userId);
+    if (score !== null) {
+      await this.d.redis.hset(SEEN_KEY, userId, String(this.d.now()));
+    }
     const queueSize = await this.d.redis.zcard(QUEUE_KEY);
     return {
       inQueue: score !== null,
@@ -164,25 +172,34 @@ export class MatchmakingService {
     return Math.min(MAX_BAND, BASE_BAND + waitedSec * BAND_PER_SECOND);
   }
 
-  /** Parse ZRANGEBYSCORE ... WITHSCORES output and pick the closest opponent. */
-  private pickNearest(
+  /**
+   * Closest opponent from ZRANGEBYSCORE ... WITHSCORES output who is still
+   * polling; a player who closed the tab is evicted rather than matched.
+   */
+  private async pickNearest(
     raw: string[],
     selfId: string,
     rating: number
-  ): { userId: string; rating: number } | null {
-    let best: { userId: string; rating: number } | null = null;
+  ): Promise<{ userId: string; rating: number } | null> {
+    const candidates: { userId: string; rating: number }[] = [];
     for (let i = 0; i < raw.length; i += 2) {
-      const candidateId = raw[i];
-      const candidateRating = Number(raw[i + 1]);
-      if (candidateId === selfId) continue;
-      if (
-        !best ||
-        Math.abs(candidateRating - rating) < Math.abs(best.rating - rating)
-      ) {
-        best = { userId: candidateId, rating: candidateRating };
+      if (raw[i] !== selfId) {
+        candidates.push({ userId: raw[i], rating: Number(raw[i + 1]) });
       }
     }
-    return best;
+    candidates.sort(
+      (a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating)
+    );
+    for (const candidate of candidates) {
+      const seen =
+        (await this.d.redis.hget(SEEN_KEY, candidate.userId)) ??
+        (await this.d.redis.hget(META_KEY, candidate.userId));
+      if (seen && this.d.now() - Number(seen) <= STALE_AFTER_MS) {
+        return candidate;
+      }
+      await this.leaveQueue(candidate.userId);
+    }
+    return null;
   }
 
   /** Try to pair `userId` with the nearest waiting player within the band. */
@@ -202,7 +219,7 @@ export class MatchmakingService {
       rating + band,
       'WITHSCORES'
     );
-    const opponent = this.pickNearest(raw, userId, rating);
+    const opponent = await this.pickNearest(raw, userId, rating);
     if (!opponent) return { matched: false };
 
     // Deterministic lock order on both players → no deadlock, no double-book.
@@ -233,6 +250,7 @@ export class MatchmakingService {
       );
       await this.d.redis.zrem(QUEUE_KEY, userId, opponent.userId);
       await this.d.redis.hdel(META_KEY, userId, opponent.userId);
+      await this.d.redis.hdel(SEEN_KEY, userId, opponent.userId);
 
       let battle: { battleId: string; slug: string };
       try {
@@ -249,6 +267,8 @@ export class MatchmakingService {
           opponent.userId,
           opponentEnqueuedAt ?? now
         );
+        await this.d.redis.hset(SEEN_KEY, userId, now);
+        await this.d.redis.hset(SEEN_KEY, opponent.userId, now);
         throw err;
       }
 

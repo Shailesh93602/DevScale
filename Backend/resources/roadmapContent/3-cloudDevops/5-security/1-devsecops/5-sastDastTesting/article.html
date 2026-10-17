@@ -33,7 +33,7 @@ docker run --rm owasp/zap2docker-stable zap-baseline.py \
   -r zap-report.html
 
 # DAST tests for:
-# - XSS: injects <script>alert(1)</script> into every form field and URL parameter
+# - XSS: injects &lt;script&gt;alert(1)&lt;/script&gt; into every form field and URL parameter
 # - SQL Injection: appends ' OR 1=1-- to all inputs
 # - CSRF: checks for missing CSRF tokens on state-changing forms
 # - Broken authentication: tests for session fixation, cookie security flags

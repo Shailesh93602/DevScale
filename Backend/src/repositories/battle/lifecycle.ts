@@ -19,9 +19,6 @@ export async function joinBattle(battleIdOrSlug: string, userId: string) {
           403
         );
       }
-      if (battle.current_participants >= battle.max_participants) {
-        throw createAppError('Battle is full', 403);
-      }
 
       // Guard: reject if already enrolled
       const existingParticipant = await tx.battleParticipant.findUnique({
@@ -31,6 +28,20 @@ export async function joinBattle(battleIdOrSlug: string, userId: string) {
       });
       if (existingParticipant) {
         throw createAppError('You are already enrolled in this battle', 409);
+      }
+
+      // Conditional claim of a seat: two joiners racing for the last one cannot
+      // both pass, unlike a read-then-write capacity check.
+      const seat = await tx.battle.updateMany({
+        where: {
+          id: battleId,
+          status: { in: ['WAITING', 'LOBBY'] },
+          current_participants: { lt: battle.max_participants },
+        },
+        data: { current_participants: { increment: 1 } },
+      });
+      if (seat.count === 0) {
+        throw createAppError('Battle is full', 403);
       }
 
       // The read-then-write guard above is not atomic: two join requests from
@@ -53,9 +64,8 @@ export async function joinBattle(battleIdOrSlug: string, userId: string) {
           throw err;
         });
 
-      const updated = await tx.battle.update({
+      const updated = await tx.battle.findUniqueOrThrow({
         where: { id: battleId },
-        data: { current_participants: { increment: 1 } },
         include: battleDetailInclude,
       });
 
@@ -79,6 +89,10 @@ export async function leaveBattle(battleIdOrSlug: string, userId: string) {
       if (!participant) throw createAppError('You are not in this battle', 404);
 
       const battle = await tx.battle.findUnique({ where: { id: battleId } });
+      // A finished battle's rows are its history (stats, win rate); keep them.
+      if (battle?.status === 'COMPLETED' || battle?.status === 'CANCELLED') {
+        throw createAppError('This battle has already ended', 409);
+      }
       if (battle?.status === 'IN_PROGRESS') {
         // Mark as disconnected rather than removing
         await tx.battleParticipant.update({

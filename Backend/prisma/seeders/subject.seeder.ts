@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { runIfEntryPoint } from './runSeeder.js';
 import { subjects } from '../../resources/subjects';
 
 const prisma = new PrismaClient();
@@ -33,9 +34,11 @@ const seedSubjects = async () => {
     console.log('Subjects seeded successfully');
   } catch (error) {
     console.error('Error seeding subjects:', error);
+    throw error;
   } finally {
     await prisma.$disconnect();
   }
 };
 
-seedSubjects();
+export default seedSubjects;
+runIfEntryPoint('subject.seeder', seedSubjects);

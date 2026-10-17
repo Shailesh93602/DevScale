@@ -40,7 +40,7 @@ await user.save();
 
 // Read
 const users = await User.find({ age: { $gt: 18 } });
-const user = await User.findById('60c...fd7');
+const userById = await User.findById('60c...fd7');
     </code></pre>
 
     <h3>Conclusion</h3>

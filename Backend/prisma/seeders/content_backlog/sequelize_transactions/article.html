@@ -11,11 +11,12 @@
 const t = await sequelize.transaction();
 
 try {
-  await User.create({ name: 'John Doe' }, { transaction: t });
+  const user = await User.create({ name: 'John Doe' }, { transaction: t });
   await Profile.create({ userId: user.id }, { transaction: t });
   await t.commit();
 } catch (error) {
   await t.rollback();
+  throw error;
 }
     </code></pre>
 

@@ -59,9 +59,18 @@ class BattleSocketService {
 
   async transitionToLobby(battleId: string) {
     try {
-      const battle = await prisma.battle.update({
-        where: { id: battleId },
+      // Compare-and-set: a battle cancelled (possibly on another worker) since
+      // this timer was armed must stay cancelled.
+      const claimed = await prisma.battle.updateMany({
+        where: { id: battleId, status: 'WAITING' },
         data: { status: 'LOBBY' },
+      });
+      if (claimed.count === 0) {
+        logger.info(`Battle ${battleId} is no longer WAITING — lobby skipped`);
+        return;
+      }
+      const battle = await prisma.battle.findUniqueOrThrow({
+        where: { id: battleId },
       });
 
       socketService.emitToRoom(battleId, 'battle:status_changed', {
@@ -86,7 +95,15 @@ class BattleSocketService {
       if (secondsRemaining <= 0) {
         clearInterval(tick);
         state.lobbyCountdownHandle = null;
-        await this.startBattle(battleId);
+        try {
+          const claimed = await prisma.battle.updateMany({
+            where: { id: battleId, status: 'LOBBY' },
+            data: { status: 'IN_PROGRESS' },
+          });
+          if (claimed.count === 1) await this.startBattle(battleId);
+        } catch (err) {
+          logger.error(`scheduled start ${battleId}:`, err);
+        }
         return;
       }
       socketService.emitToRoom(battleId, 'battle:countdown', {
@@ -107,10 +124,15 @@ class BattleSocketService {
         state.lobbyCountdownHandle = null;
       }
 
-      await prisma.battle.update({
-        where: { id: battleId },
-        data: { status: 'IN_PROGRESS' },
+      // Callers claim IN_PROGRESS first (lifecycle.startBattle, or the lobby
+      // countdown); anything else here — CANCELLED, COMPLETED — stops the run.
+      const live = await prisma.battle.count({
+        where: { id: battleId, status: 'IN_PROGRESS' },
       });
+      if (live === 0) {
+        logger.info(`Battle ${battleId} is not IN_PROGRESS — start skipped`);
+        return;
+      }
       await prisma.battleParticipant.updateMany({
         where: { battle_id: battleId, status: { in: ['JOINED', 'READY'] } },
         data: { status: 'PLAYING' },

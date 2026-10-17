@@ -21,6 +21,7 @@ import {
 } from './roadmap/roadmapInputs.js';
 import {
   getLikedCommentIds,
+  invalidateRoadmapCaches,
   toggleCommentLikeRow,
   toggleRoadmapBookmark,
   toggleRoadmapLike,
@@ -153,6 +154,7 @@ export default class RoadmapController {
         description: description ?? roadMap.description,
       },
     });
+    await invalidateRoadmapCaches(roadMap.id, { lists: true });
 
     return sendResponse(res, 'ROADMAP_UPDATED', {
       data: updatedRoadMap,
@@ -177,6 +179,7 @@ export default class RoadmapController {
     await this.roadmapRepo.delete({
       where: { id: roadMap.id },
     });
+    await invalidateRoadmapCaches(roadMap.id, { lists: true });
 
     return sendResponse(res, 'ROADMAP_DELETED', {
       data: { id: roadMap.id },
@@ -313,6 +316,11 @@ export default class RoadmapController {
     }
 
     const outcome = await toggleRoadmapBookmark(req.user.id, req.params.id);
+    if (!outcome) {
+      return sendResponse(res, 'ROADMAP_NOT_FOUND', {
+        error: 'Roadmap not found',
+      });
+    }
     return sendResponse(
       res,
       outcome === 'unbookmarked'

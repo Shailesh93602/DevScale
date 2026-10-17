@@ -1,13 +1,19 @@
 <section>
-    <h2>Understanding How to Implement Encryption</h2>
-    <p>Using the powerful, integrated, and feature-rich development tools to implement encryption correctly in your project is critical for Maintaining high-quality software. By following these steps, you can set it up in minutes.</p>
+    <h2>Implementing Encryption Correctly</h2>
+    <p>Encryption is reversible by design: whoever holds the key can recover the plaintext. That makes it the right tool for data you must read back, such as third-party API keys or personal data, and the wrong tool for passwords, which should be hashed with a password-hashing function (argon2id or bcrypt) instead. Bcrypt is not an encryption library; what it produces cannot be decrypted.</p>
 
-    <h3>1. Why implement Encryption?</h3>
-    <p>Implementing encryption correctly allows you to correctly track and manage exactly how your project's data is secured—including its **User Passwords**, its **Personal Data**, and its **Sensitive Information**—as intended.</p>
+    <h3>1. Choose an authenticated cipher</h3>
+    <p>Use AES-256-GCM (or ChaCha20-Poly1305). These are AEAD ciphers: besides hiding the data they produce an authentication tag, so a modified ciphertext fails to decrypt instead of silently yielding garbage. Avoid unauthenticated modes such as AES-CBC without a MAC, and never use ECB.</p>
 
-    <h3>2. Encryption Libraries</h3>
-    <p>Ideally, you should use popular, secure, and audited encryption libraries—such as **Bcrypt** or **Crypto**—to ensure that your project's overall security remains safe and performant as intended.</p>
+    <h3>2. Never reuse an IV with the same key</h3>
+    <p>Generate a new random 12-byte IV for every encryption with <code>crypto.randomBytes(12)</code> and store it alongside the ciphertext and tag. Reusing an IV with GCM leaks the relationship between messages and can expose the authentication key.</p>
+
+    <h3>3. Manage keys separately</h3>
+    <p>Load keys from a key-management service or secret store, not from the database or the repository. Record which key encrypted each value so keys can be rotated: decrypt with the old key, re-encrypt with the new one.</p>
+
+    <h3>4. Encrypt in transit too</h3>
+    <p>Data at rest is only half the picture. Serve every endpoint over TLS (HTTPS) and require TLS on database connections, so the plaintext is never exposed on the network.</p>
 
     <h3>Conclusion</h3>
-    <p>By making encryption implementation a priority, you can ensure that your application's most valuable asset—its data—remains safe and performant for your users.</p>
+    <p>Use an authenticated cipher, a fresh IV per message and keys held outside the data store, and keep password storage on a password-hashing function rather than encryption.</p>
 </section>

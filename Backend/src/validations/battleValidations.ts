@@ -86,8 +86,13 @@ export const createBattleValidationSchema = Joi.object({
     }),
   start_time: Joi.when('type', {
     is: 'SCHEDULED',
+    // Evaluated per request; a .min(new Date(...)) here froze at module load.
     then: Joi.date()
-      .min(new Date(Date.now() + 5 * 60 * 1000))
+      .custom((value: Date, helpers) =>
+        value.getTime() >= Date.now() + 5 * 60 * 1000
+          ? value
+          : helpers.error('date.min')
+      )
       .required()
       .messages({
         'date.min':

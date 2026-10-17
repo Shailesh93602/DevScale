@@ -50,7 +50,10 @@ describe('embedText', () => {
   });
 
   it('returns the cached vector without calling the provider', async () => {
-    store.set(`embedding:${hashText('cached text')}`, [9, 9]);
+    store.set(
+      `embedding:text-embedding-004:768:${hashText('cached text')}`,
+      [9, 9]
+    );
     const vector = await embedText('cached text');
     expect(vector).toEqual([9, 9]);
     expect(mockRawEmbed).not.toHaveBeenCalled();
@@ -61,6 +64,20 @@ describe('embedText', () => {
     await embedText('same');
     await embedText('same');
     expect(mockRawEmbed).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not serve a vector cached under another model (or the old text-only key)', async () => {
+    store.set(`embedding:old-model:768:${hashText('model change')}`, [1]);
+    store.set(`embedding:${hashText('model change')}`, [1]);
+    mockRawEmbed.mockResolvedValue([2]);
+    expect(await embedText('model change')).toEqual([2]);
+    expect(mockRawEmbed).toHaveBeenCalledTimes(1);
+  });
+
+  it('skipCache re-embeds even when the current model has a cached vector', async () => {
+    store.set(`embedding:text-embedding-004:768:${hashText('forced')}`, [1]);
+    mockRawEmbed.mockResolvedValue([3]);
+    expect(await embedText('forced', null, { skipCache: true })).toEqual([3]);
   });
 
   it('throws before any provider call when there is no key', async () => {

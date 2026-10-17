@@ -1,4 +1,6 @@
-import { PrismaClient, Status, QuizType } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { Status, QuizType } from '../../src/constants/enums';
+import { sanitizeRichText } from '../../src/utils/sanitize';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
@@ -48,7 +50,7 @@ async function seedSingleTopic() {
     // 1. Process Article
     const articlePath = path.join(contentPath, 'article.html');
     if (fs.existsSync(articlePath)) {
-        const content = fs.readFileSync(articlePath, 'utf8');
+        const content = sanitizeRichText(fs.readFileSync(articlePath, 'utf8'));
         const existingArticle = await prisma.article.findFirst({
             where: { topic_id: topic.id, title: topicTitle }
         });

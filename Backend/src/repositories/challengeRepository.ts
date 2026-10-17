@@ -4,6 +4,7 @@ import { createAppError } from '../utils/errorHandler.js';
 import BaseRepository from './baseRepository.js';
 import logger from '../utils/logger.js';
 import { executeCode } from '../utils/codeExecutor';
+import { wrapCode } from '../utils/codeWrapper';
 import {
   ChallengeData,
   ResourceStats,
@@ -77,15 +78,24 @@ export class ChallengeRepository extends BaseRepository<
     data: ChallengeSubmissionData
   ): Promise<ChallengeSubmission> {
     const challenge = await this.getChallenge(data.challenge_id);
+    if (challenge.status !== 'ACTIVE') {
+      throw createAppError('This challenge is not accepting submissions', 400);
+    }
     const test_cases = await prisma.testCase.findMany({
       where: { challenge_id: data.challenge_id },
     });
+    // `[].every()` is true: with no test cases any code would be "accepted".
+    if (test_cases.length === 0) {
+      throw createAppError('This challenge has no test cases to grade', 400);
+    }
+    // The same program "Run" executes (codeController.runCode wraps it too).
+    const program = wrapCode(data.code, data.language, challenge);
 
     const results = await Promise.all(
       test_cases.map(async (test_case) => {
         try {
           const result = await executeCode({
-            code: data.code,
+            code: program,
             language: data.language,
             input: test_case.input,
             timeLimit: challenge.time_limit ?? 0,
@@ -110,31 +120,43 @@ export class ChallengeRepository extends BaseRepository<
       results.length;
     const maxMemoryUsed = Math.max(...results.map((r) => r.memory_used || 0));
 
-    const submission = await prisma.challengeSubmission.create({
-      data: {
-        ...data,
-        status: allPassed ? 'accepted' : 'wrong_answer',
-        runtime_ms: avgExecutionTime,
-        memory_used_kb: maxMemoryUsed,
-        feedback: results.map((r) => r.error).join('\n'),
-        score: allPassed ? this.calculatePoints(challenge.difficulty) : 0,
-      },
-    });
+    const points = this.calculatePoints(challenge.difficulty);
+    return prisma.$transaction(async (tx) => {
+      // Serialises submissions per (user, challenge) so only the first
+      // accepted one can pay; re-submitting solved code pays nothing.
+      const lockKey = `challenge-solve:${data.user_id}:${data.challenge_id}`;
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${lockKey}))`;
+      const solvedBefore =
+        allPassed &&
+        (await tx.challengeSubmission.findFirst({
+          where: {
+            user_id: data.user_id,
+            challenge_id: data.challenge_id,
+            status: 'accepted',
+          },
+          select: { id: true },
+        }));
 
-    if (allPassed) {
-      await prisma.userPoints.upsert({
-        where: { user_id: data.user_id },
-        update: {
-          points: { increment: this.calculatePoints(challenge.difficulty) },
-        },
-        create: {
-          user_id: data.user_id,
-          points: this.calculatePoints(challenge.difficulty),
+      const submission = await tx.challengeSubmission.create({
+        data: {
+          ...data,
+          status: allPassed ? 'accepted' : 'wrong_answer',
+          runtime_ms: avgExecutionTime,
+          memory_used_kb: maxMemoryUsed,
+          feedback: results.map((r) => r.error).join('\n'),
+          score: allPassed ? points : 0,
         },
       });
-    }
 
-    return submission;
+      if (allPassed && !solvedBefore) {
+        await tx.userPoints.upsert({
+          where: { user_id: data.user_id },
+          update: { points: { increment: points } },
+          create: { user_id: data.user_id, points },
+        });
+      }
+      return submission;
+    });
   }
 
   async getLeaderboard(challengeId?: string) {

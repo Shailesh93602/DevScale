@@ -71,7 +71,9 @@ export class ContentIngestService {
       return { status: 'skipped' };
     }
 
-    const embedding = await embedText(input.text, userId);
+    const embedding = await embedText(input.text, userId, {
+      skipCache: options.force,
+    });
     await this.repo.upsert({
       contentType: input.contentType,
       contentId: input.contentId,

@@ -48,23 +48,26 @@ export const wrapCode = (
   switch (language.toLowerCase()) {
     case 'javascript':
     case 'typescript':
+      // Only reading the input is best-effort; an exception thrown by the
+      // solution itself must reach stderr with a non-zero exit.
       return `
 ${code}
 
-const fs = require('fs');
+let __harnessArgs = null;
 try {
-    const input = fs.readFileSync(0, 'utf-8').trim();
-    if (!input) {
-        // Just run the code, maybe user added their own calls
-    } else {
-        const inputObj = JSON.parse(input);
-        if (typeof ${functionName} === 'function') {
-            const result = ${functionName}(...Object.values(inputObj));
-            if (result !== undefined) console.log(result);
-        }
+    const __harnessInput = require('fs').readFileSync(0, 'utf-8').trim();
+    if (__harnessInput) __harnessArgs = Object.values(JSON.parse(__harnessInput));
+} catch (_err) {
+    // Not JSON arguments: the solution reads stdin itself.
+}
+if (__harnessArgs && typeof ${functionName} === 'function') {
+    try {
+        const __harnessResult = ${functionName}(...__harnessArgs);
+        if (__harnessResult !== undefined) console.log(__harnessResult);
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
     }
-} catch (err) {
-    // If wrapping fails, we still want the user's console logs to show up
 }
 `;
 
@@ -75,18 +78,24 @@ import json
 
 ${code}
 
+__harness_params = None
 try:
-    input_data = sys.stdin.read().strip()
-    if input_data:
-        params = json.loads(input_data)
-        if 'Solution' in globals():
-            sol = Solution()
-            method = getattr(sol, '${functionName}')
-            print(method(**params))
-        else:
-            print(${functionName}(**params))
-except Exception as e:
+    __harness_input = sys.stdin.read().strip()
+    if __harness_input:
+        __harness_params = json.loads(__harness_input)
+except Exception:
     pass
+
+if __harness_params is not None:
+    try:
+        if 'Solution' in globals():
+            print(getattr(Solution(), '${functionName}')(**__harness_params))
+        else:
+            print(${functionName}(**__harness_params))
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
 `;
 
     case 'cpp':

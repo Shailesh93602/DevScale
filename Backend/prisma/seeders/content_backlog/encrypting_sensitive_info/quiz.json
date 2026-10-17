@@ -4,8 +4,8 @@
   "passingScore": 70,
   "questions": [
     {
-      "question": "Regarding the web security, what is a primary step within an encryption implementation workflow?项目",
-      "options": ["Benefit from popular and secure encryption libraries—such as Bcrypt—to correctly handle exactly how your user's sensitive data is secured correctly as intended", "Deleting all your local code", "Recording a commit directly through SQL", "Its only possible for SQL repositories"],
+      "question": "Your app stores a third-party API key that it must send on every request. How should it be stored?",
+      "options": ["Encrypted with AES-256-GCM, with the key held in a KMS or secret store", "Hashed with bcrypt", "Hashed with SHA-256", "In plain text, since the database is private"],
       "correctAnswer": 0,
       "points": 10
     }

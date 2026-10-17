@@ -5,12 +5,7 @@ import { DateTime } from 'luxon';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 import { createAppError } from '../utils/errorHandler.js';
-import {
-  StreakStats,
-  DailyActivity,
-  StreakValidationResult,
-  StreakCalculationResult,
-} from '../types/streak';
+import { StreakStats, DailyActivity } from '../types/streak';
 
 interface UpdateStreakParams {
   activityType: ActivityType;
@@ -24,90 +19,6 @@ export default class StreakRepository extends BaseRepository<
 > {
   constructor() {
     super(prisma.userStreak);
-  }
-
-  private convertToUserTimezone(date: Date, timezone: string): DateTime {
-    return DateTime.fromJSDate(date).setZone(timezone);
-  }
-
-  private isDateInStreak(
-    lastActivityDate: Date | null,
-    currentDate: Date,
-    timezone: string
-  ): boolean {
-    if (!lastActivityDate) return false;
-
-    const lastActivityInUserTz = this.convertToUserTimezone(
-      lastActivityDate,
-      timezone
-    );
-    const currentDateInUserTz = this.convertToUserTimezone(
-      currentDate,
-      timezone
-    );
-
-    const diffInDays = currentDateInUserTz.diff(
-      lastActivityInUserTz,
-      'days'
-    ).days;
-    return diffInDays <= 1;
-  }
-
-  private validateStreak(
-    lastActivityDate: Date | null,
-    timezone: string
-  ): StreakValidationResult {
-    const currentDate = new Date();
-    const currentDateInUserTz = this.convertToUserTimezone(
-      currentDate,
-      timezone
-    );
-    const lastActivityInUserTz = lastActivityDate
-      ? this.convertToUserTimezone(lastActivityDate, timezone)
-      : null;
-
-    const isValid = this.isDateInStreak(
-      lastActivityDate,
-      currentDate,
-      timezone
-    );
-    const shouldReset = lastActivityDate ? !isValid : false;
-
-    return {
-      isValid,
-      shouldReset,
-      lastActivityInUserTimezone: lastActivityInUserTz?.toJSDate() || null,
-      currentDateInUserTimezone: currentDateInUserTz.toJSDate(),
-    };
-  }
-
-  private calculateNewStreakValues(
-    currentStreak: number,
-    longestStreak: number,
-    validationResult: StreakValidationResult
-  ): StreakCalculationResult {
-    let newCurrentStreak = currentStreak;
-    let newLongestStreak = longestStreak;
-    let streakStartDate: Date | null = null;
-    let lastActivityDate: Date | null = null;
-
-    if (validationResult.shouldReset) {
-      newCurrentStreak = 1;
-      streakStartDate = validationResult.currentDateInUserTimezone;
-    } else if (validationResult.isValid) {
-      newCurrentStreak += 1;
-      newLongestStreak = Math.max(newCurrentStreak, newLongestStreak);
-      streakStartDate = validationResult.lastActivityInUserTimezone;
-    }
-
-    lastActivityDate = validationResult.currentDateInUserTimezone;
-
-    return {
-      currentStreak: newCurrentStreak,
-      longestStreak: newLongestStreak,
-      streakStartDate,
-      lastActivityDate,
-    };
   }
 
   async getUserStreak(userId: string): Promise<StreakStats | null> {
@@ -217,15 +128,19 @@ export default class StreakRepository extends BaseRepository<
           return;
         }
 
-        const lastActivityDate = DateTime.fromJSDate(
-          userStreak.last_activity_date
+        // Calendar days in the user's zone, not elapsed time: two pings on one
+        // day count once, and yesterday 08:00 → today 20:00 is still +1.
+        const lastDay = DateTime.fromJSDate(userStreak.last_activity_date)
+          .setZone(now.zone)
+          .startOf('day');
+        const dayGap = Math.round(
+          now.startOf('day').diff(lastDay, 'days').days
         );
-        const daysSinceLastActivity = now.diff(lastActivityDate, 'days').days;
 
         let newCurrentStreak = userStreak.current_streak;
-        if (daysSinceLastActivity <= 1) {
+        if (dayGap === 1) {
           newCurrentStreak += 1;
-        } else {
+        } else if (dayGap > 1) {
           newCurrentStreak = 1;
         }
 

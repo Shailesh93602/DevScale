@@ -5,7 +5,11 @@
  */
 
 import { createHash } from 'node:crypto';
-import { rawEmbed } from './embeddingProvider.js';
+import {
+  EMBEDDING_DIMENSIONS,
+  EMBEDDING_MODEL,
+  rawEmbed,
+} from './embeddingProvider.js';
 import { getCache, setCache } from '../cacheService.js';
 import { requireApiKey } from './resolveApiKey.js';
 
@@ -28,13 +32,18 @@ export function hashText(text: string): string {
  */
 export async function embedText(
   text: string,
-  userId?: string | null
+  userId?: string | null,
+  { skipCache = false }: { skipCache?: boolean } = {}
 ): Promise<number[]> {
   const { apiKey } = await requireApiKey(userId);
 
-  const key = hashText(text);
-  const cached = await getCache<number[]>(`${CACHE_PREFIX}:${key}`);
-  if (cached) return cached;
+  // A vector is a function of the text AND the model: keyed on the text alone,
+  // a model change kept serving the old model's vectors for the whole TTL.
+  const key = `${EMBEDDING_MODEL}:${EMBEDDING_DIMENSIONS}:${hashText(text)}`;
+  if (!skipCache) {
+    const cached = await getCache<number[]>(`${CACHE_PREFIX}:${key}`);
+    if (cached) return cached;
+  }
 
   const vector = await rawEmbed(text, apiKey);
   await setCache(key, vector, { ttl: CACHE_TTL_SECONDS, prefix: CACHE_PREFIX });

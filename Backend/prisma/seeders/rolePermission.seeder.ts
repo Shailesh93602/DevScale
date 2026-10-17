@@ -4,6 +4,7 @@ import {
   PermissionEnum,
 } from './../../src/constants/index';
 import { PrismaClient } from '@prisma/client';
+import { runIfEntryPoint } from './runSeeder.js';
 
 const prisma = new PrismaClient();
 
@@ -170,10 +171,11 @@ const seedRolePermissions = async () => {
     console.log('Role permissions seeded successfully');
   } catch (error) {
     console.error('Error seeding role permissions:', error);
-    process.exit(1);
+    throw error;
   } finally {
     await prisma.$disconnect();
   }
 };
 
-seedRolePermissions();
+export default seedRolePermissions;
+runIfEntryPoint('rolePermission.seeder', seedRolePermissions);

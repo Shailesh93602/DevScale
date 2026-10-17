@@ -20,22 +20,28 @@ function averageDuration(rows: { details: unknown }[]): number | null {
   return total / rows.length;
 }
 
+// Hour of day, not the exact instant: grouping by `timestamp` made every row
+// its own group. Nothing writes LOGIN rows yet, so this is [] — no data.
 async function getPeakUsageTimes(): Promise<string[]> {
-  const hourlyUsage = await prisma.auditLog.groupBy({
-    by: ['timestamp'],
-    where: {
-      action: 'LOGIN',
-      timestamp: { gte: new Date(Date.now() - 7 * DAY_MS) },
-    },
-    _count: true,
-    orderBy: { _count: { timestamp: 'desc' } },
-    take: 3,
-  });
+  const rows = await prisma.$queryRaw<{ hour: number }[]>`
+    SELECT EXTRACT(HOUR FROM "timestamp")::int AS hour
+    FROM "AuditLog"
+    WHERE action = 'LOGIN' AND "timestamp" >= ${new Date(Date.now() - 7 * DAY_MS)}
+    GROUP BY 1 ORDER BY COUNT(*) DESC LIMIT 3`;
+  return rows.map(({ hour }) => `${String(hour).padStart(2, '0')}:00`);
+}
 
-  return hourlyUsage.map(
-    ({ timestamp }) =>
-      new Date(timestamp).getHours().toString().padStart(2, '0') + ':00'
-  );
+// Distinct users who did something the database records. auditLog has no
+// writer, so counting its LOGIN rows reported a permanent, measured-looking 0.
+async function activeUsersSince(since: Date): Promise<number> {
+  const [row] = await prisma.$queryRaw<{ n: number }[]>`
+    SELECT COUNT(DISTINCT user_id)::int AS n FROM (
+      SELECT user_id FROM "BattleAnswer" WHERE created_at >= ${since}
+      UNION ALL SELECT user_id FROM "ChallengeSubmission" WHERE created_at >= ${since}
+      UNION ALL SELECT user_id FROM "QuizSubmission" WHERE created_at >= ${since}
+      UNION ALL SELECT user_id FROM "UserProgress" WHERE updated_at >= ${since}
+    ) activity`;
+  return row?.n ?? 0;
 }
 
 export async function getActivityMetrics(): Promise<{
@@ -48,15 +54,11 @@ export async function getActivityMetrics(): Promise<{
   const oneDayAgo = new Date(Date.now() - DAY_MS);
   const oneWeekAgo = new Date(Date.now() - 7 * DAY_MS);
   const oneMonthAgo = new Date(Date.now() - 30 * DAY_MS);
-  const loginsSince = (since: Date) =>
-    prisma.auditLog.count({
-      where: { timestamp: { gte: since }, action: 'LOGIN' },
-    });
 
   const [daily, weekly, monthly] = await Promise.all([
-    loginsSince(oneDayAgo),
-    loginsSince(oneWeekAgo),
-    loginsSince(oneMonthAgo),
+    activeUsersSince(oneDayAgo),
+    activeUsersSince(oneWeekAgo),
+    activeUsersSince(oneMonthAgo),
   ]);
 
   // Nothing writes SESSION rows to `auditLog` today, so this is null — never a fabricated 0.
@@ -77,6 +79,16 @@ export async function getActivityMetrics(): Promise<{
   };
 }
 
+/** A real round trip, not a constant 'healthy'. */
+async function probeDatabase(): Promise<string> {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return 'healthy';
+  } catch {
+    return 'error';
+  }
+}
+
 /** Write-then-read a probe key, so a healthy Redis actually reports healthy. */
 async function probeCache(): Promise<string> {
   try {
@@ -95,7 +107,7 @@ export async function getSystemHealth(): Promise<{
   errorRate: number | null;
 }> {
   try {
-    const databaseStatus = 'healthy';
+    const databaseStatus = await probeDatabase();
     const cacheStatus = await probeCache();
 
     // Get average response time from audit logs (null, not "0ms", when unmeasured)

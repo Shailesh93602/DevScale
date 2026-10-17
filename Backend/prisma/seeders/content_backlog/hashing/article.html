@@ -1,13 +1,20 @@
 <section>
     <h2>Understanding Hashing</h2>
-    <p>Using **Hashing** correctly to securely store your application's passwords and sensitive data is critical for Maintaining high-quality software. By following these steps, you can set it up in minutes.</p>
+    <p>A hash function maps input of any size to a fixed-size output (the digest). The same input always produces the same digest, and good cryptographic hashes make it infeasible to find the input from the digest or to find two inputs with the same digest.</p>
 
-    <h3>1. What is Hashing?</h3>
-    <p>Hashing is the process of correctly and mathematically converting your project's data—such as its **Passwords**—into a unique, fixed-length string of characters (a Hash) that is essentially impossible to reverse as intended.</p>
+    <h3>1. What a hash guarantees, and what it does not</h3>
+    <p>Digests are not unique: because infinitely many inputs map to a fixed number of outputs, collisions must exist. A secure hash such as SHA-256 only makes them infeasible to find. Older functions such as MD5 and SHA-1 have practical collision attacks and should not be used for security.</p>
 
-    <h3>2. Why use Hashing?</h3>
-    <p>Hashing provides powerful, integrated, and feature-rich protection, ensuring that even if your project's data is compromised, an attacker cannot incorrectly obtain exactly what the original information was correctly.</p>
+    <h3>2. Hashing for integrity</h3>
+    <p>Fast hashes such as SHA-256 are the right choice for checksums, content addressing and integrity checks, for example verifying that a downloaded file matches the published digest. To prove a message came from someone holding a secret key, use an HMAC rather than a bare hash.</p>
+
+    <h3>3. Hashing passwords</h3>
+    <p>Passwords need a different kind of hash: a deliberately slow, salted password-hashing function such as argon2id or bcrypt. A per-user random salt stops attackers from using precomputed tables, and the work factor makes each guess expensive. Fast hashes like SHA-256 let an attacker try billions of guesses per second.</p>
+    <pre><code>import argon2 from 'argon2';
+
+const hash = await argon2.hash(password);          // salt generated and embedded
+const ok = await argon2.verify(hash, attempt);</code></pre>
 
     <h3>Conclusion</h3>
-    <p>By making hashing a priority, you can ensure that your application's most valuable asset—its data—remains safe and performant for your users.</p>
+    <p>Use SHA-256 or HMAC for integrity, argon2id or bcrypt for passwords, and remember that a hash is one-way: if you need the original value back, you need encryption, not hashing.</p>
 </section>

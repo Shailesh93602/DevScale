@@ -206,4 +206,23 @@ describe('ContentIngestService.ingest', () => {
     expect(result.status).toBe('skipped');
     expect(mockRawEmbed).not.toHaveBeenCalled();
   });
+
+  it('force re-embeds even when Redis still holds a cached vector for the text', async () => {
+    const text = 'cached but forced';
+    store.set(
+      `embedding:${CURRENT_MODEL}:${CURRENT_DIMENSIONS}:${hashText(text)}`,
+      [0.1]
+    );
+    store.set(`embedding:${hashText(text)}`, [0.1]);
+    mockGetStoredFingerprint.mockResolvedValue(stored(text));
+    mockRawEmbed.mockResolvedValue([0.9]);
+
+    await svc.ingest(
+      { contentType: 'challenge', contentId: 'c8', text },
+      undefined,
+      { force: true }
+    );
+
+    expect(mockRawEmbed).toHaveBeenCalledTimes(1);
+  });
 });

@@ -35,6 +35,12 @@ export const sanitizeRichText = (input: string): string =>
       'code',
       'a',
       'img',
+      'table',
+      'thead',
+      'tbody',
+      'tr',
+      'th',
+      'td',
     ],
     allowedAttributes: {
       a: ['href', 'title', 'target'],

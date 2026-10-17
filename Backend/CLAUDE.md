@@ -220,6 +220,19 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-10-17 — Code-review mediums (security / data-safety / correctness / honesty)
+
+### [P1] CODE_REVIEW_FINDINGS.md `eduscale-backend` 🤖 mediums, each with a test that fails on revert
+- **Seeding:** every seeder exports its function and runs only as the entry script (`prisma/seeders/runSeeder.ts`); `prisma/seed.ts` awaits them in order, fails non-zero, and **refuses any non-local DATABASE_URL with no override**. A single seeder accepts `SEED_ALLOW_REMOTE=1` (e.g. roles on a fresh prod DB). Prisma "enum" imports (undefined at runtime) replaced by `src/constants/enums`. Seeded article HTML goes through `sanitizeRichText` (allow-list now includes table tags). Placeholder "X Developer Masterclass" roadmaps no longer seeded — **any already in production must be removed by hand.**
+- **`scripts/push-env-to-vercel.sh`:** reads `.env.production` (never the dev `.env`), only keys in `scripts/vercel-env-keys.txt`, validates everything first (NODE_ENV must be production, no localhost values), overwrites with `vercel env add --force`.
+- **Battles:** join claims a seat with a conditional `updateMany`; leave refused after COMPLETED/CANCELLED; answers re-check IN_PROGRESS + participant inside the lock; scheduled lobby/start timers are compare-and-set; `start_time` bound evaluated per request.
+- **Challenges:** points only for the first accepted submission (advisory xact lock per user+challenge, verified on local pg), no-test-case and non-ACTIVE challenges refused, Submit runs the same wrapped program as Run; harness now reports a solution's exception (stderr, exit 1).
+- **Caches:** `cacheResponse` caches only 2xx, keys are `http:`-prefixed and built from the validated query; route-level roadmap detail cache dropped; update/delete/like/bookmark invalidate `roadmap:detail:<id>:*` via SCAN (no KEYS). Embedding cache keyed on model+dims; ingest `force` bypasses it.
+- **Other:** analytics `/user/me` route order; RolePermission join rows in create/updateRole; streak counts calendar days (tz + minutes validated); topic-only quiz progress, errors no longer swallowed; Stripe redirects use one origin (`FRONTEND_URL` or first `CORS_ORIGIN`); matchmaking evicts waiters not seen for 30 s; admin DAU/WAU/MAU from real activity tables, DB health probed; dead `codeRunnerController` (host `exec`) and unrouted resource handlers deleted.
+- **Open (design calls):** server-side answer timing (#22-14/#23-06/#26-07), Supabase identity on admin delete (#22-15), bookmark vs enrolment sharing `UserRoadmap` (#22-09), subject/concept progress schema (#19-04), backlog article rewrites (#20-03/#20-04).
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:
