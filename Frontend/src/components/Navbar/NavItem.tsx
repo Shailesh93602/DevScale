@@ -45,9 +45,10 @@ export const NavItem = ({
       onClick={handleClick}
       className={cn(
         'group relative flex h-9 items-center justify-center rounded-full px-5 text-[14px] font-bold no-underline transition-all duration-300',
+        // Foreground, not primary/muted: the transparent navbar sits on the home page's bg-primary/20 glow.
         isActive
-          ? 'text-primary'
-          : 'text-muted-foreground hover:bg-primary/5 hover:text-primary',
+          ? 'text-foreground'
+          : 'text-foreground/70 hover:bg-primary/5 hover:text-foreground',
         isPill && 'py-1',
       )}
     >

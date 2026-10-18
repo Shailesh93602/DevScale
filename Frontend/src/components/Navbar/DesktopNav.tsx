@@ -35,8 +35,8 @@ export const DesktopNav = ({
               className={cn(
                 'flex h-9 items-center gap-1.5 rounded-full px-4 text-[14px] font-bold transition-all duration-200 focus:outline-none',
                 battleZoneOpen
-                  ? 'bg-primary/10 text-primary shadow-sm'
-                  : 'text-muted-foreground hover:bg-primary/5 hover:text-primary',
+                  ? 'bg-primary/10 text-foreground shadow-sm'
+                  : 'text-foreground/70 hover:bg-primary/5 hover:text-foreground',
               )}
             >
               {item.label}
