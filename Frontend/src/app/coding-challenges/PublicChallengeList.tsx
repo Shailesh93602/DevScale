@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
 import { LogIn, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import './styles.css';
+import { challengePreview } from './challenge-preview';
 
 /**
  * The signed-out view of /coding-challenges. Server component: the catalogue
@@ -109,10 +109,10 @@ export function PublicChallengeList({
               {challenges.map((challenge) => (
                 <li
                   key={challenge.id}
-                  className="flex flex-col rounded-lg border border-border bg-muted/30 p-6 shadow-sm transition-shadow hover:shadow-md"
+                  className="flex min-w-0 flex-col rounded-lg border border-border bg-muted/30 p-6 shadow-sm transition-shadow hover:shadow-md"
                 >
                   <div className="mb-4 flex items-start justify-between gap-3">
-                    <h2 className="text-xl font-bold text-foreground">
+                    <h2 className="min-w-0 break-words text-xl font-bold text-foreground">
                       {challenge.title}
                     </h2>
                     <span
@@ -121,9 +121,9 @@ export function PublicChallengeList({
                       {challenge.difficulty}
                     </span>
                   </div>
-                  <div className="prose prose-sm mb-6 line-clamp-3 max-w-none flex-grow text-sm text-muted-foreground">
-                    <ReactMarkdown>{challenge.description}</ReactMarkdown>
-                  </div>
+                  <p className="mb-6 line-clamp-3 flex-grow break-words text-sm text-muted-foreground">
+                    {challengePreview(challenge.description)}
+                  </p>
                   <Link
                     href={signInFor(challenge.id)}
                     className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
