@@ -1,6 +1,11 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
+  "functions": {
+    "api/index.ts": {
+      "excludeFiles": "{prisma/seeders/**,src/tests/**,dist/tests/**,qa/**}"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
