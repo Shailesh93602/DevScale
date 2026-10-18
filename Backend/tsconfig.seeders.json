@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true
+  },
+  "include": ["prisma/seeders/**/*.ts"],
+  "exclude": ["node_modules", "dist", "prisma/seeders/**/*.d.ts"]
+}

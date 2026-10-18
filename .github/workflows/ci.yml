@@ -171,6 +171,11 @@ jobs:
       - name: TypeScript type-check
         run: npx tsc --noEmit
 
+      # tsconfig.json's rootDir is src, so the seeders were never type-checked
+      # and went stale until a Vercel build tripped on them.
+      - name: TypeScript type-check — seeders
+        run: npm run typecheck:seeders
+
   backend-test:
     name: Backend — unit tests
     runs-on: ubuntu-latest

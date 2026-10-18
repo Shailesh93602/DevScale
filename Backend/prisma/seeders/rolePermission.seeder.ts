@@ -2,7 +2,7 @@ import {
   RoleEnum,
   FeatureEnum,
   PermissionEnum,
-} from './../../src/constants/index';
+} from '../../src/constants/rbacEnums';
 import { PrismaClient } from '@prisma/client';
 import { runIfEntryPoint } from './runSeeder.js';
 

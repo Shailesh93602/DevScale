@@ -1,4 +1,4 @@
-import { FeatureEnum } from './../../src/constants';
+import { FeatureEnum } from '../../src/constants/rbacEnums';
 import { runIfEntryPoint } from './runSeeder.js';
 
 import { PrismaClient } from '@prisma/client';
