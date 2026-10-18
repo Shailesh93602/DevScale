@@ -8,6 +8,14 @@ coverage
 # (an unanchored "monitoring" matched both → Vercel build failed: Cannot find
 # module './services/monitoring/performanceMonitor.js').
 /monitoring
+# Not runtime code, and Vercel type-checks every .ts it uploads: challenge solutions,
+# seeders and tests failed production builds on 2026-10-18 though `tsc` (rootDir src) never sees them.
+/resources/**/*.ts
+/prisma/seeders
+/src/tests
+/src/scripts
+/qa
+/temp_content
 *.log
 .env
 .env.*
