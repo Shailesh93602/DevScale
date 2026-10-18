@@ -50,8 +50,8 @@ async function seedSingleChallenge(targetSlug: string) {
       : null;
     const hints: string[] = JSON.parse(fs.readFileSync(path.join(challengePath, 'hints.json'), 'utf-8'));
     const testCases: TestCase[] = JSON.parse(fs.readFileSync(path.join(challengePath, 'test_cases.json'), 'utf-8'));
-    const solutions = fs.existsSync(path.join(challengePath, 'solution.ts'))
-      ? { typescript: fs.readFileSync(path.join(challengePath, 'solution.ts'), 'utf-8') }
+    const solutions = fs.existsSync(path.join(challengePath, 'solution.ts.txt'))
+      ? { typescript: fs.readFileSync(path.join(challengePath, 'solution.ts.txt'), 'utf-8') }
       : Prisma.DbNull;
     const boilerplates = fs.existsSync(path.join(challengePath, 'boilerplates.json'))
       ? JSON.parse(fs.readFileSync(path.join(challengePath, 'boilerplates.json'), 'utf-8'))

@@ -157,7 +157,7 @@ function loadChallengeFolders(): ChallengeFolder[] {
     // Optional
     const hints = readJsonIfExists<string[]>(path.join(folderPath, 'hints.json')) ?? [];
     const editorial = readFileIfExists(path.join(folderPath, 'editorial.md'));
-    const solution = readFileIfExists(path.join(folderPath, 'solution.ts'));
+    const solution = readFileIfExists(path.join(folderPath, 'solution.ts.txt'));
     const boilerplates = readJsonIfExists<Boilerplates>(path.join(folderPath, 'boilerplates.json'));
 
     challenges.push({ slug, folderPath, meta, description, hints, editorial, test_cases, solution, boilerplates });

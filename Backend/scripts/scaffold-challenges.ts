@@ -362,8 +362,8 @@ function scaffoldChallenge(slug: string, title: string, difficulty: 'Easy' | 'Me
   // editorial.md
   fs.writeFileSync(path.join(dir, 'editorial.md'), `# Editorial — ${title}\n\nTODO: Add editorial with multiple approaches and complexity analysis.\n`);
 
-  // solution.ts
-  fs.writeFileSync(path.join(dir, 'solution.ts'), `// TODO: Add reference solution\n`);
+  // solution.ts.txt (not .ts: Vercel type-checks every .ts it uploads)
+  fs.writeFileSync(path.join(dir, 'solution.ts.txt'), `// TODO: Add reference solution\n`);
 
   // boilerplates.json
   const sig = meta.function_signature;
@@ -401,7 +401,7 @@ for (const [slug, title, difficulty, category] of PLANNED) {
 
 console.log(`\n✅ Done! Created: ${created} | Skipped (existing): ${skipped}`);
 console.log(`\nNext steps:`);
-console.log(`  1. Fill in each challenge folder's files (meta.json, description.md, hints.json, test_cases.json, editorial.md, solution.ts)`);
+console.log(`  1. Fill in each challenge folder's files (meta.json, description.md, hints.json, test_cases.json, editorial.md, solution.ts.txt)`);
 console.log(`  2. Change status from "DRAFT" to "ACTIVE" when ready`);
 console.log(`  3. Run: npx tsx prisma/seeders/masterChallenge.seeder.ts`);
 console.log(`\nOnly ACTIVE challenges are seeded to the database.\n`);
