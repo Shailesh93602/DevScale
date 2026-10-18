@@ -28,6 +28,12 @@ const matchesRoutePrefix = (
 export const GUEST_ONLY_ROUTE_PREFIXES = ['/auth'] as const;
 
 /**
+ * Under /auth but open to signed-in users: opening a password-recovery link
+ * signs the user in, so a guest-only redirect would make the reset impossible.
+ */
+export const SIGNED_IN_AUTH_ROUTE_PREFIXES = ['/auth/reset-password'] as const;
+
+/**
  * Admin-only routes — requires ADMIN role.
  * These are also included in AUTH_REQUIRED_ROUTE_PREFIXES.
  */
@@ -128,6 +134,7 @@ export const AUTH_REQUIRED_ROUTE_PATTERNS: readonly RegExp[] = [
 /** Returns true if this is a guest-only route (login, register, etc.) */
 export function isGuestOnlyRoute(pathname?: string | null): boolean {
   if (!pathname) return false;
+  if (matchesRoutePrefix(pathname, SIGNED_IN_AUTH_ROUTE_PREFIXES)) return false;
   return matchesRoutePrefix(pathname, GUEST_ONLY_ROUTE_PREFIXES);
 }
 

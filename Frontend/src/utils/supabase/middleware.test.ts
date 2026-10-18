@@ -181,3 +181,32 @@ describe('/admin gate', () => {
     },
   );
 });
+
+describe('/auth/reset-password', () => {
+  it('lets a signed-in user reach the reset page — a recovery link signs them in', async () => {
+    signedInAs({});
+    expect(
+      redirectTarget(await updateSession(requestFor('/auth/reset-password'))),
+    ).toBeNull();
+  });
+
+  it('lets an anonymous visitor reach it too', async () => {
+    getUser.mockResolvedValue({ data: { user: null } });
+    expect(
+      redirectTarget(await updateSession(requestFor('/auth/reset-password'))),
+    ).toBeNull();
+  });
+
+  it('still sends a signed-in user away from the other auth pages', async () => {
+    signedInAs({});
+    for (const path of [
+      '/auth/login',
+      '/auth/register',
+      '/auth/forgot-password',
+    ]) {
+      expect(redirectTarget(await updateSession(requestFor(path))), path).toBe(
+        '/dashboard',
+      );
+    }
+  });
+});
