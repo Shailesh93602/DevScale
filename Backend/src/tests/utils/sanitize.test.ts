@@ -5,6 +5,8 @@
 //    textarea), so each PoC runs with the advisory's own options: a downgrade
 //    to an affected version fails here even though our allow-list is narrower.
 import { describe, it, expect } from '@jest/globals';
+import { spawnSync } from 'node:child_process';
+import path from 'node:path';
 import sanitizeHtml from 'sanitize-html';
 import { sanitizeRichText, sanitizeText } from '../../utils/sanitize';
 
@@ -73,6 +75,28 @@ describe('installed sanitize-html is patched', () => {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['textarea']),
       }
     );
-    expect(out).not.toMatch(/<img|onerror="/i);
+    // The payload may survive as escaped text; what must not survive is a live tag.
+    expect(out.replace(/<\/?textarea>/g, '')).not.toContain('<');
+  });
+});
+
+// sanitize-html is CommonJS and require()s htmlparser2. htmlparser2 >= 11 is
+// ESM-only, which loads only where require(esm) works; the Vercel function
+// crashed on every request (FUNCTION_INVOCATION_FAILED) when it shipped. The
+// override in package.json keeps it on the CommonJS htmlparser2 10.
+describe('sanitize-html loads without require(esm)', () => {
+  it('requires cleanly with --no-experimental-require-module', () => {
+    const run = spawnSync(
+      process.execPath,
+      [
+        '--no-experimental-require-module',
+        '-e',
+        "process.stdout.write(require('sanitize-html')('<b>x</b><script>1</script>'))",
+      ],
+      { cwd: path.resolve(__dirname, '../../..'), encoding: 'utf8' }
+    );
+    expect(run.stderr).not.toMatch(/ERR_REQUIRE_ESM/);
+    expect(run.status).toBe(0);
+    expect(run.stdout).toBe('<b>x</b>');
   });
 });

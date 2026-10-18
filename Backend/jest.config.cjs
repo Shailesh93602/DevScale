@@ -1,18 +1,3 @@
-// sanitize-html >= 2.17.6 depends on htmlparser2 12, which (with its dom* and
-// entities dependencies) ships ESM only. Node loads it through require(esm) at
-// runtime; Jest's CommonJS loader cannot, so those packages are transpiled to
-// CommonJS for tests only. Without this, every suite that imports
-// utils/sanitize fails with "Cannot use import statement outside a module".
-const ESM_ONLY_DEPS = [
-  'htmlparser2',
-  'domhandler',
-  'domutils',
-  'domelementtype',
-  'dom-serializer',
-  'entities',
-];
-const ESM_ONLY_DEPS_PATTERN = `/node_modules/(${ESM_ONLY_DEPS.join('|')})/`;
-
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: 'ts-jest',
@@ -40,18 +25,7 @@ module.exports = {
         },
       },
     ],
-    [`${ESM_ONLY_DEPS_PATTERN}.+\\.js$`]: [
-      'ts-jest',
-      {
-        isolatedModules: true,
-        tsconfig: { allowJs: true, module: 'CommonJS', target: 'ES2022' },
-      },
-    ],
   },
-  // Nested copies (node_modules/sanitize-html/node_modules/htmlparser2) included.
-  transformIgnorePatterns: [
-    `/node_modules/(?!(?:.+/node_modules/)?(?:${ESM_ONLY_DEPS.join('|')})/)`,
-  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^(\\.{1,2}/.*)\\.js$': '$1',

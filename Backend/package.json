@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/main.js",
   "engines": {
-    "node": "^20.19.0 || ^22.12.0 || ^24.0.0"
+    "node": ">=20"
   },
   "scripts": {
     "prisma:generate": "prisma generate",
@@ -170,5 +170,10 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.21.0"
+  },
+  "overrides": {
+    "sanitize-html": {
+      "htmlparser2": "^10.1.0"
+    }
   }
 }
