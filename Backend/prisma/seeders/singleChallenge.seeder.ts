@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { Difficulty, ChallengeCategory, ChallengeStatus } from '../../src/constants/enums';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -52,7 +52,7 @@ async function seedSingleChallenge(targetSlug: string) {
     const testCases: TestCase[] = JSON.parse(fs.readFileSync(path.join(challengePath, 'test_cases.json'), 'utf-8'));
     const solutions = fs.existsSync(path.join(challengePath, 'solution.ts'))
       ? { typescript: fs.readFileSync(path.join(challengePath, 'solution.ts'), 'utf-8') }
-      : null;
+      : Prisma.DbNull;
     const boilerplates = fs.existsSync(path.join(challengePath, 'boilerplates.json'))
       ? JSON.parse(fs.readFileSync(path.join(challengePath, 'boilerplates.json'), 'utf-8'))
       : null;
