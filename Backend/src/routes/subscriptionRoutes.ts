@@ -59,8 +59,14 @@ export class SubscriptionRoutes {
         const url = await createCheckoutSession(req.user.id, priceId);
         res.json({ url });
       } catch (err) {
-        const error = err as { status?: number; message: string };
-        res.status(error.status || 500).json({ message: error.message });
+        const error = err as {
+          statusCode?: number;
+          status?: number;
+          message: string;
+        };
+        res
+          .status(error.statusCode || error.status || 500)
+          .json({ message: error.message });
       }
     });
 
@@ -69,8 +75,14 @@ export class SubscriptionRoutes {
         const url = await createPortalSession(req.user.id);
         res.json({ url });
       } catch (err) {
-        const error = err as { status?: number; message: string };
-        res.status(error.status || 500).json({ message: error.message });
+        const error = err as {
+          statusCode?: number;
+          status?: number;
+          message: string;
+        };
+        res
+          .status(error.statusCode || error.status || 500)
+          .json({ message: error.message });
       }
     });
   }

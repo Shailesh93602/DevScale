@@ -14,7 +14,20 @@ const frontendOrigin = (): string =>
     .trim()
     .replace(/\/+$/, '');
 
-export async function createCheckoutSession(userId: string, priceId: string) {
+// Only the server's configured plan prices may be checked out; a client-sent id is untrusted.
+function assertCheckoutPrice(priceId: unknown): asserts priceId is string {
+  const allowed = [env.STRIPE_PRO_PRICE_ID, env.STRIPE_TEAM_PRICE_ID].filter(
+    (id): id is string => Boolean(id)
+  );
+  if (allowed.length === 0)
+    throw createAppError('Billing is not available', 503);
+  if (typeof priceId !== 'string' || !allowed.includes(priceId)) {
+    throw createAppError('Unknown price', 400);
+  }
+}
+
+export async function createCheckoutSession(userId: string, priceId: unknown) {
+  assertCheckoutPrice(priceId);
   const user = (await userRepo.findUnique({
     where: { id: userId },
     include: { subscription: true },

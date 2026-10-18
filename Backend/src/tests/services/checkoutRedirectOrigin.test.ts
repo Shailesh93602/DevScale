@@ -15,6 +15,7 @@ jest.mock('../../lib/stripe', () => ({
 }));
 jest.mock('../../config/env', () => ({
   env: {
+    STRIPE_PRO_PRICE_ID: 'price_1',
     CORS_ORIGIN:
       'https://eduscale.vercel.app/, https://staging.app,http://localhost:3000',
   },
