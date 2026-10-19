@@ -3,6 +3,7 @@
 import React from 'react';
 import { Check, Minus } from 'lucide-react';
 import { BRANDING } from '@/constants';
+import { SITE_URL } from '@/lib/site-url';
 
 /**
  * WHAT THIS PAGE USED TO SAY, AND WHY IT DOESN'T ANY MORE.
@@ -82,6 +83,34 @@ const plans: PricingPlan[] = [
   },
 ];
 
+// JSON-LD read from the rendered free plan, never restated; no rating or review — there are none.
+function pricingStructuredData(): Record<string, unknown> {
+  const free = plans.find((p) => p.id === 'free');
+  if (!free) throw new Error('pricing: the free plan is missing');
+  const match = /^\$(\d+(?:\.\d+)?)$/.exec(free.price);
+  if (!match) throw new Error(`pricing: cannot read "${free.price}" as USD`);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    '@id': `${SITE_URL}/#app`,
+    name: 'EduScale',
+    url: SITE_URL,
+    applicationCategory: 'EducationalApplication',
+    operatingSystem: 'Any (runs in a web browser)',
+    description: free.description,
+    isAccessibleForFree: Number(match[1]) === 0,
+    offers: {
+      '@type': 'Offer',
+      name: free.name,
+      price: match[1],
+      priceCurrency: 'USD',
+      url: `${SITE_URL}/pricing`,
+    },
+    featureList: free.features,
+    publisher: { '@id': `${SITE_URL}/#organization` },
+  };
+}
+
 export default function PricingPage() {
   const handleSelect = (plan: PricingPlan) => {
     if (plan.id === 'free') {
@@ -91,6 +120,12 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-background px-4 py-20 text-foreground">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(pricingStructuredData()),
+        }}
+      />
       <div className="mx-auto mb-16 max-w-7xl text-center">
         <h1 className="mb-6 text-5xl font-bold text-foreground md:text-7xl">
           Pricing

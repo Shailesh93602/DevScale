@@ -26,7 +26,7 @@ const BASE_URL = EXTERNAL_BASE_URL || `http://localhost:${PORT}`;
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: /anonymous-read-only\.spec\.ts/,
+  testMatch: /(anonymous-read-only|seo-served)\.spec\.ts/,
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

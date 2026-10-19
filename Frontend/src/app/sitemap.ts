@@ -38,7 +38,6 @@ const CANDIDATE_PATHS = [
   '/discussions',
   '/discussion-forums',
   '/events',
-  '/explore',
   '/faq',
   '/achievements',
   // Both are anonymously reachable and were simply never listed. Found by

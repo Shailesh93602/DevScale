@@ -1,5 +1,8 @@
 import { withSentryConfig } from '@sentry/nextjs';
-import { legacyRedirects } from './src/lib/legacy-redirects.mjs';
+import {
+  legacyRedirects,
+  retiredPageRedirects,
+} from './src/lib/legacy-redirects.mjs';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -21,7 +24,7 @@ const nextConfig = {
   // the stubs shipped and the live site still answered /login with a 200 empty
   // shell and /register with a 404. See src/lib/legacy-redirects.mjs.
   async redirects() {
-    return legacyRedirects;
+    return [...legacyRedirects, ...retiredPageRedirects];
   },
   eslint: {
     ignoreDuringBuilds: true,

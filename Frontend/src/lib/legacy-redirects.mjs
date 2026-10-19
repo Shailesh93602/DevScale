@@ -23,3 +23,9 @@ export const legacyRedirects = [
   { source: '/signup', destination: '/auth/register', permanent: true },
   { source: '/sign-up', destination: '/auth/register', permanent: true },
 ];
+
+// Retired pages: a page-level redirect streamed a 200 with the home title, so crawlers indexed it.
+export const retiredPageRedirects = [
+  { source: '/explore', destination: '/career-roadmap', permanent: true },
+  { source: '/article-listing', destination: '/moderate', permanent: true },
+];

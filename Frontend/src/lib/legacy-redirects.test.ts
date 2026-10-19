@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { legacyRedirects } from './legacy-redirects.mjs';
+import { legacyRedirects, retiredPageRedirects } from './legacy-redirects.mjs';
+import { SITEMAP_PATHS } from '../app/sitemap';
 import { isGuestOnlyRoute } from './public-routes';
 
 /**
@@ -54,6 +55,28 @@ describe('legacy auth redirects', () => {
     for (const r of legacyRedirects) {
       const stub = path.join(appDir, r.source.slice(1), 'page.tsx');
       expect(fs.existsSync(stub), `${stub} should not exist`).toBe(false);
+    }
+  });
+});
+
+describe('retired page redirects', () => {
+  it('are edge 308s wired into next.config, with no page stub left behind', () => {
+    const config = fs.readFileSync(
+      path.join(__dirname, '..', '..', 'next.config.mjs'),
+      'utf8',
+    );
+    expect(config).toMatch(/\.\.\.retiredPageRedirects/);
+    const appDir = path.join(__dirname, '..', 'app');
+    for (const r of retiredPageRedirects) {
+      expect(r.permanent, r.source).toBe(true);
+      const stub = path.join(appDir, r.source.slice(1), 'page.tsx');
+      expect(fs.existsSync(stub), `${stub} should not exist`).toBe(false);
+    }
+  });
+
+  it('are never offered to crawlers', () => {
+    for (const r of retiredPageRedirects) {
+      expect(SITEMAP_PATHS).not.toContain(r.source);
     }
   });
 });

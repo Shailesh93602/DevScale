@@ -11,3 +11,4 @@ export interface LegacyRedirect {
 }
 
 export const legacyRedirects: LegacyRedirect[];
+export const retiredPageRedirects: LegacyRedirect[];
