@@ -39,13 +39,19 @@ export class RoadMapRoutes extends BaseRouter {
       this.bindRoute(this.roadMapController.getRoadmapCategories)
     );
 
-    // Public routes — no auth required for listing
+    // Readable signed out; optional auth personalises isEnrolled / isLiked and
+    // the enrolled / my-roadmaps filters. The shared response cache is for
+    // anonymous requests only, so a personalised body can never land in it.
     this.router.get(
       '/',
+      optionalAuthMiddleware,
       validateQuery(roadmapQueryValidation),
       this.roadmapLimiter,
       (req: Request, res: Response, next: NextFunction) => {
-        const cacheMiddleware = cacheResponse({ duration: 60 });
+        const cacheMiddleware = cacheResponse({
+          duration: 60,
+          condition: (r) => !r.user,
+        });
         cacheMiddleware(req, res, next).catch(next);
       },
       this.bindRoute(this.roadMapController.getAllRoadmaps)

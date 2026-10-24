@@ -113,9 +113,9 @@ describe('roadMapRoutes — anonymous read-only surface', () => {
   const router = new RoadMapRoutes().getRouter();
 
   it('list, detail and comments are readable signed out; detail/comments still identify a signed-in reader', () => {
-    expect(guardOf(router, 'GET /')).toBe('none');
     // optional, not none: the controller passes req.user?.id through so a
-    // member still gets isLiked / isBookmarked / progress on the same route.
+    // member still gets isLiked / isEnrolled / progress on the same route.
+    expect(guardOf(router, 'GET /')).toBe('optional');
     expect(guardOf(router, 'GET /:id')).toBe('optional');
     expect(guardOf(router, 'GET /:id/comments')).toBe('optional');
   });

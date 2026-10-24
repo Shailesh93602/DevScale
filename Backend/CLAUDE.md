@@ -233,6 +233,20 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-10-24 — Audit leftovers: dashboard cache and the roadmap list
+
+### [P1] Dashboard summary cache moved to Redis
+- **Files:** `src/repositories/dashboard/summaryCache.ts` (new: key, 300 s TTL, `invalidateDashboardSummary`), `src/repositories/dashboardRepository.ts`, writers in `controllers/roadMapControllers.ts` (enrol), `controllers/roadmap/roadmapEngagement.ts` (bookmark, like via `invalidateViewerCaches`), `controllers/userProgressController.ts`, `repositories/{quizRepository,streakRepository,userRepository}.ts`.
+- **Change:** the 5-minute summary was in per-instance memory, so an enrolment on one Vercel instance left another stale for up to 5 min. It is now in Redis under `dashboard:summary:<userId>`; every write it reads deletes that key. Redis down → `getCache`/`setCache` fail open and the summary is built live. Enrol/bookmark/like also drop the viewer's Redis list pages (`roadmaps:list:<userId>:*`); the old in-memory deletes for those keys hit nothing.
+- **Not covered:** `markTopicComplete`, `resetStreak`, `trackProgress` (no callers); a roadmap edit by its author leaves other users' summaries up to 5 min stale.
+- **Tests:** `tests/repositories/dashboardSummaryCache.test.ts` (two module registries as two instances), `dashboardSummaryRedisDown.test.ts`, `tests/controllers/roadmapCacheInvalidation.test.ts`.
+
+### [P1] `GET /roadmaps` has optional auth; the shared cache is anonymous-only
+- **Files:** `src/routes/roadMapRoutes.ts`, `tests/routes/roadmapListPersonalisation.test.ts` (new), `tests/security/anonymousReadContract.test.ts`.
+- **Change:** without `optionalAuthMiddleware`, list cards had `isEnrolled`/`isLiked` false for everyone and `type=enrolled` / `my-roadmaps` returned every public roadmap. The route-level `cacheResponse` now has `condition: !req.user`, so a signed-in request neither reads nor writes the shared `http:` key; the repository cache was already keyed per user (`guest` for anonymous). Frontend: every list call goes through `httpClient`, which sends the bearer token; the Enrolled/Bookmarked tabs filter client-side on these flags and nothing sends `type=enrolled` or `my-roadmaps`.
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:
