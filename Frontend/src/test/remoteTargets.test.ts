@@ -21,6 +21,16 @@ describe('remoteTargets', () => {
     ).toEqual(['PLAYWRIGHT_BASE_URL', 'NEXT_PUBLIC_API_BASE_URL']);
   });
 
+  it('counts the realtime host, which receives battle writes', () => {
+    expect(
+      remoteTargets({
+        NEXT_PUBLIC_API_BASE_URL: 'http://localhost:4000/api/v1',
+        NEXT_PUBLIC_REALTIME_API_BASE_URL:
+          'https://eduscale-realtime.onrender.com/api/v1',
+      }),
+    ).toEqual(['NEXT_PUBLIC_REALTIME_API_BASE_URL']);
+  });
+
   it('treats a lookalike host or garbage as remote', () => {
     expect(
       remoteTargets({ NEXT_PUBLIC_API_BASE_URL: 'http://localhost.evil.com' }),

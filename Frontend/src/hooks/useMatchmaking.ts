@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { createClient } from '@/utils/supabase/client';
 import { io, Socket } from 'socket.io-client';
+import { socketBaseUrl } from '@/lib/realtime-host';
 
 export interface MatchResult {
   matched: boolean;
@@ -111,13 +112,7 @@ export function useMatchmaking(
       try {
         if (!token || !isSubscribed || socketRef.current) return;
 
-        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
-        const wsUrl =
-          process.env.NEXT_PUBLIC_WS_URL ||
-          apiBase.replace(/\/api\/v1\/?$/, '') ||
-          'http://localhost:5000';
-
-        const socket = io(wsUrl, {
+        const socket = io(socketBaseUrl(), {
           path: '/socket.io',
           transports: ['websocket'],
           reconnection: true,

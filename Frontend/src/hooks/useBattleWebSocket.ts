@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { io, Socket } from 'socket.io-client';
+import { socketBaseUrl, warmRealtimeHost } from '@/lib/realtime-host';
 import { useAuth } from '@/contexts/AuthContext';
 import { createClient } from '@/utils/supabase/client';
 import { LeaderboardEntry } from '@/types/battle';
@@ -98,13 +99,8 @@ const sockets = new Map<string, Socket>();
 function getSocket(battleId: string, token: string | null): Socket {
   if (sockets.has(battleId)) return sockets.get(battleId)!;
 
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? '';
-  const wsUrl =
-    process.env.NEXT_PUBLIC_WS_URL ||
-    apiBase.replace(/\/api\/v1\/?$/, '') ||
-    'http://localhost:5000';
-
-  const socket = io(wsUrl, {
+  warmRealtimeHost();
+  const socket = io(socketBaseUrl(), {
     path: '/socket.io',
     transports: ['websocket'],
     reconnection: true,

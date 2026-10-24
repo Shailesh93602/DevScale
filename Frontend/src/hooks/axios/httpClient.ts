@@ -1,5 +1,12 @@
 import { createClient } from '@/utils/supabase/client';
 import axios, { AxiosError } from 'axios';
+import {
+  REALTIME_TIMEOUT_MS,
+  isBattlePath,
+  needsRealtimeHost,
+  realtimeApiBase,
+  warmRealtimeHost,
+} from '@/lib/realtime-host';
 
 export const httpClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -52,6 +59,15 @@ async function getAccessToken(): Promise<string | null> {
 
 // Add Supabase auth and CSRF interceptors
 httpClient.interceptors.request.use(async (config) => {
+  const realtimeBase = realtimeApiBase();
+  if (realtimeBase && isBattlePath(config.url)) {
+    warmRealtimeHost();
+    if (needsRealtimeHost(config.method, config.url)) {
+      config.baseURL = realtimeBase;
+      config.timeout = Math.max(config.timeout ?? 0, REALTIME_TIMEOUT_MS);
+    }
+  }
+
   // 1. Auth Token
   const token = await getAccessToken();
   if (token) {

@@ -71,3 +71,56 @@ describe('httpClient access-token cache', () => {
     expect(h.getSession).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('httpClient realtime-host routing', () => {
+  const sentTo = async (method: 'get' | 'post', url: string) => {
+    let seen: { baseURL?: string; timeout?: number } = {};
+    const adapter: AxiosAdapter = async (config) => {
+      seen = { baseURL: config.baseURL, timeout: config.timeout };
+      return { data: {}, status: 200, statusText: 'OK', headers: {}, config };
+    };
+    await httpClient.request({ method, url, adapter });
+    return seen;
+  };
+  beforeEach(() => {
+    h.getSession.mockReset().mockResolvedValue({ data: { session: null } });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve(new Response('{}'))),
+    );
+  });
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+
+  it('sends battle writes to the realtime host with a cold-start timeout', async () => {
+    vi.stubEnv(
+      'NEXT_PUBLIC_REALTIME_API_BASE_URL',
+      'https://rt.example.test/api/v1',
+    );
+    const seen = await sentTo('post', '/battles/abc/start');
+    expect(seen.baseURL).toBe('https://rt.example.test/api/v1');
+    expect(seen.timeout).toBe(75_000);
+  });
+
+  it('leaves battle reads and other routes on the default host', async () => {
+    vi.stubEnv(
+      'NEXT_PUBLIC_REALTIME_API_BASE_URL',
+      'https://rt.example.test/api/v1',
+    );
+    expect((await sentTo('get', '/battles/abc')).baseURL).toBe(
+      httpClient.defaults.baseURL,
+    );
+    expect((await sentTo('post', '/roadmaps/enroll')).baseURL).toBe(
+      httpClient.defaults.baseURL,
+    );
+  });
+
+  it('changes nothing when the realtime host is unset', async () => {
+    vi.stubEnv('NEXT_PUBLIC_REALTIME_API_BASE_URL', '');
+    const seen = await sentTo('post', '/battles/abc/start');
+    expect(seen.baseURL).toBe(httpClient.defaults.baseURL);
+    expect(seen.timeout).toBe(20_000);
+  });
+});

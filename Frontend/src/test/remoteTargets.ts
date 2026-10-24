@@ -10,6 +10,7 @@ const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '::1', '[::1]']);
 export const TARGET_VARS = [
   'PLAYWRIGHT_BASE_URL',
   'NEXT_PUBLIC_API_BASE_URL',
+  'NEXT_PUBLIC_REALTIME_API_BASE_URL',
 ] as const;
 
 /** Names (never values) of the target variables that point off this machine. */
