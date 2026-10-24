@@ -9,6 +9,7 @@ import AdminAuditLogRepository from '../repositories/adminAuditLogRepository.js'
 import { withAudit, recordActionBestEffort } from '../services/auditTrail.js';
 import logger from '../utils/logger.js';
 import { sendResponse } from '../utils/apiResponse.js';
+import { invalidateRoadmapCaches } from './roadmap/roadmapEngagement.js';
 import prisma from '../lib/prisma.js';
 
 export default class AdminController {
@@ -219,6 +220,9 @@ export default class AdminController {
       },
       (tx) => tx.roadmap.delete({ where: { id: roadmapId } })
     );
+    // Detail and lists are cached for up to 24h; drop them or the deleted
+    // roadmap keeps being served.
+    await invalidateRoadmapCaches(roadmapId, { lists: true });
 
     sendResponse(res, 'ROADMAP_DELETED');
   });

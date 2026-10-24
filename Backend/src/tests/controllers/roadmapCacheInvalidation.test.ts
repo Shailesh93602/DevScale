@@ -34,7 +34,13 @@ jest.mock('../../repositories/roadmapRepository', () => ({
     getRoadmap = async () => roadmapRow;
     update = async () => roadmapRow;
     delete = async () => roadmapRow;
+    create = async () => roadmapRow;
   },
+}));
+jest.mock('../../services/auditTrail', () => ({
+  withAudit: async (_entry: unknown, fn: (tx: unknown) => unknown) =>
+    fn({ roadmap: { delete: async () => roadmapRow } }),
+  recordActionBestEffort: async () => undefined,
 }));
 
 import {
@@ -42,6 +48,7 @@ import {
   toggleRoadmapLike,
 } from '../../controllers/roadmap/roadmapEngagement';
 import RoadmapController from '../../controllers/roadMapControllers';
+import AdminController from '../../controllers/adminController';
 
 beforeEach(() => {
   invalidated.length = 0;
@@ -67,6 +74,26 @@ describe('roadmap cache invalidation', () => {
       );
     }
   );
+
+  it('createRoadmap drops the cached lists, or guests miss it for 24h', async () => {
+    await runHandler(new RoadmapController().createRoadmap, {
+      body: { title: 'New', description: 'd' },
+      user: { id: 'owner' } as never,
+    });
+    expect(invalidated).toContain('roadmaps:list:*');
+  });
+
+  it('the admin delete drops the deleted roadmap’s detail and the lists', async () => {
+    const out = await runHandler(new AdminController().deleteRoadmap, {
+      params: { roadmapId: 'r1' },
+      headers: {},
+      user: { id: 'admin' } as never,
+    });
+    expect(out.error).toBeUndefined();
+    expect(invalidated).toEqual(
+      expect.arrayContaining(['roadmap:detail:r1:*', 'roadmaps:list:*'])
+    );
+  });
 
   it('a like drops the Redis detail for every viewer, not only the in-process map', async () => {
     await toggleRoadmapLike('u1', 'r1');

@@ -125,6 +125,9 @@ export default class RoadmapController {
         },
       },
     });
+    // The guest list is cached for 24h; without this a new roadmap is
+    // invisible to signed-out visitors for up to a day.
+    await invalidateRoadmapCaches(roadmap.id, { lists: true });
 
     return sendResponse(res, 'ROADMAP_CREATED', {
       data: roadmap,
