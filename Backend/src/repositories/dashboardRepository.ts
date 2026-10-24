@@ -3,11 +3,11 @@ import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 import { DashboardStats } from '../types/dashboard';
 import { liveCurrentStreak } from './streakRepository.js';
+import { getCache, setCache } from '../services/cacheService.js';
 import {
-  getCached,
-  setCached,
-  invalidatePattern,
-} from '../services/memoryCache';
+  DASHBOARD_SUMMARY_TTL_SECONDS,
+  dashboardSummaryKey,
+} from './dashboard/summaryCache.js';
 
 // Raw SQL row shapes
 interface RoadmapRow {
@@ -271,24 +271,26 @@ export class DashboardRepository extends BaseRepository<
    * Uses a single raw SQL query with correlated subqueries to eliminate all
    * Prisma N+1 round-trips and reduce network hops to 1.
    * Promise-coalesced so simultaneous requests share one DB call.
-   * Result cached 300s per user.
+   * Result cached 300s per user in Redis (shared by every instance); when Redis
+   * is unavailable getCache/setCache fail open and the summary is built live.
    */
   async getDashboardSummary(userId: string) {
-    const cacheKey = `dashboard:summary:${userId}`;
+    const cacheKey = dashboardSummaryKey(userId);
 
-    // 1. In-memory cache hit (warm path — ~0 ms)
     const cached =
-      getCached<Awaited<ReturnType<typeof this._buildSummary>>>(cacheKey);
+      await getCache<Awaited<ReturnType<typeof this._buildSummary>>>(cacheKey);
     if (cached) return cached;
 
-    // 2. Promise coalescing — if a build is already in-flight for this user,
+    // Promise coalescing — if a build is already in-flight for this user,
     //    return the same promise instead of launching a duplicate DB call.
     const inflight = this._pending.get(userId);
     if (inflight) return inflight;
 
     const promise = this._buildSummary(userId)
-      .then((result) => {
-        setCached(cacheKey, result, 300); // 5-minute cache
+      .then(async (result) => {
+        await setCache(cacheKey, result, {
+          ttl: DASHBOARD_SUMMARY_TTL_SECONDS,
+        });
         return result;
       })
       .finally(() => {
@@ -297,11 +299,6 @@ export class DashboardRepository extends BaseRepository<
 
     this._pending.set(userId, promise);
     return promise;
-  }
-
-  /** Invalidate the per-user summary cache (call after any write that affects dashboard data). */
-  invalidateSummaryCache(userId: string) {
-    invalidatePattern(`dashboard:summary:${userId}`);
   }
 
   /**

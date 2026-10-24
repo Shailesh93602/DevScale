@@ -4,7 +4,7 @@ import UserProgressRepository from '../repositories/userProgressRepository.js';
 import UserPointsRepository from '../repositories/userPointsRepository.js';
 import { catchAsync } from '../utils/index.js';
 import { sendResponse } from '../utils/apiResponse.js';
-import { invalidatePattern } from '../services/memoryCache.js';
+import { invalidateDashboardSummary } from '../repositories/dashboard/summaryCache.js';
 
 const TOPIC_COMPLETION_POINTS = 10;
 
@@ -52,7 +52,7 @@ export default class UserProgressController {
       );
     }
 
-    invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard shows progress
+    await invalidateDashboardSummary(userId);
     sendResponse(res, 'PROGRESS_UPDATED');
   });
 }

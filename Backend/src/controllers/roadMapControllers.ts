@@ -22,6 +22,7 @@ import {
 import {
   getLikedCommentIds,
   invalidateRoadmapCaches,
+  invalidateViewerCaches,
   toggleCommentLikeRow,
   toggleRoadmapBookmark,
   toggleRoadmapLike,
@@ -270,9 +271,8 @@ export default class RoadmapController {
     });
 
     invalidatePattern(`roadmap:detail:${roadmapId}`);
-    invalidatePattern(`roadmaps:list:${userId}`);
-    invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard shows new enrollment
     await invalidateCachePattern(`roadmap:detail:${roadmapId}:${userId}`);
+    await invalidateViewerCaches(userId);
 
     return sendResponse(res, 'ROADMAP_ENROLLED', { data: null });
   });

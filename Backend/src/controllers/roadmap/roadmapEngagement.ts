@@ -1,6 +1,7 @@
 import prisma from '../../lib/prisma.js';
 import { invalidatePattern } from '../../services/memoryCache.js';
 import { invalidateCachePattern } from '../../services/cacheService.js';
+import { invalidateDashboardSummary } from '../../repositories/dashboard/summaryCache.js';
 
 /** Drops every viewer's cached detail (Redis + in-process); lists too if asked. */
 export async function invalidateRoadmapCaches(
@@ -10,6 +11,14 @@ export async function invalidateRoadmapCaches(
   invalidatePattern(`roadmap:detail:${roadmapId}`);
   await invalidateCachePattern(`roadmap:detail:${roadmapId}:*`);
   if (lists) await invalidateCachePattern('roadmaps:list:*');
+}
+
+/** The viewer enrolled, bookmarked or liked: drop their list pages and dashboard summary. */
+export async function invalidateViewerCaches(userId: string): Promise<void> {
+  await Promise.all([
+    invalidateCachePattern(`roadmaps:list:${userId}:*`),
+    invalidateDashboardSummary(userId),
+  ]);
 }
 
 /** Flips the viewer's like on a roadmap; null when the roadmap does not exist. */
@@ -36,6 +45,7 @@ export async function toggleRoadmapLike(
     });
   }
   await invalidateRoadmapCaches(roadmapId);
+  await invalidateViewerCaches(userId);
   return existingLike ? 'unliked' : 'liked';
 }
 
@@ -63,7 +73,7 @@ export async function toggleRoadmapBookmark(
   }
 
   await invalidateRoadmapCaches(roadmapId);
-  invalidatePattern(`dashboard:summary:${userId}`); // Ensure dashboard reflects change
+  await invalidateViewerCaches(userId);
   return existingBookmark ? 'unbookmarked' : 'bookmarked';
 }
 

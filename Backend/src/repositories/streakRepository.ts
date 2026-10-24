@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 import { createAppError } from '../utils/errorHandler.js';
+import { invalidateDashboardSummary } from './dashboard/summaryCache.js';
 import { StreakStats, DailyActivity } from '../types/streak';
 
 /**
@@ -92,6 +93,7 @@ export default class StreakRepository extends BaseRepository<
     // streak ping is a client-side race, not a server fault.
     try {
       await this.runStreakTransaction(userId, activityType, minutesSpent, now);
+      await invalidateDashboardSummary(userId);
     } catch (err) {
       const code = (err as { code?: string }).code;
       const message = (err as Error).message ?? '';

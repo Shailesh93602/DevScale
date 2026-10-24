@@ -7,6 +7,7 @@ import logger from '../utils/logger.js';
 import { createAppError } from '../utils/errorHandler.js';
 
 import prisma from '../lib/prisma.js';
+import { invalidateDashboardSummary } from './dashboard/summaryCache.js';
 
 export default class QuizRepository extends BaseRepository<
   Quiz,
@@ -236,5 +237,6 @@ export default class QuizRepository extends BaseRepository<
         completed_at: new Date(),
       },
     });
+    await invalidateDashboardSummary(user_id);
   }
 }

@@ -89,8 +89,8 @@ jest.mock('../../lib/prisma', () => ({
     },
   },
 }));
-jest.mock('../../services/memoryCache', () => ({
-  invalidatePattern: jest.fn(),
+jest.mock('../../repositories/dashboard/summaryCache', () => ({
+  invalidateDashboardSummary: async () => undefined,
 }));
 
 import UserProgressController from '../../controllers/userProgressController';

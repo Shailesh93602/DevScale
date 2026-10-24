@@ -3,6 +3,7 @@ import BaseRepository from './baseRepository.js';
 import { createAppError } from '../utils/errorHandler.js';
 import logger from '../utils/logger.js';
 import prisma from '../lib/prisma.js';
+import { invalidateDashboardSummary } from './dashboard/summaryCache.js';
 import {
   syncSupabaseUserRole,
   type RoleSyncResult,
@@ -422,6 +423,8 @@ export default class UserRepository extends BaseRepository<
     }
 
     await prisma.$transaction(transaction);
+    // Each user's activity feed on their dashboard gains the BULK_* entry.
+    await Promise.all(user_ids.map(invalidateDashboardSummary));
   }
 
   async getAllUsers(params: { page: number; limit: number; search: string }) {

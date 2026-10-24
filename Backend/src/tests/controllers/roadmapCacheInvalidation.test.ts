@@ -5,6 +5,7 @@ import { runHandler } from '../helpers/runHandler';
 const invalidated: string[] = [];
 jest.mock('../../services/cacheService', () => ({
   invalidateCachePattern: async (p: string) => void invalidated.push(p),
+  deleteCache: async (k: string) => void invalidated.push(k),
   getCache: async () => null,
   setCache: async () => undefined,
 }));
@@ -32,6 +33,7 @@ jest.mock('../../repositories/roadmapRepository', () => ({
   __esModule: true,
   default: class {
     getRoadmap = async () => roadmapRow;
+    getUserRoadmap = async () => ({ ...roadmapRow, user_roadmaps: [] });
     update = async () => roadmapRow;
     delete = async () => roadmapRow;
     create = async () => roadmapRow;
@@ -99,6 +101,27 @@ describe('roadmap cache invalidation', () => {
     await toggleRoadmapLike('u1', 'r1');
     expect(invalidated).toContain('roadmap:detail:r1:*');
   });
+
+  it.each<[string, () => Promise<unknown>]>([
+    ['like', () => toggleRoadmapLike('u1', 'r1')],
+    ['bookmark', () => toggleRoadmapBookmark('u1', 'r1')],
+    [
+      'enrol',
+      () =>
+        runHandler(new RoadmapController().enrollRoadMap, {
+          body: { roadmapId: 'r1' },
+          user: { id: 'u1' } as never,
+        }),
+    ],
+  ])(
+    'a %s drops that viewer’s list pages and dashboard summary',
+    async (_n, act) => {
+      await act();
+      expect(invalidated).toEqual(
+        expect.arrayContaining(['roadmaps:list:u1:*', 'dashboard:summary:u1'])
+      );
+    }
+  );
 
   it('bookmarking an unknown roadmap is a not-found, never an FK error', async () => {
     roadmapExists = false;
