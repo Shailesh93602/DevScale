@@ -41,7 +41,11 @@ jest.mock('../../utils/logger', () => ({
   default: { info: jest.fn(), warn: jest.fn(), error: jest.fn() },
 }));
 
-import { joinBattle, leaveBattle } from '../../repositories/battle/lifecycle';
+import {
+  joinBattle,
+  leaveBattle,
+  markReady,
+} from '../../repositories/battle/lifecycle';
 import { submitAnswer } from '../../repositories/battle/gameplay';
 import { battleSocketService } from '../../services/battleSocket';
 import { createBattleValidationSchema } from '../../validations/battleValidations';
@@ -63,6 +67,31 @@ describe('joinBattle', () => {
       message: 'Battle is full',
     });
     expect(tx.battleParticipant.create).not.toHaveBeenCalled();
+  });
+});
+
+describe('markReady', () => {
+  it.each(['IN_PROGRESS', 'COMPLETED', 'CANCELLED'])(
+    'refuses once the battle is %s, so a finished or departed player cannot reset their status',
+    async (status) => {
+      tx.battleParticipant.findUnique.mockResolvedValue({
+        status: 'COMPLETED',
+      });
+      tx.battle.findUnique.mockResolvedValue({ status });
+      await expect(markReady('b1', 'u1')).rejects.toMatchObject({
+        statusCode: 409,
+      });
+      expect(tx.battleParticipant.update).not.toHaveBeenCalled();
+    }
+  );
+
+  it('marks a joined player ready in the lobby', async () => {
+    tx.battleParticipant.findUnique.mockResolvedValue({ status: 'JOINED' });
+    tx.battle.findUnique.mockResolvedValue({ status: 'LOBBY' });
+    tx.battleParticipant.update.mockResolvedValue({ status: 'READY' });
+    await expect(markReady('b1', 'u1')).resolves.toMatchObject({
+      status: 'READY',
+    });
   });
 });
 

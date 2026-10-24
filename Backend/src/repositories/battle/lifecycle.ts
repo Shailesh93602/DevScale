@@ -127,6 +127,19 @@ export async function markReady(battleIdOrSlug: string, userId: string) {
     where: { battle_id_user_id: { battle_id: battleId, user_id: userId } },
   });
   if (!participant) throw createAppError('You are not in this battle', 404);
+  // Ready is a lobby state. Mid-battle it would turn a COMPLETED player back
+  // into one who is not done (so the battle never completes on answers) and a
+  // DISCONNECTED leaver back into a player.
+  const battle = await prisma.battle.findUnique({
+    where: { id: battleId },
+    select: { status: true },
+  });
+  if (battle?.status !== 'WAITING' && battle?.status !== 'LOBBY') {
+    throw createAppError(
+      'You can only get ready before the battle starts',
+      409
+    );
+  }
   if (participant.status === 'READY') return participant;
 
   return prisma.battleParticipant.update({
