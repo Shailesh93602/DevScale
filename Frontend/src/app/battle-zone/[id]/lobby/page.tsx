@@ -1,6 +1,12 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import BattleZoneLayout from '@/components/Battle/BattleZoneLayout';
 import { Battle } from '@/types/battle';
@@ -22,9 +28,11 @@ export default function BattleLobbyPage() {
     useBattleApi();
   const hasFetched = useRef(false);
   const fetchBattleRef = useRef(fetchBattle);
-  fetchBattleRef.current = fetchBattle;
   const joinExistingBattleRef = useRef(joinExistingBattle);
-  joinExistingBattleRef.current = joinExistingBattle;
+  useLayoutEffect(() => {
+    fetchBattleRef.current = fetchBattle;
+    joinExistingBattleRef.current = joinExistingBattle;
+  });
 
   // Load battle details
   useEffect(() => {

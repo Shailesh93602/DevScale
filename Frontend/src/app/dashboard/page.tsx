@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { BookOpen, Award, Flame, Swords, ArrowRight } from 'lucide-react';
@@ -97,7 +97,9 @@ const DashboardPage: React.FC = () => {
   // AuthGuard renders on a session before the profile loads, so the user id
   // can arrive after mount; the cache is read and written with the latest one.
   const userIdRef = useRef(userId);
-  userIdRef.current = userId;
+  useLayoutEffect(() => {
+    userIdRef.current = userId;
+  });
   const freshRef = useRef<DashboardSummary | null>(null);
 
   useEffect(() => {
