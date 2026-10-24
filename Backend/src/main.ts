@@ -22,6 +22,7 @@ import {
   CORS_ORIGIN,
   PORT,
 } from './config/index.js';
+import { isOriginAllowed, parseAllowedOrigins } from './config/corsOrigins.js';
 import { AppRoutes } from './routes/routes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { requestIdMiddleware } from './middlewares/requestIdMiddleware.js';
@@ -163,21 +164,8 @@ export class App {
             // In production, only allow origins from CORS_ORIGIN env var.
             // Entries may contain a single `*` wildcard (e.g. `https://*.vercel.app`)
             // so preview deployments don't need to be listed individually.
-            const allowedOrigins = (CORS_ORIGIN || '')
-              .split(',')
-              .map((o) => o.trim())
-              .filter(Boolean);
-            const wildcardToRegex = (pattern: string) =>
-              new RegExp(
-                '^' +
-                  pattern
-                    .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
-                    .replace(/\*/g, '.*') +
-                  '$'
-              );
-            const isAllowed = allowedOrigins.some((o) =>
-              o.includes('*') ? wildcardToRegex(o).test(origin) : o === origin
-            );
+            const allowedOrigins = parseAllowedOrigins(CORS_ORIGIN);
+            const isAllowed = isOriginAllowed(origin, allowedOrigins);
             // FAIL CLOSED on an unset CORS_ORIGIN. This used to read
             // `allowedOrigins.length === 0 || isAllowed`, so a missing or empty
             // env var in production silently became allow-any-origin — with

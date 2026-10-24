@@ -1,5 +1,6 @@
 import type { ExtendedError, Socket } from 'socket.io';
 import { CORS_ORIGIN } from '../../config';
+import { isOriginAllowed, parseAllowedOrigins } from '../../config/corsOrigins';
 import { isProduction } from '../../config/runtimeMode';
 import prisma from '../../lib/prisma';
 import logger from '../../utils/logger';
@@ -16,11 +17,8 @@ export function socketCorsOrigin(
   if (!origin) return callback(null, true);
 
   if (isProduction()) {
-    const allowedOrigins = (CORS_ORIGIN || '')
-      .split(',')
-      .map((o) => o.trim())
-      .filter(Boolean);
-    if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+    // Same list and wildcard rules as the REST CORS check, and closed when empty.
+    if (isOriginAllowed(origin, parseAllowedOrigins(CORS_ORIGIN))) {
       return callback(null, true);
     }
     return callback(new Error('Origin not allowed by CORS'));

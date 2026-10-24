@@ -31,11 +31,16 @@ const valueOrUnknown = (raw: string | undefined): string => {
 };
 
 export function resolveAppVersion(env: Env = process.env): AppVersion {
-  const sha = valueOrUnknown(env.VERCEL_GIT_COMMIT_SHA);
+  // Render's names are the fallback for the long-lived realtime host.
+  const sha = valueOrUnknown(
+    env.VERCEL_GIT_COMMIT_SHA?.trim() || env.RENDER_GIT_COMMIT
+  );
   return {
     sha,
     shortSha: sha === UNKNOWN_VERSION ? UNKNOWN_VERSION : sha.slice(0, 7),
-    ref: valueOrUnknown(env.VERCEL_GIT_COMMIT_REF),
+    ref: valueOrUnknown(
+      env.VERCEL_GIT_COMMIT_REF?.trim() || env.RENDER_GIT_BRANCH
+    ),
     env: valueOrUnknown(env.VERCEL_ENV),
   };
 }

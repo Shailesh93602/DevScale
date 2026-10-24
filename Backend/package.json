@@ -38,6 +38,7 @@
     "seed:battles": "tsx ./src/scripts/seed-battles.ts",
     "postinstall": "prisma generate",
     "start:prod": "node -r module-alias/register -r dotenv/config dist/main.js",
+    "start:realtime": "node dist/main.js",
     "build:clean": "rm -rf dist && npm run build",
     "prisma:reset": "prisma migrate reset && npm run seed:all",
     "docker:up": "docker-compose up -d",

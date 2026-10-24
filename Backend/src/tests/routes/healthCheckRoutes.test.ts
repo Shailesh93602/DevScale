@@ -87,6 +87,17 @@ describe('resolveAppVersion', () => {
     });
   });
 
+  it('falls back to Render system env on the realtime host', () => {
+    expect(
+      resolveAppVersion({ RENDER_GIT_COMMIT: SHA, RENDER_GIT_BRANCH: 'main' })
+    ).toEqual({
+      sha: SHA,
+      shortSha: '43a6e0b',
+      ref: 'main',
+      env: UNKNOWN_VERSION,
+    });
+  });
+
   it('treats blank values as unset', () => {
     const v = resolveAppVersion({
       VERCEL_GIT_COMMIT_SHA: '  ',

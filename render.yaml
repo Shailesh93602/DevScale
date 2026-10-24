@@ -1,0 +1,62 @@
+# Render Blueprint for the EduScale realtime host (Socket.io + battle timers).
+# The REST API stays on Vercel. Owner steps: Backend/docs/REALTIME_HOSTING.md.
+services:
+  - type: web
+    name: eduscale-realtime
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: main
+    rootDir: Backend
+    dockerfilePath: ./Backend/Dockerfile
+    dockerContext: ./Backend
+    # Liveness only: the deep /api/v1/health returns 503 on a Redis or DB blip,
+    # and a restart would kill every in-process battle timer.
+    healthCheckPath: /api/v1/health/ready
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - Backend/**
+      ignoredPaths:
+        - Backend/src/tests/**
+        - Backend/**/*.md
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: eduscale-realtime-redis
+          property: connectionString
+      # Filled in once, at Blueprint creation (copy from the Vercel backend project).
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_JWT_SIGNING_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: API_URL
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SECRET_ENCRYPTION_KEY
+        sync: false
+      - key: METRICS_TOKEN
+        sync: false
+
+  - type: keyvalue
+    name: eduscale-realtime-redis
+    plan: free
+    region: singapore
+    # Bull's documented requirement; a queue key must never be evicted.
+    maxmemoryPolicy: noeviction
+    # Empty = no public access; the web service connects over the internal URL.
+    ipAllowList: []

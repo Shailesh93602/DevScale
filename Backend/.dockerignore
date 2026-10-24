@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+.vercel
+logs
+uploads
+backups
+coverage
+qa
+temp_content
+monitoring
+*.log
