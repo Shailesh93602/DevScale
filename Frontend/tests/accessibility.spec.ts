@@ -32,7 +32,6 @@ const publicRoutes = [
   { path: '/faq', name: 'faq' },
   { path: '/contact', name: 'contact' },
   { path: '/interview-question', name: 'interview-question' },
-  { path: '/article-listing', name: 'article-listing' },
   // Public since 2026-09-03 (#36): the roadmap list and the challenge LIST are
   // readable signed out. They sat in the protected list below until
   // 2026-09-05, so the classification guard was red and — had it not been —

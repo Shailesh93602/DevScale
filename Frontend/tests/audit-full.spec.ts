@@ -33,7 +33,6 @@ const allRoutes = [
   { path: '/tech-pioneer', name: 'tech-pioneer' },
   { path: '/instant-battle', name: 'instant-battle' },
   { path: '/create-battle', name: 'create-battle' },
-  { path: '/article-listing', name: 'article-listing' },
   { path: '/create-resource', name: 'create-resource' },
 ];
 
