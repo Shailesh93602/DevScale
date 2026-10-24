@@ -51,6 +51,8 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  // Search Console URL-prefix property (owner's Google account).
+  verification: { google: 'sp7HJsGIg1Tc-x6DyKtwZ3gVMhRcp3IK4xbaqO7TKG8' },
   // Without metadataBase, Next.js cannot turn a relative OG image path into the
   // absolute URL that crawlers and social cards require — it warns at build
   // time and emits a relative URL that every scraper then fails to fetch.
