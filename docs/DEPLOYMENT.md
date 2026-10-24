@@ -12,7 +12,7 @@ This document describes how to safely spin up production-grade iterations of the
 Vercel handles the Next.js `App Router`, auto-configuring Edge Functions for SSR logic, Image Optimization, and globally resolving CDN nodes natively based on your deployment regions.
 
 **Backend Deployment (Fly.io / AWS ECS / Railway):**
-Due to stateful WebSocket necessities tied to Redis, Serverless environments are inadequate for our API servers. We specifically deploy containerized (Docker) Express.js Node instances. Ensure the deployment platform supports **sticky sessions** if working behind load balancers with `socket.io`.
+Due to stateful WebSocket necessities tied to Redis, Serverless environments are inadequate for our API servers. **Current plan (2026-10-24):** REST stays on Vercel; battle writes, matchmaking and Socket.io go to a free Render web service. See [`Backend/docs/REALTIME_HOSTING.md`](../Backend/docs/REALTIME_HOSTING.md). We specifically deploy containerized (Docker) Express.js Node instances. Ensure the deployment platform supports **sticky sessions** if working behind load balancers with `socket.io`.
 
 **Database (Supabase / AWS RDS):**
 Our instances require Postgres `v14+` utilizing connection pooling (PgBouncer mode: *Transaction*). Setting the mode to *Session* will overload memory aggressively, crashing the Next.js backend invocations.

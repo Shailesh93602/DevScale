@@ -136,6 +136,14 @@ new Redis is the only fix.
 
 ---
 
+### 2026-10-24 — Realtime host prepared (branch `feat/realtime-host`, not deployed)
+
+| Item | Files | Status |
+|------|-------|--------|
+| Vercel serverless never calls `App.start()`, so `/socket.io` is 404 and the in-process battle timers (armed by REST calls) die with the function. Prepared a free long-lived host: Render web service + Render Key Value in Singapore via `render.yaml`, a `Backend/Dockerfile` that runs `node dist/main.js`. The frontend sends battle writes and all of `/matchmaking` to `NEXT_PUBLIC_REALTIME_API_BASE_URL` (reads stay on Vercel), points sockets there, and wakes the host on the first battle request. The socket handshake now uses the REST CORS matcher: wildcards work, and a blank list fails closed. `/health` reports `RENDER_GIT_COMMIT`. Comparison of 12 free options + owner steps: `Backend/docs/REALTIME_HOSTING.md`. 🔴 Owner: create the Render Blueprint and set two frontend env vars | `render.yaml`, `Backend/Dockerfile`, `Backend/.dockerignore`, `Backend/src/config/corsOrigins.ts`, `Backend/src/services/realtime/socketHandshake.ts`, `Backend/src/main.ts`, `Backend/src/utils/appVersion.ts`, `Frontend/src/lib/realtime-host.ts`, `Frontend/src/hooks/axios/httpClient.ts`, `Frontend/src/hooks/{useBattleWebSocket,useMatchmaking}.ts`, `Frontend/src/test/remoteTargets.ts` | ⏳ Prepared |
+
+---
+
 ## Remaining P0 Blockers (as of end of Session 3)
 
 ### Phase 1 — Infrastructure
