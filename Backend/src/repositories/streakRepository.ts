@@ -7,6 +7,28 @@ import prisma from '../lib/prisma.js';
 import { createAppError } from '../utils/errorHandler.js';
 import { StreakStats, DailyActivity } from '../types/streak';
 
+/**
+ * The streak as of today: `current_streak` is only rewritten on activity, so a
+ * streak whose last activity is before yesterday (in the zone it was recorded
+ * in) has ended even though the column still holds its old length.
+ */
+export function liveCurrentStreak(
+  current: number,
+  lastActivity: Date | string | null,
+  zone: string | null | undefined,
+  now: DateTime = DateTime.now()
+): number {
+  if (!lastActivity) return 0;
+  const tz = zone || 'UTC';
+  const lastDay = DateTime.fromJSDate(new Date(lastActivity))
+    .setZone(tz)
+    .startOf('day');
+  const dayGap = Math.round(
+    now.setZone(tz).startOf('day').diff(lastDay, 'days').days
+  );
+  return dayGap > 1 ? 0 : current;
+}
+
 interface UpdateStreakParams {
   activityType: ActivityType;
   minutesSpent: number;
@@ -37,7 +59,11 @@ export default class StreakRepository extends BaseRepository<
     if (!userStreak) return null;
 
     return {
-      currentStreak: userStreak.current_streak,
+      currentStreak: liveCurrentStreak(
+        userStreak.current_streak,
+        userStreak.last_activity_date,
+        userStreak.timezone
+      ),
       longestStreak: userStreak.longest_streak,
       lastActivityDate: userStreak.last_activity_date,
       streakStartDate: userStreak.streak_start_date,
@@ -123,6 +149,7 @@ export default class StreakRepository extends BaseRepository<
               current_streak: 1,
               longest_streak: 1,
               last_activity_date: now.toJSDate(),
+              timezone: now.zoneName ?? undefined,
             },
           });
           return;
@@ -153,6 +180,7 @@ export default class StreakRepository extends BaseRepository<
               userStreak.longest_streak
             ),
             last_activity_date: now.toJSDate(),
+            timezone: now.zoneName ?? undefined,
           },
         });
       },

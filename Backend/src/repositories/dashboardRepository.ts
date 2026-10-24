@@ -2,6 +2,7 @@ import type { User } from '@prisma/client';
 import BaseRepository from './baseRepository.js';
 import prisma from '../lib/prisma.js';
 import { DashboardStats } from '../types/dashboard';
+import { liveCurrentStreak } from './streakRepository.js';
 import {
   getCached,
   setCached,
@@ -101,7 +102,11 @@ export class DashboardRepository extends BaseRepository<
       }),
       this.prismaClient.userStreak.findUnique({
         where: { user_id: userId },
-        select: { current_streak: true },
+        select: {
+          current_streak: true,
+          last_activity_date: true,
+          timezone: true,
+        },
       }),
       this.prismaClient.userRoadmap.findMany({
         where: { user_id: userId },
@@ -164,7 +169,13 @@ export class DashboardRepository extends BaseRepository<
       totalTopics,
       totalTopicsCompleted,
       averageProgress,
-      streakDays: userStreak?.current_streak || 0,
+      streakDays: userStreak
+        ? liveCurrentStreak(
+            userStreak.current_streak,
+            userStreak.last_activity_date,
+            userStreak.timezone
+          )
+        : 0,
       totalHoursSpent: Math.round((totalHoursSpent._sum.time_spent || 0) / 60),
     };
   }
@@ -471,7 +482,11 @@ export class DashboardRepository extends BaseRepository<
       }>,
       streak: streak
         ? {
-            currentStreak: streak.current_streak,
+            currentStreak: liveCurrentStreak(
+              streak.current_streak,
+              streak.last_activity_date,
+              streak.timezone
+            ),
             longestStreak: streak.longest_streak,
             lastActivityDate: streak.last_activity_date,
             streakStartDate: streak.streak_start_date,
