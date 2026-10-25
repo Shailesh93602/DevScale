@@ -196,4 +196,35 @@ describe('AuthContext profile loading', () => {
     expect(text('status')).toBe('unauthenticated');
     expect(text('userId')).toBe('null');
   });
+
+  it.each(['SIGNED_OUT event', 'signOut()'])(
+    'sign-out (%s) drops unsaved challenge code, which is not keyed by user',
+    async (path) => {
+      localStorage.setItem('challenge_progress_c1', '{"javascript":"mine"}');
+      localStorage.setItem('unrelated', 'kept');
+      fetchMock.mockResolvedValue(ok());
+      function SignOutButton() {
+        const { signOut } = useAuth();
+        return <button onClick={() => void signOut()}>out</button>;
+      }
+      render(
+        <AuthProvider>
+          <SignOutButton />
+        </AuthProvider>,
+      );
+      await act(async () => {
+        await h.listener!('INITIAL_SESSION', h.session);
+      });
+      await flush();
+      expect(localStorage.getItem('challenge_progress_c1')).not.toBeNull();
+
+      await act(async () => {
+        if (path === 'signOut()') fireEvent.click(screen.getByText('out'));
+        else await h.listener!('SIGNED_OUT', null);
+      });
+      expect(localStorage.getItem('challenge_progress_c1')).toBeNull();
+      expect(localStorage.getItem('unrelated')).toBe('kept');
+      localStorage.clear();
+    },
+  );
 });

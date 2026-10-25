@@ -26,6 +26,7 @@ import React, {
 } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { clearDashboardCache } from '@/lib/dashboard-cache';
+import { clearChallengeDrafts } from '@/lib/challenge-drafts';
 import type { Session, User as SupabaseUser } from '@supabase/supabase-js';
 import type { IUser, UserRole } from '@/types';
 
@@ -274,6 +275,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     clearDashboardCache();
+    clearChallengeDrafts();
     resetProfile();
     setUser(null);
     setSession(null);
@@ -293,6 +295,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (event === 'SIGNED_OUT') {
         clearDashboardCache();
+        clearChallengeDrafts();
         resetProfile();
         setUser(null);
         setStatus('unauthenticated');

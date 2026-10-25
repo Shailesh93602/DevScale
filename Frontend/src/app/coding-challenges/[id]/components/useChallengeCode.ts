@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAxiosGet, useAxiosPost } from '@/hooks/useAxios';
 import { logger } from '@/lib/logger';
+import { challengeDraftKey as progressKey } from '@/lib/challenge-drafts';
 import { DEFAULT_BOILERPLATE, IChallenge } from './challengeTypes';
 
 type CodeByLanguage = Record<string, string>;
-
-const progressKey = (id: string) => `challenge_progress_${id}`;
 
 /**
  * Loads the challenge and keeps the per-language code in sync with
