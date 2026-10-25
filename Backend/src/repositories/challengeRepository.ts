@@ -98,7 +98,8 @@ export class ChallengeRepository extends BaseRepository<
             code: program,
             language: data.language,
             input: test_case.input,
-            timeLimit: challenge.time_limit ?? 0,
+            // Stored in ms; Judge0's cpu_time_limit is seconds.
+            timeLimit: challenge.time_limit ? challenge.time_limit / 1000 : 0,
             memoryLimit: challenge.memory_limit ?? 0,
           });
 
@@ -168,11 +169,21 @@ export class ChallengeRepository extends BaseRepository<
 
     if (!challengeId) return leaderboard;
 
+    // Selected, not the whole row: `code` is another user's accepted solution.
     const submissions = await prisma.challengeSubmission.findMany({
       where: {
         challenge_id: challengeId,
         status: 'accepted',
         user_id: { in: leaderboard.map((l) => l.user_id) },
+      },
+      select: {
+        id: true,
+        user_id: true,
+        language: true,
+        runtime_ms: true,
+        memory_used_kb: true,
+        score: true,
+        created_at: true,
       },
       orderBy: { runtime_ms: 'asc' },
     });

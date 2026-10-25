@@ -9,6 +9,10 @@ import {
   JUDGE0_SUBMIT_TIMEOUT_MS,
 } from './deadlines';
 
+// Judge0 CE defaults for MAX_CPU_TIME_LIMIT and MAX_MEMORY_LIMIT.
+export const JUDGE0_MAX_CPU_SECONDS = 15;
+export const JUDGE0_MAX_MEMORY_KB = 512000;
+
 interface ExecuteCodeParams {
   code: string;
   language: string;
@@ -78,8 +82,13 @@ async function _executeCodeRaw(
         source_code: Buffer.from(params.code).toString('base64'),
         language_id: getLanguageId(params.language),
         stdin: Buffer.from(params.input).toString('base64'),
-        cpu_time_limit: params.timeLimit || 2,
-        memory_limit: params.memoryLimit || 128000,
+        // Judge0 rejects values above its maximums (422), and a rejection
+        // counts against the shared breaker.
+        cpu_time_limit: Math.min(params.timeLimit || 2, JUDGE0_MAX_CPU_SECONDS),
+        memory_limit: Math.min(
+          params.memoryLimit || 128000,
+          JUDGE0_MAX_MEMORY_KB
+        ),
       },
       {
         headers: {

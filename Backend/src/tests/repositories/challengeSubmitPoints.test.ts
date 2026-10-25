@@ -88,4 +88,11 @@ describe('ChallengeRepository.submitChallenge', () => {
     const sent = (executeCode.mock.calls[0][0] as { code: string }).code;
     expect(sent).toContain('__harnessArgs');
   });
+
+  it("sends Judge0 the challenge's time limit in seconds, not milliseconds", async () => {
+    await submit();
+    const sent = executeCode.mock.calls[0][0] as { timeLimit: number };
+    // time_limit is stored as 2000 ms; cpu_time_limit is seconds.
+    expect(sent.timeLimit).toBe(2);
+  });
 });
