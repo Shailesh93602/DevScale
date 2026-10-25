@@ -24,6 +24,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBattleSocketEvents } from './useBattleSocketEvents';
 import { useBattleActions } from './useBattleActions';
+import { restoredResult, type RestoredAnswers } from './restoredAnswers';
 
 type BattleOn = ReturnType<typeof useBattleSocket>['on'];
 
@@ -199,6 +200,8 @@ export function useBattleDetail() {
   );
   // Post-battle results breakdown (P5.14)
   const [myResults, setMyResults] = useState<MyBattleResults | null>(null);
+  // Answers replayed by `battle:state` after a reconnect or reload.
+  const [restoredAnswers, setRestoredAnswers] = useState<RestoredAnswers>({});
 
   const membership = deriveMembership(battle, user?.id);
   const currentQuestion = questions[currentQuestionIndex] ?? null;
@@ -234,8 +237,20 @@ export function useBattleDetail() {
     setAnsweredQuestions,
     setApiLeaderboard,
     setMyResults,
+    setRestoredAnswers,
     fetchMyResults,
   });
+
+  useEffect(() => {
+    const ids = Object.keys(restoredAnswers);
+    if (ids.length === 0) return;
+    setAnsweredQuestions((prev) => new Set([...prev, ...ids]));
+    const restored = restoredResult(restoredAnswers, currentQuestion?.id);
+    if (restored) {
+      setSelectedOption(restored.selectedOption);
+      setAnswerResult((prev) => prev ?? restored.result);
+    }
+  }, [restoredAnswers, currentQuestion?.id]);
 
   useBattleDataLoad({
     battleId,

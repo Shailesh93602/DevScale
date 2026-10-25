@@ -144,6 +144,14 @@ new Redis is the only fix.
 
 ---
 
+### 2026-10-25 — Realtime split proven locally, end to end
+
+| Item | Files | Status |
+|------|-------|--------|
+| Two browser contexts play a ranked battle against the split production will use: a REST-only host (the Vercel app without `App.start()`, `/socket.io` 404) and `node dist/main.js`, with fake Supabase auth (own ES256 key) and local pg17/Redis. Matchmaking pairs them over the socket, lobby/ready/start arrive as events, a reload restores state, an unanswered question expires on the timer, the battle completes once and Elo applies once (`games_played` 1 each). Writes and matchmaking hit the realtime host, reads the REST host. 6/6. **Bug fixed:** a reload re-offered an already-answered question (resubmit = 409) because `battle:state` had no per-player answers; it now carries `my_answers`. Steps: `Backend/docs/REALTIME_HOSTING.md` "Local proof" | `Backend/qa/realtime/*`, `Backend/src/services/{battleSocket,socket}.ts`, `Backend/src/tests/services/{battleStateMyAnswers,battleStateReplay}.test.ts`, `Frontend/realtime-local/battle-realtime.spec.ts`, `Frontend/playwright.realtime.config.ts`, `Frontend/src/hooks/useBattleWebSocket.ts`, `Frontend/src/app/battle-zone/[id]/hooks/{restoredAnswers,restoredAnswers.test,useBattleDetail,useBattleSocketEvents}.ts` | ✅ Done (local) |
+
+---
+
 ## Remaining P0 Blockers (as of end of Session 3)
 
 ### Phase 1 — Infrastructure

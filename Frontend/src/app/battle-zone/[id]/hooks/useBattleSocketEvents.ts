@@ -12,6 +12,7 @@ import type useBattleApi from '@/hooks/useBattleApi';
 import type { MyBattleResults } from '@/hooks/useBattleApi';
 import type { useBattleSocket } from '@/hooks/useBattleWebSocket';
 import type { useToast } from '@/hooks/use-toast';
+import { indexRestoredAnswers, type RestoredAnswers } from './restoredAnswers';
 
 type BattleOn = ReturnType<typeof useBattleSocket>['on'];
 type SetBattle = Dispatch<SetStateAction<Battle | null>>;
@@ -31,6 +32,7 @@ interface BattleSocketEventDeps {
   setAnsweredQuestions: Dispatch<SetStateAction<Set<string>>>;
   setApiLeaderboard: Dispatch<SetStateAction<LeaderboardEntry[]>>;
   setMyResults: Dispatch<SetStateAction<MyBattleResults | null>>;
+  setRestoredAnswers: Dispatch<SetStateAction<RestoredAnswers>>;
   fetchMyResults: ReturnType<typeof useBattleApi>['fetchMyResults'];
 }
 
@@ -165,6 +167,7 @@ function subscribeLifecycle(deps: BattleSocketEventDeps) {
     if (state.current_question_index >= 0)
       setCurrentQuestionIndex(state.current_question_index);
     if (state.leaderboard.length > 0) setApiLeaderboard(state.leaderboard);
+    deps.setRestoredAnswers(indexRestoredAnswers(state.my_answers));
   });
 
   return [offStatus, offStarted, offCompleted, offState];

@@ -378,7 +378,7 @@ class BattleSocketService {
    * a patch. It is strictly better than the previous behaviour, which sent
    * nothing on any instance.
    */
-  async sendStateToSocket(socketId: string, battleId: string) {
+  async sendStateToSocket(socketId: string, battleId: string, userId?: string) {
     try {
       const battle = await prisma.battle.findUnique({
         where: { id: battleId },
@@ -394,6 +394,19 @@ class BattleSocketService {
 
       const leaderboard = await battleRepo.getBattleLeaderboard(battleId);
       const state = this.states.get(battleId);
+      // A reloaded page has forgotten what this player already answered.
+      const myAnswers = userId
+        ? await prisma.battleAnswer.findMany({
+            where: { battle_id: battleId, user_id: userId },
+            select: {
+              question_id: true,
+              selected_option: true,
+              is_correct: true,
+              points_earned: true,
+              question: { select: { correct_answer: true, explanation: true } },
+            },
+          })
+        : [];
 
       socketService.emitToSocket(socketId, 'battle:state', {
         status: battle.status,
@@ -407,6 +420,14 @@ class BattleSocketService {
           status: p.status,
           score: p.score,
           rank: p.rank,
+        })),
+        my_answers: myAnswers.map((a) => ({
+          question_id: a.question_id,
+          selected_option: a.selected_option,
+          is_correct: a.is_correct,
+          points_earned: a.points_earned,
+          correct_answer: a.question.correct_answer,
+          explanation: a.question.explanation,
         })),
       });
     } catch (err) {

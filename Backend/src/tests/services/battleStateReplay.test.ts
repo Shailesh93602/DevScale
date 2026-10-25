@@ -136,6 +136,10 @@ describe('sendStateToSocket is reachable from the join path', () => {
     // The handler chains through two awaits and a dynamic import.
     await new Promise((r) => setTimeout(r, 30));
 
-    expect(mockSendState).toHaveBeenCalledWith('socket-abc', BATTLE_ID);
+    expect(mockSendState).toHaveBeenCalledWith(
+      'socket-abc',
+      BATTLE_ID,
+      USER_ID
+    );
   });
 });

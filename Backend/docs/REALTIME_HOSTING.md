@@ -1,7 +1,7 @@
 # Realtime hosting — free option for Socket.io and battle timers
 
-**Status (2026-10-24):** prepared on branch `feat/realtime-host`, not deployed. Nothing below has
-been created on any provider.
+**Status (2026-10-25):** on `main`, not deployed. Nothing below has been created on any provider.
+A full battle against the split is proven locally: see "Local proof".
 
 ## The problem
 
@@ -189,5 +189,76 @@ suspended or deleted from the dashboard.
   - `/socket.io/?EIO=4&transport=polling` → 200 for an allowed origin (exact and `*.vercel.app`
     wildcard), 400 for an unlisted one.
   - `/api/v1/health` → all `ok` with the commit from `RENDER_GIT_COMMIT`.
-- **Not verified:** a real Render deploy, the cold-start time, internal Key Value reachability from a
-  free web service, and an end-to-end battle against the hosted pair.
+- **Not verified:** a real Render deploy, the cold-start time, and internal Key Value reachability
+  from a free web service. An end-to-end battle against the split is now proven locally (below), not
+  yet against the hosted pair.
+
+## Local proof (2026-10-25)
+
+A full ranked battle, driven by two browser contexts, against the same split production will use:
+the REST-only half (what Vercel runs) and the long-lived half (`node dist/main.js`).
+
+### What runs
+
+| Port | Process | Stands in for |
+| --- | --- | --- |
+| 54399 | `qa/realtime/fakeSupabaseAuth.mjs` | Supabase Auth: its own ES256 key, JWKS, `/auth/v1/user`. No real Supabase account is used |
+| 4056 | `qa/realtime/restOnlyHost.mjs` | Vercel: the exported Express app with no `App.start()`, so no sockets and no timers (`/socket.io` → 404) |
+| 4055 | `node dist/main.js` | The Render realtime host: Socket.io, battle timers, Bull |
+| 3055 | `next start`, built with `NEXT_PUBLIC_REALTIME_API_BASE_URL=http://127.0.0.1:4055/api/v1` and `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:4056/api/v1` | The Vercel frontend |
+
+Both backends run from a scratch directory holding a local `.env`, so `Backend/.env` (production) is
+never loaded. Postgres 17 + pgvector on 5434, database `eduscale_rt_test`; Redis DB 5.
+
+### Run it
+
+```bash
+/opt/homebrew/opt/postgresql@17/bin/pg_ctl -D /opt/homebrew/var/postgresql@17 -o "-p 5434" -l /tmp/pg17.log start
+Backend/qa/realtime/run-local-proof.sh        # SKIP_BUILD=1 reuses dist/ and .next/
+/opt/homebrew/opt/postgresql@17/bin/pg_ctl -D /opt/homebrew/var/postgresql@17 stop
+```
+
+The script refuses a database not named `*_test`/`*_e2e`, refuses Redis DB 0, checks the Prisma
+datasource line before migrating, seeds roles and 8 pool questions, flushes only its Redis DB,
+builds both halves, starts the four processes, probes `/socket.io` on both backends, and runs
+`Frontend/realtime-local/battle-realtime.spec.ts` (`playwright.realtime.config.ts`). It stops every
+process it started on exit. Logs land in `RT_DIR` (a temp dir unless set).
+
+### What the spec asserts
+
+Assertions read Postgres rows and the Socket.io frames each browser actually received, not just text.
+
+1. **Matchmaking:** Alpha queues, Bravo queues, Alpha (the waiter) gets `matchmaking:matched` over its
+   socket. One `Battle` row, `WAITING`, two seats, five `BattleQuestion` rows. Every `/matchmaking`
+   request went to the realtime host.
+2. **Lobby → start:** the creator opens the lobby, both mark ready, the creator starts. Both browsers get
+   `battle:status_changed` (LOBBY), `battle:participant_ready`, `battle:started` and question 0. Every
+   battle write went to the realtime host, and every battle read went to the REST-only host.
+3. **Answers:** Alpha answers right, Bravo wrong, each sees the verdict.
+4. **Reconnect:** Bravo answers question 2 and reloads. The new socket receives `battle:state` with
+   `IN_PROGRESS`, index 1, and Bravo's recorded answer; the page shows "Question 2 / 5" with the
+   verdict and no Submit button.
+5. **Timer expiry:** nobody answers question 3. Question 4 arrives at least `time_limit` seconds
+   later, after more than 10 `battle:timer_tick`s, with zero `BattleAnswer` rows for question 3.
+6. **Completion and Elo:** after questions 4–5 the battle is `COMPLETED` with Alpha as `winner_id`;
+   answers are 4/4 right for Alpha and 0/4 for Bravo. `UserRating`: `games_played` 1 for both, 1 win /
+   1 loss, symmetric delta (1216 / 1184 in the run). Each browser got exactly one `battle:completed`.
+   No API response ≥ 400 and no page error in either browser.
+
+Result on 2026-10-25: **6 / 6 passed** (2.8 min).
+
+### What it found
+
+- **A reload re-offered an answered question.** `battle:state` carried no per-player answers, so after
+  a reload the page showed the question as unanswered with a Submit button, and a resubmit is a 409.
+  The replay now includes `my_answers` for the joining socket's user, and the page restores the pick,
+  the verdict and the answered set from it (`battleSocket.sendStateToSocket`,
+  `hooks/restoredAnswers.ts`). Tests: `battleStateMyAnswers.test.ts`, `restoredAnswers.test.ts`, and
+  step 4 above, which failed before the fix.
+
+### Behaviour noted, not changed
+
+- A question advances only when its timer expires, even after every player has answered: each
+  answered question idles for the rest of its 30 s. A ranked match takes about 2.5 minutes.
+- A matched pair lands in a `WAITING` battle and must open the lobby, ready up and start by hand,
+  like a custom battle. Only the creator (the second player to queue) can start it.

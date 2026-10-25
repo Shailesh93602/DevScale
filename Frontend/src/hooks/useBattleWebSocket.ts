@@ -63,6 +63,15 @@ export interface BattleEventMap {
       score: number;
       rank: number;
     }>;
+    /** The receiving player's own answers, so a reload does not re-offer them. */
+    my_answers: Array<{
+      question_id: string;
+      selected_option: number;
+      is_correct: boolean;
+      points_earned: number;
+      correct_answer: number;
+      explanation?: string | null;
+    }>;
   };
 
   // Chat

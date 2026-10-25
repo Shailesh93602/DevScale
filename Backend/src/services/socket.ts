@@ -167,7 +167,7 @@ class SocketService {
     if (!joined) return;
     // Imported lazily: battleSocket imports this module, so a static import is a cycle.
     const { default: battleSocketService } = await import('./battleSocket.js');
-    await battleSocketService.sendStateToSocket(socket.id, battleId);
+    await battleSocketService.sendStateToSocket(socket.id, battleId, userId);
   }
 
   /** WAITING/LOBBY rooms are public lobbies; live or finished ones are players-only. */
