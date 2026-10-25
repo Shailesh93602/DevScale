@@ -256,9 +256,51 @@ Result on 2026-10-25: **6 / 6 passed** (2.8 min).
   `hooks/restoredAnswers.ts`). Tests: `battleStateMyAnswers.test.ts`, `restoredAnswers.test.ts`, and
   step 4 above, which failed before the fix.
 
-### Behaviour noted, not changed
+### Behaviour noted (default flags)
 
 - A question advances only when its timer expires, even after every player has answered: each
   answered question idles for the rest of its 30 s. A ranked match takes about 2.5 minutes.
 - A matched pair lands in a `WAITING` battle and must open the lobby, ready up and start by hand,
   like a custom battle. Only the creator (the second player to queue) can start it.
+- A first-visit socket can be refused: the handshake rejects a user whose row is not synced yet,
+  and the client does not retry, so a waiter who queues on their very first page load may never
+  hear `matchmaking:matched`. The specs reload `/instant-battle` after the sync. Not fixed.
+
+## Battle flow flags (branch `feat/battle-flow-options`, both OFF by default)
+
+Set on the **realtime host** (Render env, or the local proof's scratch `.env`). Only `1`, `true`,
+`yes` or `on` enable a flag (`src/config/featureFlags.ts`); unset or anything else is off, and off is
+the behaviour above, unchanged.
+
+| Flag | What it does |
+| --- | --- |
+| `BATTLE_EARLY_ADVANCE` | When every non-`DISCONNECTED` player has an answer row for the current question, the question timer is cancelled and the next question follows after a 2 s reveal, so the last answerer sees their verdict. Otherwise the timer runs as before. |
+| `MATCHMAKING_AUTO_START` | When matchmaking pairs two players, the battle goes `WAITING`/`LOBBY` → `LOBBY` with both seats `READY` (under the battle lock, guarded on status and two seats), and starts after a 10 s countdown through the scheduled-battle lobby path. The countdown is there so both players reach the battle page first. Manually created battles keep the lobby. A failed auto-start leaves the battle in the manual flow; the match still stands. |
+
+**Why early advance is race-safe.** The timer and early advance both pass through one claim,
+`claimAdvance(battleId, index)`, which is synchronous after the callers' last `await`: it checks and
+sets `advancedFrom` and cancels the timer in one tick, so of any number of concurrent answers (and the
+timer) exactly one moves past a question. Completion stays the `completeBattle` compare-and-set.
+The claim lives in the process that runs the battle's timer. An answer handled by another instance
+finds no state and does nothing, so the battle falls back to the timer, never to a double advance.
+
+**Known limits.** If a player leaves during the auto-start countdown, the start's compare-and-set
+needs two seats and refuses, leaving the remaining player in `LOBBY`. The 10 s countdown and 2 s
+reveal are constants (`AUTO_START_COUNTDOWN_MS`, `EARLY_ADVANCE_REVEAL_MS`).
+
+**Proof with both flags on:** `RT_FLOW_OPTIONS=1 Backend/qa/realtime/run-local-proof.sh` writes both
+flags into the scratch `.env` and runs `Frontend/realtime-local/battle-flow-options.spec.ts` (the
+default spec skips itself). It asserts:
+
+1. **Auto-start:** right after `matchmaking:matched`, both `BattleParticipant` rows are `READY`; both
+   browsers then get `battle:started` and question 0 with no ready/start/lobby request sent; the
+   battle is `IN_PROGRESS` and both seats `PLAYING`.
+2. **Early advance:** both answer question 1 at once; question 2 arrives well inside the time limit,
+   and each browser gets exactly one `battle:question` for it.
+3. **Not everyone answered:** only Alpha answers question 2; question 3 arrives no sooner than
+   `time_limit` later, with one `BattleAnswer` row.
+4. **Completion:** questions 3–5 advance early; `COMPLETED` with Alpha the winner; `games_played` 1
+   each; each browser saw indexes `[0,1,2,3,4]` once and one `battle:completed`; no API error.
+
+Result on 2026-10-25: **4 / 4 passed** (1.9 min) with the flags on, and the default proof still
+**6 / 6** (2.8 min) on the same build.

@@ -247,6 +247,15 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-10-25 — Battle flow flags (branch `feat/battle-flow-options`, OFF by default)
+
+### [P2] Early advance and matchmaking auto-start, each behind its own env flag
+- **Files:** `src/config/featureFlags.ts` (new), `src/services/battleSocket.ts` (`claimAdvance`, `advanceIfAllAnswered`, `scheduleAutoStart`), `src/repositories/battle/gameplay.ts` (`allActivePlayersAnswered`), `src/repositories/battle/lifecycle.ts` (`autoReadyMatchedBattle`), `src/services/matchmaking/matchmakingService.ts`, `.env.example`, `docs/REALTIME_HOSTING.md` ("Battle flow flags").
+- **Flags:** `BATTLE_EARLY_ADVANCE`, `MATCHMAKING_AUTO_START`; only `1/true/yes/on` enable them.
+- **Tests:** `tests/services/battleEarlyAdvance.test.ts`, `tests/repositories/battleAutoStart.test.ts`, `tests/matchmaking/matchmakingAutoStart.test.ts`; the claim guard was mutation-checked. Local proof with both flags on: `RT_FLOW_OPTIONS=1 qa/realtime/run-local-proof.sh` (4/4), default still 6/6.
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:

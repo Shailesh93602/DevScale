@@ -9,6 +9,7 @@ RT_DB="${RT_DB:-eduscale_rt_test}"
 RT_REDIS_DB="${RT_REDIS_DB:-5}"
 RT_DIR="${RT_DIR:-$(mktemp -d)}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
+RT_FLOW_OPTIONS="${RT_FLOW_OPTIONS:-0}" # 1 = BATTLE_EARLY_ADVANCE + MATCHMAKING_AUTO_START on
 DB_URL="postgresql://${USER}@127.0.0.1:${RT_PG_PORT}/${RT_DB}"
 
 case "$RT_DB" in *_test | *_e2e) ;; *) echo "RT_DB must end in _test or _e2e" >&2; exit 2 ;; esac
@@ -39,6 +40,9 @@ REDIS_URL=redis://127.0.0.1:6379/$RT_REDIS_DB
 CORS_ORIGIN=http://127.0.0.1:3055
 API_URL=http://127.0.0.1:4055
 EOF
+if [ "$RT_FLOW_OPTIONS" = "1" ]; then
+  printf 'BATTLE_EARLY_ADVANCE=1\nMATCHMAKING_AUTO_START=1\n' >>"$RT_DIR/.env"
+fi
 
 createdb -h 127.0.0.1 -p "$RT_PG_PORT" "$RT_DB" 2>/dev/null || true
 cd "$REPO/Backend"
@@ -80,4 +84,4 @@ curl -sf -o /dev/null "http://127.0.0.1:4055/socket.io/?EIO=4&transport=polling"
 
 echo "▶ playwright"
 cd "$REPO/Frontend"
-RT_DATABASE_URL="$DB_URL" npx playwright test -c playwright.realtime.config.ts
+RT_FLOW_OPTIONS="$RT_FLOW_OPTIONS" RT_DATABASE_URL="$DB_URL" npx playwright test -c playwright.realtime.config.ts
