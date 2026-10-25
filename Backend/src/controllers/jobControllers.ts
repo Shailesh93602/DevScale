@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils';
 import { sendResponse } from '../utils/apiResponse';
 import JobRepository from '../repositories/jobRepository';
+import { withAudit } from '../services/auditTrail';
 
 export default class JobController {
   private readonly jobRepo: JobRepository;
@@ -65,9 +66,24 @@ export default class JobController {
 
   public deleteJob = catchAsync(async (req: Request, res: Response) => {
     const jobId = req.params.id;
-    const deletedJob = await this.jobRepo.delete({
-      where: { id: jobId },
-    });
+    // Audited atomically: a missing id makes the delete throw, which rolls the
+    // transaction back, so a failed delete leaves no audit row.
+    const deletedJob = await withAudit(
+      (deleted: { id: string }) => ({
+        admin_id: req.user.id,
+        action: 'DELETE_JOB',
+        entity: 'JOB',
+        entity_id: jobId,
+        details: {
+          requested_ids: [jobId],
+          deleted_ids: [deleted.id],
+          count: 1,
+        },
+        ip_address: req.ip,
+        user_agent: req.headers['user-agent'],
+      }),
+      (tx) => tx.job.delete({ where: { id: jobId } })
+    );
 
     if (!deletedJob) {
       return sendResponse(res, 'JOB_NOT_FOUND');

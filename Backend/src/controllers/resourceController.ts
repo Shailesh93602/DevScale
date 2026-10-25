@@ -5,6 +5,7 @@ import Joi from 'joi';
 import { sendResponse } from '../utils/apiResponse';
 import { createAppError } from '../utils/errorHandler';
 import { sanitizeText, sanitizeRichText } from '../utils/sanitize';
+import { withAudit } from '../services/auditTrail';
 import interviewQuestions from '../../resources/interviewquestions.json' with { type: 'json' };
 
 // Root directory of the project (for resource file paths)
@@ -65,7 +66,37 @@ export default class ResourceController {
     if (!Array.isArray(ids) || ids.length === 0) {
       throw createAppError('Invalid subject IDs array', 400);
     }
-    await prisma.subject.deleteMany({ where: { id: { in: ids } } });
+    // Audited in the delete's transaction. A count mismatch means a concurrent
+    // delete raced us; roll back rather than record ids we did not remove.
+    await withAudit(
+      (deletedIds: string[]) => ({
+        admin_id: req.user.id,
+        action: 'BULK_DELETE_SUBJECTS',
+        entity: 'SUBJECT',
+        entity_id: 'BULK',
+        details: {
+          requested_ids: ids,
+          deleted_ids: deletedIds,
+          count: deletedIds.length,
+        },
+        ip_address: req.ip,
+        user_agent: req.headers['user-agent'],
+      }),
+      async (tx) => {
+        const found = await tx.subject.findMany({
+          where: { id: { in: ids } },
+          select: { id: true },
+        });
+        const deletedIds = found.map((s) => s.id);
+        const { count } = await tx.subject.deleteMany({
+          where: { id: { in: deletedIds } },
+        });
+        if (count !== deletedIds.length) {
+          throw createAppError('Subjects changed during delete, retry', 409);
+        }
+        return deletedIds;
+      }
+    );
     sendResponse(res, 'SUBJECTS_DELETED');
   });
 

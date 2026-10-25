@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { catchAsync } from '../utils/index.js';
 import { sendResponse } from '../utils/apiResponse.js';
 import { MainConceptRepository } from '../repositories/mainConceptRepository.js';
+import { withAudit } from '../services/auditTrail.js';
 
 export default class MainConceptController {
   private readonly mainConceptRepo: MainConceptRepository;
@@ -87,7 +88,20 @@ export default class MainConceptController {
 
   deleteMainConcept = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const mainConcept = await this.mainConceptRepo.deleteMainConcept(id);
+    // Audited atomically: a missing id makes the delete throw, which rolls the
+    // transaction back, so a failed delete leaves no audit row.
+    const mainConcept = await withAudit(
+      (deleted: { id: string }) => ({
+        admin_id: req.user.id,
+        action: 'DELETE_MAIN_CONCEPT',
+        entity: 'MAIN_CONCEPT',
+        entity_id: id,
+        details: { requested_ids: [id], deleted_ids: [deleted.id], count: 1 },
+        ip_address: req.ip,
+        user_agent: req.headers['user-agent'],
+      }),
+      (tx) => tx.mainConcept.delete({ where: { id } })
+    );
 
     return sendResponse(res, 'MAIN_CONCEPT_DELETED', {
       data: mainConcept,

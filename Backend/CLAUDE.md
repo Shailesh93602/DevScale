@@ -265,6 +265,14 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-10-25 — Curriculum/job deletes audited
+
+### [P1] Subject bulk delete, main-concept delete and job delete write an audit row atomically
+- **Files:** `src/controllers/{resourceController,mainConceptController,jobControllers}.ts`, `src/tests/security/bulkDeleteAudit.test.ts` (new, 9).
+- **Change:** each delete runs inside `withAudit`, so the row (`BULK_DELETE_SUBJECTS` / `DELETE_MAIN_CONCEPT` / `DELETE_JOB`, details `{ requested_ids, deleted_ids, count }`) commits with the delete or not at all. Subjects resolve the existing ids first; a count mismatch (concurrent delete) rolls back with 409. There is no bulk route for main concepts or jobs; their single `DELETE` routes are the ones covered. All three were already `authorizeRoles('ADMIN')`; the test proves a STUDENT gets 403 through the real routers.
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:
