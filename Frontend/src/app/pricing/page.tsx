@@ -144,7 +144,7 @@ export default function PricingPage() {
             className={`relative transform rounded-3xl border p-8 transition-all duration-300 ${
               plan.highlighted
                 ? 'border-primary/50 bg-card shadow-[0_0_30px_hsl(var(--primary)/0.18)] ring-1 ring-primary/30 hover:-translate-y-2'
-                : 'border-border bg-card opacity-80'
+                : 'border-border bg-card'
             }`}
           >
             <div className="mb-8">

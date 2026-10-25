@@ -119,7 +119,7 @@ export function BattleReplay({ fixture }: BattleReplayProps) {
             </div>
             <Badge
               variant="outline"
-              className="w-fit border-amber-500/40 text-amber-700"
+              className="w-fit border-amber-500/40 text-warning"
             >
               {fixture.label}
             </Badge>
@@ -147,7 +147,7 @@ export function BattleReplay({ fixture }: BattleReplayProps) {
               <Badge variant="outline">{fixture.battle.difficulty}</Badge>
               <Badge
                 variant="outline"
-                className="border-amber-500/40 text-amber-700"
+                className="border-amber-500/40 text-warning"
               >
                 {fixture.label}
               </Badge>

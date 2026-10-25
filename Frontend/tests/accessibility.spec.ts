@@ -38,6 +38,9 @@ const publicRoutes = [
   // both would have been audited as a student only.
   { path: '/career-roadmap', name: 'career-roadmap' },
   { path: '/coding-challenges', name: 'coding-challenges' },
+  // Public and linked, but missing here: both shipped dark/light contrast failures.
+  { path: '/pricing', name: 'pricing' },
+  { path: '/battles/demo', name: 'battles-demo' },
 ];
 
 /**
