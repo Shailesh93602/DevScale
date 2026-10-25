@@ -24,6 +24,8 @@ import { DEFAULT_RATING } from '../rating/ratingMath.js';
 import logger from '../../utils/logger.js';
 import { createAppError } from '../../utils/errorHandler.js';
 import { getRandomPoolQuestions } from '../questionPoolService.js';
+import battleSocketService from '../battleSocket.js';
+import { isMatchmakingAutoStartEnabled } from '../../config/featureFlags.js';
 
 const QUEUE_KEY = 'matchmaking:queue:quick';
 const META_KEY = 'matchmaking:meta:quick';
@@ -35,6 +37,8 @@ const BAND_PER_SECOND = 20; // widen while waiting
 const MAX_BAND = 600;
 const LOCK_TTL_MS = 5000;
 const RANKED_QUESTIONS = 5;
+/** Auto-start countdown: time for both players to reach the battle page. */
+export const AUTO_START_COUNTDOWN_MS = 10_000;
 
 export interface MatchResult {
   matched: boolean;
@@ -88,6 +92,10 @@ export interface MatchmakingDeps {
   getRating: (userId: string) => Promise<number>;
   /** Notify a (typically waiting) player that they were matched. */
   notify: (userId: string, event: string, data: unknown) => void;
+  /** MATCHMAKING_AUTO_START, read per match. */
+  autoStartEnabled: () => boolean;
+  /** Ready both seats and arm the start; false when the battle's guard refused. */
+  autoStart: (battleId: string) => Promise<boolean>;
   /** Injectable clock for deterministic tests. */
   now: () => number;
 }
@@ -128,6 +136,17 @@ const defaultDeps: MatchmakingDeps = {
   notify: (userId, event, data) => {
     const battleId = (data as { battleId?: string })?.battleId ?? '';
     void socketService.emitToUser(battleId, userId, event, data);
+  },
+  autoStartEnabled: isMatchmakingAutoStartEnabled,
+  autoStart: async (battleId) => {
+    const ready = await battleRepo.autoReadyMatchedBattle(battleId);
+    if (ready) {
+      battleSocketService.scheduleAutoStart(
+        battleId,
+        Date.now() + AUTO_START_COUNTDOWN_MS
+      );
+    }
+    return ready;
   },
   now: () => Date.now(),
 };
@@ -202,6 +221,16 @@ export class MatchmakingService {
     return null;
   }
 
+  /** A failed auto-start leaves the battle in the manual lobby flow; the match stands. */
+  private async startMatched(battleId: string): Promise<void> {
+    try {
+      const started = await this.d.autoStart(battleId);
+      if (!started) logger.warn(`auto-start refused for battle ${battleId}`);
+    } catch (err) {
+      logger.error(`auto-start failed for battle ${battleId}`, { err });
+    }
+  }
+
   /** Try to pair `userId` with the nearest waiting player within the band. */
   async tryMatch(userId: string): Promise<MatchResult> {
     const scoreStr = await this.d.redis.zscore(QUEUE_KEY, userId);
@@ -270,6 +299,10 @@ export class MatchmakingService {
         await this.d.redis.hset(SEEN_KEY, userId, now);
         await this.d.redis.hset(SEEN_KEY, opponent.userId, now);
         throw err;
+      }
+
+      if (this.d.autoStartEnabled()) {
+        await this.startMatched(battle.battleId);
       }
 
       // The caller gets the result inline; the waiter learns via their socket.

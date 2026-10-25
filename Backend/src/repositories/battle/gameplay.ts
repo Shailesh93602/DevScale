@@ -264,6 +264,26 @@ export async function checkAllParticipantsDone(
   return activePlayers.every((p) => p.status === 'COMPLETED');
 }
 
+/** Every non-DISCONNECTED participant has an answer row for `questionId`. */
+export async function allActivePlayersAnswered(
+  battleId: string,
+  questionId: string
+): Promise<boolean> {
+  const active = await prisma.battleParticipant.findMany({
+    where: { battle_id: battleId, status: { not: 'DISCONNECTED' } },
+    select: { user_id: true },
+  });
+  if (active.length === 0) return false;
+  const answered = await prisma.battleAnswer.count({
+    where: {
+      battle_id: battleId,
+      question_id: questionId,
+      user_id: { in: active.map((p) => p.user_id) },
+    },
+  });
+  return answered >= active.length;
+}
+
 /**
  * 🔴 SERIALIZING IS NOT DEDUPLICATING.
  *

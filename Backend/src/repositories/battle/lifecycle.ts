@@ -220,6 +220,32 @@ export async function startBattle(battleIdOrSlug: string, userId: string) {
   });
 }
 
+// ── Auto-ready (matchmaking) ──────────────────────────────────────────────
+
+/** WAITING/LOBBY → LOBBY with every JOINED seat READY; false when the guard refused. */
+export async function autoReadyMatchedBattle(
+  battleId: string
+): Promise<boolean> {
+  return withBattleLock(battleId, BATTLE_START_LOCK_TTL_MS, () =>
+    prisma.$transaction(async (tx) => {
+      const opened = await tx.battle.updateMany({
+        where: {
+          id: battleId,
+          status: { in: ['WAITING', 'LOBBY'] },
+          current_participants: { gte: 2 },
+        },
+        data: { status: 'LOBBY' },
+      });
+      if (opened.count === 0) return false;
+      await tx.battleParticipant.updateMany({
+        where: { battle_id: battleId, status: 'JOINED' },
+        data: { status: 'READY' },
+      });
+      return true;
+    })
+  );
+}
+
 // ── Cancel ────────────────────────────────────────────────────────────────
 
 export async function cancelBattle(battleIdOrSlug: string, userId: string) {

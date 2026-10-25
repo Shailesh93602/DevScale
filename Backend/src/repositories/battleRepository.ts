@@ -21,6 +21,7 @@ import {
   getBattleQuestions,
 } from './battle/questions.js';
 import {
+  autoReadyMatchedBattle,
   cancelBattle,
   joinBattle,
   leaveBattle,
@@ -29,6 +30,7 @@ import {
   updateStatus,
 } from './battle/lifecycle.js';
 import {
+  allActivePlayersAnswered,
   checkAllParticipantsDone,
   completeBattle,
   submitAnswer,
@@ -129,6 +131,10 @@ export class BattleRepository extends BaseRepository<
     return cancelBattle(battleIdOrSlug, userId);
   }
 
+  autoReadyMatchedBattle(battleId: string): Promise<boolean> {
+    return autoReadyMatchedBattle(battleId);
+  }
+
   updateStatus(
     battleIdOrSlug: string,
     userId: string,
@@ -157,6 +163,13 @@ export class BattleRepository extends BaseRepository<
 
   checkAllParticipantsDone(battleId: string): Promise<boolean> {
     return checkAllParticipantsDone(battleId);
+  }
+
+  allActivePlayersAnswered(
+    battleId: string,
+    questionId: string
+  ): Promise<boolean> {
+    return allActivePlayersAnswered(battleId, questionId);
   }
 
   completeBattle(battleId: string) {

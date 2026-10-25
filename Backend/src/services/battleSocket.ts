@@ -3,14 +3,21 @@ import logger from '../utils/logger';
 import prisma from '../lib/prisma';
 import { BattleRepository } from '../repositories/battleRepository';
 import { BattleRatingService } from './rating/battleRatingService';
+import { isBattleEarlyAdvanceEnabled } from '../config/featureFlags';
 
 const battleRepo = new BattleRepository();
 const battleRatingService = new BattleRatingService();
+
+/** Early advance waits this long so the last answerer sees their verdict. */
+export const EARLY_ADVANCE_REVEAL_MS = 2_000;
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
 interface BattleState {
   currentQuestionIndex: number;
+  currentQuestionId: string | null;
+  /** Highest index already moved past; the compare-and-set for advancing. */
+  advancedFrom: number;
   questionStartedAt: number;
   questionEndsAt: number;
   questionTimerInterval: NodeJS.Timeout | null;
@@ -86,7 +93,22 @@ class BattleSocketService {
     }
   }
 
-  private runLobbyCountdown(battleId: string, startAtMs: number) {
+  /** Matchmaking auto-start: the battle is already LOBBY with every seat READY. */
+  scheduleAutoStart(battleId: string, startAtMs: number) {
+    socketService.emitToRoom(battleId, 'battle:status_changed', {
+      status: 'LOBBY',
+    });
+    this.runLobbyCountdown(battleId, startAtMs, 2);
+    logger.info(
+      `Battle ${battleId}: auto-start in ${Math.round((startAtMs - Date.now()) / 1000)}s`
+    );
+  }
+
+  private runLobbyCountdown(
+    battleId: string,
+    startAtMs: number,
+    minParticipants = 0
+  ) {
     const state = this.getOrCreateState(battleId);
     if (state.lobbyCountdownHandle) clearInterval(state.lobbyCountdownHandle);
 
@@ -97,7 +119,13 @@ class BattleSocketService {
         state.lobbyCountdownHandle = null;
         try {
           const claimed = await prisma.battle.updateMany({
-            where: { id: battleId, status: 'LOBBY' },
+            where: {
+              id: battleId,
+              status: 'LOBBY',
+              ...(minParticipants > 0 && {
+                current_participants: { gte: minParticipants },
+              }),
+            },
             data: { status: 'IN_PROGRESS' },
           });
           if (claimed.count === 1) await this.startBattle(battleId);
@@ -176,6 +204,7 @@ class BattleSocketService {
       const endsAt = now + question.time_limit * 1000;
 
       state.currentQuestionIndex = index;
+      state.currentQuestionId = question.id;
       state.questionStartedAt = now;
       state.questionEndsAt = endsAt;
 
@@ -200,16 +229,9 @@ class BattleSocketService {
       // Auto-advance when time expires
       const timeoutHandle = setTimeout(
         async () => {
-          clearInterval(timerInterval);
-          state.questionTimerInterval = null;
-          state.questionTimeoutHandle = null;
+          if (!this.claimAdvance(battleId, index)) return;
           logger.info(`Battle ${battleId} Q${index} expired → advancing`);
-          const done = await battleRepo.checkAllParticipantsDone(battleId);
-          if (done) {
-            await this.endBattle(battleId);
-          } else {
-            await this.broadcastQuestion(battleId, index + 1);
-          }
+          await this.moveOn(battleId, index);
         },
         question.time_limit * 1000 + 500
       );
@@ -221,6 +243,49 @@ class BattleSocketService {
     } catch (err) {
       logger.error(`broadcastQuestion ${battleId} index ${index}:`, err);
     }
+  }
+
+  // ── Advancing ──────────────────────────────────────────────────────────
+
+  /**
+   * The one gate past question `index`, shared by the timer and early advance.
+   * Synchronous after the callers' last await, so exactly one caller wins it.
+   */
+  private claimAdvance(battleId: string, index: number): boolean {
+    const state = this.states.get(battleId);
+    if (!state || state.advancedFrom >= index) return false;
+    state.advancedFrom = index;
+    if (state.questionTimerInterval) clearInterval(state.questionTimerInterval);
+    if (state.questionTimeoutHandle) clearTimeout(state.questionTimeoutHandle);
+    state.questionTimerInterval = null;
+    state.questionTimeoutHandle = null;
+    return true;
+  }
+
+  private async moveOn(battleId: string, index: number) {
+    const done = await battleRepo.checkAllParticipantsDone(battleId);
+    if (done) {
+      await this.endBattle(battleId);
+    } else {
+      await this.broadcastQuestion(battleId, index + 1);
+    }
+  }
+
+  /** BATTLE_EARLY_ADVANCE: every active player answered the current question. */
+  private async advanceIfAllAnswered(battleId: string) {
+    const state = this.states.get(battleId);
+    if (!state?.currentQuestionId) return;
+    const index = state.currentQuestionIndex;
+    const answered = await battleRepo.allActivePlayersAnswered(
+      battleId,
+      state.currentQuestionId
+    );
+    if (!answered || !this.claimAdvance(battleId, index)) return;
+    logger.info(`Battle ${battleId} Q${index} all answered → advancing early`);
+    state.questionTimeoutHandle = setTimeout(() => {
+      state.questionTimeoutHandle = null;
+      void this.moveOn(battleId, index);
+    }, EARLY_ADVANCE_REVEAL_MS);
   }
 
   // ── Answer submitted ────────────────────────────────────────────────────
@@ -262,7 +327,11 @@ class BattleSocketService {
         state.questionTimerInterval = null;
       }
       await this.endBattle(battleId);
+      return;
     }
+
+    if (isBattleEarlyAdvanceEnabled())
+      await this.advanceIfAllAnswered(battleId);
   }
 
   // ── End battle ─────────────────────────────────────────────────────────
@@ -441,6 +510,8 @@ class BattleSocketService {
     if (!this.states.has(battleId)) {
       this.states.set(battleId, {
         currentQuestionIndex: -1,
+        currentQuestionId: null,
+        advancedFrom: -1,
         questionStartedAt: 0,
         questionEndsAt: 0,
         questionTimerInterval: null,
