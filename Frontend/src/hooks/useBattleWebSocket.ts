@@ -105,7 +105,7 @@ async function getAuthToken(): Promise<string | null> {
 
 const sockets = new Map<string, Socket>();
 
-function getSocket(battleId: string, token: string | null): Socket {
+function getSocket(battleId: string): Socket {
   if (sockets.has(battleId)) return sockets.get(battleId)!;
 
   warmRealtimeHost();
@@ -116,7 +116,10 @@ function getSocket(battleId: string, token: string | null): Socket {
     reconnectionAttempts: 10,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
-    auth: token ? { token } : undefined,
+    // Read per handshake: a token captured at creation expires (~1 h) and every reconnect is refused.
+    auth: (cb) => {
+      void getAuthToken().then((token) => cb(token ? { token } : {}));
+    },
   });
 
   socket.on('connect', () => {
@@ -160,8 +163,8 @@ export function useBattleSocket(battleId: string) {
     if (!battleId || initialized.current) return;
     initialized.current = true;
 
-    getAuthToken().then((token) => {
-      const socket = getSocket(battleId, token);
+    getAuthToken().then(() => {
+      const socket = getSocket(battleId);
       socketRef.current = socket;
 
       for (const { event, handler } of pendingRef.current) {

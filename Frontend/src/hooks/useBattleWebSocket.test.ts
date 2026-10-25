@@ -51,8 +51,8 @@ const h = vi.hoisted(() => {
 });
 
 vi.mock('socket.io-client', () => ({
-  io: () => {
-    const s = h.makeSocket();
+  io: (_url: string, opts: { auth?: unknown }) => {
+    const s = Object.assign(h.makeSocket(), { opts });
     h.state.sockets.push(s);
     return s;
   },
@@ -172,5 +172,23 @@ describe('useBattleSocket.on', () => {
       socket.receive('battle:completed', { winner_id: 'u1', leaderboard: [] });
     });
     expect(completed).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('useBattleSocket handshake auth', () => {
+  it('reads the CURRENT token on every handshake, not the one from creation', async () => {
+    h.state.session = () => Promise.resolve('token-at-creation');
+    renderHook(() => useBattleSocket(freshBattleId()));
+    await settle();
+    const { auth } = (latestSocket() as unknown as { opts: { auth?: unknown } })
+      .opts;
+    expect(typeof auth).toBe('function');
+
+    // The access token refreshes (~hourly); a reconnect must carry the new one.
+    h.state.session = () => Promise.resolve('token-after-refresh');
+    const sent = await new Promise((resolve) =>
+      (auth as (cb: (data: object) => void) => void)(resolve),
+    );
+    expect(sent).toEqual({ token: 'token-after-refresh' });
   });
 });
