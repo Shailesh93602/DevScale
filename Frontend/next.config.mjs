@@ -29,9 +29,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   // Build identity, baked into the bundle so /api/version (src/lib/app-version.ts)
   // can answer even where Vercel's system env is not exposed to functions. The
   // build step always has the git vars — vercel.json's ignoreCommand depends on
