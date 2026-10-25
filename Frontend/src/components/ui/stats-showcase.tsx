@@ -10,6 +10,7 @@ import {
   FaChartLine,
   FaLightbulb,
 } from 'react-icons/fa';
+import { battleCopy } from '@/lib/battle-claims';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 
@@ -25,7 +26,7 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
   const platformStats = [
     {
       label: 'Quiz Battles',
-      value: 'Real-Time',
+      value: battleCopy().stat,
       icon: <FaLaptopCode size={24} />,
     },
     { label: 'Career Roadmaps', value: 'Adaptive', icon: <FaRoad size={24} /> },
@@ -61,12 +62,11 @@ export const StatsShowcase = ({ className }: StatsShowcaseProps) => {
       name: 'Battles',
       icon: <FaUsers />,
       title: 'Code Against Someone',
-      description:
-        'Head-to-head battles over a live socket connection, scored as you answer.',
+      description: battleCopy().showcase,
       stats: platformStats,
       features: [
         'Create a battle or get matched into one',
-        'Live lobby with a countdown and participant list',
+        'A lobby with a countdown and participant list',
         'Timed rounds scored on speed and accuracy',
         'Global and per-battle leaderboards',
       ],

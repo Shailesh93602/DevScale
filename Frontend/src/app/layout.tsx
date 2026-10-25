@@ -12,17 +12,18 @@ import { ReduxProvider } from '@/contexts/ReduxContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import Loader from '@/components/Loader';
 import type { Metadata } from 'next';
+import { battleCopy } from '@/lib/battle-claims';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit' });
+const battleMeta = battleCopy().meta;
 
 export const metadata: Metadata = {
   title: {
     default: 'EduScale | All-in-One Engineering Learning Platform',
     template: '%s | EduScale',
   },
-  description:
-    'EduScale is the all-in-one platform for engineering students. Personalized roadmaps, real-time quiz battles, placement preparation, coding challenges, and interactive learning. Built by Shailesh Chaudhari.',
+  description: battleMeta.description,
   keywords: [
     'engineering',
     'learning platform',
@@ -37,15 +38,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     title: 'EduScale | All-in-One Engineering Learning Platform',
-    description:
-      'Personalized roadmaps, real-time quiz battles, and interactive challenges for engineering students.',
+    description: battleMeta.openGraph,
     siteName: 'EduScale',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'EduScale | Engineering Learning Platform',
-    description:
-      'Personalized roadmaps, real-time quiz battles, and interactive challenges.',
+    description: battleMeta.twitter,
   },
   robots: {
     index: true,
@@ -92,8 +91,7 @@ const structuredData = {
       '@id': `${SITE_URL}/#website`,
       url: SITE_URL,
       name: 'EduScale',
-      description:
-        'Learning platform for engineering students: career roadmaps, coding challenges, real-time battles and placement preparation.',
+      description: battleMeta.site,
       inLanguage: 'en',
       publisher: { '@id': `${SITE_URL}/#organization` },
     },

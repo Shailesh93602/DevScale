@@ -5,6 +5,7 @@ import { FaTrophy, FaMedal, FaAward, FaUser } from 'react-icons/fa';
 import Link from 'next/link';
 import { ctaLinks } from '@/constants';
 import { useAxiosGet } from '@/hooks/useAxios';
+import { battleCopy } from '@/lib/battle-claims';
 
 /**
  * Top players by competitive rating, from `GET /ratings/leaderboard`.
@@ -119,7 +120,7 @@ const SimpleWeeklyLeaderboard: React.FC<WeeklyLeaderboardProps> = ({
           Rating Leaderboard
         </h2>
         <p className="mt-1 text-center text-sm text-muted-foreground">
-          Top players by competitive rating, live from the Battle Zone.
+          {battleCopy().rating}
         </p>
       </div>
 

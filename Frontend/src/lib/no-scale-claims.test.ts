@@ -462,3 +462,140 @@ describe('live battles are claimed only when the realtime host is configured', (
     expect(liveClaims(text).length).toBeGreaterThan(0);
   }, 30_000);
 });
+
+/**
+ * The same rule for every other surface a visitor or a crawler reads: the landing page, the
+ * about page, the root metadata and JSON-LD, the PWA manifest and the social card. These ship
+ * at build time, so the build without NEXT_PUBLIC_REALTIME_API_BASE_URL must not claim live play.
+ */
+describe('no surface claims live battles while the realtime host is unset', () => {
+  const ENV = 'NEXT_PUBLIC_REALTIME_API_BASE_URL';
+  const LIVE_PLAY = /real-?time|\blive\b|synced timer/i;
+
+  const liveClaims = (text: string) =>
+    text
+      .split(/(?<=[.!?])\s+|\n/)
+      .filter((s) => LIVE_PLAY.test(s) && !DENIAL.test(s));
+
+  async function surfaces(base: string) {
+    vi.resetModules();
+    vi.stubEnv(ENV, base);
+    vi.spyOn(console, 'error').mockImplementation(() => {}); // <html> inside a <div>
+    vi.stubGlobal(
+      'IntersectionObserver',
+      class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      },
+    );
+    const pass = ({ children }: { children?: unknown }) => children;
+    vi.doMock('next/font/google', () => ({
+      Inter: () => ({ variable: 'inter' }),
+      Outfit: () => ({ variable: 'outfit' }),
+    }));
+    vi.doMock('@/app/App', () => ({ default: pass }));
+    vi.doMock('@/components/ThemeProvider', () => ({ ThemeProvider: pass }));
+    vi.doMock('@/contexts/WebSocketContext', () => ({
+      WebSocketProvider: pass,
+    }));
+    vi.doMock('@/contexts/ReduxContext', () => ({ ReduxProvider: pass }));
+    vi.doMock('@/contexts/AuthContext', () => ({ AuthProvider: pass }));
+    vi.doMock('react-redux', () => ({
+      useSelector: (pick: (s: unknown) => unknown) =>
+        pick({ user: { isAuthenticated: false } }),
+    }));
+    vi.doMock('@/hooks/useAxios', () => ({
+      useAxiosGet: () => [() => new Promise(() => {})],
+    }));
+    vi.doMock('next/og', () => ({
+      ImageResponse: class {
+        constructor(public element: unknown) {}
+      },
+    }));
+
+    const layout = await import('@/app/layout');
+    const { default: manifest } = await import('@/app/manifest');
+    const { default: OG, alt } = await import('@/app/opengraph-image');
+    const { default: HomePage } = await import('@/components/Landing/HomePage');
+    const { default: About } = await import('@/app/about/page');
+
+    const html = (el: unknown) => {
+      const { container, unmount } = render(el as React.ReactElement);
+      const text = container.textContent ?? '';
+      unmount();
+      return text;
+    };
+    const m = layout.metadata;
+    const titles = [
+      typeof m.title === 'object' && m.title && 'default' in m.title
+        ? m.title.default
+        : String(m.title),
+      String(m.openGraph?.title ?? ''),
+      String(m.twitter?.title ?? ''),
+    ];
+    const descriptions = [
+      m.description ?? '',
+      m.openGraph?.description ?? '',
+      m.twitter?.description ?? '',
+    ];
+    const text = [
+      ...titles,
+      ...descriptions,
+      html(createElement(layout.default, null, 'page')),
+      manifest().description ?? '',
+      alt,
+      html((OG() as unknown as { element: unknown }).element),
+      html(createElement(HomePage)),
+      html(createElement(About)),
+    ].join('\n');
+    return { text, titles, descriptions };
+  }
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+    vi.resetModules();
+  });
+
+  it('no marketing source holds a literal live-play claim', () => {
+    const hits = UI_FILES.flatMap((rel) =>
+      read(rel)
+        .split('\n')
+        .map((line, i) => ({ line, i }))
+        .filter(
+          ({ line }) =>
+            !COMMENT_LINE.test(line) &&
+            !DENIAL.test(line) &&
+            LIVE_PLAY.test(line),
+        )
+        .map(({ line, i }) => `${rel}:L${i + 1} ${line.trim()}`),
+    );
+    expect(hits, `use battleCopy() from lib/battle-claims.ts`).toEqual([]);
+  });
+
+  for (const [mode, base] of [
+    ['unset', ''],
+    ['set', 'https://realtime.example.test/api/v1'],
+  ] as const) {
+    it(`titles ≤60 and descriptions ≤155 with the env var ${mode}`, async () => {
+      const { titles, descriptions } = await surfaces(base);
+      for (const t of titles) expect(t.length, t).toBeLessThanOrEqual(60);
+      for (const d of descriptions)
+        expect(String(d).length, String(d)).toBeLessThanOrEqual(155);
+    }, 60_000);
+  }
+
+  it('with the env var unset, nothing claims live battles', async () => {
+    const { text } = await surfaces('');
+    expect(liveClaims(text)).toEqual([]);
+    expect(text).toMatch(/real-time[^.]*coming soon/i);
+  }, 60_000);
+
+  it('with the env var set, the live claim appears', async () => {
+    const { text } = await surfaces('https://realtime.example.test/api/v1');
+    expect(text).toMatch(/real-time quiz battles/i);
+    expect(liveClaims(text).length).toBeGreaterThan(0);
+  }, 60_000);
+});

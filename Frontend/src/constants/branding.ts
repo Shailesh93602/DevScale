@@ -1,3 +1,5 @@
+import { battleCopy } from '@/lib/battle-claims';
+
 export const BRANDING = {
   name: 'EduScale',
   description:
@@ -28,12 +30,7 @@ export const BRANDING = {
   // landing page in place of fabricated user testimonials (EduScale is new, so
   // we don't claim users/quotes we don't have).
   communityHighlights: [
-    {
-      title: 'Real-time Battle Zone',
-      description:
-        'Go head-to-head in live quiz battles with shared questions and a synced timer — practice under real pressure.',
-      icon: 'FaBolt',
-    },
+    { ...battleCopy().highlight, icon: 'FaBolt' },
     {
       title: 'Adaptive roadmaps',
       description:

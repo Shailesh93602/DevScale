@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Shield, Zap, Users, Target, Rocket, Code2 } from 'lucide-react';
 import { BRANDING } from '@/constants';
+import { battleCopy } from '@/lib/battle-claims';
 
 // Honest product capabilities — EduScale is a new, solo-built platform, so
 // this leads with what it does, not user counts it does not have (see QA: no
@@ -11,7 +12,7 @@ import { BRANDING } from '@/constants';
 // reason: there is no "we", and a page that says "we" and then "one engineer"
 // in the same scroll reads as either padding or a slip.
 const stats = [
-  { label: 'Battle Zones', value: 'Real-Time' },
+  { label: 'Battle Zones', value: battleCopy().stat },
   { label: 'Career Roadmaps', value: 'Adaptive' },
   { label: 'Code Runner', value: 'Sandboxed' },
   { label: 'Production Stack', value: 'Next · PG · Redis' },
@@ -33,8 +34,7 @@ const values = [
   {
     icon: <Zap className="h-6 w-6" />,
     title: 'Battle Tested',
-    description:
-      'Timed, scored, live. The Battle Zone is closer to an interview than a tutorial is, and that is the point.',
+    description: battleCopy().tested,
   },
   {
     icon: <Shield className="h-6 w-6" />,
@@ -170,10 +170,9 @@ export default function About() {
                 So I built something that works less like a tutorial and more
                 like a{' '}
                 <strong className="text-foreground">proving ground</strong>:
-                roadmaps you actually progress through, real-time battles
-                against another person, and challenges that grade your code. It
-                is one person&apos;s project, not a company, and it is still
-                growing.
+                roadmaps you actually progress through, {battleCopy().against},
+                and challenges that grade your code. It is one person&apos;s
+                project, not a company, and it is still growing.
               </p>
             </div>
           </motion.div>

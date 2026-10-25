@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { battleCopy } from '@/lib/battle-claims';
 
 export const runtime = 'edge';
 export const alt = 'EduScale — All-in-One Engineering Learning Platform';
@@ -56,8 +57,7 @@ export default function OG() {
           <p
             style={{ fontSize: 30, margin: 0, opacity: 0.85, lineHeight: 1.3 }}
           >
-            Real-time quiz battles, distributed locking, circuit breakers,
-            Prometheus metrics. Built for engineering students.
+            {battleCopy().meta.ogImage}
           </p>
         </div>
         <div style={{ fontSize: 22, opacity: 0.75 }}>

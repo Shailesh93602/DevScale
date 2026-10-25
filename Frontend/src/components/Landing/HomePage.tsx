@@ -21,6 +21,7 @@ import { ThreeDCard } from '@/components/ui/3d-card';
 import { FloatingElements } from '@/components/ui/floating-elements';
 import { AnimatedBattleCard } from '@/components/ui/animated-battle-card';
 import { MagneticButton } from '@/components/ui/magnetic-button';
+import { battleCopy } from '@/lib/battle-claims';
 
 /** Scrolled far enough that returning to the top is a real action. */
 const SHOW_AFTER_PX = 400;
@@ -249,11 +250,7 @@ export default function HomePage() {
                   className="h-full"
                 />
 
-                <AnimatedBattleCard
-                  title="Live Competitions"
-                  description="Participate in real-time battles against peers to test your speed and accuracy."
-                  className="h-full"
-                />
+                <AnimatedBattleCard {...battleCopy().card} className="h-full" />
 
                 <AnimatedBattleCard
                   title="Difficulty Levels"

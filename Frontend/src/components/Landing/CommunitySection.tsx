@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { FaBolt, FaRoad, FaLaptopCode } from 'react-icons/fa';
 import { BRANDING } from '@/constants';
+import { battleCopy } from '@/lib/battle-claims';
 
 // Map the icon name stored in branding constants to its component.
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -25,8 +26,7 @@ const CommunitySection: React.FC = () => (
           Built for Engineers Who Practice
         </h2>
         <p className="mx-auto max-w-3xl text-lg text-foreground/90">
-          Learn by doing — compete in live battles, follow structured roadmaps,
-          and run real code with instant feedback.
+          {battleCopy().doing}
         </p>
       </motion.div>
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

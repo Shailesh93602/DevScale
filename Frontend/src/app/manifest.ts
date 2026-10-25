@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/site-url';
+import { battleCopy } from '@/lib/battle-claims';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'EduScale — All-in-One Engineering Learning Platform',
     short_name: 'EduScale',
-    description:
-      'Real-time engineering learning platform with 1v1 quiz battles, distributed locking (Redlock), circuit breakers (opossum), and Prometheus metrics.',
+    description: battleCopy().meta.manifest,
     start_url: '/',
     display: 'standalone',
     background_color: '#5b008f',

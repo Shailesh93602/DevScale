@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
 import { ctaLinks, companyInfo } from '@/constants';
 import { CustomLink } from '@/components/ui/custom-link';
+import { battleCopy } from '@/lib/battle-claims';
 
 const CTASection: React.FC = () => {
   const isAuthenticated = useSelector(
@@ -35,9 +36,9 @@ const CTASection: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          Use {companyInfo.name} to accelerate your learning with real-time quiz
-          battles, structured roadmaps, and a sandboxed code runner — and build
-          toward the career you want.
+          Use {companyInfo.name} to accelerate your learning with{' '}
+          {battleCopy().phrase}, structured roadmaps, and a sandboxed code
+          runner — and build toward the career you want.
         </motion.p>
         <motion.div
           className="flex flex-col items-center justify-center gap-4 sm:flex-row"
