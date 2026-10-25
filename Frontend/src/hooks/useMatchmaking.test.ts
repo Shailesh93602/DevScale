@@ -8,6 +8,9 @@ const h = vi.hoisted(() => {
     const listeners = new Map<string, Set<Handler>>();
     return {
       connected: true,
+      active: false,
+      auth: {} as { token?: string },
+      connect: vi.fn(),
       on: (event: string, fn: Handler) => {
         if (!listeners.has(event)) listeners.set(event, new Set());
         listeners.get(event)!.add(fn);
@@ -87,7 +90,11 @@ vi.mock('@/hooks/useAxios', () => ({
   },
 }));
 
-import { useMatchmaking } from './useMatchmaking';
+import {
+  useMatchmaking,
+  SOCKET_RETRY_LIMIT,
+  socketRetryDelay,
+} from './useMatchmaking';
 
 describe('useMatchmaking', () => {
   beforeEach(() => {
@@ -381,5 +388,184 @@ describe('useMatchmaking', () => {
     });
     expect(result.current.phase).toBe('matched');
     expect(result.current.matchedBattle?.battleId).toBe('battle-late');
+  });
+
+  describe('a refused or dropped socket is retried and never silent', () => {
+    const mounted = async () => {
+      const hook = renderHook(() => useMatchmaking());
+      await act(async () => {
+        await Promise.resolve();
+      });
+      expect(h.state.sockets).toHaveLength(1);
+      return { ...hook, socket: h.state.sockets[0] };
+    };
+    const refuse = (
+      socket: (typeof h.state.sockets)[number],
+      retryable = true,
+    ) => {
+      socket.connected = false;
+      socket.receive(
+        'connect_error',
+        Object.assign(new Error('Invalid authentication token'), {
+          data: { code: 'AUTH_TOKEN_INVALID', retryable },
+        }),
+      );
+    };
+    const flush = async (ms: number) => {
+      await act(async () => {
+        vi.advanceTimersByTime(ms);
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+    };
+
+    it('a refused handshake is retried with a fresh token, then connects', async () => {
+      const { result, socket } = await mounted();
+      expect(result.current.realtimeStatus).toBe('connecting');
+
+      act(() => refuse(socket));
+      expect(result.current.realtimeStatus).toBe('reconnecting');
+      expect(socket.connect).not.toHaveBeenCalled();
+
+      h.state.sessionToken = 'refreshed-token';
+      await flush(socketRetryDelay(0));
+      expect(socket.connect).toHaveBeenCalledTimes(1);
+      expect(socket.auth).toEqual({ token: 'refreshed-token' });
+
+      act(() => {
+        socket.connected = true;
+        socket.receive('connect', undefined);
+      });
+      expect(result.current.realtimeStatus).toBe('connected');
+    });
+
+    it('backs off exponentially and reports unavailable after the limit', async () => {
+      const { result, socket } = await mounted();
+      for (let i = 0; i < SOCKET_RETRY_LIMIT; i++) {
+        act(() => refuse(socket));
+        await flush(socketRetryDelay(i) - 1);
+        expect(socket.connect).toHaveBeenCalledTimes(i);
+        await flush(1);
+        expect(socket.connect).toHaveBeenCalledTimes(i + 1);
+      }
+      expect(socketRetryDelay(1)).toBe(2 * socketRetryDelay(0));
+      act(() => refuse(socket));
+      expect(result.current.realtimeStatus).toBe('unavailable');
+      await flush(60_000);
+      expect(socket.connect).toHaveBeenCalledTimes(SOCKET_RETRY_LIMIT);
+
+      // The UI's Reconnect button starts again.
+      await act(async () => {
+        result.current.reconnectRealtime();
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      expect(result.current.realtimeStatus).toBe('reconnecting');
+      expect(socket.connect).toHaveBeenCalledTimes(SOCKET_RETRY_LIMIT + 1);
+    });
+
+    it('a non-retryable refusal (suspended) is reported at once, not retried', async () => {
+      const { result, socket } = await mounted();
+      act(() => refuse(socket, false));
+      expect(result.current.realtimeStatus).toBe('unavailable');
+      await flush(60_000);
+      expect(socket.connect).not.toHaveBeenCalled();
+    });
+
+    it('a transport drop is left to socket.io, but shown as reconnecting', async () => {
+      const { result, socket } = await mounted();
+      act(() => {
+        socket.active = true;
+        socket.receive('connect_error', new Error('websocket error'));
+      });
+      expect(result.current.realtimeStatus).toBe('reconnecting');
+      await flush(60_000);
+      expect(socket.connect).not.toHaveBeenCalled();
+    });
+
+    it('on reconnect while queuing, a match pushed while disconnected is picked up from status', async () => {
+      h.state.joinMock.mockResolvedValueOnce({
+        success: true,
+        data: { matched: false },
+      });
+      const { result, socket } = await mounted();
+      await act(async () => {
+        await result.current.joinQueue();
+      });
+      expect(result.current.phase).toBe('queuing');
+      const before = h.state.statusMock.mock.calls.length;
+
+      h.state.statusMock.mockResolvedValue({
+        success: true,
+        data: {
+          inQueue: false,
+          queueSize: 0,
+          rating: 1250,
+          match: { matched: true, battleId: 'battle-missed', slug: 's' },
+        },
+      });
+      await act(async () => {
+        socket.connected = true;
+        socket.receive('connect', undefined);
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      expect(h.state.statusMock.mock.calls.length).toBe(before + 1);
+      expect(result.current.phase).toBe('matched');
+      expect(result.current.matchedBattle?.battleId).toBe('battle-missed');
+    });
+
+    it('with no socket at all, the status poll still delivers the match', async () => {
+      h.state.sessionToken = null; // no socket is ever created
+      h.state.joinMock.mockResolvedValueOnce({
+        success: true,
+        data: { matched: false },
+      });
+      const { result } = renderHook(() => useMatchmaking());
+      await act(async () => {
+        await result.current.joinQueue();
+      });
+      expect(h.state.sockets).toHaveLength(0);
+      h.state.statusMock.mockResolvedValue({
+        success: true,
+        data: {
+          inQueue: false,
+          queueSize: 0,
+          rating: null,
+          match: { matched: true, battleId: 'battle-polled' },
+        },
+      });
+      await flush(3000);
+      expect(result.current.phase).toBe('matched');
+      expect(result.current.matchedBattle?.battleId).toBe('battle-polled');
+    });
+
+    it('a match reported by both the socket and status is applied once', async () => {
+      h.state.joinMock.mockResolvedValueOnce({
+        success: true,
+        data: { matched: false },
+      });
+      const { result, socket } = await mounted();
+      await act(async () => {
+        await result.current.joinQueue();
+      });
+      act(() =>
+        socket.receive('matchmaking:matched', {
+          matched: true,
+          battleId: 'battle-first',
+        }),
+      );
+      h.state.statusMock.mockResolvedValue({
+        success: true,
+        data: {
+          inQueue: false,
+          queueSize: 0,
+          rating: null,
+          match: { matched: true, battleId: 'battle-other' },
+        },
+      });
+      await flush(3000);
+      expect(result.current.matchedBattle?.battleId).toBe('battle-first');
+    });
   });
 });

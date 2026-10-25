@@ -17,7 +17,22 @@ export interface MatchmakingStatus {
   inQueue: boolean;
   queueSize: number;
   rating: number | null;
+  /** Present when this player was matched while waiting and the socket push may have been missed. */
+  match?: MatchResult;
 }
+
+/** The live-updates socket, surfaced so a refused or dropped socket is never silent. */
+export type RealtimeStatus =
+  | 'connecting'
+  | 'connected'
+  | 'reconnecting'
+  | 'unavailable';
+
+/** Handshake refusals are retried this many times, backing off 1 s, 2 s, 4 s ... up to 30 s. */
+export const SOCKET_RETRY_LIMIT = 6;
+const SOCKET_RETRY_MAX_DELAY_MS = 30_000;
+export const socketRetryDelay = (attempt: number) =>
+  Math.min(SOCKET_RETRY_MAX_DELAY_MS, 1000 * 2 ** attempt);
 
 export type MatchmakingPhase =
   | 'idle'
@@ -48,6 +63,9 @@ export interface UseMatchmakingReturn {
   userRating: number | null;
   matchedBattle: MatchResult | null;
   error: string | null;
+  realtimeStatus: RealtimeStatus;
+  /** Retry the live-updates socket now (after it was reported unavailable). */
+  reconnectRealtime: () => void;
   joinQueue: () => Promise<void>;
   leaveQueue: () => Promise<void>;
   reset: () => void;
@@ -71,6 +89,8 @@ export function useMatchmaking(
   const [userRating, setUserRating] = useState<number | null>(null);
   const [matchedBattle, setMatchedBattle] = useState<MatchResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [realtimeStatus, setRealtimeStatus] =
+    useState<RealtimeStatus>('connecting');
 
   const [postJoin] = useAxiosPost<MatchResult>('/matchmaking/join');
   const [postLeave] = useAxiosPost<{ left: boolean }>('/matchmaking/leave');
@@ -84,6 +104,9 @@ export function useMatchmaking(
   const phaseRef = useRef<MatchmakingPhase>('idle');
   const postLeaveRef = useRef(postLeave);
   const unmountedRef = useRef(false);
+  const reconnectRef = useRef<() => void>(() => {});
+  const checkStatusRef = useRef<() => Promise<void>>(async () => {});
+  const applyMatchRef = useRef<(data: MatchResult) => void>(() => {});
   useEffect(() => {
     phaseRef.current = phase;
     postLeaveRef.current = postLeave;
@@ -101,17 +124,41 @@ export function useMatchmaking(
     }
   }, []);
 
-  // Connect socket to receive push notifications for matchmaking:matched.
-  // The session may not exist yet on mount, so connect again when it arrives:
-  // this socket is the only way the waiting player hears about a match.
+  // The socket is how a waiting player hears `matchmaking:matched`. It connects
+  // when a session exists, and a refused handshake is retried with backoff
+  // because socket.io-client never retries a middleware refusal itself.
   useEffect(() => {
     let isSubscribed = true;
     let unsubscribeAuth: (() => void) | undefined;
+    let retryTimer: ReturnType<typeof setTimeout> | null = null;
+    let attempts = 0;
+    let supabase: ReturnType<typeof createClient> | null = null;
+
+    const freshToken = async () => {
+      try {
+        const { data } = (await supabase?.auth.getSession()) ?? {};
+        return data?.session?.access_token;
+      } catch {
+        return undefined;
+      }
+    };
+
+    const retryNow = async (socket: Socket) => {
+      retryTimer = null;
+      const token = await freshToken();
+      if (!isSubscribed || socket.connected) return;
+      if (token) socket.auth = { token };
+      socket.connect();
+    };
 
     function connect(token: string | undefined) {
+      if (!token || !isSubscribed) return;
+      if (socketRef.current) {
+        // Keep later reconnects on the current (refreshed) token.
+        socketRef.current.auth = { token };
+        return;
+      }
       try {
-        if (!token || !isSubscribed || socketRef.current) return;
-
         const socket = io(socketBaseUrl(), {
           path: '/socket.io',
           transports: ['websocket'],
@@ -122,18 +169,56 @@ export function useMatchmaking(
         socketRef.current = socket;
 
         socket.on('matchmaking:matched', (data: MatchResult) => {
-          if (!isSubscribed) return;
-          clearTimers();
-          setMatchedBattle(data);
-          setPhase('matched');
+          if (isSubscribed) applyMatchRef.current(data);
         });
+
+        socket.on('connect', () => {
+          if (!isSubscribed) return;
+          attempts = 0;
+          setRealtimeStatus('connected');
+          // A match made while this socket was down was pushed to nobody.
+          if (phaseRef.current === 'queuing') void checkStatusRef.current();
+        });
+
+        socket.on('disconnect', () => {
+          if (isSubscribed) setRealtimeStatus('reconnecting');
+        });
+
+        socket.on('connect_error', (err: Error & { data?: unknown }) => {
+          if (!isSubscribed) return;
+          // Transport failure: socket.io is already reconnecting on its own.
+          if (socket.active) {
+            setRealtimeStatus('reconnecting');
+            return;
+          }
+          const retryable =
+            (err.data as { retryable?: boolean } | undefined)?.retryable !==
+            false;
+          if (!retryable || attempts >= SOCKET_RETRY_LIMIT) {
+            setRealtimeStatus('unavailable');
+            return;
+          }
+          setRealtimeStatus('reconnecting');
+          retryTimer = setTimeout(
+            () => void retryNow(socket),
+            socketRetryDelay(attempts++),
+          );
+        });
+
+        reconnectRef.current = () => {
+          if (socket.connected) return;
+          if (retryTimer) clearTimeout(retryTimer);
+          attempts = 0;
+          setRealtimeStatus('reconnecting');
+          void retryNow(socket);
+        };
       } catch {
-        // Socket init fallback — polling will still pick up state if socket fails
+        setRealtimeStatus('unavailable');
       }
     }
 
     try {
-      const supabase = createClient();
+      supabase = createClient();
       supabase.auth
         .getSession()
         .then(({ data: { session } }) => connect(session?.access_token))
@@ -150,13 +235,31 @@ export function useMatchmaking(
 
     return () => {
       isSubscribed = false;
+      if (retryTimer) clearTimeout(retryTimer);
       unsubscribeAuth?.();
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
       }
     };
-  }, [clearTimers]);
+  }, []);
+
+  const reconnectRealtime = useCallback(() => reconnectRef.current(), []);
+
+  // A match is applied once, whichever of the socket, /status or the inline join reports it.
+  const applyMatch = useCallback(
+    (data: MatchResult) => {
+      if (unmountedRef.current || phaseRef.current === 'matched') return;
+      phaseRef.current = 'matched';
+      clearTimers();
+      setMatchedBattle(data);
+      setPhase('matched');
+    },
+    [clearTimers],
+  );
+  useEffect(() => {
+    applyMatchRef.current = applyMatch;
+  }, [applyMatch]);
 
   // Periodic elapsed timer + band expansion calculation
   useEffect(() => {
@@ -196,24 +299,23 @@ export function useMatchmaking(
     };
   }, [phase, baseBand, bandPerSecond, maxBand, timeoutMs, clearTimers]);
 
-  // Poll status while queuing
+  // Poll status while queuing. It also delivers a match the socket missed.
+  const checkStatus = useCallback(async () => {
+    const res = await getStatus();
+    if (!res.success || !res.data || phaseRef.current !== 'queuing') return;
+    setQueueSize(res.data.queueSize);
+    if (res.data.rating !== null) {
+      setUserRating(res.data.rating);
+    }
+    if (res.data.match?.battleId) applyMatch(res.data.match);
+  }, [getStatus, applyMatch]);
+
+  useEffect(() => {
+    checkStatusRef.current = checkStatus;
+  }, [checkStatus]);
+
   useEffect(() => {
     if (phase !== 'queuing') return;
-
-    const checkStatus = async () => {
-      const res = await getStatus();
-      if (res.success && res.data) {
-        setQueueSize(res.data.queueSize);
-        if (res.data.rating !== null) {
-          setUserRating(res.data.rating);
-        }
-        // If we are no longer in queue on the server but didn't receive a match or error,
-        // recheck if a match happened
-        if (!res.data.inQueue && phase === 'queuing') {
-          // May have been matched or expired
-        }
-      }
-    };
 
     void checkStatus();
     pollTimerRef.current = setInterval(checkStatus, pollIntervalMs);
@@ -224,11 +326,12 @@ export function useMatchmaking(
         pollTimerRef.current = null;
       }
     };
-  }, [phase, getStatus, pollIntervalMs]);
+  }, [phase, checkStatus, pollIntervalMs]);
 
   // Join matchmaking
   const joinQueue = useCallback(async () => {
     setError(null);
+    phaseRef.current = 'joining';
     setPhase('joining');
 
     const res = await postJoin({});
@@ -246,15 +349,14 @@ export function useMatchmaking(
 
     // Direct instantaneous match returned inline
     if (res.data?.matched && res.data.battleId) {
-      clearTimers();
-      setMatchedBattle(res.data);
-      setPhase('matched');
+      applyMatch(res.data);
       return;
     }
 
     // Otherwise enqueued and waiting
+    phaseRef.current = 'queuing';
     setPhase('queuing');
-  }, [postJoin, clearTimers]);
+  }, [postJoin, applyMatch]);
 
   // Leave matchmaking
   const leaveQueue = useCallback(async () => {
@@ -302,6 +404,8 @@ export function useMatchmaking(
     userRating,
     matchedBattle,
     error,
+    realtimeStatus,
+    reconnectRealtime,
     joinQueue,
     leaveQueue,
     reset,

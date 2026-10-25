@@ -23,6 +23,8 @@ export default function InstantBattlePage() {
     userRating,
     matchedBattle,
     error,
+    realtimeStatus,
+    reconnectRealtime,
     joinQueue,
     leaveQueue,
     reset,
@@ -81,6 +83,8 @@ export default function InstantBattlePage() {
               onJoin={joinQueue}
               onLeave={leaveQueue}
               onRetry={joinQueue}
+              realtimeStatus={realtimeStatus}
+              onReconnect={reconnectRealtime}
             />
 
             {/* Match Found Modal */}

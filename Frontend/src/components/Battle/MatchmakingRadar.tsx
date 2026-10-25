@@ -17,7 +17,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { MatchmakingPhase, MatchResult } from '@/hooks/useMatchmaking';
+import {
+  MatchmakingPhase,
+  MatchResult,
+  RealtimeStatus,
+} from '@/hooks/useMatchmaking';
 
 interface MatchmakingRadarProps {
   phase: MatchmakingPhase;
@@ -28,6 +32,8 @@ interface MatchmakingRadarProps {
   onJoin: () => void;
   onLeave: () => void;
   onRetry: () => void;
+  realtimeStatus?: RealtimeStatus;
+  onReconnect?: () => void;
 }
 
 export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
@@ -39,6 +45,8 @@ export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
   onJoin,
   onLeave,
   onRetry,
+  realtimeStatus = 'connected',
+  onReconnect,
 }) => {
   const formatTime = (secs: number) => {
     const mins = Math.floor(secs / 60);
@@ -51,6 +59,31 @@ export const MatchmakingRadar: React.FC<MatchmakingRadarProps> = ({
       {/* Background ambient radar glow */}
       <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+
+      {['idle', 'joining', 'queuing'].includes(phase) &&
+        (realtimeStatus === 'reconnecting' ||
+          realtimeStatus === 'unavailable') && (
+          <div
+            role="status"
+            className="relative mb-4 flex flex-col items-center justify-between gap-3 rounded-xl border border-border bg-muted/60 px-4 py-3 text-sm sm:flex-row"
+          >
+            <span>
+              {realtimeStatus === 'reconnecting'
+                ? 'Reconnecting live match alerts… your queue is still checked every few seconds.'
+                : 'Live match alerts are unavailable. Your queue is still checked every few seconds, so a match will still appear here.'}
+            </span>
+            {realtimeStatus === 'unavailable' && onReconnect && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={onReconnect}
+                className="shrink-0 rounded-lg"
+              >
+                Reconnect
+              </Button>
+            )}
+          </div>
+        )}
 
       {phase === 'idle' && (
         <div className="flex flex-col items-center justify-between gap-6 md:flex-row">

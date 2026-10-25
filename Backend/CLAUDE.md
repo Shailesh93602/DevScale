@@ -256,6 +256,15 @@ All backend changes tracked chronologically with file references.
 
 ---
 
+## 2026-10-25 — First-visit socket handshake
+
+### [P1] The handshake creates the user row; `syncUser` is race-safe (#23-15)
+- **Files:** `src/middlewares/authMiddleware.ts` (`syncUser` exported; `createSyncedUser` returns the winner's row on P2002 and retries a username clash with an 8-hex suffix, 3 attempts), `src/services/realtime/socketHandshake.ts` (calls `syncUser`; refusals carry `data: { code, retryable }`), `src/services/matchmaking/matchmakingService.ts` (waiter's match kept in `matchmaking:matched:quick` for 2 min, returned by `getStatus` as `match`, cleared on join/leave; best effort).
+- **Why:** a brand-new waiter's socket was refused before any REST call created the row, and socket.io-client never retries a middleware refusal.
+- **Tests:** `tests/security/socketFirstLogin.test.ts` (new, 10), `tests/matchmaking/matchmakingMatchReplay.test.ts` (new, 5), `tests/security/socketSuspendedAccount.test.ts` (mock updated). Proof: `qa/realtime/run-local-proof.sh` (no reload; `first-visit.spec.ts`; fails on any refused handshake). `docs/REALTIME_HOSTING.md` "First-visit sockets".
+
+---
+
 ## Outstanding P0s (as of end of session 3)
 
 See `../CLAUDE.md` for full list. Quick reference:

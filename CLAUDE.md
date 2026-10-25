@@ -152,6 +152,14 @@ new Redis is the only fix.
 
 ---
 
+### 2026-10-25 — First-visit socket no longer strands a waiter
+
+| Item | Files | Status |
+|------|-------|--------|
+| The socket handshake refused a user with no `User` row (created only by a REST call) and socket.io-client never retries a middleware refusal, so a brand-new waiter could miss `matchmaking:matched` for good. The handshake now creates the row through REST's `syncUser`, which survives the first-login race (#23-15: P2002 → winner's row; username clash → fresh suffix). Refusals carry `{ code, retryable }`; the client retries retryable ones with backoff and a fresh token, re-reads `/matchmaking/status` on every reconnect, and `/status` now carries a missed match (2 min). `/instant-battle` shows a reconnecting/unavailable notice with a Reconnect button. Reload workaround removed from the local proof; new `first-visit.spec.ts` makes the REST host fail until the row exists. Proof 7/7 default, 5/5 flags on; negative control fails on the old handshake. Details: `Backend/docs/REALTIME_HOSTING.md` "First-visit sockets" | `Backend/src/middlewares/authMiddleware.ts`, `Backend/src/services/realtime/socketHandshake.ts`, `Backend/src/services/matchmaking/matchmakingService.ts`, `Backend/src/tests/security/{socketFirstLogin,socketSuspendedAccount}.test.ts`, `Backend/src/tests/matchmaking/matchmakingMatchReplay.test.ts`, `Backend/qa/realtime/{restOnlyHost.mjs,run-local-proof.sh}`, `Frontend/src/hooks/useMatchmaking{,.test}.ts`, `Frontend/src/components/Battle/MatchmakingRadar{,.test}.tsx`, `Frontend/src/app/instant-battle/page.tsx`, `Frontend/realtime-local/{realtimeHelpers,battle-realtime.spec,battle-flow-options.spec,first-visit.spec}.ts` | ✅ Done (local) |
+
+---
+
 ## Remaining P0 Blockers (as of end of Session 3)
 
 ### Phase 1 — Infrastructure

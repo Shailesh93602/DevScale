@@ -4,7 +4,8 @@ import {
   answer,
   eventsNamed,
   openDb,
-  openInstantBattle,
+  expectNoReloadWorkaround,
+  queueOnFirstLoad,
   signIn,
   waitForEvent,
   wrongOf,
@@ -40,12 +41,13 @@ test.describe.serial('battle flow options on the realtime host', () => {
   });
 
   test('a match is readied and auto-started with no lobby clicks', async () => {
-    for (const p of [a, b]) await openInstantBattle(db, p);
-    await a.page.getByRole('button', { name: /find instant match/i }).click();
-    await expect(a.page.getByText(/cancel queue/i)).toBeVisible();
-    await b.page.getByRole('button', { name: /find instant match/i }).click();
+    // Both are brand new and queue on their very first page load.
+    await queueOnFirstLoad(db, a, { waiter: true });
+    await queueOnFirstLoad(db, b, { waiter: false });
 
+    // A was waiting: only the socket can tell it about the match.
     await waitForEvent(a, 'matchmaking:matched');
+    for (const p of [a, b]) await expectNoReloadWorkaround(p);
     battleId = String(eventsNamed(a, 'matchmaking:matched')[0].data.battleId);
 
     // Readied before the waiter was told, so this is already true now.

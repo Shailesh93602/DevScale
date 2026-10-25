@@ -46,6 +46,14 @@ export interface Player {
   requests: { method: string; url: string }[];
   /** API responses >= 400 and uncaught page errors. */
   failures: string[];
+  /** Main-frame document loads: a reload workaround would show up here. */
+  documentLoads: number;
+  /** Socket.io sockets this page opened. */
+  sockets: number;
+  /** Socket.io CONNECT acks received: the handshake was accepted. */
+  socketConnects: number;
+  /** REST calls the proof's REST host refused on purpose (x-rt-injected). */
+  injected: string[];
   dbUserId?: string;
 }
 
@@ -91,6 +99,10 @@ export async function signIn(browser: Browser, label: string): Promise<Player> {
     events: [],
     requests: [],
     failures: [],
+    documentLoads: 0,
+    sockets: 0,
+    socketConnects: 0,
+    injected: [],
   };
   watch(player);
   return player;
@@ -98,9 +110,12 @@ export async function signIn(browser: Browser, label: string): Promise<Player> {
 
 /** Record every Socket.io event the BROWSER receives, and where REST went. */
 function watch(player: Player) {
+  player.page.on('load', () => player.documentLoads++);
   player.page.on('websocket', (ws) => {
+    if (ws.url().includes('/socket.io/')) player.sockets++;
     ws.on('framereceived', ({ payload }) => {
       const text = typeof payload === 'string' ? payload : payload.toString();
+      if (text.startsWith('40')) player.socketConnects++;
       if (!text.startsWith('42')) return;
       try {
         const [name, data] = JSON.parse(text.slice(2)) as [
@@ -120,6 +135,11 @@ function watch(player: Player) {
     }
   });
   player.page.on('response', (res) => {
+    // x-rt-injected: the proof's deliberate first-visit REST failure, not a bug.
+    if (res.headers()['x-rt-injected']) {
+      player.injected.push(`${res.status()} ${res.url()}`);
+      return;
+    }
     if (res.url().includes('/api/v1/') && res.status() >= 400) {
       player.failures.push(
         `${res.status()} ${res.request().method()} ${res.url()}`,
@@ -198,15 +218,42 @@ export async function syncedUserId(db: PgClient, p: Player): Promise<string> {
   return id!;
 }
 
-// Reload once the user row exists: the handshake rejects an unsynced user and the
-// client never retries, so a first-visit socket misses `matchmaking:matched`.
-export async function openInstantBattle(db: PgClient, p: Player) {
-  const findMatch = p.page.getByRole('button', { name: /find instant match/i });
+/**
+ * A brand-new user's very first page load, queued with no reload. For an `rt-cold-` user
+ * the REST host fails every call until a row exists, so only the handshake can create it.
+ */
+export async function queueOnFirstLoad(
+  db: PgClient,
+  p: Player,
+  { waiter }: { waiter: boolean },
+) {
+  const rowCount = async () =>
+    (await db.query('select 1 from "User" where supabase_id = $1', [p.sub]))
+      .rows.length;
+  expect(await rowCount(), `${p.label} must be brand new`).toBe(0);
   await p.page.goto('/instant-battle');
+  await expect
+    .poll(() => p.socketConnects, {
+      timeout: 30_000,
+      message: `${p.label}'s first socket should be accepted`,
+    })
+    .toBe(1);
+  if (p.label.startsWith('cold-')) {
+    // REST refused this user and nothing else has called the realtime host yet.
+    expect(await rowCount(), `${p.label} row from the handshake`).toBe(1);
+  }
+  const findMatch = p.page.getByRole('button', { name: /find instant match/i });
   await expect(findMatch).toBeVisible({ timeout: 30_000 });
+  await findMatch.click();
+  if (waiter) await expect(p.page.getByText(/cancel queue/i)).toBeVisible();
   p.dbUserId = await syncedUserId(db, p);
-  await p.page.reload();
-  await expect(findMatch).toBeVisible({ timeout: 30_000 });
+}
+
+/** One document load, one socket, and no live-updates warning on screen. */
+export async function expectNoReloadWorkaround(p: Player) {
+  expect(p.documentLoads, `${p.label} document loads`).toBe(1);
+  expect(p.sockets, `${p.label} sockets opened`).toBe(1);
+  await expect(p.page.getByText(/live match alerts/i)).toHaveCount(0);
 }
 
 /** The backend under test runs with both battle-flow flags on. */

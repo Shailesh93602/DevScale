@@ -80,7 +80,62 @@ const splitFullName = (fullName?: string) => {
 const verifyToken = (token: string): Promise<SupabaseUser> =>
   verifySupabaseToken(token);
 
-const syncUser = async (user: SupabaseUser): Promise<Request['user']> => {
+const USERNAME_ATTEMPTS = 3;
+
+const isUniqueViolation = (err: unknown) =>
+  (err as { code?: string } | null)?.code === 'P2002';
+
+// Concurrent first requests (REST + socket handshake) both miss and both insert:
+// on P2002 return the winner's row, else retry the username suffix (#23-15).
+const createSyncedUser = async (
+  user: SupabaseUser,
+  metadata: Record<string, unknown>
+): Promise<Request['user']> => {
+  const studentRole = await prisma.role.findUnique({
+    where: { name: 'STUDENT' },
+  });
+  const fullName = metadata.full_name as string;
+
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const created = (await prisma.user.create({
+        data: {
+          supabase_id: user.id,
+          email: user.email ?? '',
+          username:
+            (user.email?.split('@')[0] || 'user') +
+            '_' +
+            crypto.randomBytes(4).toString('hex'),
+          first_name:
+            (metadata.first_name as string) ||
+            splitFullName(fullName).firstName,
+          last_name:
+            (metadata.last_name as string) || splitFullName(fullName).lastName,
+          avatar_url: (metadata.avatar_url as string) || '',
+          role_id: studentRole?.id,
+          status: 'active',
+          is_active: true,
+        },
+        include: { role: true, subscription: true },
+      })) as unknown as Request['user'];
+      logger.info('New user synced from Supabase', { userId: created.id });
+      return created;
+    } catch (err) {
+      if (!isUniqueViolation(err)) throw err;
+      const winner = (await prisma.user.findUnique({
+        where: { supabase_id: user.id },
+        include: { role: true, subscription: true },
+      })) as unknown as Request['user'];
+      if (winner) return winner;
+      if (attempt >= USERNAME_ATTEMPTS) throw err;
+    }
+  }
+};
+
+/** Find or create our User row for a verified Supabase user. Shared by REST auth and the socket handshake. */
+export const syncUser = async (
+  user: SupabaseUser
+): Promise<Request['user']> => {
   let userData = (await prisma.user.findUnique({
     where: { supabase_id: user.id },
     include: { role: true, subscription: true },
@@ -106,31 +161,7 @@ const syncUser = async (user: SupabaseUser): Promise<Request['user']> => {
       })) as unknown as Request['user'];
     }
   } else {
-    const studentRole = await prisma.role.findUnique({
-      where: { name: 'STUDENT' },
-    });
-    const fullName = metadata.full_name as string;
-
-    userData = (await prisma.user.create({
-      data: {
-        supabase_id: user.id,
-        email: user.email ?? '',
-        username:
-          (user.email?.split('@')[0] || 'user') +
-          '_' +
-          Math.floor(Math.random() * 1000),
-        first_name:
-          (metadata.first_name as string) || splitFullName(fullName).firstName,
-        last_name:
-          (metadata.last_name as string) || splitFullName(fullName).lastName,
-        avatar_url: (metadata.avatar_url as string) || '',
-        role_id: studentRole?.id,
-        status: 'active',
-        is_active: true,
-      },
-      include: { role: true, subscription: true },
-    })) as unknown as Request['user'];
-    logger.info('New user synced from Supabase', { userId: userData.id });
+    userData = await createSyncedUser(user, metadata);
   }
   return userData;
 };

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MatchmakingRadar } from './MatchmakingRadar';
 
 const props = {
@@ -24,5 +24,48 @@ describe('MatchmakingRadar copy', () => {
   it('does not promise an expanding band on the idle card', () => {
     render(<MatchmakingRadar phase="idle" {...props} />);
     expect(screen.queryByText(/expanding rating band/)).toBeNull();
+  });
+});
+
+describe('MatchmakingRadar live-updates status', () => {
+  it('says nothing while the socket is connected', () => {
+    render(
+      <MatchmakingRadar
+        phase="queuing"
+        {...props}
+        realtimeStatus="connected"
+      />,
+    );
+    expect(screen.queryByRole('status')).toBeNull();
+  });
+
+  it('shows reconnecting while queuing', () => {
+    render(
+      <MatchmakingRadar
+        phase="queuing"
+        {...props}
+        realtimeStatus="reconnecting"
+      />,
+    );
+    expect(screen.getByRole('status')).toHaveTextContent(
+      /Reconnecting live match alerts/,
+    );
+  });
+
+  it('shows unavailable with a working Reconnect button', () => {
+    const onReconnect = vi.fn();
+    render(
+      <MatchmakingRadar
+        phase="queuing"
+        {...props}
+        realtimeStatus="unavailable"
+        onReconnect={onReconnect}
+      />,
+    );
+    expect(screen.getByRole('status')).toHaveTextContent(
+      /Live match alerts are unavailable/,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Reconnect' }));
+    expect(onReconnect).toHaveBeenCalledTimes(1);
   });
 });

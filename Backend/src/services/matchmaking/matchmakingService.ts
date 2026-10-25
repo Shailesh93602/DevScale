@@ -32,6 +32,9 @@ const META_KEY = 'matchmaking:meta:quick';
 // Last time each queued player was seen (join or a status poll, every ~3 s).
 const SEEN_KEY = 'matchmaking:seen:quick';
 const STALE_AFTER_MS = 30_000;
+// A waiter's match, so /status delivers it if the socket push was missed. Cleared on join/leave.
+const MATCHED_KEY = 'matchmaking:matched:quick';
+const MATCH_REPLAY_MS = 120_000;
 const BASE_BAND = 100; // rating points
 const BAND_PER_SECOND = 20; // widen while waiting
 const MAX_BAND = 600;
@@ -51,6 +54,8 @@ export interface QueueStatus {
   inQueue: boolean;
   queueSize: number;
   rating: number | null;
+  /** Set when this player was matched while waiting (the socket push may have been missed). */
+  match?: MatchResult;
 }
 
 interface QueueRedis {
@@ -161,6 +166,7 @@ export class MatchmakingService {
   /** Join the queue, then immediately attempt a match. */
   async joinQueue(userId: string): Promise<MatchResult> {
     const rating = await this.d.getRating(userId);
+    await this.d.redis.hdel(MATCHED_KEY, userId);
     await this.d.redis.zadd(QUEUE_KEY, rating, userId);
     await this.d.redis.hset(META_KEY, userId, String(this.d.now()));
     await this.d.redis.hset(SEEN_KEY, userId, String(this.d.now()));
@@ -171,6 +177,7 @@ export class MatchmakingService {
     await this.d.redis.zrem(QUEUE_KEY, userId);
     await this.d.redis.hdel(META_KEY, userId);
     await this.d.redis.hdel(SEEN_KEY, userId);
+    await this.d.redis.hdel(MATCHED_KEY, userId);
   }
 
   async getStatus(userId: string): Promise<QueueStatus> {
@@ -179,11 +186,31 @@ export class MatchmakingService {
       await this.d.redis.hset(SEEN_KEY, userId, String(this.d.now()));
     }
     const queueSize = await this.d.redis.zcard(QUEUE_KEY);
-    return {
+    const status: QueueStatus = {
       inQueue: score !== null,
       queueSize,
       rating: score !== null ? Number(score) : null,
     };
+    if (score === null) {
+      const match = await this.recentMatch(userId);
+      if (match) status.match = match;
+    }
+    return status;
+  }
+
+  private async recentMatch(userId: string): Promise<MatchResult | null> {
+    const raw = await this.d.redis.hget(MATCHED_KEY, userId);
+    if (!raw) return null;
+    try {
+      const { at, ...match } = JSON.parse(raw) as MatchResult & { at: number };
+      if (typeof at === 'number' && this.d.now() - at <= MATCH_REPLAY_MS) {
+        return match;
+      }
+    } catch {
+      // unreadable entry: drop it below
+    }
+    await this.d.redis.hdel(MATCHED_KEY, userId);
+    return null;
   }
 
   private computeBand(enqueuedAtMs: number): number {
@@ -305,12 +332,25 @@ export class MatchmakingService {
         await this.startMatched(battle.battleId);
       }
 
-      // The caller gets the result inline; the waiter learns via their socket.
-      this.d.notify(opponent.userId, 'matchmaking:matched', {
+      // The caller gets the result inline; the waiter learns via their socket,
+      // or via /status if that push was missed.
+      const waiterMatch: MatchResult = {
+        matched: true,
         battleId: battle.battleId,
         slug: battle.slug,
         opponentId: userId,
-      });
+      };
+      this.d.notify(opponent.userId, 'matchmaking:matched', waiterMatch);
+      // Best effort: the battle exists and the joiner is told inline either way.
+      await this.d.redis
+        .hset(
+          MATCHED_KEY,
+          opponent.userId,
+          JSON.stringify({ ...waiterMatch, at: this.d.now() })
+        )
+        .catch((err: unknown) => {
+          logger.warn('matchmaking match replay not stored', { err });
+        });
 
       return {
         matched: true,

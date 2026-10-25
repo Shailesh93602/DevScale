@@ -221,15 +221,17 @@ Backend/qa/realtime/run-local-proof.sh        # SKIP_BUILD=1 reuses dist/ and .n
 The script refuses a database not named `*_test`/`*_e2e`, refuses Redis DB 0, checks the Prisma
 datasource line before migrating, seeds roles and 8 pool questions, flushes only its Redis DB,
 builds both halves, starts the four processes, probes `/socket.io` on both backends, and runs
-`Frontend/realtime-local/battle-realtime.spec.ts` (`playwright.realtime.config.ts`). It stops every
-process it started on exit. Logs land in `RT_DIR` (a temp dir unless set).
+`Frontend/realtime-local/battle-realtime.spec.ts` and `first-visit.spec.ts`
+(`playwright.realtime.config.ts`). It then fails if the realtime host logged any refused socket
+handshake. It stops every process it started on exit. Logs land in `RT_DIR` (a temp dir unless set).
 
 ### What the spec asserts
 
 Assertions read Postgres rows and the Socket.io frames each browser actually received, not just text.
 
-1. **Matchmaking:** Alpha queues, Bravo queues, Alpha (the waiter) gets `matchmaking:matched` over its
-   socket. One `Battle` row, `WAITING`, two seats, five `BattleQuestion` rows. Every `/matchmaking`
+1. **Matchmaking:** Alpha and Bravo are brand new (no `User` row) and queue on their very first load of
+   `/instant-battle`, with no reload: one document load, one socket, its CONNECT accepted, no
+   "Live match alerts" warning. Alpha (the waiter) gets `matchmaking:matched` over that socket. One `Battle` row, `WAITING`, two seats, five `BattleQuestion` rows. Every `/matchmaking`
    request went to the realtime host.
 2. **Lobby → start:** the creator opens the lobby, both mark ready, the creator starts. Both browsers get
    `battle:status_changed` (LOBBY), `battle:participant_ready`, `battle:started` and question 0. Every
@@ -247,6 +249,20 @@ Assertions read Postgres rows and the Socket.io frames each browser actually rec
 
 Result on 2026-10-25: **6 / 6 passed** (2.8 min).
 
+**First visit while REST is failing** (`first-visit.spec.ts`, runs in both flag modes). The
+REST-only host answers 503 to any `rt-cold-` user who has no row yet, so the first `/users/me` fails
+and only the realtime host's socket handshake can create the row. The spec asserts both users are
+brand new, each first socket is accepted and the row exists at that moment, the waiter gets
+`matchmaking:matched` over that socket, both seats are in the battle, nothing reloaded, and the REST
+host did refuse them first.
+
+Result after the fix (2026-10-25, final tree): default flags **7 / 7** (6 battle + 1 first visit,
+2.7 min); `RT_FLOW_OPTIONS=1` **5 / 5** (4 + 1, 1.1 min); zero refused handshakes in both.
+Negative control, same specs against a backend built with the old handshake: the first-visit test
+fails (the cold waiter's socket is never accepted), and the matchmaking test fails because the
+waiter's first socket was refused (the new client's retry still delivered the match, on a second
+socket).
+
 ### What it found
 
 - **A reload re-offered an answered question.** `battle:state` carried no per-player answers, so after
@@ -262,9 +278,38 @@ Result on 2026-10-25: **6 / 6 passed** (2.8 min).
   answered question idles for the rest of its 30 s. A ranked match takes about 2.5 minutes.
 - A matched pair lands in a `WAITING` battle and must open the lobby, ready up and start by hand,
   like a custom battle. Only the creator (the second player to queue) can start it.
-- A first-visit socket can be refused: the handshake rejects a user whose row is not synced yet,
-  and the client does not retry, so a waiter who queues on their very first page load may never
-  hear `matchmaking:matched`. The specs reload `/instant-battle` after the sync. Not fixed.
+- ~~A first-visit socket can be refused~~ **Fixed 2026-10-25**, see "First-visit sockets" below.
+- A failed first `/users/me` leaves `AuthContext` on a fallback profile (Supabase id, not our
+  `User.id`) for the whole session; it never refetches. On the battle page the creator then gets
+  no "Open lobby" button. Seen while building the first-visit proof; not fixed.
+
+## First-visit sockets (fixed 2026-10-25)
+
+**Cause.** The handshake looked the `User` row up and refused when it was missing; the row was
+created only by a REST call (`syncUser` in `authMiddleware`). socket.io-client never retries a
+middleware refusal, so a waiter whose socket arrived before the row existed (first visit; first
+REST call failed or slow) never heard `matchmaking:matched`.
+
+**Fix, both layers:**
+
+1. **Server.** The handshake calls the same `syncUser` as REST, so it creates the row. `syncUser`
+   now survives the first-login race (#23-15): on a P2002 it returns the winner's row, and a
+   username clash retries a fresh 8-hex suffix (3 attempts). Refusals carry
+   `connect_error.data = { code, retryable }`: `AUTH_TOKEN_MISSING`, `AUTH_TOKEN_INVALID`,
+   `AUTH_UNAVAILABLE` are retryable; `ACCOUNT_SUSPENDED` is not.
+2. **Client** (`useMatchmaking`). A retryable refusal is retried with a fresh session token after
+   1, 2, 4, 8, 16, 30 s; then it reports `unavailable`. Transport drops are left to socket.io's own
+   reconnect. On every (re)connect while queuing it re-reads `/matchmaking/status`.
+3. **Status carries the match.** On a match the server stores the waiter's result
+   (`matchmaking:matched:quick`, 2 min, cleared on join/leave) and `/matchmaking/status` returns it
+   as `match`. The 3 s status poll therefore delivers a match even with no socket at all.
+4. **Never silent.** `/instant-battle` shows "Reconnecting live match alerts…" or "Live match
+   alerts are unavailable…" with a Reconnect button whenever the socket is not connected.
+
+Tests: `Backend/src/tests/security/socketFirstLogin.test.ts` (10, incl. REST + socket racing on a
+new user and five concurrent first requests), `tests/matchmaking/matchmakingMatchReplay.test.ts`
+(5), `Frontend/src/hooks/useMatchmaking.test.ts` (+7), `MatchmakingRadar.test.tsx` (+3). The race
+and retry tests were mutation-checked (each fails with its guard removed).
 
 ## Battle flow flags (branch `feat/battle-flow-options`, both OFF by default)
 

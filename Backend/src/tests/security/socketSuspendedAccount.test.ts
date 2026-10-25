@@ -17,20 +17,17 @@ const user = {
 };
 
 jest.mock('../../utils/verifySupabaseToken', () => ({
-  verifySupabaseToken: async () => ({ id: 'sb-1' }),
+  verifySupabaseToken: async () => ({ id: 'sb-1', user_metadata: {} }),
 }));
 jest.mock('../../services/cacheService', () => ({
   __esModule: true,
-  redis: { exists: async () => 0 },
+  redis: { exists: async () => 0, get: async () => null },
 }));
 jest.mock('../../lib/prisma', () => ({
   __esModule: true,
   default: {
     user: {
-      findUnique: async ({ select }: { select: Record<string, boolean> }) =>
-        Object.fromEntries(
-          Object.entries(user).filter(([k]) => select[k as keyof typeof user])
-        ),
+      findUnique: async () => ({ ...user, role: null, subscription: null }),
     },
   },
 }));

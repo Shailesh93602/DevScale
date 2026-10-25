@@ -6,7 +6,8 @@ import {
   answer,
   eventsNamed,
   openDb,
-  openInstantBattle,
+  expectNoReloadWorkaround,
+  queueOnFirstLoad,
   signIn,
   waitForEvent,
   wrongOf,
@@ -42,14 +43,13 @@ test.describe.serial('realtime battle on the long-lived host', () => {
   });
 
   test('matchmaking pairs the two players over the realtime host', async () => {
-    for (const p of [a, b]) await openInstantBattle(db, p);
-
-    await a.page.getByRole('button', { name: /find instant match/i }).click();
-    await expect(a.page.getByText(/cancel queue/i)).toBeVisible();
-    await b.page.getByRole('button', { name: /find instant match/i }).click();
+    // Both are brand new and queue on their very first page load.
+    await queueOnFirstLoad(db, a, { waiter: true });
+    await queueOnFirstLoad(db, b, { waiter: false });
 
     // A was waiting: only the socket can tell it about the match.
     await waitForEvent(a, 'matchmaking:matched');
+    for (const p of [a, b]) await expectNoReloadWorkaround(p);
     battleId = String(eventsNamed(a, 'matchmaking:matched')[0].data.battleId);
 
     const battle = await db.query<{

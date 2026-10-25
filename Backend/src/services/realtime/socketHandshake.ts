@@ -2,10 +2,9 @@ import type { ExtendedError, Socket } from 'socket.io';
 import { CORS_ORIGIN } from '../../config';
 import { isOriginAllowed, parseAllowedOrigins } from '../../config/corsOrigins';
 import { isProduction } from '../../config/runtimeMode';
-import prisma from '../../lib/prisma';
 import logger from '../../utils/logger';
 import { verifySupabaseToken } from '../../utils/verifySupabaseToken';
-import { isBarred } from '../../middlewares/authMiddleware';
+import { isBarred, syncUser } from '../../middlewares/authMiddleware';
 
 type OriginCallback = (err: Error | null, allow?: boolean) => void;
 
@@ -33,38 +32,55 @@ export function socketCorsOrigin(
   callback(isAllowed ? null : new Error('Origin not allowed'), isAllowed);
 }
 
-/** Authentication middleware: attaches our own User record to `socket.data.user`. */
+/** Sent as `connect_error.data`: socket.io-client never retries a middleware refusal, so the client reads `retryable`. */
+export type HandshakeErrorCode =
+  | 'AUTH_TOKEN_MISSING'
+  | 'AUTH_TOKEN_INVALID'
+  | 'ACCOUNT_SUSPENDED'
+  | 'AUTH_UNAVAILABLE';
+
+function refusal(
+  message: string,
+  code: HandshakeErrorCode,
+  retryable: boolean
+): ExtendedError {
+  const err = new Error(message) as ExtendedError;
+  err.data = { code, retryable };
+  return err;
+}
+
+/** Attaches our User row to `socket.data.user`, creating it via REST's `syncUser` so a first visit needs no prior API call. */
 export async function authenticateSocket(
   socket: Socket,
   next: (err?: ExtendedError) => void
 ) {
+  const token =
+    socket.handshake.auth?.token || (socket.handshake.query?.token as string);
+
+  if (!token) {
+    return next(
+      refusal('Authentication token is missing', 'AUTH_TOKEN_MISSING', true)
+    );
+  }
+
+  let supabaseUser: Awaited<ReturnType<typeof verifySupabaseToken>>;
   try {
-    const token =
-      socket.handshake.auth.token || (socket.handshake.query.token as string);
+    // Verify the Supabase access token the same way the REST API does.
+    supabaseUser = await verifySupabaseToken(token);
+  } catch (error) {
+    logger.warn('Socket token rejected', { error });
+    // Retryable: the client refreshes its session before the next attempt.
+    return next(
+      refusal('Invalid authentication token', 'AUTH_TOKEN_INVALID', true)
+    );
+  }
 
-    if (!token) {
-      return next(new Error('Authentication token is missing'));
-    }
-
-    // Verify the Supabase access token the same way the REST API does, then
-    // resolve the internal user (battles reference User.id, not the Supabase id).
-    const supabaseUser = await verifySupabaseToken(token);
-    const dbUser = await prisma.user.findUnique({
-      where: { supabase_id: supabaseUser.id },
-      select: {
-        id: true,
-        username: true,
-        avatar_url: true,
-        status: true,
-        is_active: true,
-      },
-    });
-    if (!dbUser) {
-      return next(new Error('Invalid authentication token'));
-    }
+  try {
+    // Battles reference User.id, not the Supabase id.
+    const dbUser = await syncUser(supabaseUser);
     // Same rule as the REST authMiddleware: a suspended account is refused.
     if (isBarred(dbUser)) {
-      return next(new Error('Account suspended'));
+      return next(refusal('Account suspended', 'ACCOUNT_SUSPENDED', false));
     }
 
     socket.data.user = {
@@ -76,6 +92,6 @@ export async function authenticateSocket(
     next();
   } catch (error) {
     logger.error('Socket authentication error:', error);
-    next(new Error('Authentication failed'));
+    next(refusal('Authentication failed', 'AUTH_UNAVAILABLE', true));
   }
 }

@@ -85,3 +85,8 @@ curl -sf -o /dev/null "http://127.0.0.1:4055/socket.io/?EIO=4&transport=polling"
 echo "▶ playwright"
 cd "$REPO/Frontend"
 RT_FLOW_OPTIONS="$RT_FLOW_OPTIONS" RT_DATABASE_URL="$DB_URL" npx playwright test -c playwright.realtime.config.ts
+
+# No socket handshake may be refused (first-visit.spec.ts asserts who created the rows).
+refused="$(grep -cE 'Socket token rejected|Socket authentication error' "$RT_DIR/realtime.log" || true)"
+echo "▶ socket handshakes refused: $refused"
+[ "$refused" = 0 ] || { echo "a socket handshake was refused; see $RT_DIR/realtime.log" >&2; exit 1; }
