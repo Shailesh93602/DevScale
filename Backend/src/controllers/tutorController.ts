@@ -3,6 +3,10 @@ import { catchAsync } from '../utils/index.js';
 import { sendResponse } from '../utils/apiResponse.js';
 import { TutorService } from '../services/ai/tutorService.js';
 
+// The question goes into the embedding call and the prompt verbatim; without a
+// cap one request could carry the whole 100 kb body (~25k tokens) per call.
+export const MAX_QUESTION_LENGTH = 1000;
+
 export default class TutorController {
   private readonly service: TutorService;
 
@@ -14,7 +18,8 @@ export default class TutorController {
   public ask = catchAsync(async (req: Request, res: Response) => {
     if (!req.user?.id) return sendResponse(res, 'UNAUTHORIZED');
     const question = String(req.body?.question ?? '').trim();
-    if (question.length < 3) return sendResponse(res, 'INVALID_PAYLOAD');
+    if (question.length < 3 || question.length > MAX_QUESTION_LENGTH)
+      return sendResponse(res, 'INVALID_PAYLOAD');
     const data = await this.service.answerQuestion(question, req.user.id);
     return sendResponse(res, 'TUTOR_ANSWERED', { data });
   });
