@@ -131,12 +131,44 @@ function getSocket(battleId: string): Socket {
 }
 
 function releaseSocket(battleId: string) {
+  clearTimeout(releaseTimers.get(battleId));
+  releaseTimers.delete(battleId);
+  holders.delete(battleId);
   const socket = sockets.get(battleId);
   if (socket) {
     socket.emit('battle:leave', { battle_id: battleId });
     socket.disconnect();
     sockets.delete(battleId);
   }
+}
+
+// Every mounted useBattleSocket holds its battle's socket; the last one out
+// closes it. The close waits RELEASE_GRACE_MS so lobby → battle (one page
+// unmounts, the next mounts a moment later) keeps the same connection and
+// misses no battle:started / battle:question frame.
+export const RELEASE_GRACE_MS = 5000;
+const holders = new Map<string, number>();
+const releaseTimers = new Map<string, ReturnType<typeof setTimeout>>();
+
+function holdSocket(battleId: string) {
+  clearTimeout(releaseTimers.get(battleId));
+  releaseTimers.delete(battleId);
+  holders.set(battleId, (holders.get(battleId) ?? 0) + 1);
+}
+
+function unholdSocket(battleId: string) {
+  const left = (holders.get(battleId) ?? 0) - 1;
+  if (left > 0) {
+    holders.set(battleId, left);
+    return;
+  }
+  holders.delete(battleId);
+  releaseTimers.set(
+    battleId,
+    setTimeout(() => {
+      if (!holders.has(battleId)) releaseSocket(battleId);
+    }, RELEASE_GRACE_MS),
+  );
 }
 
 // ── Primary hook ─────────────────────────────────────────────────────────────
@@ -157,13 +189,15 @@ export function useBattleSocket(battleId: string) {
     { event: string; handler: (data: unknown) => void }[]
   >([]);
   const [isConnected, setIsConnected] = useState(false);
-  const initialized = useRef(false);
 
   useEffect(() => {
-    if (!battleId || initialized.current) return;
-    initialized.current = true;
+    if (!battleId) return;
+    holdSocket(battleId);
+    let cancelled = false;
+    let detach = () => {};
 
     getAuthToken().then(() => {
+      if (cancelled) return;
       const socket = getSocket(battleId);
       socketRef.current = socket;
 
@@ -187,12 +221,19 @@ export function useBattleSocket(battleId: string) {
       socket.on('connect', onConnect);
       socket.on('disconnect', onDisconnect);
       socket.on('connect_error', onError);
+      detach = () => {
+        socket.off('connect', onConnect);
+        socket.off('disconnect', onDisconnect);
+        socket.off('connect_error', onError);
+      };
 
       if (socket.connected) setIsConnected(true);
     });
 
     return () => {
-      // Don't destroy socket on unmount — let consumers call disconnect explicitly
+      cancelled = true;
+      detach();
+      unholdSocket(battleId);
     };
   }, [battleId, toast]);
 

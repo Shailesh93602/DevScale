@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 
 /**
@@ -23,6 +23,7 @@ const h = vi.hoisted(() => {
     const listeners = new Map<string, Set<Handler>>();
     return {
       connected: false,
+      disconnects: 0,
       on: (event: string, fn: Handler) => {
         if (!listeners.has(event)) listeners.set(event, new Set());
         listeners.get(event)!.add(fn);
@@ -31,7 +32,9 @@ const h = vi.hoisted(() => {
         listeners.get(event)?.delete(fn);
       },
       emit: () => {},
-      disconnect: () => {},
+      disconnect() {
+        this.disconnects++;
+      },
       /** Test-only: deliver a frame the way the server would. */
       receive(event: string, data: unknown) {
         for (const fn of listeners.get(event) ?? []) fn(data);
@@ -74,7 +77,7 @@ vi.mock('@/contexts/AuthContext', () => ({
   useAuth: () => ({ user: null, userId: null }),
 }));
 
-import { useBattleSocket } from './useBattleWebSocket';
+import { RELEASE_GRACE_MS, useBattleSocket } from './useBattleWebSocket';
 
 // The hook keeps one socket per battle id in a module-level map, so every
 // test uses a fresh id.
@@ -190,5 +193,62 @@ describe('useBattleSocket handshake auth', () => {
       (auth as (cb: (data: object) => void) => void)(resolve),
     );
     expect(sent).toEqual({ token: 'token-after-refresh' });
+  });
+});
+
+describe('useBattleSocket lifetime', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('closes the socket once the last holder (the lobby) unmounts', async () => {
+    vi.useFakeTimers();
+    const id = freshBattleId();
+    // The lobby mounts three holders: BattleLobby, BattleChat, ParticipantList.
+    const lobby = [1, 2, 3].map(() => renderHook(() => useBattleSocket(id)));
+    await settle();
+    expect(h.state.sockets).toHaveLength(1);
+    const socket = latestSocket();
+
+    lobby[0].unmount();
+    lobby[1].unmount();
+    act(() => vi.advanceTimersByTime(RELEASE_GRACE_MS));
+    expect(socket.disconnects).toBe(0);
+
+    lobby[2].unmount();
+    act(() => vi.advanceTimersByTime(RELEASE_GRACE_MS));
+    expect(socket.disconnects).toBe(1);
+    expect(socket.listenerCount('connect')).toBe(1); // only getSocket's join
+    expect(socket.listenerCount('disconnect')).toBe(0);
+  });
+
+  it('keeps one connection from the lobby into the battle page', async () => {
+    vi.useFakeTimers();
+    const id = freshBattleId();
+    const lobby = renderHook(() => useBattleSocket(id));
+    await settle();
+    const socket = latestSocket();
+
+    lobby.unmount();
+    act(() => vi.advanceTimersByTime(RELEASE_GRACE_MS - 1));
+    const battle = renderHook(() => useBattleSocket(id));
+    await settle();
+    act(() => vi.advanceTimersByTime(RELEASE_GRACE_MS * 2));
+
+    expect(h.state.sockets).toHaveLength(1);
+    expect(socket.disconnects).toBe(0);
+    expect(battle.result.current.socket.current).toBe(socket);
+    expect(socket.listenerCount('disconnect')).toBe(1);
+  });
+
+  it('does not pile listeners up across visits', async () => {
+    const id = freshBattleId();
+    for (let i = 0; i < 3; i++) {
+      const visit = renderHook(() => useBattleSocket(id));
+      await settle();
+      visit.unmount();
+    }
+    const socket = latestSocket();
+    expect(h.state.sockets).toHaveLength(1);
+    expect(socket.listenerCount('disconnect')).toBe(0);
+    expect(socket.listenerCount('connect_error')).toBe(0);
   });
 });
