@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Battle, BattleFilters } from '@/types/battle';
 
 export default function MyBattlesPage() {
-  const { user } = useAuth();
+  const { userId } = useAuth();
   const [activeTab, setActiveTab] = useState<
     'created' | 'joined' | 'upcoming' | 'completed'
   >('created');
@@ -24,7 +24,10 @@ export default function MyBattlesPage() {
     const page = { limit: 12, page: 1 };
     switch (activeTab) {
       case 'created':
-        return { filters: { user_id: user?.id, ...page } };
+        // Without our User.id an unfiltered list would pass as "created by me".
+        return userId
+          ? { filters: { user_id: userId, ...page } }
+          : { filters: page, select: () => false };
       case 'upcoming':
         return {
           filters: page,
@@ -34,9 +37,12 @@ export default function MyBattlesPage() {
         return { filters: page, select: (b) => b.status === 'COMPLETED' };
       case 'joined':
       default:
-        return { filters: page, select: (b) => b.user_id !== user?.id };
+        return {
+          filters: page,
+          select: (b) => !!userId && b.user_id !== userId,
+        };
     }
-  }, [activeTab, user?.id]);
+  }, [activeTab, userId]);
 
   return (
     <BattleZoneLayout>

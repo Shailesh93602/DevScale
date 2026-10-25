@@ -80,9 +80,9 @@ const cardVariants = {
 
 const DashboardPage: React.FC = () => {
   const { getDashboardSummary } = useDashboard();
-  const { user } = useAuth();
+  const { user, userId: authUserId } = useAuth();
 
-  const userId = user?.id;
+  const userId = authUserId ?? undefined;
 
   // Seed from sessionStorage immediately — no skeleton on repeat visits
   const [isLoading, setIsLoading] = useState(

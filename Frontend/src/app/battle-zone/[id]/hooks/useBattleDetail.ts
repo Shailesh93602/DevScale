@@ -61,10 +61,14 @@ function useQuestionCountdown(
 }
 
 function deriveMembership(battle: Battle | null, userId: string | undefined) {
+  // No User.id yet (profile not loaded): nobody, rather than undefined === undefined.
   const isParticipant =
-    battle?.participants.some((p) => p.user_id === userId) ?? false;
-  const isCreator = battle?.user_id === userId;
-  const myParticipant = battle?.participants.find((p) => p.user_id === userId);
+    !!userId &&
+    (battle?.participants.some((p) => p.user_id === userId) ?? false);
+  const isCreator = !!userId && battle?.user_id === userId;
+  const myParticipant = userId
+    ? battle?.participants.find((p) => p.user_id === userId)
+    : undefined;
   const isReady = myParticipant?.status === 'READY';
   const allReady =
     (battle?.participants.length ?? 0) > 0 &&
@@ -179,7 +183,8 @@ export function useBattleDetail() {
   const params = useParams();
   const router = useRouter();
   const battleId = params.id as string;
-  const { user } = useAuth();
+  const { userId: authUserId } = useAuth();
+  const userId = authUserId ?? undefined;
   const { toast } = useToast();
   const api = useBattleApi();
   const { fetchMyResults } = api;
@@ -203,7 +208,7 @@ export function useBattleDetail() {
   // Answers replayed by `battle:state` after a reconnect or reload.
   const [restoredAnswers, setRestoredAnswers] = useState<RestoredAnswers>({});
 
-  const membership = deriveMembership(battle, user?.id);
+  const membership = deriveMembership(battle, userId);
   const currentQuestion = questions[currentQuestionIndex] ?? null;
 
   const { isConnected, on, disconnect } = useBattleSocket(battleId);
@@ -227,7 +232,7 @@ export function useBattleDetail() {
     on,
     toast,
     router,
-    userId: user?.id,
+    userId,
     currentQuestion,
     questionStartRef,
     setBattle,
@@ -256,7 +261,7 @@ export function useBattleDetail() {
     battleId,
     api,
     router,
-    userId: user?.id,
+    userId,
     battleStatus: battle?.status,
     isParticipant: membership.isParticipant,
     questionCount: questions.length,
@@ -272,7 +277,7 @@ export function useBattleDetail() {
   const actions = useBattleActions({
     api,
     battleId,
-    userId: user?.id,
+    userId,
     isReady: membership.isReady,
     currentQuestion,
     selectedOption,
@@ -285,7 +290,7 @@ export function useBattleDetail() {
 
   return {
     router,
-    userId: user?.id,
+    userId,
     battle,
     questions,
     loading,

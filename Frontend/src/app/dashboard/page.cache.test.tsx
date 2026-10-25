@@ -9,7 +9,7 @@ const h = vi.hoisted(() => ({
   getDashboardSummary: vi.fn(),
 }));
 vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: () => ({ user: h.user }),
+  useAuth: () => ({ user: h.user, userId: h.user?.id ?? null }),
 }));
 vi.mock('@/hooks/useDashboard', () => ({
   useDashboard: () => ({ getDashboardSummary: h.getDashboardSummary }),

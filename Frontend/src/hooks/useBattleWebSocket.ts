@@ -233,7 +233,7 @@ export function useBattleSocket(battleId: string) {
 // ── Convenience hooks ────────────────────────────────────────────────────────
 
 export function useBattleChat(battleId: string) {
-  const { user } = useAuth();
+  const { user, userId } = useAuth();
   const { isConnected, on, emit } = useBattleSocket(battleId);
   const [messages, setMessages] = useState<BattleEventMap['chat:message'][]>(
     [],
@@ -249,17 +249,17 @@ export function useBattleChat(battleId: string) {
 
   const sendMessage = useCallback(
     (message: string) => {
-      if (!message.trim() || !user?.id) return;
+      if (!message.trim() || !user || !userId) return;
       emit('chat:message', {
         battle_id: battleId,
-        user_id: user.id,
+        user_id: userId,
         username: user.username || 'Anonymous',
         avatar_url: user.avatar_url || '',
         message: message.trim(),
         timestamp: Date.now(),
       });
     },
-    [battleId, emit, user],
+    [battleId, emit, user, userId],
   );
 
   return { messages, sendMessage, isConnected };
@@ -318,16 +318,16 @@ export function useBattleParticipants(battleId: string) {
   >([]);
 
   useEffect(() => {
-    const offJoin = on('battle:participant_joined', ({ user }) => {
+    const offJoin = on('battle:participant_joined', ({ user: joiner }) => {
       setJoined((prev) =>
-        prev.some((u) => u.user_id === user.id)
+        prev.some((u) => u.user_id === joiner.id)
           ? prev
           : [
               ...prev,
               {
-                user_id: user.id,
-                username: user.username,
-                avatar_url: user.avatar_url,
+                user_id: joiner.id,
+                username: joiner.username,
+                avatar_url: joiner.avatar_url,
               },
             ],
       );

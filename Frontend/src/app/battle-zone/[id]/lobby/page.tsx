@@ -22,7 +22,7 @@ export default function BattleLobbyPage() {
   const battleId = params.id as string;
   const [battle, setBattle] = useState<Battle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth();
+  const { userId } = useAuth();
   const { toast } = useToast();
   const { fetchBattle, joinExistingBattle, leaveExistingBattle } =
     useBattleApi();
@@ -36,7 +36,8 @@ export default function BattleLobbyPage() {
 
   // Load battle details
   useEffect(() => {
-    if (hasFetched.current) return;
+    // Membership needs our User.id; without it every visit would re-join.
+    if (!userId || hasFetched.current) return;
     hasFetched.current = true;
 
     const loadBattle = async () => {
@@ -65,7 +66,7 @@ export default function BattleLobbyPage() {
 
           // Check if user has already joined
           const userParticipant = battle.participants?.find(
-            (p) => p.user_id === user?.id,
+            (p) => p.user_id === userId,
           );
 
           // If user hasn't joined, join the battle
@@ -93,7 +94,7 @@ export default function BattleLobbyPage() {
     };
 
     loadBattle();
-  }, [battleId, router, user?.id, toast]);
+  }, [battleId, router, userId, toast]);
 
   // Handle start battle
   const handleStartBattle = useCallback(() => {
@@ -143,7 +144,7 @@ export default function BattleLobbyPage() {
       ) : (
         <BattleLobby
           battle={battle}
-          currentUserId={user?.id || ''}
+          currentUserId={userId ?? ''}
           onStartBattle={handleStartBattle}
           onLeaveBattle={handleLeaveBattle}
         />

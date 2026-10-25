@@ -70,7 +70,9 @@ vi.mock('@/utils/supabase/client', () => ({
 }));
 
 vi.mock('@/hooks/use-toast', () => ({ useToast: () => ({ toast: () => {} }) }));
-vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ user: null }) }));
+vi.mock('@/contexts/AuthContext', () => ({
+  useAuth: () => ({ user: null, userId: null }),
+}));
 
 import { useBattleSocket } from './useBattleWebSocket';
 

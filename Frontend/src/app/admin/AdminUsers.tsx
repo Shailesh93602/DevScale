@@ -69,7 +69,7 @@ const roleBadge = (name?: string) => {
 };
 
 export default function AdminUsers() {
-  const { user: currentUser } = useAuth();
+  const { userId: currentUserId } = useAuth();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [toDelete, setToDelete] = useState<AdminUser | null>(null);
@@ -134,7 +134,7 @@ export default function AdminUsers() {
   const users = result?.users ?? [];
   const total = result?.pagination?.total ?? users.length;
   const totalPages = Math.max(1, result?.pagination?.pages ?? 1);
-  const isSelf = (u: AdminUser) => !!currentUser && u.id === currentUser.id;
+  const isSelf = (u: AdminUser) => !!currentUserId && u.id === currentUserId;
 
   const changeRole = async (user: AdminUser, roleId: string) => {
     if (roleSaving) return;

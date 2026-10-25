@@ -63,7 +63,7 @@ export const BattleList: React.FC<BattleListProps> = ({
   select,
 }) => {
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { userId } = useAuth();
   const { filters, setFilters, resetFilters } = useBattleStore();
   const [searchTerm, setSearchTerm] = useState(filters.search);
   const appliedInitialFiltersRef = useRef<string | null>(null);
@@ -212,7 +212,7 @@ export const BattleList: React.FC<BattleListProps> = ({
                 <BattleCard
                   battle={battle}
                   onJoin={onJoinBattle}
-                  currentUserId={user?.id}
+                  currentUserId={userId ?? undefined}
                 />
               </Suspense>
             ))}

@@ -12,7 +12,7 @@ vi.mock('next/navigation', () => ({
 }));
 vi.mock('@/hooks/use-toast', () => ({ useToast: () => ({ toast: h.toast }) }));
 vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: () => ({ user: { id: 'u1' } }),
+  useAuth: () => ({ user: { id: 'u1' }, userId: 'u1' }),
 }));
 vi.mock('@/components/Battle/BattleZoneLayout', () => ({
   default: ({ children }: { children: React.ReactNode }) => <>{children}</>,

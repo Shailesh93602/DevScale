@@ -25,7 +25,7 @@ vi.mock('@/hooks/useAxios', () => ({
 }));
 vi.mock('@/hooks/use-toast', () => ({ useToast: () => ({ toast: vi.fn() }) }));
 vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: () => ({ user: { id: 'me' } }),
+  useAuth: () => ({ user: { id: 'me' }, userId: 'me' }),
 }));
 // Radix Select does not open in jsdom; a native select exercises the same props.
 vi.mock('@/components/ui/select', () => ({

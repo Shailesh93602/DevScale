@@ -14,7 +14,7 @@ vi.mock('@/hooks/useAxios', () => ({
 }));
 vi.mock('@/hooks/use-toast', () => ({ useToast: () => ({ toast: h.toast }) }));
 vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: () => ({ user: { id: 'me' } }),
+  useAuth: () => ({ user: { id: 'me' }, userId: 'me' }),
 }));
 vi.mock('./BattleCard', () => ({
   default: ({ battle }: { battle: { title: string } }) => (
