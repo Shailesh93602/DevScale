@@ -10,8 +10,8 @@ export default function VerifyEmailPage() {
     <div className="p-8 text-center">
       <h1 className="mb-4 text-2xl font-bold">Check Your Email</h1>
       <p className="text-muted-foreground">
-        We&apos;ve sent a verification link to your email. Click the link to
-        verify your account.
+        If this email can be used for a new account, we&apos;ve sent a
+        verification link to it. Check your inbox to continue.
       </p>
     </div>
   );

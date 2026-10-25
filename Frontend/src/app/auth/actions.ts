@@ -45,10 +45,21 @@ export async function signup(formData: FormData) {
 
   const { error } = await supabase.auth.signUp(data);
 
-  if (error) {
+  // An existing address must look exactly like a new one, or the form tells
+  // anyone which emails have accounts. Both go to the "check your inbox" page.
+  if (error && !isAccountExistsError(error)) {
     return { success: false, error: error.message };
   }
 
   revalidatePath('/', 'layout');
   return { success: true };
+}
+
+const ACCOUNT_EXISTS_CODES = new Set(['user_already_exists', 'email_exists']);
+
+function isAccountExistsError(error: { code?: string; message: string }) {
+  return (
+    ACCOUNT_EXISTS_CODES.has(error.code ?? '') ||
+    /already (registered|exists)/i.test(error.message)
+  );
 }
