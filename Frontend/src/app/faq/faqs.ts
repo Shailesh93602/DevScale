@@ -12,6 +12,10 @@
  * One source, imported by both. faqs.test.ts asserts the schema and the page
  * cannot describe different questions.
  */
+import { battleCopy } from '@/lib/battle-claims';
+
+const battles = battleCopy();
+
 export interface Faq {
   id: string;
   question: string;
@@ -22,14 +26,12 @@ export const FAQS: Faq[] = [
   {
     id: 'faq-1',
     question: 'What is EduScale?',
-    answer:
-      'EduScale is an all-in-one platform for engineering students. It provides personalized roadmaps, coding challenges, real-time quiz battles, placement preparation, and interactive learning tools to help you succeed.',
+    answer: `EduScale is an all-in-one platform for engineering students. It provides personalized roadmaps, coding challenges, ${battles.phrase}, placement preparation, and interactive learning tools to help you succeed.`,
   },
   {
     id: 'faq-2',
     question: 'Can I learn alongside other students?',
-    answer:
-      'Yes. Sign up for a free account to comment on roadmaps, challenge other students to real-time quiz battles and climb the leaderboards. Discussion forums, events and collaboration boards are not built yet.',
+    answer: `Yes. Sign up for a free account to comment on roadmaps. ${battles.together} Discussion forums, events and collaboration boards are not built yet.`,
   },
   {
     id: 'faq-3',
@@ -56,13 +58,12 @@ export const FAQS: Faq[] = [
     id: 'faq-5',
     question: 'Is there any cost to join?',
     answer:
-      'No. EduScale has one tier and it is free: roadmaps, quizzes, coding challenges, battles and the leaderboards are all available to any signed-in account, with no card and no checkout. There are no paid plans to buy today.',
+      'No. EduScale has one tier and it is free: everything it offers is available to any signed-in account, with no card and no checkout. There are no paid plans to buy today.',
   },
   {
     id: 'faq-6',
     question: 'What is the Battle Zone?',
-    answer:
-      'The Battle Zone is a competitive quiz arena where you can challenge other students in real-time quiz battles, test your skills, and climb the leaderboard.',
+    answer: battles.zone,
   },
 ];
 

@@ -1,4 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { render } from '@testing-library/react';
+import { createElement } from 'react';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -395,4 +397,68 @@ describe('a feature is advertised only while its page is built', () => {
       ).toEqual([]);
     });
   }
+});
+
+/**
+ * Production serves REST from Vercel, which has no /socket.io and runs no battle timers.
+ * Live battles exist only once NEXT_PUBLIC_REALTIME_API_BASE_URL points at the realtime
+ * host, so the pricing and FAQ copy is derived from it (lib/battle-claims.ts).
+ */
+describe('live battles are claimed only when the realtime host is configured', () => {
+  const ENV = 'NEXT_PUBLIC_REALTIME_API_BASE_URL';
+  const REALTIME = /real-?time|matchmaking|leaderboard/i;
+  const DERIVED_DIRS = ['Frontend/src/app/pricing', 'Frontend/src/app/faq'];
+
+  /** Sentences that name a realtime feature without saying it is not live yet. */
+  const liveClaims = (text: string) =>
+    text
+      .split(/(?<=[.!?])\s+|\n/)
+      .filter((s) => REALTIME.test(s) && !DENIAL.test(s));
+
+  async function renderedCopy(base: string) {
+    vi.resetModules();
+    vi.stubEnv(ENV, base);
+    const { FAQS } = await import('@/app/faq/faqs');
+    const { default: PricingPage } = await import('@/app/pricing/page');
+    const { container, unmount } = render(createElement(PricingPage));
+    const text = [
+      container.textContent ?? '',
+      ...FAQS.map((f) => f.answer),
+    ].join('\n');
+    unmount();
+    return text;
+  }
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  it('pricing and FAQ sources hold no literal realtime claim', () => {
+    const hits = DERIVED_DIRS.flatMap((dir) =>
+      readdirSync(join(repoRoot, dir))
+        .filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f))
+        .flatMap((f) =>
+          read(`${dir}/${f}`)
+            .split('\n')
+            .filter((l) => !COMMENT_LINE.test(l) && REALTIME.test(l))
+            .map((l) => `${dir}/${f}: ${l.trim()}`),
+        ),
+    );
+    expect(hits, 'use battleCopy() from lib/battle-claims.ts').toEqual([]);
+  });
+
+  it('with the env var unset, nothing claims live battles', async () => {
+    const text = await renderedCopy('');
+    expect(liveClaims(text)).toEqual([]);
+    expect(text).toMatch(/real-time quiz battles[^.]*coming soon/i);
+  }, 30_000);
+
+  it('with the env var set, the live claim appears', async () => {
+    const text = await renderedCopy('https://realtime.example.test/api/v1');
+    expect(text).toContain(
+      'Real-time quiz battles, matchmaking and leaderboards',
+    );
+    expect(liveClaims(text).length).toBeGreaterThan(0);
+  }, 30_000);
 });

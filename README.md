@@ -16,9 +16,11 @@
 
 ## What it is
 
-EduScale is an engineering learning platform with real-time coding battles. The interesting engineering problem: when two players join a battle room, the server that handles "player 1 joined" and the server that handles "player 2 joined" may be **different Node.js instances**. Without distributed coordination, the battle never starts.
+EduScale is an engineering learning platform with real-time quiz battles. The interesting engineering problem: when two players join a battle room, the server that handles "player 1 joined" and the server that handles "player 2 joined" may be **different Node.js instances**. Without distributed coordination, the battle never starts.
 
 This README focuses on the infrastructure decisions — the distributed architecture, not the features.
+
+**Production status:** the REST API runs on Vercel, which serves no `/socket.io` and runs no battle timers. Live battles and matchmaking need the long-lived realtime host in [`Backend/docs/REALTIME_HOSTING.md`](Backend/docs/REALTIME_HOSTING.md), which is not deployed yet, so they work end to end only in the local proof for now. `/pricing` and the FAQ say "coming soon" until the frontend is built with `NEXT_PUBLIC_REALTIME_API_BASE_URL`.
 
 ---
 

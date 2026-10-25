@@ -160,6 +160,14 @@ new Redis is the only fix.
 
 ---
 
+### 2026-10-25 — Fallback profile refetched; live-battle copy follows the realtime host
+
+| Item | Files | Status |
+|------|-------|--------|
+| A failed first `/users/me` left `AuthContext` on a session fallback (Supabase id as `id`) for the whole session, so the battle page never recognised the creator (no "Open lobby"). It now retries with backoff (1–30 s) and on focus/visibility/online while on the fallback, exposes `userId` (null until the profile loads) and `profileStatus`, gives the fallback a blank `id`, and shows a quiet Retry notice after two failures. Every id comparison moved to `userId`; a source guard fails on `.id` read off `useAuth().user`. The first-visit proof now opens the lobby, starts and answers with the first `/users/me` failing: 8/8 default, 6/6 flags on; it fails on the old frontend. `/pricing` and the FAQ claimed live battles, matchmaking and leaderboards while production has no realtime host (`/socket.io` 404 on Vercel); the copy now comes from `lib/battle-claims.ts`, "coming soon" unless the build has `NEXT_PUBLIC_REALTIME_API_BASE_URL`. The leaderboard goes with them, because battle Elo is its only writer. `no-scale-claims.test.ts` renders both states. llms.txt and README state the hosting status | `Frontend/src/contexts/AuthContext{,.test}.tsx`, `Frontend/src/contexts/authUserId.guard.test.ts`, `Frontend/src/lib/battle-claims.ts`, `Frontend/src/lib/no-scale-claims.test.ts`, `Frontend/src/app/{pricing/page.tsx,faq/faqs.ts}`, id call sites under `Frontend/src/app/{battle-zone,admin,dashboard}`, `Frontend/src/components/Battle/BattleList.tsx`, `Frontend/src/hooks/useBattleWebSocket.ts`, `Frontend/realtime-local/first-visit.spec.ts`, `Backend/docs/REALTIME_HOSTING.md`, `README.md`, `Frontend/public/llms.txt` | ✅ Done (local) |
+
+---
+
 ## Remaining P0 Blockers (as of end of Session 3)
 
 ### Phase 1 — Infrastructure

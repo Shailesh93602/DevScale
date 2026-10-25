@@ -3,6 +3,7 @@
 import React from 'react';
 import { Check, Minus } from 'lucide-react';
 import { BRANDING } from '@/constants';
+import { battleCopy } from '@/lib/battle-claims';
 import { SITE_URL } from '@/lib/site-url';
 
 /**
@@ -56,7 +57,7 @@ const plans: PricingPlan[] = [
       'Coding challenges in an in-browser editor',
       'Submissions run in a sandboxed code runner',
       'AI review of your own challenge submissions',
-      'Real-time quiz battles, matchmaking and leaderboards',
+      battleCopy().feature,
       'Progress tracking, streaks and achievement badges',
       'Articles, blogs and curated learning resources',
     ],
@@ -207,8 +208,8 @@ export default function PricingPage() {
       <div className="mx-auto mt-24 max-w-2xl text-center">
         <p className="text-sm text-muted-foreground">
           Every line above is in the shipped code today — nothing on this page
-          is a plan or a projection. Real-time battles, career roadmaps and a
-          sandboxed code runner, on Next.js, PostgreSQL and Redis.
+          is a plan or a projection. {battleCopy().footnote}, on Next.js,
+          PostgreSQL and Redis.
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
           Want something here that isn&apos;t built?{' '}

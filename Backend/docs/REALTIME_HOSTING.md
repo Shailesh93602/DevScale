@@ -157,6 +157,10 @@ In the Vercel **frontend** project (`eduscale`) → Settings → Environment Var
 Leave `NEXT_PUBLIC_API_BASE_URL` on the Vercel backend. Then redeploy the frontend: `NEXT_PUBLIC_*`
 values are baked in at build time.
 
+The same variable drives the marketing copy (`Frontend/src/lib/battle-claims.ts`): without it,
+`/pricing` and the FAQ list real-time battles, matchmaking and the leaderboard as "coming soon";
+with it, as included. The redeploy flips the feature and the claim together.
+
 `NEXT_PUBLIC_WS_URL` must not be a `wss://` URL. `src/contexts/WebSocketContext.tsx` opens a *raw*
 WebSocket only when the value starts with `ws(s)://`, and nothing on the server answers raw
 WebSockets. With `https://` it stays inert, and Socket.io accepts `https://`.
@@ -279,9 +283,8 @@ socket).
 - A matched pair lands in a `WAITING` battle and must open the lobby, ready up and start by hand,
   like a custom battle. Only the creator (the second player to queue) can start it.
 - ~~A first-visit socket can be refused~~ **Fixed 2026-10-25**, see "First-visit sockets" below.
-- A failed first `/users/me` leaves `AuthContext` on a fallback profile (Supabase id, not our
-  `User.id`) for the whole session; it never refetches. On the battle page the creator then gets
-  no "Open lobby" button. Seen while building the first-visit proof; not fixed.
+- ~~A failed first `/users/me` leaves `AuthContext` on a fallback profile for the whole
+  session~~ **Fixed 2026-10-25**, see "Fallback profile" below.
 
 ## First-visit sockets (fixed 2026-10-25)
 
@@ -310,6 +313,35 @@ Tests: `Backend/src/tests/security/socketFirstLogin.test.ts` (10, incl. REST + s
 new user and five concurrent first requests), `tests/matchmaking/matchmakingMatchReplay.test.ts`
 (5), `Frontend/src/hooks/useMatchmaking.test.ts` (+7), `MatchmakingRadar.test.tsx` (+3). The race
 and retry tests were mutation-checked (each fails with its guard removed).
+
+## Fallback profile (fixed 2026-10-25)
+
+**Cause.** When the first `/users/me` failed, `AuthContext` built a profile from the Supabase
+session (`id` = the Supabase id) and never fetched again, short of an hourly token refresh. Every
+`User.id` comparison then failed: the battle page did not see the creator (no "Open lobby"), the
+lobby re-joined, "My battles" filtered on the wrong id.
+
+**Fix** (`Frontend/src/contexts/AuthContext.tsx`):
+
+1. A failed load is retried after 1, 2, 4, 8, 16, 30 s with a fresh session token, then on window
+   focus, tab visibility and `online` while the profile is still the fallback. A failed token
+   refresh keeps a profile already loaded for the same account.
+2. The fallback's `id` is blank, and the context exposes `userId` (our `User.id`, null until the
+   profile loads) and `profileStatus`. Every id comparison uses `userId`; the lobby waits for it
+   before deciding to join. `authUserId.guard.test.ts` fails if a file reads `.id` off
+   `useAuth().user`.
+3. After two failures a quiet notice ("We couldn't load your profile yet…", Retry) shows bottom
+   left; it never blocks the page.
+
+Tests: `AuthContext.test.tsx` (6), `authUserId.guard.test.ts` (2); the proof's
+`first-visit.spec.ts` now goes on to open the lobby, start, and have both answer question 1.
+Its new test also asserts each cold user's first `/users/me` was refused, and that the profile
+notice is gone by the end. In flags-on mode it checks there is no lobby and the battle auto-starts.
+
+Result on 2026-10-25: default flags **8 / 8** (6 battle + 2 first visit, 4.0 min);
+`RT_FLOW_OPTIONS=1` **6 / 6** (4 + 2, 1.7 min); zero refused handshakes in both. Negative control,
+the frontend rebuilt from the old source: the new test fails because the creator's page never
+shows "Open lobby", and its navbar shows the fallback's email-prefix username.
 
 ## Battle flow flags (branch `feat/battle-flow-options`, both OFF by default)
 

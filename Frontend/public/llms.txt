@@ -1,6 +1,6 @@
 # EduScale
 
-> Free learning platform for engineering students: public career roadmaps with per-topic quizzes, coding challenges in an in-browser editor with a sandboxed code runner, and real-time quiz battles with matchmaking and leaderboards. One free tier; nothing is behind a paywall.
+> Free learning platform for engineering students: public career roadmaps with per-topic quizzes, coding challenges in an in-browser editor with a sandboxed code runner, and quiz battles with matchmaking and a rating leaderboard. Live battles need a separate realtime server; until it is deployed they are listed as coming soon on /pricing. One free tier; nothing is behind a paywall.
 
 EduScale is a side project by Shailesh Chaudhari (Software Engineer at ContextQA, Ahmedabad, India). Author portfolio: https://shaileshchaudhari.vercel.app.
 
